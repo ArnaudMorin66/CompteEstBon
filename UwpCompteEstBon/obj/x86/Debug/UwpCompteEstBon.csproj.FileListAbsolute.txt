@@ -688,3 +688,7 @@ C:\Users\arnaud\Source\CompteEstBon\UwpCompteEstBon\obj\x86\Debug\resources.en.r
 C:\Users\arnaud\Source\CompteEstBon\UwpCompteEstBon\obj\x86\Debug\resources.en-us.resfiles.intermediate
 C:\Users\arnaud\Source\CompteEstBon\UwpCompteEstBon\obj\x86\Debug\resources.en.resfiles.intermediate
 C:\Users\arnaud\Source\CompteEstBon\UwpCompteEstBon\obj\x86\Debug\ProjectArchitectures.txt
+C:\Users\arnaud\Source\CompteEstBon\UwpCompteEstBon\bin\x86\Debug\System.Console.dll
+C:\Users\arnaud\Source\CompteEstBon\UwpCompteEstBon\bin\x86\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
+C:\Users\arnaud\Source\CompteEstBon\UwpCompteEstBon\obj\x86\Debug\FxResources.System.Console.SR.resw
+C:\Users\arnaud\Source\CompteEstBon\UwpCompteEstBon\obj\x86\Debug\FxResources.System.Runtime.InteropServices.RuntimeInformation.SR.resw
