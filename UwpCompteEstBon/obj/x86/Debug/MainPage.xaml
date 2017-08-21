@@ -1,0 +1,191 @@
+﻿<Page
+    x:Class="UwpCompteEstBon.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UwpCompteEstBon"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+     xmlns:sf="using:Syncfusion.UI.Xaml.Grid"
+    xmlns:sfi="using:Syncfusion.UI.Xaml.Controls.Input"
+    xmlns:sfn="using:Syncfusion.UI.Xaml.Controls.Notification"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="CebDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="SfComboboxStyle" TargetType="sfi:SfComboBox">
+                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="BorderThickness" Value="0"/>
+            </Style>
+            <Style TargetType="sf:GridHeaderCellControl" x:Key="SfGridHeaderCell">
+                <Setter Property="Background" Value="DodgerBlue" />
+                <Setter Property="Foreground" Value="White" />
+            </Style>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Page.DataContext>
+        <local:BindingTirage x:ConnectionId='1' x:Name="Tirage"/>
+    </Page.DataContext>
+    <Grid x:ConnectionId='2' x:Name="Grid"
+          Background="{ThemeResource AppBarBackgroundThemeBrush}"
+          x:FieldModifier="public"
+                                  
+                              >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+        <Border Grid.Column="1"
+                 Grid.ColumnSpan="6"
+                 Grid.Row="0"
+                 Margin="0,10,0,0"
+                 Style="{StaticResource BorderTitreStyle}">
+            <TextBlock Style="{StaticResource TextBoxTitreStyle}">Plaques</TextBlock>
+        </Border>
+        <Border Grid.Column="7"
+                 Grid.ColumnSpan="2"
+                 Grid.Row="0"
+                 Style="{StaticResource BorderTitreStyle}" Margin="0,10,0,0"
+                 >
+            <TextBlock Style="{StaticResource TextBoxTitreStyle}">Cherche</TextBlock>
+        </Border>
+        <sfi:SfComboBox Grid.Row="1" Grid.Column="1"
+                        ItemsSource="{Binding listePlaques}"
+                        SelectedValue="{Binding Plaques[0],Mode=TwoWay}"
+                        Style="{StaticResource SfComboboxStyle}"  />
+        <sfi:SfComboBox Grid.Row="1" Grid.Column="2"
+                        ItemsSource="{Binding listePlaques}"
+                        SelectedValue="{Binding Plaques[1], Mode=TwoWay}"
+                        Style="{StaticResource SfComboboxStyle}" />
+        <sfi:SfComboBox Grid.Row="1" Grid.Column="3"
+                        ItemsSource="{Binding listePlaques}"
+                        SelectedValue="{Binding Plaques[2], Mode=TwoWay}"
+                        Style="{StaticResource SfComboboxStyle}" />
+        <sfi:SfComboBox Grid.Row="1" Grid.Column="4"
+                        ItemsSource="{Binding listePlaques}"
+                        SelectedValue="{Binding Plaques[3], Mode=TwoWay}"
+                        Style="{StaticResource SfComboboxStyle}" />
+        <sfi:SfComboBox Grid.Row="1" Grid.Column="5"
+                        ItemsSource="{Binding listePlaques}"
+                        SelectedValue="{Binding Plaques[4], Mode=TwoWay}"
+                        Style="{StaticResource SfComboboxStyle}" />
+        <sfi:SfComboBox Grid.Row="1" Grid.Column="6"
+                        ItemsSource="{Binding listePlaques}"
+                        SelectedValue="{Binding Plaques[5], Mode=TwoWay}"
+                        Style="{StaticResource SfComboboxStyle}" />
+
+        <sfi:SfNumericUpDown Grid.Row="1" Grid.Column="7" Grid.ColumnSpan="2"
+                             Value="{Binding Search, Mode=TwoWay}"
+                             FormatString="{}0"
+                             VerticalContentAlignment="Stretch"
+                             VerticalAlignment="Center"
+                             Maximum="999"
+                             MaximumNumberDecimalDigits="0"
+                             Minimum="0"
+                             SpinButtonsAlignment="Both"
+                             BorderThickness="0" />
+        <Button x:ConnectionId='3'
+            Grid.Row="2"
+                Grid.Column="1"
+                Grid.ColumnSpan="2"
+                Background="{Binding Background}"
+                Foreground="{Binding Foreground}"
+                                    
+                Content="Hasard"
+                ToolTipService.ToolTip="Raccourci: Ctrl+H"
+                Style="{StaticResource CebButtonStyle}">
+
+        </Button>
+        <Button x:ConnectionId='4' Grid.Row="2"
+                Grid.Column="3"
+                Grid.ColumnSpan="6"
+                Background="{Binding Background}"
+                Foreground="{Binding Foreground}"
+                                      
+                Content="{Binding Result}"
+                
+                ToolTipService.ToolTip="Raccourci: Ctrl+R"
+                Style="{StaticResource CebButtonStyle}" />
+        <sf:SfDataGrid Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="8"
+                       ItemsSource="{Binding Solutions}"
+                       AllowFiltering="False"
+                       AutoGenerateColumns="False"
+                       ColumnSizer="Star"
+                       NavigationMode="Row"
+                       AllowGrouping="False"
+                       AllowSorting="False"
+                       BorderBrush="Black"
+                       Background="White"
+                       HeaderStyle="{StaticResource SfGridHeaderCell}"
+                       SelectionForegroundBrush="Black" >
+            <sf:SfDataGrid.RowSelectionBrush>
+                <SolidColorBrush Color="DodgerBlue" Opacity="0.699999988079071"/>
+            </sf:SfDataGrid.RowSelectionBrush>
+            <sf:SfDataGrid.Columns>
+                <sf:GridTextColumn MappingName="[0]" HeaderText="Opération 1" TextAlignment="Center" />
+                <sf:GridTextColumn MappingName="[1]" HeaderText="Opération 2" TextAlignment="Center"/>
+                <sf:GridTextColumn MappingName="[2]" HeaderText="Opération 3" TextAlignment="Center" />
+                <sf:GridTextColumn MappingName="[3]" HeaderText="Opération 4" TextAlignment="Center"/>
+                <sf:GridTextColumn MappingName="[4]" HeaderText="Opération 5" TextAlignment="Center"/>
+            </sf:SfDataGrid.Columns>
+        </sf:SfDataGrid>
+        <Grid Grid.Column="1"
+              Grid.Row="4"
+              Grid.ColumnSpan="8"
+              Background="DodgerBlue"
+              VerticalAlignment="Stretch"
+              HorizontalAlignment="Stretch" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <sfn:SfBusyIndicator Grid.Column="0"
+                                 IsBusy="{Binding IsBusy}"
+                                 Visibility="{Binding Visibility}"
+                                 ViewboxHeight="20"
+                                 ViewboxWidth="20"
+                                 AnimationType="Box"
+                                 AnimationSpeed="300" Foreground="White" />
+            <TextBlock Grid.Column="1"
+                       Foreground="White"
+                       TextAlignment="Center"
+                       FontSize="18" FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Stretch">
+                <Run Text="Nombre de solutions: " />
+                <Run Text="{Binding Solutions.Count, Mode=OneWay}" />
+            </TextBlock>
+            <TextBlock
+                Grid.Column="2"
+                Foreground="White"
+                TextAlignment="Center"
+                FontSize="18" FontWeight="Bold"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Center">
+                <Run Text="Durée: " />
+                <Run Text="{Binding Duree, Mode=OneWay}" />
+                <Run Text=" s"/>
+            </TextBlock>
+        </Grid>
+    </Grid>
+</Page>
+

@@ -1,0 +1,6 @@
+C:\Users\arnaud\Source\CompteEstBon\CompteEstBon\bin\Release\CompteEstBon.dll
+C:\Users\arnaud\Source\CompteEstBon\CompteEstBon\bin\Release\CompteEstBon.pdb
+C:\Users\arnaud\Source\CompteEstBon\CompteEstBon\obj\Release\CompteEstBon.csprojResolveAssemblyReference.cache
+C:\Users\arnaud\Source\CompteEstBon\CompteEstBon\obj\Release\CompteEstBon.csproj.CoreCompileInputs.cache
+C:\Users\arnaud\Source\CompteEstBon\CompteEstBon\obj\Release\CompteEstBon.dll
+C:\Users\arnaud\Source\CompteEstBon\CompteEstBon\obj\Release\CompteEstBon.pdb
