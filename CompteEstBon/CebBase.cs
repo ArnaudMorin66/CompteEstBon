@@ -14,7 +14,7 @@ namespace CompteEstBon
         /// </summary>
         public abstract int Rank { get; }
 
-        public  string this[int index] =>  index < Operations.Length ? Operations[index] : "";
+        public  string this[int index] =>  index < Operations.Length ? Operations[index] : null;
         
         public virtual string[] Operations { get; }
         public virtual bool IsValid => Value > 0;

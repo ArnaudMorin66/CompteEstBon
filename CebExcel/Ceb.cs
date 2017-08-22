@@ -133,7 +133,7 @@ namespace CebExcel
             }
             else
             {
-                Resultat.Value = $"Compte approché: {Tirage.Found} - Écart={Tirage.Diff}";
+                Resultat.Value = $"Compte approché: {Tirage.Found} - Écart: {Tirage.Diff}";
                 Resultat.Interior.Color = Color.Green;
                 Resultat.Font.Color = Color.White;
             }
