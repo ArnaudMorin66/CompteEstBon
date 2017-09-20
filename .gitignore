@@ -265,3 +265,5 @@ __pycache__/
 /CebExcel/*.user
 bin
 obj
+bin
+obj
