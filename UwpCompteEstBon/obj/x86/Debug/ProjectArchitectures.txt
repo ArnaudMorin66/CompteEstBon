@@ -1,2 +1,0 @@
-C:\Users\arnaud\Source\CompteEstBon\CompteEstBon\CompteEstBon.csproj;neutral
-C:\Users\arnaud\Source\CompteEstBon\UwpCompteEstBon\UwpCompteEstBon.csproj;x86
