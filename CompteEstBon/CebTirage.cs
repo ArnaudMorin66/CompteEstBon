@@ -57,7 +57,7 @@ namespace CompteEstBon
 
         /// <summary>
         /// </summary>
-        public CebPlaque[] Plaques { get; }=new CebPlaque[6];
+        public CebPlaque[] Plaques { get; } = new CebPlaque[6];
 
         /// <summary>
         /// </summary>
@@ -177,7 +177,7 @@ namespace CompteEstBon
                 }
 
                 liste.Sort((p, q) => q.Value.CompareTo(p.Value));
-                
+
                 for (var i = 0; i < liste.Count; i++)
                 {
                     AddSolution(liste[i]);
@@ -187,7 +187,7 @@ namespace CompteEstBon
                             CebOperation.ListeOperations.Select(operation => new CebOperation(liste[i], operation, liste[j]))
                                 .Where(oper => oper.IsValid))
                             Resolve(
-                                liste.Where((t, k) => k != i && k != j).Concat(new CebBase[] {oper}).ToList());
+                                liste.Where((t, k) => k != i && k != j).Concat(new CebBase[] { oper }).ToList());
                 }
             }
 
