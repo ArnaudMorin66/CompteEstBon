@@ -3658,16 +3658,11 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Users\\arnaud\\.dotnet\\NuGetFallbackFolder": {},
-        "http://nuget.syncfusion.com/nuget_aspnetcore/nuget/getsyncfusionpackages/aspnetcore": {},
         "https://api.nuget.org/v3/index.json": {}
       }
     },
     "dependencies": {
-      "Microsoft.NETCore.Portable.Compatibility": {
-        "target": "Package",
-        "version": "[1.0.1, )"
-      },
+      "Microsoft.NETCore.Portable.Compatibility": "[1.0.1, )",
       "NETStandard.Library": "[1.6.0, )"
     },
     "frameworks": {
