@@ -27,7 +27,11 @@ namespace CompteEstBon
             Tirage = tirage;
             Value = value;
         }
-
+        public string  Text
+        {
+            get => Value.ToString();
+            set { Value = int.TryParse(value, out int res) ? res : 0; }
+        }
         public override int Value
         {
             get => base.Value;
@@ -43,7 +47,7 @@ namespace CompteEstBon
         public override int Rank => 0;
 
         public override bool IsValid => ListePlaques.Contains(Value);
-        public override string[] Operations => new[] {Value.ToString()};
+        public override string[] Operations => new[] {Text};
 
         public CebTirage Tirage { get; }
 

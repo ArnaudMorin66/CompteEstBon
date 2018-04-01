@@ -34,3 +34,4 @@ C:\Users\arnaud\Source\CompteEstBon\UnitTestCeb\obj\Debug\UnitTestCeb.csprojReso
 C:\Users\arnaud\Source\CompteEstBon\UnitTestCeb\obj\Debug\UnitTestCeb.csproj.CoreCompileInputs.cache
 C:\Users\arnaud\Source\CompteEstBon\UnitTestCeb\obj\Debug\UnitTestCeb.dll
 C:\Users\arnaud\Source\CompteEstBon\UnitTestCeb\obj\Debug\UnitTestCeb.pdb
+C:\Users\arnaud\Source\CompteEstBon\UnitTestCeb\obj\Debug\UnitTestCeb.csproj.CopyComplete

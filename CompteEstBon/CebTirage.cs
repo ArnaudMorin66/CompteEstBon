@@ -25,9 +25,10 @@ namespace CompteEstBon
         /// </summary>
         public CebTirage()
         {
+            Plaques.Clear();
             for (var i = 0; i < 6; i++)
             {
-                Plaques[i] = new CebPlaque(this, 0);
+                Plaques.Add(new CebPlaque(this, 0));
             }
             Random();
         }
@@ -57,7 +58,7 @@ namespace CompteEstBon
 
         /// <summary>
         /// </summary>
-        public CebPlaque[] Plaques { get; } = new CebPlaque[6];
+        public List<CebPlaque> Plaques { get; } = new List<CebPlaque>();
 
         /// <summary>
         /// </summary>
