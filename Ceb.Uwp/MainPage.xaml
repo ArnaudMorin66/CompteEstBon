@@ -1,35 +1,32 @@
 ﻿<Page
-    x:Class="UwpCompteEstBon.MainPage"
+    x:Class="Ceb.Uwp.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:UwpCompteEstBon"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:sf="using:Syncfusion.UI.Xaml.Grid"
-    xmlns:sfi="using:Syncfusion.UI.Xaml.Controls.Input"
-    xmlns:sfn="using:Syncfusion.UI.Xaml.Controls.Notification"
-    mc:Ignorable="d">
+    xmlns:local="using:Ceb.Uwp"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="CebDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="SfComboboxStyle" TargetType="sfi:SfComboBox">
+            <Style x:Key="SfComboboxStyle" TargetType="ComboBox">
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Stretch" />
                 <Setter Property="BorderThickness" Value="0" />
             </Style>
-            <Style x:Key="SfGridHeaderCell" TargetType="sf:GridHeaderCellControl">
+            <!--<Style x:Key="SfGridHeaderCell" TargetType="sf:GridHeaderCellControl">
                 <Setter Property="Background">
                     <Setter.Value>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1.0">
-                            <GradientStop Offset="0" Color="Navy" />
-                            <GradientStop Offset="1" Color="Black" />
+                            <GradientStop Color="Navy" Offset="0"/>
+                            <GradientStop Color="Black" Offset="1"/>
                         </LinearGradientBrush>
                     </Setter.Value>
                 </Setter>
                 <Setter Property="Foreground" Value="White" />
-            </Style>
+            </Style>-->
         </ResourceDictionary>
     </Page.Resources>
 
@@ -91,37 +88,37 @@
             Style="{StaticResource BorderTitreStyle}">
             <TextBlock Style="{StaticResource TextBoxTitreStyle}">Plaques</TextBlock>
         </Border>
-        <sfi:SfComboBox
+        <ComboBox
             Grid.Row="1"
             Grid.Column="2"
             ItemsSource="{Binding listePlaques}"
             SelectedValue="{Binding Plaques[0], Mode=TwoWay}"
             Style="{StaticResource SfComboboxStyle}" />
-        <sfi:SfComboBox
+        <ComboBox
             Grid.Row="1"
             Grid.Column="3"
             ItemsSource="{Binding listePlaques}"
             SelectedValue="{Binding Plaques[1], Mode=TwoWay}"
             Style="{StaticResource SfComboboxStyle}" />
-        <sfi:SfComboBox
+        <ComboBox
             Grid.Row="1"
             Grid.Column="4"
             ItemsSource="{Binding listePlaques}"
             SelectedValue="{Binding Plaques[2], Mode=TwoWay}"
             Style="{StaticResource SfComboboxStyle}" />
-        <sfi:SfComboBox
+        <ComboBox
             Grid.Row="1"
             Grid.Column="5"
             ItemsSource="{Binding listePlaques}"
             SelectedValue="{Binding Plaques[3], Mode=TwoWay}"
             Style="{StaticResource SfComboboxStyle}" />
-        <sfi:SfComboBox
+        <ComboBox
             Grid.Row="1"
             Grid.Column="6"
             ItemsSource="{Binding listePlaques}"
             SelectedValue="{Binding Plaques[4], Mode=TwoWay}"
             Style="{StaticResource SfComboboxStyle}" />
-        <sfi:SfComboBox
+        <ComboBox
             Grid.Row="1"
             Grid.Column="7"
             ItemsSource="{Binding listePlaques}"
@@ -132,10 +129,11 @@
             Grid.Column="8"
             Grid.ColumnSpan="1"
             Style="{StaticResource BorderTitreStyle}">
-            <TextBlock Style="{StaticResource TextBoxTitreStyle}" Text="Cherche" />
+            <TextBlock Style="{StaticResource TextBoxTitreStyle}">
+                <TextBlock.Text>Cherche</TextBlock.Text>
+            </TextBlock>
         </Border>
-
-        <sfi:SfNumericUpDown
+        <TextBox
             Grid.Row="1"
             Grid.Column="9"
             Grid.ColumnSpan="2"
@@ -143,17 +141,28 @@
             VerticalContentAlignment="Stretch"
             Background="#FF9EB9EB"
             BorderThickness="0"
+            Text="{Binding Search, Mode=TwoWay}"
+            TextAlignment="Center" />
+
+        <!--<sfi:SfNumericUpDown
+            Grid.Row="1"
+            Grid.Column="9"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Stretch"
+            VerticalContentAlignment="Stretch"
+            Value="{Binding Search, Mode=TwoWay}"
+            Background="#FF9EB9EB"
+            BorderThickness="0"
             FormatString="{}0"
             Maximum="999"
             MaximumNumberDecimalDigits="0"
             Minimum="0"
             SpinButtonsAlignment="Right"
-            TextAlignment="Center"
-            Value="{Binding Search, Mode=TwoWay}" />
+            TextAlignment="Center" />-->
         <Button
             Grid.Row="2"
             Grid.Column="1"
-            Grid.ColumnSpan="4"
+            Grid.ColumnSpan="5"
             AccessKey="H"
             Background="{Binding Background}"
             Click="Hasard_Click"
@@ -165,8 +174,8 @@
         </Button>
         <Button
             Grid.Row="2"
-            Grid.Column="5"
-            Grid.ColumnSpan="4"
+            Grid.Column="6"
+            Grid.ColumnSpan="5"
             AccessKey="R"
             Background="{Binding Background}"
             Click="Resoudre_Click"
@@ -174,17 +183,6 @@
             Foreground="{Binding Foreground}"
             Style="{StaticResource CebButtonStyle}"
             ToolTipService.ToolTip="Raccourci: Alt+R" />
-        <Button
-            x:Name="ExportExcel"
-            Grid.Row="2"
-            Grid.Column="9"
-            Grid.ColumnSpan="2"
-            AccessKey="X"
-            Background="{Binding Background}"
-            Content="Excel"
-            Foreground="{Binding Foreground}"
-            Style="{StaticResource CebButtonStyle}"
-            ToolTipService.ToolTip="Raccourci: Alt+X" Click="ExportExcel_Click" />
         <Grid
             Grid.Row="3"
             Grid.Column="1"
@@ -198,7 +196,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <sfn:SfBusyIndicator
+            <!--<sfn:SfBusyIndicator
                 Grid.Column="0"
                 VerticalAlignment="Stretch"
                 AnimationSpeed="300"
@@ -207,7 +205,7 @@
                 IsBusy="{Binding IsBusy}"
                 ViewboxHeight="20"
                 ViewboxWidth="20"
-                Visibility="{Binding Visibility}" />
+                Visibility="{Binding Visibility}" />-->
             <TextBlock
                 Grid.Column="1"
                 HorizontalAlignment="Center"
@@ -227,17 +225,19 @@
                 FontWeight="Bold"
                 Foreground="White"
                 TextAlignment="Center">
-                <Run FontFamily="Segoe UI" Text="Durée: " />
+                <Run Text="Durée: " />
                 <Run Text="{Binding Duree, Mode=OneWay}" />
                 <Run Text=" s" />
             </TextBlock>
         </Grid>
-        <sf:SfDataGrid
+        <Controls:DataGrid Grid.Row="4" Grid.Column="1"
+                           />
+
+        <!--<sf:SfDataGrid
             x:Name="SolutionsData"
             Grid.Row="4"
             Grid.Column="1"
             Grid.ColumnSpan="10"
-            x:FieldModifier="public"
             AllowFiltering="False"
             AllowGrouping="False"
             AllowSorting="False"
@@ -251,7 +251,8 @@
             ItemsSource="{Binding Solutions}"
             NavigationMode="Cell"
             RowSelectionBrush="LightBlue"
-            SelectionForegroundBrush="Navy">
+            SelectionForegroundBrush="Navy"
+            x:FieldModifier="public">
             <sf:SfDataGrid.Columns>
                 <sf:GridTextColumn
                     HeaderText="Opération 1"
@@ -274,6 +275,6 @@
                     MappingName="[4]"
                     TextAlignment="Center" />
             </sf:SfDataGrid.Columns>
-        </sf:SfDataGrid>
+        </sf:SfDataGrid>-->
     </Grid>
 </Page>

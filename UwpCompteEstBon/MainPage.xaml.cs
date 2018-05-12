@@ -1,10 +1,17 @@
-﻿
+﻿using System;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using CompteEstBon;
+using Syncfusion.UI.Xaml.Grid.Converter;
+using Syncfusion.XlsIO;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using System.Collections.Generic;
+using Windows.Storage.Provider;
 
 // Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -15,7 +22,6 @@ namespace UwpCompteEstBon
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private bool _isCtrlKeyPressed;
         public MainPage()
         {
             this.InitializeComponent();
@@ -27,38 +33,51 @@ namespace UwpCompteEstBon
 
         private async void Resoudre_Click(object sender, RoutedEventArgs e)
         {
-            if (Tirage.Tirage.Status == CompteEstBon.CebStatus.Valid)
+            switch (Tirage.Tirage.Status)
             {
-                await Tirage.ResolveAsync();
-            } else
-            {
-                await Tirage.ClearAsync();
-            }
-        }
-
-        private void Grid_OnKeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key == VirtualKey.Control)
-            {
-                _isCtrlKeyPressed = true;
-                return;
-            }
-            if (!_isCtrlKeyPressed) return;
-            switch (e.Key)
-            {
-                case VirtualKey.H:
-                    Hasard_Click(sender, e);
+                case CebStatus.Valid:
+                    await Tirage.ResolveAsync();
                     break;
-                case VirtualKey.R:
-                    Resoudre_Click(sender, e);
+                case CebStatus.CompteEstBon:
+                case CebStatus.CompteApproche:
+                    await Tirage.ClearAsync();
+                    break;
+                case CebStatus.Erreur:
+                    await Tirage.RandomAsync();
                     break;
             }
         }
-
-        private void Grid_OnKeyUp(object sender, KeyRoutedEventArgs e)
+        private async System.Threading.Tasks.Task ExportGridToExcelAsync()
         {
-            if (e.Key == VirtualKey.Control)
-                _isCtrlKeyPressed = false;
+            FileSavePicker savePicker = new FileSavePicker();
+            savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            // Dropdown of file types the user can save the file as
+            savePicker.FileTypeChoices.Add("Excel", new List<string>() { ".xlsx" });
+            // Default file name if the user does not type one in or select a file to replace
+            savePicker.SuggestedFileName = "Ceb";
+            StorageFile file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                // Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
+                CachedFileManager.DeferUpdates(file);
+
+                var options = new ExcelExportingOptions
+                {
+                    ExcelVersion = ExcelVersion.Excel2013,
+                    ExportAllPages = true
+                };
+                var excelEngine = SolutionsData.ExportToExcel(SolutionsData.View, options);
+                var workBook = excelEngine.Excel.Workbooks[0];
+                await workBook.SaveAsAsync(file);
+                // Let Windows know that we're finished changing the file so the other app can update the remote version of the file.
+                // Completing updates may require Windows to ask for user input.
+                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+            }
+        }
+
+        private async void ExportExcel_Click(object sender, RoutedEventArgs e)
+        {
+            await ExportGridToExcelAsync();
         }
     }
 }

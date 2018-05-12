@@ -17,7 +17,7 @@ using Windows.UI.Xaml.Media;
 
 #endregion
 
-namespace UwpCompteEstBon
+namespace Ceb.Uwp
 {
     
     public class BindingTirage : INotifyPropertyChanged

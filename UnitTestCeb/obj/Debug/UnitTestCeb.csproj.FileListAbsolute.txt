@@ -30,8 +30,8 @@ C:\Users\arnaud\Source\CompteEstBon\UnitTestCeb\bin\Debug\Microsoft.VisualStudio
 C:\Users\arnaud\Source\CompteEstBon\UnitTestCeb\bin\Debug\CompteEstBon.pdb
 C:\Users\arnaud\Source\CompteEstBon\UnitTestCeb\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
 C:\Users\arnaud\Source\CompteEstBon\UnitTestCeb\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
-C:\Users\arnaud\Source\CompteEstBon\UnitTestCeb\obj\Debug\UnitTestCeb.csprojResolveAssemblyReference.cache
 C:\Users\arnaud\Source\CompteEstBon\UnitTestCeb\obj\Debug\UnitTestCeb.csproj.CoreCompileInputs.cache
 C:\Users\arnaud\Source\CompteEstBon\UnitTestCeb\obj\Debug\UnitTestCeb.dll
 C:\Users\arnaud\Source\CompteEstBon\UnitTestCeb\obj\Debug\UnitTestCeb.pdb
 C:\Users\arnaud\Source\CompteEstBon\UnitTestCeb\obj\Debug\UnitTestCeb.csproj.CopyComplete
+C:\Users\arnaud\Source\CompteEstBon\UnitTestCeb\obj\Debug\UnitTestCeb.csprojAssemblyReference.cache
