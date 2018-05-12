@@ -55,13 +55,14 @@ namespace UwpCompteEstBon
                 NotifiedChanged();
             }
         }
-
+        private int _search; 
         public int Search
         {
-            get => Tirage.Search;
+            get => _search;
             set
             {
-                if (Tirage.Search == value) return;
+                if (_search == value) return;
+                _search = value;
                 Tirage.Search = value;
                 NotifyChangedAndClear();
             }
@@ -209,7 +210,8 @@ namespace UwpCompteEstBon
                 for (var i = 0; i < Tirage.Plaques.Count; i++)
                     Plaques[i] = Tirage.Plaques[i];
             }
-            Solutions.Clear();
+            Search = Tirage.Search;
+
         }
 
         #region Action
@@ -218,13 +220,14 @@ namespace UwpCompteEstBon
         {
             await Tirage.ClearAsync();
             NotifiedChanged("Search");
-            UpdateData();
+            // UpdateData();
+            Solutions.Clear();
+            NotifyChangedAndClear("Solutions");
         }
 
         public async Task RandomAsync()
         {
             await Tirage.RandomAsync();
-            NotifiedChanged("Search");
             UpdateData();
         }
 
