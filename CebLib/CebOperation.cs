@@ -115,7 +115,7 @@ namespace CompteEstBon
       if (_string == null)
       {
         _string = this[0];
-        for (int i = 1; i < _array.Length; i++)
+        for (int i = 1; i < _array.Count; i++)
         {
           _string += $", {this[i]}";
         }
@@ -123,21 +123,21 @@ namespace CompteEstBon
       return _string;
     }
 
-    private string[] _array;
+    private List<string> _array;
 
-    public override string[] Operations
+    public override List<string> Operations
     {
       get
       {
         if (_array == null)
         {
-          var l = new List<string>();
+          _array = new List<string>();
           if (Left is CebOperation)
-            l.AddRange(Left.Operations);
+            _array.AddRange(Left.Operations);
           if (Right is CebOperation)
-            l.AddRange(Right.Operations);
-          l.Add($"{Left.Value} {Oper} {Right.Value} = {Value}");
-          _array = l.ToArray();
+            _array.AddRange(Right.Operations);
+          _array.Add($"{Left.Value} {Oper} {Right.Value} = {Value}");
+     
         }
         return _array;
       }

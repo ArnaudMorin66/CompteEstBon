@@ -220,7 +220,6 @@ namespace UwpCompteEstBon
         {
             await Tirage.ClearAsync();
             NotifiedChanged("Search");
-            // UpdateData();
             Solutions.Clear();
             NotifyChangedAndClear("Solutions");
         }

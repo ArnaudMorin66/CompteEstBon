@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
     mc:Ignorable="d">
     <Style x:Key="CebButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="Transparent" />
@@ -95,12 +96,11 @@
         <Setter Property="BorderBrush" Value="White" />
         <Setter Property="CornerRadius" Value="4" />
     </Style>
-    <Style x:Key="TextBoxTitreStyle" TargetType="TextBlock">
+    <Style x:Key="TextBlockTitreStyle" TargetType="TextBlock">
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontSize" Value="24" />
-        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="16" />
     </Style>
     <CompositeTransform x:Key="Transformation" />
 </ResourceDictionary>

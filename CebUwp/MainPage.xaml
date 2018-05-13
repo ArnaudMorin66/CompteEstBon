@@ -1,37 +1,51 @@
 ﻿<Page
-    x:Class="Ceb.Uwp.MainPage"
+    x:Class="CebUwp.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:Controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:Ceb.Uwp"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
+    xmlns:extensions="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:local="using:CebUwp"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
+    xmlns:tlk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="CebDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="SfComboboxStyle" TargetType="ComboBox">
+            <Style x:Key="ComboboxStyle" TargetType="ComboBox">
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Stretch" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
                 <Setter Property="BorderThickness" Value="0" />
             </Style>
-            <!--<Style x:Key="SfGridHeaderCell" TargetType="sf:GridHeaderCellControl">
+            <Style x:Key="hedearCellStyle" TargetType="ContentControl">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Foreground" Value="Yellow" />
                 <Setter Property="Background">
                     <Setter.Value>
-                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1.0">
-                            <GradientStop Color="Navy" Offset="0"/>
-                            <GradientStop Color="Black" Offset="1"/>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Offset="0" Color="Black" />
+                            <GradientStop Offset="1" Color="Navy" />
                         </LinearGradientBrush>
                     </Setter.Value>
                 </Setter>
-                <Setter Property="Foreground" Value="White" />
-            </Style>-->
+            </Style>
+            <Style x:Key="cellStyle" TargetType="tlk:DataGridCell">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="BorderBrush" Value="Navy" />
+            </Style>
+
         </ResourceDictionary>
     </Page.Resources>
-
     <Page.DataContext>
-        <local:BindingTirage x:Name="Tirage" />
+        <local:BindTirage x:Name="Tirage" />
     </Page.DataContext>
 
     <Grid
@@ -66,10 +80,14 @@
             Grid.Column="1"
             Grid.ColumnSpan="10">
             <Border.Background>
-                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                <media:RadialGradientBrush
+                    AlphaMode="Straight"
+                    RadiusX="4"
+                    RadiusY="8">
                     <GradientStop Color="Black" />
+                    <GradientStop Offset="0.5" Color="Blue" />
                     <GradientStop Offset="1" Color="Navy" />
-                </LinearGradientBrush>
+                </media:RadialGradientBrush>
             </Border.Background>
             <TextBlock
                 VerticalAlignment="Stretch"
@@ -86,79 +104,65 @@
             Grid.Column="1"
             Grid.ColumnSpan="1"
             Style="{StaticResource BorderTitreStyle}">
-            <TextBlock Style="{StaticResource TextBoxTitreStyle}">Plaques</TextBlock>
+            <TextBlock Style="{StaticResource TextBlockTitreStyle}">Plaques</TextBlock>
         </Border>
         <ComboBox
             Grid.Row="1"
             Grid.Column="2"
             ItemsSource="{Binding listePlaques}"
             SelectedValue="{Binding Plaques[0], Mode=TwoWay}"
-            Style="{StaticResource SfComboboxStyle}" />
+            Style="{StaticResource ComboboxStyle}" />
         <ComboBox
             Grid.Row="1"
             Grid.Column="3"
             ItemsSource="{Binding listePlaques}"
             SelectedValue="{Binding Plaques[1], Mode=TwoWay}"
-            Style="{StaticResource SfComboboxStyle}" />
+            Style="{StaticResource ComboboxStyle}" />
         <ComboBox
             Grid.Row="1"
             Grid.Column="4"
             ItemsSource="{Binding listePlaques}"
             SelectedValue="{Binding Plaques[2], Mode=TwoWay}"
-            Style="{StaticResource SfComboboxStyle}" />
+            Style="{StaticResource ComboboxStyle}" />
         <ComboBox
             Grid.Row="1"
             Grid.Column="5"
             ItemsSource="{Binding listePlaques}"
             SelectedValue="{Binding Plaques[3], Mode=TwoWay}"
-            Style="{StaticResource SfComboboxStyle}" />
+            Style="{StaticResource ComboboxStyle}" />
         <ComboBox
             Grid.Row="1"
             Grid.Column="6"
             ItemsSource="{Binding listePlaques}"
             SelectedValue="{Binding Plaques[4], Mode=TwoWay}"
-            Style="{StaticResource SfComboboxStyle}" />
+            Style="{StaticResource ComboboxStyle}" />
         <ComboBox
             Grid.Row="1"
             Grid.Column="7"
             ItemsSource="{Binding listePlaques}"
             SelectedValue="{Binding Plaques[5], Mode=TwoWay}"
-            Style="{StaticResource SfComboboxStyle}" />
+            Style="{StaticResource ComboboxStyle}" />
         <Border
             Grid.Row="1"
             Grid.Column="8"
             Grid.ColumnSpan="1"
             Style="{StaticResource BorderTitreStyle}">
-            <TextBlock Style="{StaticResource TextBoxTitreStyle}">
-                <TextBlock.Text>Cherche</TextBlock.Text>
-            </TextBlock>
+            <TextBlock Style="{StaticResource TextBlockTitreStyle}" Text="Cherche" />
         </Border>
         <TextBox
             Grid.Row="1"
             Grid.Column="9"
             Grid.ColumnSpan="2"
+            HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
             VerticalContentAlignment="Stretch"
-            Background="#FF9EB9EB"
+            extensions:TextBoxMask.Mask="999"
+            Background="#FF2966CC"
             BorderThickness="0"
-            Text="{Binding Search, Mode=TwoWay}"
-            TextAlignment="Center" />
+            SelectionHighlightColor="#7F2966CC"
+            Text="{Binding Search, Mode=TwoWay}" />
 
-        <!--<sfi:SfNumericUpDown
-            Grid.Row="1"
-            Grid.Column="9"
-            Grid.ColumnSpan="2"
-            VerticalAlignment="Stretch"
-            VerticalContentAlignment="Stretch"
-            Value="{Binding Search, Mode=TwoWay}"
-            Background="#FF9EB9EB"
-            BorderThickness="0"
-            FormatString="{}0"
-            Maximum="999"
-            MaximumNumberDecimalDigits="0"
-            Minimum="0"
-            SpinButtonsAlignment="Right"
-            TextAlignment="Center" />-->
         <Button
             Grid.Row="2"
             Grid.Column="1"
@@ -196,16 +200,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <!--<sfn:SfBusyIndicator
-                Grid.Column="0"
-                VerticalAlignment="Stretch"
-                AnimationSpeed="300"
-                AnimationType="Box"
-                Foreground="White"
-                IsBusy="{Binding IsBusy}"
-                ViewboxHeight="20"
-                ViewboxWidth="20"
-                Visibility="{Binding Visibility}" />-->
+
             <TextBlock
                 Grid.Column="1"
                 HorizontalAlignment="Center"
@@ -225,56 +220,53 @@
                 FontWeight="Bold"
                 Foreground="White"
                 TextAlignment="Center">
-                <Run Text="Durée: " />
+                <Run FontFamily="Segoe UI" Text="Durée: " />
                 <Run Text="{Binding Duree, Mode=OneWay}" />
                 <Run Text=" s" />
             </TextBlock>
         </Grid>
-        <Controls:DataGrid Grid.Row="4" Grid.Column="1"
-                           />
-
-        <!--<sf:SfDataGrid
+        <tlk:DataGrid
             x:Name="SolutionsData"
             Grid.Row="4"
             Grid.Column="1"
             Grid.ColumnSpan="10"
-            AllowFiltering="False"
-            AllowGrouping="False"
-            AllowSorting="False"
+            x:FieldModifier="public"
+            AlternatingRowBackground="#FF37AAA4"
             AutoGenerateColumns="False"
-            Background="White"
-            BorderBrush="Black"
-            ColumnSizer="Star"
-            CurrentCellBorderBrush="Navy"
-            FontSize="14"
-            HeaderStyle="{StaticResource SfGridHeaderCell}"
+            CellStyle="{StaticResource cellStyle}"
+            ColumnHeaderStyle="{StaticResource hedearCellStyle}"
+            GridLinesVisibility="All"
+            HeadersVisibility="All"
+            HorizontalGridLinesBrush="Black"
             ItemsSource="{Binding Solutions}"
-            NavigationMode="Cell"
-            RowSelectionBrush="LightBlue"
-            SelectionForegroundBrush="Navy"
-            x:FieldModifier="public">
-            <sf:SfDataGrid.Columns>
-                <sf:GridTextColumn
-                    HeaderText="Opération 1"
-                    MappingName="[0]"
-                    TextAlignment="Center" />
-                <sf:GridTextColumn
-                    HeaderText="Opération 2"
-                    MappingName="[1]"
-                    TextAlignment="Center" />
-                <sf:GridTextColumn
-                    HeaderText="Opération 3"
-                    MappingName="[2]"
-                    TextAlignment="Center" />
-                <sf:GridTextColumn
-                    HeaderText="Opération 4"
-                    MappingName="[3]"
-                    TextAlignment="Center" />
-                <sf:GridTextColumn
-                    HeaderText="Opération 5"
-                    MappingName="[4]"
-                    TextAlignment="Center" />
-            </sf:SfDataGrid.Columns>
-        </sf:SfDataGrid>-->
+            VerticalGridLinesBrush="Navy">
+            <tlk:DataGrid.Columns>
+                <tlk:DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding [0]}"
+                    Header="Opération 1"
+                    IsReadOnly="True" />
+                <tlk:DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding [1]}"
+                    Header="Opération 2"
+                    IsReadOnly="True" />
+                <tlk:DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding [2]}"
+                    Header="Opération 3"
+                    IsReadOnly="True" />
+                <tlk:DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding [3]}"
+                    Header="Opération 4"
+                    IsReadOnly="True" />
+                <tlk:DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding [4]}"
+                    Header="Opération 5"
+                    IsReadOnly="True" />
+            </tlk:DataGrid.Columns>
+        </tlk:DataGrid>
     </Grid>
 </Page>

@@ -181,10 +181,11 @@
             Grid.ColumnSpan="2"
             AccessKey="X"
             Background="{Binding Background}"
+            Click="ExportExcel_Click"
             Content="Excel"
             Foreground="{Binding Foreground}"
             Style="{StaticResource CebButtonStyle}"
-            ToolTipService.ToolTip="Raccourci: Alt+X" Click="ExportExcel_Click" />
+            ToolTipService.ToolTip="Raccourci: Alt+X" />
         <Grid
             Grid.Row="3"
             Grid.Column="1"

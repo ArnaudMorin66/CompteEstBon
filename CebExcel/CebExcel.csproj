@@ -19,7 +19,7 @@
     <PublishUrl>publish\</PublishUrl>
     <InstallUrl />
     <TargetCulture>fr</TargetCulture>
-    <ApplicationVersion>1.0.0.2</ApplicationVersion>
+    <ApplicationVersion>1.0.0.3</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>7</UpdateInterval>
@@ -31,6 +31,11 @@
     <OfficeApplicationDescription />
   </PropertyGroup>
   <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7 %28x86 et x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1</ProductName>
@@ -217,7 +222,7 @@
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{BAA0C2D2-18E2-41B9-852F-F413020CAA33}">
-        <ProjectProperties HostName="Ceb.xlsx" HostPackage="{3F2B7691-D1D1-402F-9370-2704A737CF60}" OfficeVersion="15.0" VstxVersion="4.0" ApplicationType="XLS" Language="CS" TemplatesPath="VSTOTemplates" DebugInfoExeName="C:\Program Files (x86)\Microsoft Office\root\Office16\Excel.exe" DebugInfoCommandLine="/x &quot;[$OUTPUT]Ceb.xlsx&quot;" />
+        <ProjectProperties HostName="Ceb.xlsx" HostPackage="{3F2B7691-D1D1-402F-9370-2704A737CF60}" OfficeVersion="15.0" VstxVersion="4.0" ApplicationType="XLS" Language="CS" TemplatesPath="VSTOTemplates" DebugInfoExeName="C:\Program Files (x86)\Microsoft Office\root\Office16\excel.exe" DebugInfoCommandLine="/x &quot;[$OUTPUT]Ceb.xlsx&quot;" />
         <Host Name="Excel Document" Path=".\Ceb.xlsx" GeneratedCodeNamespace="CebExcel" PublishedHash="204CB834041F1CBC24D408D43CEF39926D9B5D7A">
           <HostItem Name="Feuil1" Code="Ceb.cs" CanonicalName="Feuil1" PublishedHash="CACEA3CBC9998F1522CF35C0D21E496AFAA7B188" DisplayName="Compte est bon" Blueprint="Ceb.Designer.xml" GeneratedCode="Ceb.Designer.cs" />
           <HostItem Name="Feuil2" Code="Param.cs" CanonicalName="Feuil2" PublishedHash="5020098EE86E273278C5AB7C1E921E528E15F076" CanActivate="false" DisplayName="Param" Blueprint="Param.Designer.xml" GeneratedCode="Param.Designer.cs" />

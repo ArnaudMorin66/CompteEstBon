@@ -1,5 +1,4 @@
-﻿#region
-
+﻿
 using CompteEstBon;
 using System;
 using System.Collections.Generic;
@@ -15,13 +14,12 @@ using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
-#endregion
 
-namespace Ceb.Uwp
+namespace CebUwp
 {
-    
-    public class BindingTirage : INotifyPropertyChanged
+    class BindTirage : INotifyPropertyChanged
     {
+        public MainPage Main { get; set; }
         private Brush _background;
 
         private double _duree;
@@ -44,7 +42,7 @@ namespace Ceb.Uwp
 
         public IEnumerable<int> listePlaques { get; } = CebPlaque.ListePlaques.Distinct();
 
-        public ObservableCollection<CebBase> Solutions { get; } = new ObservableCollection<CebBase>();
+        public ObservableCollection<IList<string>> Solutions { get; } = new ObservableCollection<IList<string>>();
 
         public double Duree
         {
@@ -55,13 +53,14 @@ namespace Ceb.Uwp
                 NotifiedChanged();
             }
         }
-
+        private int _search;
         public int Search
         {
-            get => Tirage.Search;
+            get => _search;
             set
             {
-                if (Tirage.Search == value) return;
+                if (_search == value) return;
+                _search = value;
                 Tirage.Search = value;
                 NotifyChangedAndClear();
             }
@@ -136,7 +135,7 @@ namespace Ceb.Uwp
         /// Initialisation 
         /// </summary>
         /// <returns></returns>
-        public BindingTirage()
+        public BindTirage()
         {
             _background = new SolidColorBrush(Colors.Navy);
             Dispatcher = new DispatcherTimer
@@ -176,9 +175,6 @@ namespace Ceb.Uwp
                 case CebStatus.CompteApproche:
                     SetBrush(Colors.Firebrick, Colors.White);
                     break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -204,12 +200,10 @@ namespace Ceb.Uwp
 
         private void UpdateData()
         {
-            lock (Plaques)
-            {
-                for (var i = 0; i < Tirage.Plaques.Count; i++)
-                    Plaques[i] = Tirage.Plaques[i];
-            }
-            Solutions.Clear();
+            for (var i = 0; i < Tirage.Plaques.Count; i++)
+                Plaques[i] = Tirage.Plaques[i];
+            NotifiedChanged("Plaques");
+            Search = Tirage.Search;
         }
 
         #region Action
@@ -218,13 +212,13 @@ namespace Ceb.Uwp
         {
             await Tirage.ClearAsync();
             NotifiedChanged("Search");
-            UpdateData();
+            Solutions.Clear();
+            NotifyChangedAndClear("Solutions");
         }
 
         public async Task RandomAsync()
         {
             await Tirage.RandomAsync();
-            NotifiedChanged("Search");
             UpdateData();
         }
 
@@ -239,9 +233,7 @@ namespace Ceb.Uwp
             Result = Tirage.Status == CebStatus.CompteEstBon
                 ? "Le Compte est bon"
                 : (Tirage.Status == CebStatus.CompteApproche ? $"Compte approché: {Tirage.Found}" : "Tirage incorrect");
-
-            Tirage.Solutions.ForEach(s => Solutions.Add(s));
-
+            Tirage.Solutions.ForEach(s => Solutions.Add(s.Operations));
             Dispatcher.Stop();
             Duree = (DateTime.Now - _time).TotalSeconds;
             SendToast();
@@ -295,7 +287,7 @@ namespace Ceb.Uwp
             {
                 var sl = string.Empty;
                 var i = true;
-                foreach (var op in Solutions[0].Operations)
+                foreach (var op in Solutions[0])
                 {
                     var sep = (sl != string.Empty ? (i ? "\n" : ", ") : string.Empty);
                     sl += $"{sep}{op}";

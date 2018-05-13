@@ -1,5 +1,6 @@
 // Plage Compte est bon
 
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CompteEstBon
@@ -36,6 +37,7 @@ namespace CompteEstBon
             get => base.Value;
             set
             {
+                if (base.Value == value) return;
                 base.Value = value;
                 Tirage.Clear();
             }
@@ -46,7 +48,7 @@ namespace CompteEstBon
         public override int Rank => 0;
 
         public override bool IsValid => ListePlaques.Contains(Value);
-        public override string[] Operations => new[] {Text};
+        public override List<string> Operations => new List<string> {Text};
 
         public CebTirage Tirage { get; }
 
