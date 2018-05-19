@@ -7,16 +7,15 @@
     mc:Ignorable="d">
     <Style x:Key="CebButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
-        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
+
         <Setter Property="Padding" Value="0" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
-        <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontSize" Value="14" />
         <Setter Property="UseSystemFocusVisuals" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
@@ -97,10 +96,21 @@
         <Setter Property="CornerRadius" Value="4" />
     </Style>
     <Style x:Key="TextBlockTitreStyle" TargetType="TextBlock">
-        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontSize" Value="16" />
     </Style>
+    <AcrylicBrush
+        x:Key="CustomAcrylicBrush"
+        BackgroundSource="Backdrop"
+        FallbackColor="#FF808080"
+        TintColor="Black"
+        TintOpacity="0.50" />
+    <AcrylicBrush
+        x:Key="DatagridAcrylicBrush"
+        BackgroundSource="Backdrop"
+        FallbackColor="White"
+        TintColor="DeepSkyBlue"
+        TintOpacity="0.75" />
     <CompositeTransform x:Key="Transformation" />
 </ResourceDictionary>

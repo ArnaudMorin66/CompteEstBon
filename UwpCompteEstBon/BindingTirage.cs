@@ -42,7 +42,7 @@ namespace UwpCompteEstBon
 
         public ObservableCollection<int> Plaques { get; } = new ObservableCollection<int> { -1, -1, -1, -1, -1, -1 };
 
-        public IEnumerable<int> listePlaques { get; } = CebPlaque.ListePlaques.Distinct();
+        public IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
 
         public ObservableCollection<CebBase> Solutions { get; } = new ObservableCollection<CebBase>();
 
@@ -246,7 +246,7 @@ namespace UwpCompteEstBon
 
             Dispatcher.Stop();
             Duree = (DateTime.Now - _time).TotalSeconds;
-            SendToast();
+            // SendToast();
             IsEnabled = false;
             IsBusy = false;
             return Tirage.Status;
@@ -278,42 +278,42 @@ namespace UwpCompteEstBon
             Foreground = new SolidColorBrush(foreground);
         }
 
-        public void SendToast()
-        {
-            var msg = $"Recherche: {Tirage.Search} - Plaques: ";
-            for (var ip = 0; ip < Plaques.Count; ip++)
-            {
-                if (ip > 0)
-                {
-                    msg += ", ";
-                }
-                msg += Plaques[ip];
-            }
-            msg += "\n" + (Tirage.Status == CebStatus.CompteEstBon
-                ? "Le Compte est bon"
-                : (Tirage.Status == CebStatus.CompteApproche ? $"Compte approché: {Tirage.Found}" : "Tirage incorrect"));
+        //public void SendToast()
+        //{
+        //    var msg = $"Recherche: {Tirage.Search} - Plaques: ";
+        //    for (var ip = 0; ip < Plaques.Count; ip++)
+        //    {
+        //        if (ip > 0)
+        //        {
+        //            msg += ", ";
+        //        }
+        //        msg += Plaques[ip];
+        //    }
+        //    msg += "\n" + (Tirage.Status == CebStatus.CompteEstBon
+        //        ? "Le Compte est bon"
+        //        : (Tirage.Status == CebStatus.CompteApproche ? $"Compte approché: {Tirage.Found}" : "Tirage incorrect"));
 
-            if (Solutions.Count > 0)
-            {
-                var sl = string.Empty;
-                var i = true;
-                foreach (var op in Solutions[0].Operations)
-                {
-                    var sep = (sl != string.Empty ? (i ? "\n" : ", ") : string.Empty);
-                    sl += $"{sep}{op}";
-                    i = !i;
-                }
-                msg += $"\n{sl}";
-            }
-            msg += $"\nNb de solutions: {Solutions.Count}  - Durée: {Duree} s";
+        //    if (Solutions.Count > 0)
+        //    {
+        //        var sl = string.Empty;
+        //        var i = true;
+        //        foreach (var op in Solutions[0].Operations)
+        //        {
+        //            var sep = (sl != string.Empty ? (i ? "\n" : ", ") : string.Empty);
+        //            sl += $"{sep}{op}";
+        //            i = !i;
+        //        }
+        //        msg += $"\n{sl}";
+        //    }
+        //    msg += $"\nNb de solutions: {Solutions.Count}  - Durée: {Duree} s";
 
-            ToastTemplateType toastTemplate = ToastTemplateType.ToastText01;
-            XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
+        //    ToastTemplateType toastTemplate = ToastTemplateType.ToastText01;
+        //    XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
 
-            XmlNodeList toastTextElements = toastXml.GetElementsByTagName("text");
-            toastTextElements[0].AppendChild(toastXml.CreateTextNode(msg));
+        //    XmlNodeList toastTextElements = toastXml.GetElementsByTagName("text");
+        //    toastTextElements[0].AppendChild(toastXml.CreateTextNode(msg));
 
-            ToastNotificationManager.CreateToastNotifier().Show(new ToastNotification(toastXml));
-        }
+        //    ToastNotificationManager.CreateToastNotifier().Show(new ToastNotification(toastXml));
+        //}
     }
 }

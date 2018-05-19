@@ -86,7 +86,7 @@ namespace CompteEstBon
         /// </summary>
         public CebStatus Valid()
         {
-            Status = SearchValid && PlaquesValid ? CebStatus.Valid : CebStatus.Erreur;
+            Status = SearchValid && PlaquesValid  ? CebStatus.Valid : CebStatus.Erreur;
             return Status;
         }
 
@@ -98,7 +98,7 @@ namespace CompteEstBon
 
         public bool PlaquesValid => Plaques.All(p => p.IsValid &&
                                                      Plaques.Count(q => q.Value == p.Value) <=
-                                                     CebPlaque.ListePlaques.Count(n => n == p.Value));
+                                                     CebPlaque.ListePlaques.Count(n => n == p.Value)) && Plaques.Count == 6;
 
         /// <summary>
         ///     Select the value and the plaque's list

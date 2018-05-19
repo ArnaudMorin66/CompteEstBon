@@ -1,12 +1,8 @@
-﻿using System;
-using System.Data;
+﻿using CompteEstBon;
+using System;
 using System.Drawing;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using CompteEstBon;
-using Microsoft.VisualStudio.Tools.Applications.Runtime;
 using Excel = Microsoft.Office.Interop.Excel;
-using Office = Microsoft.Office.Core;
 
 namespace CebExcel
 {
@@ -90,7 +86,7 @@ namespace CebExcel
             this.Shutdown += new System.EventHandler(this.Feuil1_Shutdown);
         }
 
-        #endregion
+        #endregion Code généré par le Concepteur VSTO
 
         private void plaque_changed(Excel.Range Target)
         {
@@ -115,7 +111,7 @@ namespace CebExcel
 
         public void Resoudre()
         {
-            if (Tirage.Status !=  CebStatus.Valid)
+            if (Tirage.Status != CebStatus.Valid)
             {
                 return;
             }
@@ -123,8 +119,9 @@ namespace CebExcel
             Application.EnableEvents = false;
             Application.ScreenUpdating = false;
             var time = DateTime.Now;
-            Tirage.Resolve();
             dsSolutions.Clear();
+            Tirage.Resolve();
+
             if (Tirage.Status == CebStatus.CompteEstBon)
             {
                 Resultat.Value = "Compte est bon";

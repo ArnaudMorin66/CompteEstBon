@@ -1,5 +1,5 @@
-﻿
-using CompteEstBon;
+﻿using CompteEstBon;
+using Microsoft.Toolkit.Uwp.UI.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,41 +8,52 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Windows.Data.Xml.Dom;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Provider;
 using Windows.UI;
-using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
-
 namespace CebUwp
 {
-    class BindTirage : INotifyPropertyChanged
+    
+    internal class BindTirage : INotifyPropertyChanged
     {
-        public MainPage Main { get; set; }
         private Brush _background;
-
         private double _duree;
 
         private Brush _foreground = new SolidColorBrush(Colors.White);
 
         private bool _isBusy;
 
-        private bool _isEnabled = true;
-        private DateTime _time;
+        private bool _isCalculed = false;
+        private DateTimeOffset _time;
 
         private string _result = "Résoudre";
 
         private Visibility _visibility = Visibility.Collapsed;
         public DispatcherTimer Dispatcher;
+        public DispatcherTimer dateDispatcher;
 
         public CebTirage Tirage { get; } = new CebTirage();
 
         public ObservableCollection<int> Plaques { get; } = new ObservableCollection<int> { -1, -1, -1, -1, -1, -1 };
 
-        public IEnumerable<int> listePlaques { get; } = CebPlaque.ListePlaques.Distinct();
+        public IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
 
         public ObservableCollection<IList<string>> Solutions { get; } = new ObservableCollection<IList<string>>();
+        public string _date;
+
+        public string Date
+        {
+            get => _date;
+            set
+            {
+                _date = value;
+                NotifiedChanged();
+            }
+        }
 
         public double Duree
         {
@@ -53,14 +64,23 @@ namespace CebUwp
                 NotifiedChanged();
             }
         }
-        private int _search;
-        public int Search
+        private string _symbol;
+        public string Symbol
         {
-            get => _search;
+            get => _symbol;
             set
             {
-                if (_search == value) return;
-                _search = value;
+                _symbol = value;
+                NotifiedChanged();
+            }
+        }
+
+
+        public int Search
+        {
+            get => Tirage.Search; 
+            set
+            {
                 Tirage.Search = value;
                 NotifyChangedAndClear();
             }
@@ -108,6 +128,16 @@ namespace CebUwp
             }
         }
 
+        public bool IsCalculed
+        {
+            get => _isCalculed;
+            set
+            {
+                _isCalculed = value;
+                NotifiedChanged();
+            }
+        }
+
         public Visibility Visibility
         {
             get => _visibility;
@@ -118,34 +148,35 @@ namespace CebUwp
             }
         }
 
-        public bool IsEnabled
-        {
-            get => _isEnabled;
-            set
-            {
-                _isEnabled = value;
-                UpdateColors();
-                NotifiedChanged();
-            }
-        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Initialisation 
+        /// Initialisation
         /// </summary>
         /// <returns></returns>
         public BindTirage()
         {
+            Symbol = ListeSymbols[CebStatus.Valid];
             _background = new SolidColorBrush(Colors.Navy);
             Dispatcher = new DispatcherTimer
             {
                 Interval = new TimeSpan(100)
+
             };
             Dispatcher.Tick += (sender, e) =>
             {
-                Duree = (DateTime.Now - _time).TotalSeconds;
+                Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             };
+            dateDispatcher = new DispatcherTimer
+            {
+                Interval = new TimeSpan(1000)
+            };
+            dateDispatcher.Tick += (sender, e) =>
+            {
+                Date = Date = $"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}"; 
+            };
+
             Plaques.CollectionChanged += (sender, e) =>
             {
                 if (e.Action != NotifyCollectionChangedAction.Replace) return;
@@ -154,10 +185,19 @@ namespace CebUwp
                 NotifyChangedAndClear("Plaques");
             };
             UpdateData();
+            UpdateColors();
+            Date = $"{DateTime.Now:dddd MM yyyy, HH:mm:ss}";
+            dateDispatcher.Start();
+        }
+
+        private void DateDispatcher_Tick(object sender, object e)
+        {
+            throw new NotImplementedException();
         }
 
         private void UpdateColors()
         {
+            Symbol = ListeSymbols[Tirage.Status];
             switch (Tirage.Status)
             {
                 case CebStatus.Valid:
@@ -173,7 +213,10 @@ namespace CebUwp
                     break;
 
                 case CebStatus.CompteApproche:
-                    SetBrush(Colors.Firebrick, Colors.White);
+                    SetBrush(Colors.Salmon, Colors.White);
+                    break;
+                case CebStatus.EnCours:
+                    SetBrush(Colors.Green, Colors.White);
                     break;
             }
         }
@@ -184,26 +227,28 @@ namespace CebUwp
         {
             Duree = 0;
             Solutions.Clear();
+            IsCalculed = false;
 
             if (Tirage.Status != CebStatus.Erreur)
             {
                 Result = "Résoudre";
-                IsEnabled = true;
             }
             else
             {
                 Result = "Tirage incorrect";
-                IsEnabled = false;
             }
+            UpdateColors();
             NotifiedChanged(propertyName);
         }
 
         private void UpdateData()
         {
-            for (var i = 0; i < Tirage.Plaques.Count; i++)
-                Plaques[i] = Tirage.Plaques[i];
-            NotifiedChanged("Plaques");
-            Search = Tirage.Search;
+            lock (Plaques)
+            {
+                for (var i = 0; i < Tirage.Plaques.Count; i++)
+                    Plaques[i] = Tirage.Plaques[i];
+            }
+            NotifiedChanged("Search");
         }
 
         #region Action
@@ -211,33 +256,39 @@ namespace CebUwp
         public async Task ClearAsync()
         {
             await Tirage.ClearAsync();
-            NotifiedChanged("Search");
             Solutions.Clear();
+            FirstSolutionString = "";
             NotifyChangedAndClear("Solutions");
         }
 
         public async Task RandomAsync()
         {
             await Tirage.RandomAsync();
+            FirstSolutionString = "";
             UpdateData();
         }
 
         public async Task<CebStatus> ResolveAsync()
         {
             IsBusy = true;
-            _time = DateTime.Now;
+
             Result = "...Calcul...";
+            Symbol = ListeSymbols[CebStatus.EnCours];
             SetBrush(Colors.Green, Colors.White);
+            _time = DateTimeOffset.Now;
             Dispatcher.Start();
             await Tirage.ResolveAsync();
+
             Result = Tirage.Status == CebStatus.CompteEstBon
                 ? "Le Compte est bon"
-                : (Tirage.Status == CebStatus.CompteApproche ? $"Compte approché: {Tirage.Found}" : "Tirage incorrect");
+                : (Tirage.Status == CebStatus.CompteApproche ?
+                $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}" : "Tirage incorrect");
+            IsCalculed = (Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche);
+            FirstSolutionString = Tirage.Solutions[0].ToString();
             Tirage.Solutions.ForEach(s => Solutions.Add(s.Operations));
             Dispatcher.Stop();
-            Duree = (DateTime.Now - _time).TotalSeconds;
-            SendToast();
-            IsEnabled = false;
+            Duree = (DateTimeOffset.Now - _time).TotalSeconds;
+            UpdateColors();
             IsBusy = false;
             return Tirage.Status;
         }
@@ -246,64 +297,75 @@ namespace CebUwp
 
         public void SetBrush(Color background, Color foreground)
         {
-            LinearGradientBrush myLinearGradientBrush =
-                new LinearGradientBrush
-                {
-                    StartPoint = new Windows.Foundation.Point(0, 0),
-                    EndPoint = new Windows.Foundation.Point(0, 1)
-                };
-
-            myLinearGradientBrush.GradientStops.Add(new GradientStop
+            RadialGradientBrush brush = new RadialGradientBrush
+            {
+                AlphaMode = AlphaMode.Premultiplied,
+                RadiusX = 0.6,
+                RadiusY = 0.8
+            };
+            brush.SpreadMethod = GradientSpreadMethod.Reflect;
+            brush.GradientStops.Add(new GradientStop
             {
                 Color = background,
                 Offset = 0.0
             });
-
-            myLinearGradientBrush.GradientStops.Add(new GradientStop
+            brush.GradientStops.Add(new GradientStop
             {
                 Color = Colors.Black,
+                Offset = 0.9
+            });
+            brush.GradientStops.Add(new GradientStop
+            {
+                Color = Colors.Transparent,
                 Offset = 1.0
             });
-            Background = myLinearGradientBrush;
+            Background = brush;
             Foreground = new SolidColorBrush(foreground);
         }
 
-        public void SendToast()
+        public string _firstSolutionString;
+
+        public string FirstSolutionString
         {
-            var msg = $"Recherche: {Tirage.Search} - Plaques: ";
-            for (var ip = 0; ip < Plaques.Count; ip++)
+            get
             {
-                if (ip > 0)
-                {
-                    msg += ", ";
-                }
-                msg += Plaques[ip];
+                return _firstSolutionString;
             }
-            msg += "\n" + (Tirage.Status == CebStatus.CompteEstBon
-                ? "Le Compte est bon"
-                : (Tirage.Status == CebStatus.CompteApproche ? $"Compte approché: {Tirage.Found}" : "Tirage incorrect"));
-
-            if (Solutions.Count > 0)
+            set
             {
-                var sl = string.Empty;
-                var i = true;
-                foreach (var op in Solutions[0])
-                {
-                    var sep = (sl != string.Empty ? (i ? "\n" : ", ") : string.Empty);
-                    sl += $"{sep}{op}";
-                    i = !i;
-                }
-                msg += $"\n{sl}";
+                _firstSolutionString = value;
+                NotifiedChanged();
             }
-            msg += $"\nNb de solutions: {Solutions.Count}  - Durée: {Duree} s";
+        }
 
-            ToastTemplateType toastTemplate = ToastTemplateType.ToastText01;
-            XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
+        public Dictionary<CebStatus, string> ListeSymbols { get; } = new Dictionary<CebStatus, String>()
+        {
+            [CebStatus.CompteApproche] = "Dislike",
+            [CebStatus.CompteEstBon] = "Like",
+            [CebStatus.Valid] = "Play",
+            [CebStatus.EnCours] = "Sync",
+            [CebStatus.Erreur] = "ReportHacked"
+        };
 
-            XmlNodeList toastTextElements = toastXml.GetElementsByTagName("text");
-            toastTextElements[0].AppendChild(toastXml.CreateTextNode(msg));
-
-            ToastNotificationManager.CreateToastNotifier().Show(new ToastNotification(toastXml));
+        public async Task ExportToCsvAsync()
+        {
+            FileSavePicker savePicker = new FileSavePicker
+            {
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+            };
+            savePicker.FileTypeChoices.Add("csv", new List<string>() { ".csv" });
+            savePicker.SuggestedFileName = "Ceb";
+            StorageFile file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                CachedFileManager.DeferUpdates(file);
+                var tmp = string.Join(";", Plaques.Select(p => p.ToString()));
+                await FileIO.WriteTextAsync(file, $"Plaques;{tmp};Recherche;{Tirage.Search}\n");
+                await FileIO.AppendTextAsync(file, $"{Result};Nb solutions:{Solutions.Count};Durée:{Duree}\n\n");
+                await FileIO.AppendTextAsync(file, "Operation 1;Operation 2;Operation 3;Operation 4;Operation 5\n");
+                await FileIO.AppendLinesAsync(file, Solutions.Select((p) => string.Join(";", p)));
+                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+            }
         }
     }
 }

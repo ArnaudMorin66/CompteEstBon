@@ -7,10 +7,10 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
@@ -27,28 +27,72 @@ namespace CebUwp
         public MainPage()
         {
             this.InitializeComponent();
-            this.Tirage.Main = this;
+            // this.bindTirage.Main = this;
         }
         private async void Hasard_Click(object sender, RoutedEventArgs e)
         {
-            await Tirage.RandomAsync();
+            await bindTirage.RandomAsync();
         }
 
         private async void Resoudre_Click(object sender, RoutedEventArgs e)
         {
-            switch (Tirage.Tirage.Status)
+            switch (bindTirage.Tirage.Status)
             {
                 case CebStatus.Valid:
-                    await Tirage.ResolveAsync();
+                    await bindTirage.ResolveAsync();
+                    cebNotification.Show(5000);
+
                     break;
                 case CebStatus.CompteEstBon:
                 case CebStatus.CompteApproche:
-                    await Tirage.ClearAsync();
+                    await bindTirage.ClearAsync();
                     break;
                 case CebStatus.Erreur:
-                    await Tirage.RandomAsync();
+                    await bindTirage.RandomAsync();
                     break;
             }
+        }
+
+
+        private void Result_Click(object sender, RoutedEventArgs e)
+        {
+            if (bindTirage.Tirage.Status == CebStatus.CompteApproche || bindTirage.Tirage.Status == CebStatus.CompteEstBon)
+                cebNotification.Show(5000);
+        }
+
+        private void TbMoins_Click(object sender, RoutedEventArgs e)
+        {
+            if (bindTirage.Search > 100)
+            {
+                bindTirage.Search--;
+            }
+        }
+
+        private void TbPlus_Click(object sender, RoutedEventArgs e)
+        {
+            if (bindTirage.Search < 999)
+            {
+                bindTirage.Search++;
+            }
+        }
+
+        private async void ExportCSV_Click(object sender, RoutedEventArgs e)
+        {
+            await bindTirage.ExportToCsvAsync();
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            this.bindTirage.dateDispatcher.Stop();
+        }
+
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            ApplicationView view = ApplicationView.GetForCurrentView();
+            if (view.IsFullScreenMode)
+                view.ExitFullScreenMode();
+            else
+                view.TryEnterFullScreenMode();
         }
     }
 }

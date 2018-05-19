@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace CebUwp
@@ -39,6 +31,25 @@ namespace CebUwp
         /// <param name="e">Détails concernant la requête et le processus de lancement.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+
+            // Set active window colors
+            // titleBar.ForegroundColor = Windows.UI.Colors.White;
+            // titleBar.BackgroundColor = Windows.UI.Colors.Blue;
+            titleBar.ButtonForegroundColor = Windows.UI.Colors.White;
+            titleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
+            titleBar.ButtonHoverForegroundColor = Windows.UI.Colors.Black;
+            titleBar.ButtonHoverBackgroundColor = Windows.UI.Colors.Transparent;
+            titleBar.ButtonPressedForegroundColor = Windows.UI.Colors.Yellow;
+            titleBar.ButtonPressedBackgroundColor = Windows.UI.Colors.Navy;
+
+            // Set inactive window colors
+            titleBar.InactiveForegroundColor = Windows.UI.Colors.Gray;
+            titleBar.InactiveBackgroundColor = Windows.UI.Colors.SeaGreen;
+            titleBar.ButtonInactiveForegroundColor = Windows.UI.Colors.Gray;
+            titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.SeaGreen;
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Ne répétez pas l'initialisation de l'application lorsque la fenêtre comporte déjà du contenu,
@@ -78,7 +89,7 @@ namespace CebUwp
         /// </summary>
         /// <param name="sender">Frame à l'origine de l'échec de navigation.</param>
         /// <param name="e">Détails relatifs à l'échec de navigation</param>
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }

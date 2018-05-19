@@ -49,8 +49,10 @@ namespace UwpCompteEstBon
         }
         private async System.Threading.Tasks.Task ExportGridToExcelAsync()
         {
-            FileSavePicker savePicker = new FileSavePicker();
-            savePicker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
+            FileSavePicker savePicker = new FileSavePicker
+            {
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+            };
             // Dropdown of file types the user can save the file as
             savePicker.FileTypeChoices.Add("Excel", new List<string>() { ".xlsx" });
             // Default file name if the user does not type one in or select a file to replace
