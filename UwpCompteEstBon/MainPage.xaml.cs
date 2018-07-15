@@ -28,22 +28,22 @@ namespace UwpCompteEstBon
         }
         private async void Hasard_Click(object sender, RoutedEventArgs e)
         {
-            await Tirage.RandomAsync();
+            await bindTirage.RandomAsync();
         }
 
         private async void Resoudre_Click(object sender, RoutedEventArgs e)
         {
-            switch (Tirage.Tirage.Status)
+            switch (bindTirage.Tirage.Status)
             {
                 case CebStatus.Valid:
-                    await Tirage.ResolveAsync();
+                    await bindTirage.ResolveAsync();
                     break;
                 case CebStatus.CompteEstBon:
                 case CebStatus.CompteApproche:
-                    await Tirage.ClearAsync();
+                    await bindTirage.ClearAsync();
                     break;
                 case CebStatus.Erreur:
-                    await Tirage.RandomAsync();
+                    await bindTirage.RandomAsync();
                     break;
             }
         }

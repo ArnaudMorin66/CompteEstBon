@@ -1,10 +1,9 @@
-namespace CompteEstBon
-{
+namespace CompteEstBon {
+
     [System.Runtime.InteropServices.Guid("9CA27D73-CD46-41CE-B666-3F589F98D328")]
-    public class CebFind
-    {
-        public CebFind()
-        {
+    public class CebFind {
+
+        public CebFind() {
             Reset();
         }
 
@@ -12,15 +11,13 @@ namespace CompteEstBon
 
         public int Found2 { get; private set; }
 
-        public void Add(int value)
-        {
+        public void Add(int value) {
             if (value == Found1 || value == Found2) return;
             if (value == int.MaxValue)
                 Found2 = int.MaxValue;
             else if (value > Found1)
                 Found2 = value;
-            else
-            {
+            else {
                 Found2 = Found1;
                 Found1 = value;
             }
@@ -30,8 +27,7 @@ namespace CompteEstBon
 
         public bool IsUnique => Found2 == int.MaxValue;
 
-        public void Reset(int value = int.MaxValue)
-        {
+        public void Reset(int value = int.MaxValue) {
             Found1 = value;
             Found2 = int.MaxValue;
         }

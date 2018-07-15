@@ -23,20 +23,20 @@ namespace UwpCompteEstBon
     public class BindingTirage : INotifyPropertyChanged
     {
         private Brush _background;
-
         private double _duree;
 
         private Brush _foreground = new SolidColorBrush(Colors.White);
 
         private bool _isBusy;
 
-        private bool _isEnabled = true;
-        private DateTime _time;
+        private bool _isCalculed = false;
+        private DateTimeOffset _time;
 
         private string _result = "Résoudre";
 
         private Visibility _visibility = Visibility.Collapsed;
         public DispatcherTimer Dispatcher;
+        public DispatcherTimer dateDispatcher;
 
         public CebTirage Tirage { get; } = new CebTirage();
 
@@ -44,97 +44,99 @@ namespace UwpCompteEstBon
 
         public IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
 
-        public ObservableCollection<CebBase> Solutions { get; } = new ObservableCollection<CebBase>();
+        public ObservableCollection<IList<string>> Solutions { get; } = new ObservableCollection<IList<string>>();
+        public string _date;
 
-        public double Duree
-        {
+        public string Date {
+            get => _date;
+            set {
+                _date = value;
+                NotifiedChanged();
+            }
+        }
+
+        public double Duree {
             get => _duree;
-            set
-            {
+            set {
                 _duree = value;
                 NotifiedChanged();
             }
         }
-        private int _search; 
-        public int Search
-        {
-            get => _search;
-            set
-            {
-                if (_search == value) return;
-                _search = value;
-                Tirage.Search = value;
-                NotifyChangedAndClear();
+        private string _symbol;
+        public string Symbol {
+            get => _symbol;
+            set {
+                _symbol = value;
+                NotifiedChanged();
             }
         }
 
-        public string Result
-        {
+
+        public int Search {
+            get => Tirage.Search;
+            set {
+                Tirage.Search = value;
+                // ClearData();
+                NotifiedChanged();
+                ClearData();
+            }
+        }
+
+        public string Result {
             get => _result;
-            set
-            {
+            set {
                 if (value == _result) return;
                 _result = value;
                 NotifiedChanged();
             }
         }
 
-        public Brush Background
-        {
+        public Brush Background {
             get => _background;
-            set
-            {
+            set {
                 _background = value;
                 NotifiedChanged();
             }
         }
 
-        public Brush Foreground
-        {
+        public Brush Foreground {
             get => _foreground;
-            set
-            {
+            set {
                 _foreground = value;
                 NotifiedChanged();
             }
         }
 
-        public bool IsBusy
-        {
+        public bool IsBusy {
             get => _isBusy;
-            set
-            {
+            set {
                 _isBusy = value;
                 Visibility = _isBusy ? Visibility.Visible : Visibility.Collapsed;
                 NotifiedChanged();
             }
         }
 
-        public Visibility Visibility
-        {
+        public bool IsCalculed {
+            get => _isCalculed;
+            set {
+                _isCalculed = value;
+                NotifiedChanged();
+            }
+        }
+
+        public Visibility Visibility {
             get => _visibility;
-            set
-            {
+            set {
                 _visibility = value;
                 NotifiedChanged();
             }
         }
 
-        public bool IsEnabled
-        {
-            get => _isEnabled;
-            set
-            {
-                _isEnabled = value;
-                UpdateColors();
-                NotifiedChanged();
-            }
-        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Initialisation 
+        /// Initialisation
         /// </summary>
         /// <returns></returns>
         public BindingTirage()
@@ -143,19 +145,34 @@ namespace UwpCompteEstBon
             Dispatcher = new DispatcherTimer
             {
                 Interval = new TimeSpan(100)
+
             };
-            Dispatcher.Tick += (sender, e) =>
-            {
-                Duree = (DateTime.Now - _time).TotalSeconds;
+            Dispatcher.Tick += (sender, e) => {
+                Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             };
-            Plaques.CollectionChanged += (sender, e) =>
+            dateDispatcher = new DispatcherTimer
             {
+                Interval = new TimeSpan(1000)
+            };
+            dateDispatcher.Tick += (sender, e) => {
+                Date = Date = $"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
+            };
+
+            Plaques.CollectionChanged += (sender, e) => {
                 if (e.Action != NotifyCollectionChangedAction.Replace) return;
                 var i = e.NewStartingIndex;
                 Tirage.Plaques[i].Value = Plaques[i];
-                NotifyChangedAndClear("Plaques");
+                ClearData();
             };
             UpdateData();
+            UpdateColors();
+            Date = $"{DateTime.Now:dddd MM yyyy, HH:mm:ss}";
+            dateDispatcher.Start();
+        }
+
+        private void DateDispatcher_Tick(object sender, object e)
+        {
+            throw new NotImplementedException();
         }
 
         private void UpdateColors()
@@ -175,32 +192,32 @@ namespace UwpCompteEstBon
                     break;
 
                 case CebStatus.CompteApproche:
-                    SetBrush(Colors.Firebrick, Colors.White);
+                    SetBrush(Colors.Salmon, Colors.White);
                     break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
+                case CebStatus.EnCours:
+                    SetBrush(Colors.Green, Colors.White);
+                    break;
             }
         }
 
         private void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        private void NotifyChangedAndClear([CallerMemberName] string propertyName = "")
+        private void ClearData()
         {
             Duree = 0;
+            FirstSolutionString = "";
             Solutions.Clear();
+            IsCalculed = false;
 
             if (Tirage.Status != CebStatus.Erreur)
             {
                 Result = "Résoudre";
-                IsEnabled = true;
             }
             else
             {
                 Result = "Tirage incorrect";
-                IsEnabled = false;
             }
-            NotifiedChanged(propertyName);
+            UpdateColors();
         }
 
         private void UpdateData()
@@ -210,8 +227,7 @@ namespace UwpCompteEstBon
                 for (var i = 0; i < Tirage.Plaques.Count; i++)
                     Plaques[i] = Tirage.Plaques[i];
             }
-            Search = Tirage.Search;
-
+            NotifiedChanged("Search");
         }
 
         #region Action
@@ -219,41 +235,53 @@ namespace UwpCompteEstBon
         public async Task ClearAsync()
         {
             await Tirage.ClearAsync();
-            NotifiedChanged("Search");
-            Solutions.Clear();
-            NotifyChangedAndClear("Solutions");
+            ClearData();
         }
 
         public async Task RandomAsync()
         {
             await Tirage.RandomAsync();
+            FirstSolutionString = "";
             UpdateData();
         }
 
         public async Task<CebStatus> ResolveAsync()
         {
             IsBusy = true;
-            _time = DateTime.Now;
+
             Result = "...Calcul...";
             SetBrush(Colors.Green, Colors.White);
+            _time = DateTimeOffset.Now;
             Dispatcher.Start();
             await Tirage.ResolveAsync();
+
             Result = Tirage.Status == CebStatus.CompteEstBon
                 ? "Le Compte est bon"
-                : (Tirage.Status == CebStatus.CompteApproche ? $"Compte approché: {Tirage.Found}" : "Tirage incorrect");
-
-            Tirage.Solutions.ForEach(s => Solutions.Add(s));
-
+                : (Tirage.Status == CebStatus.CompteApproche ?
+                $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}" : "Tirage incorrect");
+            IsCalculed = (Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche);
+            FirstSolutionString = Tirage.Solutions[0].ToString();
+            Tirage.Solutions.ForEach(s => Solutions.Add(s.Operations));
             Dispatcher.Stop();
-            Duree = (DateTime.Now - _time).TotalSeconds;
-            // SendToast();
-            IsEnabled = false;
+            Duree = (DateTimeOffset.Now - _time).TotalSeconds;
+            UpdateColors();
             IsBusy = false;
             return Tirage.Status;
         }
 
-        #endregion Action
 
+        #endregion Action
+        public string _firstSolutionString;
+
+        public string FirstSolutionString {
+            get {
+                return _firstSolutionString;
+            }
+            set {
+                _firstSolutionString = value;
+                NotifiedChanged();
+            }
+        }
         public void SetBrush(Color background, Color foreground)
         {
             LinearGradientBrush myLinearGradientBrush =
@@ -277,43 +305,5 @@ namespace UwpCompteEstBon
             Background = myLinearGradientBrush;
             Foreground = new SolidColorBrush(foreground);
         }
-
-        //public void SendToast()
-        //{
-        //    var msg = $"Recherche: {Tirage.Search} - Plaques: ";
-        //    for (var ip = 0; ip < Plaques.Count; ip++)
-        //    {
-        //        if (ip > 0)
-        //        {
-        //            msg += ", ";
-        //        }
-        //        msg += Plaques[ip];
-        //    }
-        //    msg += "\n" + (Tirage.Status == CebStatus.CompteEstBon
-        //        ? "Le Compte est bon"
-        //        : (Tirage.Status == CebStatus.CompteApproche ? $"Compte approché: {Tirage.Found}" : "Tirage incorrect"));
-
-        //    if (Solutions.Count > 0)
-        //    {
-        //        var sl = string.Empty;
-        //        var i = true;
-        //        foreach (var op in Solutions[0].Operations)
-        //        {
-        //            var sep = (sl != string.Empty ? (i ? "\n" : ", ") : string.Empty);
-        //            sl += $"{sep}{op}";
-        //            i = !i;
-        //        }
-        //        msg += $"\n{sl}";
-        //    }
-        //    msg += $"\nNb de solutions: {Solutions.Count}  - Durée: {Duree} s";
-
-        //    ToastTemplateType toastTemplate = ToastTemplateType.ToastText01;
-        //    XmlDocument toastXml = ToastNotificationManager.GetTemplateContent(toastTemplate);
-
-        //    XmlNodeList toastTextElements = toastXml.GetElementsByTagName("text");
-        //    toastTextElements[0].AppendChild(toastXml.CreateTextNode(msg));
-
-        //    ToastNotificationManager.CreateToastNotifier().Show(new ToastNotification(toastXml));
-        //}
     }
 }

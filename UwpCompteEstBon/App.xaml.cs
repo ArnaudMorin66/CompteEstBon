@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Syncfusion.Licensing;
 
 namespace UwpCompteEstBon
 {
@@ -28,8 +29,10 @@ namespace UwpCompteEstBon
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
+            SyncfusionLicenseProvider.RegisterLicense("Mjg1MkAzMTM2MmUzMjJlMzBjMi9iUERWdFJoU09OUW9uNWF5M2ZGbnJRbEEyM1hIb3loaVNDZitRNGZBPQ==;Mjg1M0AzMTM2MmUzMjJlMzBCT2NHVWQ5L0FmZGNFOTlTYTc1TzRVdHRKZDYvVEdXWEY3YXlaNWJEY29zPQ==;Mjg1NEAzMTM2MmUzMjJlMzBDaW9MU01jQloyODRzVjYrQ0dMeXNhVThkakxWTFdidGppUkNWMEhoL3hFPQ==;Mjg1NUAzMTM2MmUzMjJlMzBGSDY3dzhCZTlpZ2hNTG1VQTJFbW45LzlHclcrQ0l0NjBVdEFhZlhMdU9rPQ==;Mjg1NkAzMTM2MmUzMjJlMzBpbVRwUTRDUTVURHhpTk9YcnptN1AxcldtcnhRZW1YT2I5M0V5aDlvdjU0PQ==;Mjg1N0AzMTM2MmUzMjJlMzBvSnRPRFB5MDB0dExPOVo3L3JmNlFPL0xjM2pheTVPSkhCaFRlYktLelhnPQ==;Mjg1OEAzMTM2MmUzMjJlMzBUVldIT05YMytaaXdlSCtoVCtMQy9CN3htZDZFbWhOOG9DcXdqUmtDSVdFPQ==;Mjg1OUAzMTM2MmUzMjJlMzBoRjBzZ0VPU2JjQXltVnk4cTFVOEJQQ3dTbDdtNlN3SXppYkt4eFpLaVJFPQ==;Mjg2MEAzMTM2MmUzMjJlMzBvRCtEK3JJbkh0OHV4SWVjalI2d1pHb2hwQVJVaUVCUkhNUTJLaDNMVk9JPQ==");
+
+            InitializeComponent();
+            Suspending += OnSuspending;
         }
 
         /// <summary>

@@ -1,14 +1,13 @@
-﻿using System;
-using CompteEstBon;
+﻿using CompteEstBon;
 using Microsoft.Extensions.CommandLineUtils;
+using System;
 using static System.Console;
-using Newtonsoft.Json;
 
 namespace CsCeb
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var tirage = new CebTirage();
             var parser = new CommandLineApplication(false);
@@ -55,7 +54,7 @@ namespace CsCeb
             }
             WriteLine();
             WriteLine();
-            WriteLine($"Durée du calcul: {ts.TotalMilliseconds/1000}");
+            WriteLine($"Durée du calcul: {ts.TotalMilliseconds / 1000}");
 
             if (result == CebStatus.Erreur)
             {
@@ -89,8 +88,7 @@ namespace CsCeb
                 ReadLine();
         }
 
-
-        static TimeSpan EvalTime(Func<CebStatus> action, out CebStatus status)
+        private static TimeSpan EvalTime(Func<CebStatus> action, out CebStatus status)
         {
             var dt = DateTime.Now;
             status = action();
