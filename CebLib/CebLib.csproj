@@ -84,18 +84,33 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CebBase.cs" />
-    <Compile Include="CebFind.cs" />
-    <Compile Include="CebOperation.cs" />
-    <Compile Include="CebPlaque.cs" />
-    <Compile Include="CebStatus.cs" />
-    <Compile Include="CebTirage.cs" />
+    <Compile Include="..\CompteEstBon\CebBase.cs">
+      <Link>CebBase.cs</Link>
+    </Compile>
+    <Compile Include="..\CompteEstBon\CebFind.cs">
+      <Link>CebFind.cs</Link>
+    </Compile>
+    <Compile Include="..\CompteEstBon\CebOperation.cs">
+      <Link>CebOperation.cs</Link>
+    </Compile>
+    <Compile Include="..\CompteEstBon\CebPlaque.cs">
+      <Link>CebPlaque.cs</Link>
+    </Compile>
+    <Compile Include="..\CompteEstBon\CebStatus.cs">
+      <Link>CebStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\CompteEstBon\CebTirage.cs">
+      <Link>CebTirage.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\CebLib.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.0-Preview1-26502-02</Version>
+    </PackageReference>
+    <PackageReference Include="System.ValueTuple">
+      <Version>4.5.0</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

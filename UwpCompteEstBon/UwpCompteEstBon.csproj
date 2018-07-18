@@ -129,13 +129,13 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ceb.snk" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\CebLib\CebLib.csproj">
       <Project>{5e976ef9-5db2-4b32-9bd6-50f62f590245}</Project>
       <Name>CebLib</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ceb.snk" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '15.0' ">
     <VisualStudioVersion>15.0</VisualStudioVersion>
