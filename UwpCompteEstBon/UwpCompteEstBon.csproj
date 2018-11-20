@@ -110,22 +110,22 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.0-Preview1-26502-02</Version>
+      <Version>6.2.2</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfBusyIndicator.UWP">
-      <Version>16.2.0.41</Version>
+      <Version>16.3.0.29</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfGrid.UWP">
-      <Version>16.2.0.41</Version>
+      <Version>16.3.0.29</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfGridConverter.UWP">
-      <Version>16.2.0.41</Version>
+      <Version>16.2.0.46</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfInput.UWP">
-      <Version>16.2.0.41</Version>
+      <Version>16.3.0.29</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.XlsIO.UWP">
-      <Version>16.2.0.41</Version>
+      <Version>16.3.0.29</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

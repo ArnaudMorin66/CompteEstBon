@@ -1,12 +1,13 @@
 //Arnaud Morin
 
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
-namespace CompteEstBon
-{
+namespace CompteEstBon {
+
     [System.Runtime.InteropServices.Guid("F4D942FB-85DF-4391-AE82-9EFE20DDADB0")]
-    public abstract class CebBase
-    {
+    public abstract class CebBase {
         /// <summary>
         /// Valeur de la donnée
         /// </summary>
@@ -20,6 +21,9 @@ namespace CompteEstBon
         public string this[int index] => index < Operations.Count ? Operations[index] : null;
 
         public virtual List<string> Operations { get; set; }
+
+        public string[] ToArray() => Operations.ToArray();
+
         public virtual bool IsValid => Value > 0;
 
         public override int GetHashCode() {
@@ -34,6 +38,17 @@ namespace CompteEstBon
         public static explicit operator int(CebBase p) => p.Value;
 
         public override string ToString() => Value.ToString();
+
+        public CebOperationDetail ToCebOperationDetail() {
+            var elt = new CebOperationDetail();
+
+            foreach (var fld in elt.GetType().GetProperties()
+                .Where(p => p.Name.StartsWith("op"))
+                .Select((q, i) => new { instance = q, value = i >= Operations.Count ? "" : Operations[i] })) {
+                fld.instance.SetValue(elt, fld.value);
+            }
+            return elt;
+        }
 
         /// <summary>
         /// Détermine si le <see cref="T:System.Object" /> spécifié est égal au

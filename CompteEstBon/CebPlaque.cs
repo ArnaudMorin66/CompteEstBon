@@ -11,8 +11,8 @@ namespace CompteEstBon {
         public event System.EventHandler<int> ValueEvent;
 
         public static readonly int[] ListePlaques = {
-            1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 25,
-            25, 50, 75, 100
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
+            25, 50, 75, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,25
         };
 
         /// <summary>

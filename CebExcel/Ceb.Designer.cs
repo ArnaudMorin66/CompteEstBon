@@ -23,21 +23,11 @@ namespace CebExcel {
         
         internal Microsoft.Office.Tools.Excel.NamedRange NbSolutions;
         
-        internal Microsoft.Office.Tools.Excel.NamedRange Plaque_1;
-        
-        internal Microsoft.Office.Tools.Excel.NamedRange Plaque_2;
-        
-        internal Microsoft.Office.Tools.Excel.NamedRange Plaque_3;
-        
-        internal Microsoft.Office.Tools.Excel.NamedRange Plaque_4;
-        
-        internal Microsoft.Office.Tools.Excel.NamedRange Plaque_5;
-        
-        internal Microsoft.Office.Tools.Excel.NamedRange Plaque_6;
-        
         internal Microsoft.Office.Tools.Excel.NamedRange Recherche;
         
         internal Microsoft.Office.Tools.Excel.NamedRange Resultat;
+        
+        internal Microsoft.Office.Tools.Excel.NamedRange plaques;
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Tools.Office.ProgrammingModel.dll", "15.0.0.0")]
         private global::System.Object missing = global::System.Type.Missing;
@@ -45,20 +35,6 @@ namespace CebExcel {
         internal Microsoft.Office.Tools.Excel.Controls.Button btnHasard;
         
         internal Microsoft.Office.Tools.Excel.Controls.Button btnResoudre;
-        
-        internal System.Data.DataSet dsSolutions;
-        
-        internal System.Data.DataTable Solutions;
-        
-        internal System.Data.DataColumn Operation1;
-        
-        internal System.Data.DataColumn Operation2;
-        
-        internal System.Data.DataColumn Operation3;
-        
-        internal System.Data.DataColumn Operation4;
-        
-        internal System.Data.DataColumn Operation5;
         
         /// 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -125,7 +101,6 @@ namespace CebExcel {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Tools.Office.ProgrammingModel.dll", "15.0.0.0")]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
         private void BindToData() {
-            this.tbSolutions.SetDataBinding(this.dsSolutions, "Solutions", "Opération 1", "Opération 2", "Opération 3", "Opération 4", "Opération 5");
         }
         
         /// 
@@ -158,14 +133,9 @@ namespace CebExcel {
             this.tbSolutions.BeginInit();
             this.Durée.BeginInit();
             this.NbSolutions.BeginInit();
-            this.Plaque_1.BeginInit();
-            this.Plaque_2.BeginInit();
-            this.Plaque_3.BeginInit();
-            this.Plaque_4.BeginInit();
-            this.Plaque_5.BeginInit();
-            this.Plaque_6.BeginInit();
             this.Recherche.BeginInit();
             this.Resultat.BeginInit();
+            this.plaques.BeginInit();
         }
         
         /// 
@@ -173,14 +143,9 @@ namespace CebExcel {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Tools.Office.ProgrammingModel.dll", "15.0.0.0")]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
         private void EndInitialization() {
+            this.plaques.EndInit();
             this.Resultat.EndInit();
             this.Recherche.EndInit();
-            this.Plaque_6.EndInit();
-            this.Plaque_5.EndInit();
-            this.Plaque_4.EndInit();
-            this.Plaque_3.EndInit();
-            this.Plaque_2.EndInit();
-            this.Plaque_1.EndInit();
             this.NbSolutions.EndInit();
             this.Durée.EndInit();
             this.tbSolutions.EndInit();
@@ -195,14 +160,9 @@ namespace CebExcel {
             this.tbSolutions = Globals.Factory.CreateListObject(null, null, "Feuil1:tbSolutions", "tbSolutions", this);
             this.Durée = Globals.Factory.CreateNamedRange(null, null, "Durée", "Durée", this);
             this.NbSolutions = Globals.Factory.CreateNamedRange(null, null, "NbSolutions", "NbSolutions", this);
-            this.Plaque_1 = Globals.Factory.CreateNamedRange(null, null, "Plaque_1", "Plaque_1", this);
-            this.Plaque_2 = Globals.Factory.CreateNamedRange(null, null, "Plaque_2", "Plaque_2", this);
-            this.Plaque_3 = Globals.Factory.CreateNamedRange(null, null, "Plaque_3", "Plaque_3", this);
-            this.Plaque_4 = Globals.Factory.CreateNamedRange(null, null, "Plaque_4", "Plaque_4", this);
-            this.Plaque_5 = Globals.Factory.CreateNamedRange(null, null, "Plaque_5", "Plaque_5", this);
-            this.Plaque_6 = Globals.Factory.CreateNamedRange(null, null, "Plaque_6", "Plaque_6", this);
             this.Recherche = Globals.Factory.CreateNamedRange(null, null, "Recherche", "Recherche", this);
             this.Resultat = Globals.Factory.CreateNamedRange(null, null, "Resultat", "Resultat", this);
+            this.plaques = Globals.Factory.CreateNamedRange(null, null, "plaques", "plaques", this);
             this.btnHasard = new Microsoft.Office.Tools.Excel.Controls.Button(Globals.Factory, this.ItemProvider, this.HostContext, "117C41B6C102A71401518D1A1E5A114902CED1", "117C41B6C102A71401518D1A1E5A114902CED1", this, "btnHasard");
             this.btnResoudre = new Microsoft.Office.Tools.Excel.Controls.Button(Globals.Factory, this.ItemProvider, this.HostContext, "2E2413D132CF1E2490728DDB2C9DEA7236F422", "2E2413D132CF1E2490728DDB2C9DEA7236F422", this, "btnResoudre");
         }
@@ -212,18 +172,6 @@ namespace CebExcel {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Tools.Office.ProgrammingModel.dll", "15.0.0.0")]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
         private void InitializeComponents() {
-            if ((this.dsSolutions == null)) {
-                // Instantiate the object if not yet loaded from the data cache.
-                this.dsSolutions = new System.Data.DataSet();
-            }
-            this.Solutions = new System.Data.DataTable();
-            this.Operation1 = new System.Data.DataColumn();
-            this.Operation2 = new System.Data.DataColumn();
-            this.Operation3 = new System.Data.DataColumn();
-            this.Operation4 = new System.Data.DataColumn();
-            this.Operation5 = new System.Data.DataColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.dsSolutions)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Solutions)).BeginInit();
             // 
             // btnHasard
             // 
@@ -251,30 +199,6 @@ namespace CebExcel {
             // 
             this.NbSolutions.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
             // 
-            // Plaque_1
-            // 
-            this.Plaque_1.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
-            // 
-            // Plaque_2
-            // 
-            this.Plaque_2.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
-            // 
-            // Plaque_3
-            // 
-            this.Plaque_3.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
-            // 
-            // Plaque_4
-            // 
-            this.Plaque_4.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
-            // 
-            // Plaque_5
-            // 
-            this.Plaque_5.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
-            // 
-            // Plaque_6
-            // 
-            this.Plaque_6.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
-            // 
             // Recherche
             // 
             this.Recherche.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
@@ -283,51 +207,12 @@ namespace CebExcel {
             // 
             this.Resultat.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
             // 
-            // dsSolutions
+            // plaques
             // 
-            this.dsSolutions.DataSetName = "dsSolutions";
-            this.dsSolutions.Tables.AddRange(new System.Data.DataTable[] {
-                        this.Solutions});
-            // 
-            // Solutions
-            // 
-            this.Solutions.Columns.AddRange(new System.Data.DataColumn[] {
-                        this.Operation1,
-                        this.Operation2,
-                        this.Operation3,
-                        this.Operation4,
-                        this.Operation5});
-            this.Solutions.TableName = "Solutions";
-            // 
-            // Operation1
-            // 
-            this.Operation1.ColumnName = "Opération 1";
-            this.Operation1.ReadOnly = true;
-            // 
-            // Operation2
-            // 
-            this.Operation2.ColumnName = "Opération 2";
-            this.Operation2.ReadOnly = true;
-            // 
-            // Operation3
-            // 
-            this.Operation3.ColumnName = "Opération 3";
-            this.Operation3.ReadOnly = true;
-            // 
-            // Operation4
-            // 
-            this.Operation4.ColumnName = "Opération 4";
-            this.Operation4.ReadOnly = true;
-            // 
-            // Operation5
-            // 
-            this.Operation5.ColumnName = "Opération 5";
-            this.Operation5.ReadOnly = true;
+            this.plaques.DefaultDataSourceUpdateMode = System.Windows.Forms.DataSourceUpdateMode.Never;
             // 
             // Ceb
             // 
-            ((System.ComponentModel.ISupportInitialize)(this.dsSolutions)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Solutions)).EndInit();
             this.btnHasard.BindingContext = this.BindingContext;
             this.btnResoudre.BindingContext = this.BindingContext;
         }
@@ -344,14 +229,9 @@ namespace CebExcel {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Tools.Office.ProgrammingModel.dll", "15.0.0.0")]
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Never)]
         protected override void OnShutdown() {
+            this.plaques.Dispose();
             this.Resultat.Dispose();
             this.Recherche.Dispose();
-            this.Plaque_6.Dispose();
-            this.Plaque_5.Dispose();
-            this.Plaque_4.Dispose();
-            this.Plaque_3.Dispose();
-            this.Plaque_2.Dispose();
-            this.Plaque_1.Dispose();
             this.NbSolutions.Dispose();
             this.Durée.Dispose();
             this.tbSolutions.Dispose();

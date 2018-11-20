@@ -261,7 +261,8 @@ namespace UwpCompteEstBon
                 $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}" : "Tirage incorrect");
             IsCalculed = (Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche);
             FirstSolutionString = Tirage.Solutions[0].ToString();
-            Tirage.Solutions.ForEach(s => Solutions.Add(s.Operations));
+            foreach (var s in Tirage.Solutions)
+                Solutions.Add(s.Operations);
             Dispatcher.Stop();
             Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             UpdateColors();

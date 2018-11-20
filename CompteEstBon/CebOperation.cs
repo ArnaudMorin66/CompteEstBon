@@ -9,33 +9,33 @@ namespace CompteEstBon
     /// Classe opération
     /// </summary>
     [System.Runtime.InteropServices.Guid("59276C20-8670-47FB-BA13-44A1450CB9BF")]
-    public class CebOperation : CebBase
+    public sealed class CebOperation : CebBase
     {
         public static readonly char[] ListeOperations = { 'x', '+', '-', '/' };
 
         /// <summary> Constructor opération <=> g op d </summary> <param name="g"> </param> <param
         /// name="op"> </param> <param name="d"> </param>
         public CebOperation(CebBase g, char op, CebBase d) {
-            Left = g;
-            Oper = op;
-            Right = d;
+            _left = g;
+            _oper = op;
+            _right = d;
             Evaluate();
         }
 
         /// <summary>
         /// Opérateur qauche
         /// </summary>
-        public CebBase Left { get; }
+        private CebBase _left;
 
         /// <summary>
         /// Opérateur droit
         /// </summary>
-        public CebBase Right { get; }
+        private CebBase _right;
 
         /// <summary>
         /// Opération +,-,/,*
         /// </summary>
-        public char Oper { get; }
+        private char _oper;
 
         /// <summary>
         /// Sert de fonction de hachage par défaut.
@@ -46,9 +46,9 @@ namespace CompteEstBon
         public override int GetHashCode() {
             unchecked {
                 return ((391
-                         + (Left?.GetHashCode() ?? 0)) * 23
-                        + (Right?.GetHashCode() ?? 0)) * 23
-                       + Oper.GetHashCode();
+                         + (_left?.GetHashCode() ?? 0)) * 23
+                        + (_right?.GetHashCode() ?? 0)) * 23
+                       +    _oper.GetHashCode();
             }
         }
 
@@ -67,9 +67,9 @@ namespace CompteEstBon
         /// <exception cref="ArithmeticException">
         /// </exception>
         private void Evaluate() {
-            var g = Left.Value;
-            var oper = Oper;
-            var d = Right.Value;
+            var g = _left.Value;
+            var oper = _oper;
+            var d = _right.Value;
 
             if (g <= 0 || d <= 0) {
                 Value = 0;
@@ -95,7 +95,7 @@ namespace CompteEstBon
                         throw new ArithmeticException();
                 }
             }
-            _rank = Left.Rank + Right.Rank;
+            _rank = _left.Rank + _right.Rank;
         }
 
         private string _string;
@@ -106,7 +106,7 @@ namespace CompteEstBon
         /// <returns>
         /// </returns>
         public override string ToString() {
-            return _string ?? (_string = string.Join(",", Operations));
+            return _string ?? (_string = string.Join(", ", Operations));
         }
 
         private List<string> _array;
@@ -116,11 +116,11 @@ namespace CompteEstBon
             get {
                 if (_array == null) {
                     _array = new List<string>();
-                    if (Left is CebOperation)
-                        _array.AddRange(Left.Operations);
-                    if (Right is CebOperation)
-                        _array.AddRange(Right.Operations);
-                    _array.Add($"{Left.Value} {Oper} {Right.Value} = {Value}");
+                    if (_left is CebOperation)
+                        _array.AddRange(_left.Operations);
+                    if (_right is CebOperation)
+                        _array.AddRange(_right.Operations);
+                    _array.Add($"{_left.Value} {_oper} {_right.Value} = {Value}");
                 }
                 return _array;
             }
@@ -131,10 +131,10 @@ namespace CompteEstBon
             if (!(obj is CebOperation))
                 return false;
             var op = obj as CebOperation;
-            return (op.Oper == Oper)
+            return (op._oper == _oper)
                    && (op.Value == Value)
-                   && ((op.Left.Equals(Left) && op.Right.Equals(Right))
-                    || (op.Left.Equals(Right) && op.Right.Equals(Left)));
+                   && ((op._left.Equals(_left) && op._right.Equals(_right))
+                    || (op._left.Equals(_right) && op._right.Equals(_left)));
         }
     }
 }

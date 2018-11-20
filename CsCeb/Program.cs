@@ -1,6 +1,7 @@
 ﻿using CompteEstBon;
 using Microsoft.Extensions.CommandLineUtils;
 using System;
+using System.Collections.Generic;
 using static System.Console;
 
 namespace CsCeb
@@ -43,7 +44,7 @@ namespace CsCeb
                 return 0;
             });
             parser.Execute(args);
-            var ts = EvalTime(tirage.Resolve, out CebStatus result);
+            var ts = EvalTime(tirage.Resolve);
             WriteLine("** Le Compte est bon **");
             Write("Tirage:\t");
             WriteLine($"Recherche: {tirage.Search}");
@@ -56,13 +57,13 @@ namespace CsCeb
             WriteLine();
             WriteLine($"Durée du calcul: {ts.TotalMilliseconds / 1000}");
 
-            if (result == CebStatus.Erreur)
+            if (tirage.Status == CebStatus.Erreur)
             {
                 WriteLine("Tirage invalide");
             }
             else
             {
-                Write(result == CebStatus.CompteEstBon
+                Write(tirage.Status == CebStatus.CompteEstBon
                     ? "Compte est bon"
                     : $"Compte approché: {tirage.Found} ");
 
@@ -70,16 +71,7 @@ namespace CsCeb
                 WriteLine();
                 foreach (var solution in tirage.Solutions)
                 {
-                    var ii = 0;
-                    foreach (var operation in solution.Operations)
-                    {
-                        if (ii++ > 0)
-                        {
-                            Write(", ");
-                        }
-                        Write(operation);
-                    }
-                    WriteLine();
+                    WriteLine(solution);
                 }
             }
             WriteLine();
@@ -88,10 +80,10 @@ namespace CsCeb
                 ReadLine();
         }
 
-        private static TimeSpan EvalTime(Func<CebStatus> action, out CebStatus status)
+        private static TimeSpan EvalTime(Func<(CebStatus status, CebFind found, string[] solutions)> action)
         {
             var dt = DateTime.Now;
-            status = action();
+            action();
             return DateTime.Now - dt;
         }
     }

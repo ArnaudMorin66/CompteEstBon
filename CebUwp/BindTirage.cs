@@ -269,7 +269,8 @@ namespace CebUwp
                 : (Tirage.Status == CebStatus.CompteApproche ?
                 $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}" : "Tirage incorrect");
             IsCalculed = (Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche);
-            Tirage.Solutions.ForEach(s => Solutions.Add(s.Operations));
+            foreach (var s in Tirage.Solutions)
+                Solutions.Add(s.Operations);
             heureDispatcher.Stop();
             Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             UpdateColors();
@@ -337,6 +338,7 @@ namespace CebUwp
                 SuggestedStartLocation = PickerLocationId.DocumentsLibrary
             };
             savePicker.FileTypeChoices.Add("csv", new List<string>() { ".csv" });
+            // savePicker.FileTypeChoices.Add("*.*", new List<string>() { "*.*" });
             savePicker.SuggestedFileName = "Ceb";
             StorageFile file = await savePicker.PickSaveFileAsync();
             if (file != null)

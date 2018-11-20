@@ -1,6 +1,8 @@
 ﻿using CompteEstBon;
 using System;
+using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -8,6 +10,7 @@ namespace CebExcel
 {
     public partial class Ceb
     {
+        private bool blocked;
         public CebTirage Tirage { get; } = new CebTirage();
 
         private void Feuil1_Startup(object sender, System.EventArgs e)
@@ -17,14 +20,12 @@ namespace CebExcel
 
         private void InitData()
         {
-            Plaque_1.Value = Tirage.Plaques[0].Value;
-            Plaque_2.Value = Tirage.Plaques[1].Value;
-            Plaque_3.Value = Tirage.Plaques[2].Value;
-            Plaque_4.Value = Tirage.Plaques[3].Value;
-            Plaque_5.Value = Tirage.Plaques[4].Value;
-            Plaque_6.Value = Tirage.Plaques[5].Value;
+            blocked = true;
+            plaques.Value = Tirage.Plaques.Select(p=>p.Value).ToArray();
             Recherche.Value = Tirage.Search;
+           
             Clear();
+            blocked = false;
         }
 
         private void Feuil1_Shutdown(object sender, System.EventArgs e)
@@ -47,14 +48,14 @@ namespace CebExcel
                 Resultat.Interior.Color = Color.White;
             }
             NbSolutions.Value = null;
+            tbSolutions.DataSource = null;
             Durée.Value = null;
-            dsSolutions.Clear();
             Protect(drawingObjects: true, contents: true, scenarios: true);
         }
 
-        public void Hasard()
+        public async void Hasard()
         {
-            Tirage.Random();
+            await Tirage.RandomAsync();
             InitData();
         }
 
@@ -68,38 +69,25 @@ namespace CebExcel
         {
             this.btnHasard.Click += new System.EventHandler(this.btnHasard_Click);
             this.btnResoudre.Click += new System.EventHandler(this.btnResoudre_Click);
-            this.Plaque_1.Change +=
-                new Microsoft.Office.Interop.Excel.DocEvents_ChangeEventHandler(this.plaque_changed);
-            this.Plaque_2.Change +=
-                new Microsoft.Office.Interop.Excel.DocEvents_ChangeEventHandler(this.plaque_changed);
-            this.Plaque_3.Change +=
-                new Microsoft.Office.Interop.Excel.DocEvents_ChangeEventHandler(this.plaque_changed);
-            this.Plaque_4.Change +=
-                new Microsoft.Office.Interop.Excel.DocEvents_ChangeEventHandler(this.plaque_changed);
-            this.Plaque_5.Change +=
-                new Microsoft.Office.Interop.Excel.DocEvents_ChangeEventHandler(this.plaque_changed);
-            this.Plaque_6.Change +=
-                new Microsoft.Office.Interop.Excel.DocEvents_ChangeEventHandler(this.plaque_changed);
-            this.Recherche.Change +=
-                new Microsoft.Office.Interop.Excel.DocEvents_ChangeEventHandler(this.Recherche_Change);
+            this.Recherche.Change += new Microsoft.Office.Interop.Excel.DocEvents_ChangeEventHandler(this.Recherche_Change);
+            this.plaques.Change += new Microsoft.Office.Interop.Excel.DocEvents_ChangeEventHandler(this.plaque_changed);
             this.Startup += new System.EventHandler(this.Feuil1_Startup);
             this.Shutdown += new System.EventHandler(this.Feuil1_Shutdown);
+
         }
 
         #endregion Code généré par le Concepteur VSTO
 
         private void plaque_changed(Excel.Range Target)
         {
-            String nm = Target.Name.NameLocal;
-            nm = nm.Substring(nm.Length - 1);
-            int ix = Convert.ToInt32(nm) - 1;
-
-            Tirage.Plaques[ix].Value = int.TryParse(Target.Text, out int val) ? val : 0;
+            if (blocked) return; 
+            Tirage.Plaques[Target.Column - plaques.Column].Value = int.TryParse(Target.Text, out int val) ? val : 0;
             Clear();
         }
 
         private void Recherche_Change(Excel.Range Target)
         {
+            if (blocked) return;
             Tirage.Search = int.TryParse(Target.Text, out int val) ? val : 0;
             Clear();
         }
@@ -109,42 +97,28 @@ namespace CebExcel
             Hasard();
         }
 
-        public void Resoudre()
-        {
-            if (Tirage.Status != CebStatus.Valid)
-            {
+        public async void Resoudre() {
+            if (Tirage.Status != CebStatus.Valid) {
                 return;
             }
             Unprotect();
             Application.EnableEvents = false;
             Application.ScreenUpdating = false;
             var time = DateTime.Now;
-            dsSolutions.Clear();
-            Tirage.Resolve();
+            tbSolutions.DataBodyRange?.Delete();
+            await Tirage.ResolveAsync();
 
-            if (Tirage.Status == CebStatus.CompteEstBon)
-            {
+            if (Tirage.Status == CebStatus.CompteEstBon) {
                 Resultat.Value = "Compte est bon";
                 Resultat.Font.Color = Color.Yellow;
                 Resultat.Interior.Color = Color.Blue;
-            }
-            else
-            {
+            } else {
                 Resultat.Value = $"Compte approché: {Tirage.Found} - Écart: {Tirage.Diff}";
                 Resultat.Interior.Color = Color.Green;
                 Resultat.Font.Color = Color.White;
             }
-            Tirage.Solutions.ForEach(solution =>
-            {
-                var rw = Solutions.NewRow();
-                var ix = 0;
-                foreach (var operation in solution.Operations)
-                {
-                    rw[ix++] = operation;
-                }
-                Solutions.Rows.Add(rw);
-            });
-            Solutions.AcceptChanges();
+
+            tbSolutions.DataSource = Tirage.ToCebOperationsDetail().ToArray();
             NbSolutions.Value = Tirage.Solutions.Count;
             Durée.Value = (DateTime.Now - time).Milliseconds / 1000.0;
             Application.EnableEvents = true;
