@@ -1,41 +1,28 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
-namespace CompteEstBon
-{
+namespace CompteEstBon {
     /// <inheritdoc />
     ///    /// /// ///
     /// <summary>
     /// Classe opération
     /// </summary>
     [System.Runtime.InteropServices.Guid("59276C20-8670-47FB-BA13-44A1450CB9BF")]
-    public sealed class CebOperation : CebBase
-    {
+    public sealed class CebOperation : CebBase {
         public static readonly char[] ListeOperations = { 'x', '+', '-', '/' };
-
+        private List<string> _operations;
         /// <summary> Constructor opération <=> g op d </summary> <param name="g"> </param> <param
         /// name="op"> </param> <param name="d"> </param>
         public CebOperation(CebBase g, char op, CebBase d) {
-            _left = g;
-            _oper = op;
-            _right = d;
+            Left = g;
+            Oper = op;
+            Right = d;
             Evaluate();
         }
-
-        /// <summary>
-        /// Opérateur qauche
-        /// </summary>
-        private CebBase _left;
-
-        /// <summary>
-        /// Opérateur droit
-        /// </summary>
-        private CebBase _right;
-
-        /// <summary>
-        /// Opération +,-,/,*
-        /// </summary>
-        private char _oper;
+        public CebBase Left { get; }
+        public CebBase Right { get; }
+        public char Oper { get; }
 
         /// <summary>
         /// Sert de fonction de hachage par défaut.
@@ -46,18 +33,17 @@ namespace CompteEstBon
         public override int GetHashCode() {
             unchecked {
                 return ((391
-                         + (_left?.GetHashCode() ?? 0)) * 23
-                        + (_right?.GetHashCode() ?? 0)) * 23
-                       +    _oper.GetHashCode();
+                         + (Left?.GetHashCode() ?? 0)) * 23
+                        + (Right?.GetHashCode() ?? 0)) * 23
+                       + Oper.GetHashCode();
             }
         }
 
-        private int _rank = 0;
 
         /// <summary>
         /// Renvoie le rang
         /// </summary>
-        public override int Rank => _rank;
+        public override int Rank => Operations.Count;
 
         /// <summary>
         /// Evalue l'opération
@@ -67,36 +53,52 @@ namespace CompteEstBon
         /// <exception cref="ArithmeticException">
         /// </exception>
         private void Evaluate() {
-            var g = _left.Value;
-            var oper = _oper;
-            var d = _right.Value;
+            var g = Left.Value;
+            var oper = Oper;
+            var d = Right.Value;
 
             if (g <= 0 || d <= 0) {
                 Value = 0;
-            } else {
-                switch (oper) {
-                    case '+':
-                        Value = g + d;
-                        break;
-
-                    case '-':
-                        Value = Math.Max(0, g - d);
-                        break;
-
-                    case 'x':
-                        Value = (g <= 1 || d <= 1) ? 0 : g * d;
-                        break;
-
-                    case '/':
-                        Value = (d <= 1 || g % d != 0) ? 0 : g / d;
-                        break;
-
-                    default:
-                        throw new ArithmeticException();
-                }
+                return;
             }
-            _rank = _left.Rank + _right.Rank;
+            switch (oper) {
+                case '+':
+                    Value = g + d;
+                    return;
+
+                case '-':
+                    Value = Math.Max(0, g - d);
+                    return;
+
+                case 'x':
+                    Value = (g <= 1 || d <= 1) ? 0 : g * d;
+                    return;
+
+                case '/':
+                    Value = (d <= 1 || g % d != 0) ? 0 : g / d;
+                    return;
+
+                default:
+                    throw new ArithmeticException();
+            }
         }
+        public override List<string> Operations {
+            get {
+                if (_operations != null) return _operations;
+                _operations = new List<string>();
+                if (Left is CebOperation) {
+                    _operations.AddRange(Left.Operations);
+                }
+                if (Right is CebOperation) {
+                    _operations.AddRange(Right.Operations);
+                }
+                _operations.Add($"{Left.Value} {Oper} {Right.Value} = { Value}");
+
+                return _operations;
+            }
+        }
+
+        public override bool IsValid => Value > 0;
 
         private string _string;
 
@@ -109,32 +111,24 @@ namespace CompteEstBon
             return _string ?? (_string = string.Join(", ", Operations));
         }
 
-        private List<string> _array;
-
-        public override List<string> Operations
-        {
-            get {
-                if (_array == null) {
-                    _array = new List<string>();
-                    if (_left is CebOperation)
-                        _array.AddRange(_left.Operations);
-                    if (_right is CebOperation)
-                        _array.AddRange(_right.Operations);
-                    _array.Add($"{_left.Value} {_oper} {_right.Value} = {Value}");
-                }
-                return _array;
-            }
-        }
-
         /// <summary> Test égalité
         public override bool Equals(object obj) {
             if (!(obj is CebOperation))
                 return false;
             var op = obj as CebOperation;
-            return (op._oper == _oper)
+            return (op.Oper == Oper)
                    && (op.Value == Value)
-                   && ((op._left.Equals(_left) && op._right.Equals(_right))
-                    || (op._left.Equals(_right) && op._right.Equals(_left)));
+                   && ((op.Left.Equals(Left) && op.Right.Equals(Right))
+                    || (op.Left.Equals(Right) && op.Right.Equals(Left)));
+        }
+        public override CebDetail ToCebDetail() {
+            var elt = new CebDetail();
+            var typ = elt.GetType();
+            for (var i = 1; i < 6; i++) {
+                typ.GetProperty($"op{i}")
+                    .SetValue(elt, i > Operations.Count ? string.Empty : Operations[i - 1]);
+            }
+            return elt;
         }
     }
 }

@@ -1,8 +1,11 @@
+using System;
+
 namespace CompteEstBon {
 
     /// <summary>
     /// status du tirage
     /// </summary>
+    [Flags]
     public enum CebStatus {
         Indefini = 0,
         Valid = 1,

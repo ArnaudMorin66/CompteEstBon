@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Math;
@@ -12,7 +11,6 @@ using static System.Math;
 #endregion using
 
 namespace CompteEstBon {
-    
 
     /// <summary>
     /// Gestion tirage Compte est bon
@@ -23,29 +21,34 @@ namespace CompteEstBon {
 
         public CebTirage() {
             for (var i = 0; i < 6; i++) {
-                _plaques.Add(new CebPlaque(0, (sender, v) => { if (ActiveEvent) Clear(); }));
+                _plaques.Add(new CebPlaque(0));
             }
+            CebPlaque.ValueEvent += () => { if (ActiveEvent) Clear(); };
             Random();
         }
 
         /// <summary>
         /// Constructeur Tirage du Compte est bon
         /// </summary>
-        /// <param name="search"></param>
-        /// <param name="plaques"></param>
-        public CebTirage(int search, params int[] plaques) {
+        /// <param name="search">
+        /// </param>
+        /// <param name="plaques">
+        /// </param>
+        public CebTirage(int search, params int[] plaques):this() {
+            ActiveEvent = false;
             for (var i = 0; i < 6; i++) {
-                _plaques.Add(new CebPlaque(i >= plaques.Length ? 0 : plaques[i], (sender, v) => { if (ActiveEvent) Clear(); }));
+                _plaques[i].Value = i >= plaques.Length ? 0 : plaques[i];
             }
             if (plaques.Length < 6 || search == -1)
                 Random();
             else
                 Search = search;
+            ActiveEvent = true;
         }
 
         private bool ActiveEvent { get; set; }
 
-        public bool Sorted { get; set; } = true;
+        // public bool Sorted { get; set; } = true;
 
         /// <summary>
         /// nombre � chercher
@@ -71,14 +74,19 @@ namespace CompteEstBon {
 
         private List<CebPlaque> _plaques = new List<CebPlaque>();
         public ReadOnlyCollection<CebPlaque> Plaques => _plaques.AsReadOnly();
+        
 
         public void SetPlaques(params int[] plaq) {
             ActiveEvent = false;
-            for (var i = 0; i < Min(plaq.Length, _plaques.Count); i++)
+
+            for (var i = 0; i < 6; i++) {
+                if (i >= plaq.Length) { break; }
                 _plaques[i].Value = plaq[i];
+            }
             Clear();
             ActiveEvent = true;
         }
+
         public List<CebBase> Solutions { get; } = new List<CebBase>();
 
         /// <summary>
@@ -125,10 +133,9 @@ namespace CompteEstBon {
             ActiveEvent = false;
             var rnd = new Random();
             _search = rnd.Next(100, 1000);
-
-            var liste = new List<int>(CebPlaque.ListePlaques);
+            var liste =  CebPlaque.ListePlaques.ToList();
             foreach (var plaque in _plaques) {
-                var n = rnd.Next(0, liste.Count);
+                var n = rnd.Next(0, liste.Count());
                 plaque.Value = liste[n];
                 liste.RemoveAt(n);
             }
@@ -158,7 +165,7 @@ namespace CompteEstBon {
         /// </param>
         /// <returns>
         /// </returns>
-        public (CebStatus status, CebFind found, string[] solutions) Resolve(int search, params int[] plq) {
+        public CebStatus  Resolve(int search, params int[] plq) {
             if (plq.Length != 6)
                 throw new ArgumentException("Nombre de plaques incorrecte");
             _search = search;
@@ -174,7 +181,7 @@ namespace CompteEstBon {
         /// </summary>
         /// <returns>
         /// </returns>
-        public (CebStatus status, CebFind found, string[] solutions) Resolve() {
+        public CebStatus Resolve() {
             void Resolve(List<CebBase> liste) {
                 void AddSolution(CebBase sol) {
                     var diff = Abs(_search - sol.Value);
@@ -199,48 +206,44 @@ namespace CompteEstBon {
                     AddSolution(liste[i]);
                     for (var j = i + 1; j < liste.Count; j++) {
                         foreach (var oper in
-                            // ReSharper disable AccessToModifiedClosure
                             CebOperation.ListeOperations.Select(operation => new CebOperation(liste[i], operation, liste[j]))
                                 .Where(oper => oper.IsValid))
                             Resolve(
-                                liste.Where((t, k) => k != i && k != j).Concat(new CebBase[] { oper }).ToList());
+                                liste.Where((t, k) => k != i && k != j).Concat(new[] { oper }).ToList());
                     }
                 }
             }
-
             Clear();
-            if (Status != CebStatus.Valid) return (Status, Found, Solutions.Select(p => p.ToString()).ToArray());
+            if (Status != CebStatus.Valid) return Status;
             Resolve(_plaques.Cast<CebBase>().ToList());
-            if (Sorted)
-                Solutions.Sort((p, q) => p.Rank.CompareTo(q.Rank));
+            Solutions.Sort((p, q) => p.Rank.CompareTo(q.Rank));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
-            return (Status, Found, Solutions.Select(s => s.ToString()).ToArray());
+            return Status;
         }
 
-        public async Task<(CebStatus status, CebFind found, string[] solutions)> ResolveAsync() => await Task.Run(() => Resolve());
+        public async Task<CebStatus> ResolveAsync() => await Task.Run(() => Resolve());
 
-        public async Task<(CebStatus status, CebFind found, string[] solutions)> ResolveAsync(int search, params int[] plq) => await Task.Run(() => Resolve(search, plq));
+        public async Task<CebStatus> ResolveAsync(int search, params int[] plq) => await Task.Run(() => Resolve(search, plq));
 
         public override string ToString() {
             var buffer = new StringBuilder();
             buffer.AppendLine("## Tirage du compte est bon ###");
-            buffer.AppendLine($"Search : {this.Search}, plaques : [{string.Join(",", _plaques.Select(p => p.ToString()))}]");
-            buffer.AppendLine($"Found:  {this.Found}, Status: {Status}, Nb de solutions: {Count}");
+            buffer.AppendLine($"Search : {Search}, plaques : [{string.Join(",", _plaques.Select(p => p.ToString()))}]");
+            buffer.AppendLine($"Found:  {Found}, Status: {Status}, Nb de solutions: {Count}");
             buffer.AppendLine(string.Join(";", Solutions.Select((p) => p.ToString())));
             return buffer.ToString();
         }
 
+        public IEnumerable<string> ToArray() => Solutions.Select(p => p.ToString());
 
-        public string[] ToArray() => Solutions.Select(p => p.ToString()).ToArray();
+        public IEnumerable<IEnumerable<string>> OperationsSolutions => Solutions.Select(p => p.Operations);
 
-        public string[][] ToStringArray() => Solutions.Select(p => p.Operations.ToArray()).ToArray();
-
-        public IEnumerable<CebOperationDetail> ToCebOperationsDetail() => Solutions.Select(s => s.ToCebOperationDetail());
+        public IEnumerable<CebDetail> ToCebDetails() => Solutions.Select(s => s.ToCebDetail());
 
         public static (int search, int[] plaques, CebStatus status, CebFind found, IList<string[]> solutions) Calcul(int search = -1, params int[] plaques) {
             var t = new CebTirage(search, plaques);
             t.Resolve();
-            return (t.Search, t.Plaques.Select(p => p.Value).ToArray(), t.Status, t.Found, t.Solutions.Select((s) => s.ToArray()).ToArray());
+            return (t.Search, t.Plaques.Select(p => p.Value).ToArray(), t.Status, t.Found, t.Solutions.Select((s) => s.Operations.ToArray()).ToArray());
         }
     }
 }

@@ -87,14 +87,14 @@
     <Compile Include="..\CompteEstBon\CebBase.cs">
       <Link>CebBase.cs</Link>
     </Compile>
+    <Compile Include="..\CompteEstBon\CebDetail.cs">
+      <Link>CebDetail.cs</Link>
+    </Compile>
     <Compile Include="..\CompteEstBon\CebFind.cs">
       <Link>CebFind.cs</Link>
     </Compile>
     <Compile Include="..\CompteEstBon\CebOperation.cs">
       <Link>CebOperation.cs</Link>
-    </Compile>
-    <Compile Include="..\CompteEstBon\CebOperationDetail.cs">
-      <Link>CebOperationDetail.cs</Link>
     </Compile>
     <Compile Include="..\CompteEstBon\CebPlaque.cs">
       <Link>CebPlaque.cs</Link>

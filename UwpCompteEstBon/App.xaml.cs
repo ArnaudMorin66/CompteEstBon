@@ -4,6 +4,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Windows.Storage;
 using Syncfusion.Licensing;
 
 namespace UwpCompteEstBon {
@@ -18,8 +19,7 @@ namespace UwpCompteEstBon {
         /// </summary>
         public App()
         {
-            SyncfusionLicenseProvider.RegisterLicense("MzM5NThAMzEzNjJlMzMyZTMwY01CbHhoSkQ1R2cxRkFFL21nUUlTd05kQkpRNHA3UHlsdjhRWkJhWnhXaz0=");
-
+            SyncfusionLicenseProvider.RegisterLicense((string)ApplicationData.Current.LocalSettings.Values["sflicence"]);
             InitializeComponent();
             Suspending += OnSuspending;
         }

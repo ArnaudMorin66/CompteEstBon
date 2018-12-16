@@ -13,7 +13,7 @@ namespace CebExcel
         private bool blocked;
         public CebTirage Tirage { get; } = new CebTirage();
 
-        private void Feuil1_Startup(object sender, System.EventArgs e)
+        private void Feuil1_Startup(object sender, EventArgs e)
         {
             InitData();
         }
@@ -28,7 +28,7 @@ namespace CebExcel
             blocked = false;
         }
 
-        private void Feuil1_Shutdown(object sender, System.EventArgs e)
+        private void Feuil1_Shutdown(object sender, EventArgs e)
         {
         }
 
@@ -67,12 +67,12 @@ namespace CebExcel
         /// </summary>
         private void InternalStartup()
         {
-            this.btnHasard.Click += new System.EventHandler(this.btnHasard_Click);
-            this.btnResoudre.Click += new System.EventHandler(this.btnResoudre_Click);
-            this.Recherche.Change += new Microsoft.Office.Interop.Excel.DocEvents_ChangeEventHandler(this.Recherche_Change);
-            this.plaques.Change += new Microsoft.Office.Interop.Excel.DocEvents_ChangeEventHandler(this.plaque_changed);
-            this.Startup += new System.EventHandler(this.Feuil1_Startup);
-            this.Shutdown += new System.EventHandler(this.Feuil1_Shutdown);
+            btnHasard.Click += new EventHandler(btnHasard_Click);
+            btnResoudre.Click += new EventHandler(btnResoudre_Click);
+            Recherche.Change += new Excel.DocEvents_ChangeEventHandler(Recherche_Change);
+            plaques.Change += new Excel.DocEvents_ChangeEventHandler(plaque_changed);
+            Startup += new EventHandler(Feuil1_Startup);
+            Shutdown += new EventHandler(Feuil1_Shutdown);
 
         }
 
@@ -118,7 +118,7 @@ namespace CebExcel
                 Resultat.Font.Color = Color.White;
             }
 
-            tbSolutions.DataSource = Tirage.ToCebOperationsDetail().ToArray();
+            tbSolutions.DataSource = Tirage.ToCebDetails().ToArray();
             NbSolutions.Value = Tirage.Solutions.Count;
             Durée.Value = (DateTime.Now - time).Milliseconds / 1000.0;
             Application.EnableEvents = true;
