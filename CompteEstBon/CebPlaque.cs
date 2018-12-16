@@ -8,7 +8,7 @@ namespace CompteEstBon {
 
     [System.Runtime.InteropServices.Guid("A21F3DEC-8531-4F59-AF11-863BEF5ED340")]
     public sealed class CebPlaque : CebBase {
-        public static event ValueChange ValueEvent;
+        internal static event ValueChange ValueEvent;
         public static readonly int[] ListePlaques = {
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
             25, 50, 75, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,25
@@ -84,7 +84,7 @@ namespace CompteEstBon {
                 return false;
             }
 
-            return ((CebBase)obj).Value == Value;
+            return ((CebPlaque)obj).Value == Value;
         }
 
         public override int GetHashCode() {

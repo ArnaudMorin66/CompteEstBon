@@ -175,44 +175,42 @@ namespace CompteEstBon {
             ActiveEvent = true;
             return Resolve();
         }
+        private void UpdateSolutions(CebBase sol) {
+            var diff = Abs(_search - sol.Value);
+            if (diff > Diff)
+                return;
 
+            if (Solutions.Contains(sol))
+                return;
+
+            if (diff < Diff) {
+                Diff = diff;
+                Solutions.Clear();
+                Found.Reset();
+            }
+            Found.Add(sol.Value);
+            Solutions.Add(sol);
+        }
+
+        private void Resolve(List<CebBase> liste) {
+            liste.Sort((p, q) => q.Value.CompareTo(p.Value));
+            for (var i = 0; i < liste.Count; i++) {
+                UpdateSolutions(liste[i]);
+                for (var j = i + 1; j < liste.Count; j++) {
+                    foreach (var oper in
+                        CebOperation.ListeOperations.Select(operation => new CebOperation(liste[i], operation, liste[j]))
+                            .Where(oper => oper.IsValid))
+                        Resolve(
+                            liste.Where((t, k) => k != i && k != j).Concat(new[] { oper }).ToList());
+                }
+            }
+        }
         /// <summary>
         /// resolution
         /// </summary>
         /// <returns>
         /// </returns>
         public CebStatus Resolve() {
-            void Resolve(List<CebBase> liste) {
-                void AddSolution(CebBase sol) {
-                    var diff = Abs(_search - sol.Value);
-                    if (diff > Diff)
-                        return;
-
-                    if (Solutions.Contains(sol))
-                        return;
-
-                    if (diff < Diff) {
-                        Diff = diff;
-                        Solutions.Clear();
-                        Found.Reset();
-                    }
-                    Found.Add(sol.Value);
-                    Solutions.Add(sol);
-                }
-
-                liste.Sort((p, q) => q.Value.CompareTo(p.Value));
-
-                for (var i = 0; i < liste.Count; i++) {
-                    AddSolution(liste[i]);
-                    for (var j = i + 1; j < liste.Count; j++) {
-                        foreach (var oper in
-                            CebOperation.ListeOperations.Select(operation => new CebOperation(liste[i], operation, liste[j]))
-                                .Where(oper => oper.IsValid))
-                            Resolve(
-                                liste.Where((t, k) => k != i && k != j).Concat(new[] { oper }).ToList());
-                    }
-                }
-            }
             Clear();
             if (Status != CebStatus.Valid) return Status;
             Resolve(_plaques.Cast<CebBase>().ToList());
