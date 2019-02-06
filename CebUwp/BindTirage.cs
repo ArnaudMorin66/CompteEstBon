@@ -232,7 +232,7 @@ namespace CebUwp
         {
             lock (Plaques)
             {
-                for (var i = 0; i < Tirage.Plaques.Count; i++)
+                for (var i = 0; i < Tirage.Plaques.Length; i++)
                 {
                     Plaques[i] = Tirage.Plaques[i];
                 }

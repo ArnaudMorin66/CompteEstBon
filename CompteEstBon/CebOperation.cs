@@ -32,10 +32,9 @@ namespace CompteEstBon {
         /// </returns>
         public override int GetHashCode() {
             unchecked {
-                return ((391
-                         + (Left?.GetHashCode() ?? 0)) * 23
-                        + (Right?.GetHashCode() ?? 0)) * 23
-                       + Oper.GetHashCode();
+                return ((391 + (Left?.GetHashCode() ?? 0)) * 23
+                             + (Right?.GetHashCode() ?? 0)) * 23
+                             + Oper.GetHashCode();
             }
         }
 

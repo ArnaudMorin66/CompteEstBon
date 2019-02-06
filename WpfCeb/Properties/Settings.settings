@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="WpfCeb.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Licence" Type="System.String" Scope="User">
+      <Value Profile="(Default)">NjU1MjZAMzEzNjJlMzQyZTMwTFpldXcyV3A5czdOeUoxUjRtMVd5RzRiZGhTN2lTUFVqam5jNTFCQXk1cz0=</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -22,22 +22,16 @@ namespace CompteEstBon {
         /// <param name="value">
         /// </param>
         /// <param name="handler"></param>
-        public CebPlaque(int value) {
-            Value = value;
-        }
+        public CebPlaque(int value) => Value = value;
 
         public string Text {
             get => Value.ToString();
             set { Value = int.TryParse(value, out int res) ? res : 0; }
         }
 
-        public override List<string> Operations {
-            get {
-                return new List<string> {
+        public override List<string> Operations => new List<string> {
                     ToString()
                 };
-            }
-        }
 
         public override int Value {
             // get => base.Value;
@@ -88,12 +82,7 @@ namespace CompteEstBon {
         }
 
         public override int GetHashCode() {
-            unchecked {
-                int result = 17;
-                result = result * 23 + Value.GetHashCode();
-                result = result * 23 + Rank.GetHashCode();
-                return result;
-            }
+            return 391 + Value.GetHashCode();
         }
         public override CebDetail ToCebDetail() {
             return new CebDetail { op1 = ToString() };

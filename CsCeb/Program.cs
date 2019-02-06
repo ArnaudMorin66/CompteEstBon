@@ -80,7 +80,7 @@ namespace CsCeb
                 ReadLine();
         }
 
-        private static TimeSpan EvalTime(Func<(CebStatus status, CebFind found, string[] solutions)> action)
+        private static TimeSpan EvalTime(Func<CebStatus> action)
         {
             var dt = DateTime.Now;
             action();

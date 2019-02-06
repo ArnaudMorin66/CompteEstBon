@@ -21,9 +21,10 @@ namespace CompteEstBon {
 
         public CebTirage() {
             for (var i = 0; i < 6; i++) {
-                _plaques.Add(new CebPlaque(0));
+                Plaques[i] = new CebPlaque(0);
             }
-            CebPlaque.ValueEvent += () => { if (ActiveEvent) Clear(); };
+            // Capure des changements de valeur des plaques
+            CebPlaque.ValueEvent += () => { if (EventActif) { Clear(); } };
             Random();
         }
 
@@ -34,21 +35,21 @@ namespace CompteEstBon {
         /// </param>
         /// <param name="plaques">
         /// </param>
-        public CebTirage(int search, params int[] plaques):this() {
-            ActiveEvent = false;
-            for (var i = 0; i < 6; i++) {
-                _plaques[i].Value = i >= plaques.Length ? 0 : plaques[i];
-            }
+        public CebTirage(int search, params int[] plaques) : this() {
+            EventActif = false;
             if (plaques.Length < 6 || search == -1)
                 Random();
-            else
+            else {
+                for (var i = 0; i < 6; i++) {
+                    Plaques[i].Value = plaques[i];
+                }
                 Search = search;
-            ActiveEvent = true;
+            }
+            EventActif = true;
         }
 
-        private bool ActiveEvent { get; set; }
+        private bool EventActif { get; set; }
 
-        // public bool Sorted { get; set; } = true;
 
         /// <summary>
         /// nombre � chercher
@@ -71,20 +72,16 @@ namespace CompteEstBon {
         /// Ecart
         /// </summary>
         public int Diff { get; private set; } = int.MaxValue;
-
-        private List<CebPlaque> _plaques = new List<CebPlaque>();
-        public ReadOnlyCollection<CebPlaque> Plaques => _plaques.AsReadOnly();
-        
+        public CebPlaque[] Plaques { get; } = new CebPlaque[6];
 
         public void SetPlaques(params int[] plaq) {
-            ActiveEvent = false;
-
+            EventActif = false;
             for (var i = 0; i < 6; i++) {
                 if (i >= plaq.Length) { break; }
-                _plaques[i].Value = plaq[i];
+                Plaques[i].Value = plaq[i];
             }
             Clear();
-            ActiveEvent = true;
+            EventActif = true;
         }
 
         public List<CebBase> Solutions { get; } = new List<CebBase>();
@@ -121,25 +118,24 @@ namespace CompteEstBon {
         /// </returns>
         public bool SearchValid => _search > 99 && _search < 1000;
 
-        public bool PlaquesValid => _plaques.All(p => p.IsValid
-                                                     && _plaques.Count(q => q.Value == p.Value) <=
+        public bool PlaquesValid => Plaques.All(p => p.IsValid
+                                                     && Plaques.Count(q => q.Value == p.Value) <=
                                                      CebPlaque.ListePlaques.Count(n => n == p.Value));
 
         /// <summary>
         /// Select the value and the plaque's list
         /// </summary>
         public void Random() {
-            // EnableEvents(false);
-            ActiveEvent = false;
+            EventActif = false;
             var rnd = new Random();
             _search = rnd.Next(100, 1000);
-            var liste =  CebPlaque.ListePlaques.ToList();
-            foreach (var plaque in _plaques) {
+            var liste = CebPlaque.ListePlaques.ToList();
+            foreach (var plaque in Plaques) {
                 var n = rnd.Next(0, liste.Count());
                 plaque.Value = liste[n];
                 liste.RemoveAt(n);
             }
-            ActiveEvent = true;
+            EventActif = true;
             Clear();
         }
 
@@ -165,14 +161,14 @@ namespace CompteEstBon {
         /// </param>
         /// <returns>
         /// </returns>
-        public CebStatus  Resolve(int search, params int[] plq) {
+        public CebStatus Resolve(int search, params int[] plq) {
             if (plq.Length != 6)
                 throw new ArgumentException("Nombre de plaques incorrecte");
             _search = search;
-            ActiveEvent = false;
+            EventActif = false;
             for (var i = 0; i < 6; i++)
-                _plaques[i].Value = plq[i];
-            ActiveEvent = true;
+                Plaques[i].Value = plq[i];
+            EventActif = true;
             return Resolve();
         }
         private void UpdateSolutions(CebBase sol) {
@@ -213,7 +209,7 @@ namespace CompteEstBon {
         public CebStatus Resolve() {
             Clear();
             if (Status != CebStatus.Valid) return Status;
-            Resolve(_plaques.Cast<CebBase>().ToList());
+            Resolve(Plaques.Cast<CebBase>().ToList());
             Solutions.Sort((p, q) => p.Rank.CompareTo(q.Rank));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
             return Status;
@@ -226,7 +222,7 @@ namespace CompteEstBon {
         public override string ToString() {
             var buffer = new StringBuilder();
             buffer.AppendLine("## Tirage du compte est bon ###");
-            buffer.AppendLine($"Search : {Search}, plaques : [{string.Join(",", _plaques.Select(p => p.ToString()))}]");
+            buffer.AppendLine($"Search : {Search}, plaques : [{string.Join(",", Plaques.Select(p => p.ToString()))}]");
             buffer.AppendLine($"Found:  {Found}, Status: {Status}, Nb de solutions: {Count}");
             buffer.AppendLine(string.Join(";", Solutions.Select((p) => p.ToString())));
             return buffer.ToString();
