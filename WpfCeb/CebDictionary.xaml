@@ -5,26 +5,82 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
     mc:Ignorable="d">
-    <Style x:Key="CebButtonStyle" TargetType="syncfusion:ButtonAdv">
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="0" />
-        <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="VerticalAlignment" Value="Stretch" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
+    <ResourceDictionary.MergedDictionaries />
+    <Style x:Key="CebButtonAdvStyle" TargetType="syncfusion:ButtonAdv">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Offset="0.0" Color="Black" />
+                    <GradientStop Offset="1.0" Color="Navy" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Foreground" Value="Yellow" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="FontSize" Value="18" />
-        <Setter Property="IconHeight" Value="0" />
-        <Setter Property="IconWidth" Value="0" />
-        <Setter Property="SizeMode" Value="Large" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="SizeMode" Value="Normal" />
+    </Style>
+    <Style x:Key="CebButtonStyle" TargetType="Button">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Offset="0.0" Color="LightGreen" />
+                    <GradientStop Offset="1.0" Color="Navy" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Cursor" Value="Hand" />
+        <!--<Setter Property="Foreground" Value="Black" />-->
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="16" />
     </Style>
     <Style x:Key="BorderTitreStyle" TargetType="Border">
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Offset="0.0" Color="Navy" />
+                    <GradientStop Offset="1.0" Color="Black" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
     </Style>
     <Style x:Key="TextBoxTitreStyle" TargetType="TextBlock">
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="White" />
         <Setter Property="FontSize" Value="16" />
     </Style>
+    <ControlTemplate x:Key="CebButtonTemplate" TargetType="{x:Type ButtonBase}">
+        <Border
+            x:Name="border"
+            Background="{TemplateBinding Background}"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            SnapsToDevicePixels="True">
+            <ContentPresenter
+                x:Name="contentPresenter"
+                Margin="{TemplateBinding Padding}"
+                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                Content="{TemplateBinding Content}"
+                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                ContentTemplate="{TemplateBinding ContentTemplate}"
+                Focusable="False"
+                RecognizesAccessKey="True"
+                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="border" Property="Background" Value="Green" />
+                <Setter TargetName="border" Property="BorderBrush" Value="White" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="border" Property="Background" Value="Navy" />
+                <Setter TargetName="border" Property="BorderBrush" Value="Yellow" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
 </ResourceDictionary>

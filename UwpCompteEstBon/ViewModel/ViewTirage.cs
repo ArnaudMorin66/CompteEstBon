@@ -1,6 +1,11 @@
 ﻿#region
 
 using CompteEstBon;
+using Syncfusion.UI.Xaml.Grid;
+using Syncfusion.UI.Xaml.Grid.Converter;
+using Syncfusion.UI.Xaml.Utility;
+using Syncfusion.UI.Xaml.Utils;
+using Syncfusion.XlsIO;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,7 +14,12 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.Data.Xml.Dom;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Provider;
+using Windows.System;
 using Windows.UI;
 using Windows.UI.Notifications;
 using Windows.UI.Xaml;
@@ -19,13 +29,13 @@ using Windows.UI.Xaml.Media;
 
 namespace UwpCompteEstBon
 {
-    
-    public class BindingTirage : INotifyPropertyChanged
+    public class ViewTirage : INotifyPropertyChanged
     {
         private Brush _background;
         private double _duree;
 
         private Brush _foreground = new SolidColorBrush(Colors.White);
+        
 
         private bool _isBusy;
 
@@ -38,13 +48,17 @@ namespace UwpCompteEstBon
         public DispatcherTimer Dispatcher;
         public DispatcherTimer dateDispatcher;
 
+        public DelegateCommand HasardCommand { get; set; }
+        public DelegateCommand ResolveCommand { get; set; }
+        public DelegateCommand ExportCommand { get; set; }
+
         public CebTirage Tirage { get; } = new CebTirage();
 
         public ObservableCollection<int> Plaques { get; } = new ObservableCollection<int> { -1, -1, -1, -1, -1, -1 };
 
         public IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
 
-        public ObservableCollection<IList<string>> Solutions { get; } = new ObservableCollection<IList<string>>();
+        public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
         public string _date;
 
         public string Date {
@@ -139,9 +153,13 @@ namespace UwpCompteEstBon
         /// Initialisation
         /// </summary>
         /// <returns></returns>
-        public BindingTirage()
+        public ViewTirage()
         {
             _background = new SolidColorBrush(Colors.Navy);
+            HasardCommand = new DelegateCommand(Hasardcmd);
+            ResolveCommand = new DelegateCommand(Resolvecmd);
+            ExportCommand = new DelegateCommand(Exportcmd);
+
             Dispatcher = new DispatcherTimer
             {
                 Interval = new TimeSpan(100)
@@ -170,9 +188,71 @@ namespace UwpCompteEstBon
             dateDispatcher.Start();
         }
 
-        private void DateDispatcher_Tick(object sender, object e)
+        private async void Hasardcmd(object obj)
         {
-            throw new NotImplementedException();
+            await RandomAsync();
+        }
+        private async void Resolvecmd(object obj)
+        {
+            switch (Tirage.Status)
+            {
+                case CebStatus.Valid:
+                    await ResolveAsync();
+                    break;
+                case CebStatus.CompteEstBon:
+                case CebStatus.CompteApproche:
+                    await ClearAsync();
+                    break;
+                case CebStatus.Erreur:
+                    await RandomAsync();
+                    break;
+            }
+        }
+        private async void Exportcmd(object obj)
+        {
+            var SolutionsData = (SfDataGrid)obj;
+            FileSavePicker savePicker = new FileSavePicker
+            {
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+            };
+            // Dropdown of file types the user can save the file as
+            savePicker.FileTypeChoices.Add("Excel", new List<string>() { ".xlsx" });
+            // Default file name if the user does not type one in or select a file to replace
+            savePicker.SuggestedFileName = "Ceb";
+            StorageFile file = await savePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                // Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
+                CachedFileManager.DeferUpdates(file);
+
+                var options = new ExcelExportingOptions
+                {
+                    ExcelVersion = ExcelVersion.Excel2016,
+                    ExportAllPages = true
+                };
+                var excelEngine = SolutionsData.ExportToExcel(SolutionsData.View, options);
+                var workBook = excelEngine.Excel.Workbooks[0];
+                var ws = workBook.Worksheets[0];
+                ws.ListObjects.Create("Table1", ws[$"A1:E{SolutionsData.View.Records.Count + 1}"])
+                    .BuiltInTableStyle = TableBuiltInStyles.TableStyleMedium1;
+                ws.InsertRow(1, 3);
+                ws.Range["A1"].Value = "Plaques:";
+                for (var i = 0; i < 6; i++)
+                {
+                    ws.Range[1, i + 2].Value2 = Plaques[i];
+                }
+                ws.Range["A2"].Value2 = "Cherche:";
+                ws.Range["B2"].Value2 = Search;
+                ws.Range["A3"].Value2 = Result;
+
+                await workBook.SaveAsAsync(file);
+                // Let Windows know that we're finished changing the file so the other app can update the remote version of the file.
+                // Completing updates may require Windows to ask for user input.
+                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+                
+                await Launcher.LaunchFileAsync(file);
+
+            }
         }
 
         private void UpdateColors()
@@ -262,7 +342,7 @@ namespace UwpCompteEstBon
             IsCalculed = (Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche);
             FirstSolutionString = Tirage.Solutions[0].ToString();
             foreach (var s in Tirage.Solutions)
-                Solutions.Add(s.Operations);
+                Solutions.Add(s.ToCebDetail());
             Dispatcher.Stop();
             Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             UpdateColors();

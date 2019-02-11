@@ -18,14 +18,18 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Microsoft.Win32;
+using System.Windows.Input;
+
 
 #endregion
 
-namespace WpfCeb.Model {
-
-    public class BindingTirage : NotificationObject { // INotifyPropertyChanged {
+namespace WpfCeb
+{
+    public class ViewTirage : NotificationObject
+    {
+        public static IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
         private Brush _background;
-        private double _duree;
+        private string _duree;
 
         private Brush _foreground = new SolidColorBrush(Colors.White);
 
@@ -37,8 +41,11 @@ namespace WpfCeb.Model {
         private string _result = "Résoudre";
 
         private Visibility _visibility = Visibility.Collapsed;
+        private Visibility _notifyVisibility = Visibility.Collapsed;
         public DelegateCommand<object> HasardCommand { get; set; }
+
         public DelegateCommand<object> ResolveCommand { get; set; }
+
         public DelegateCommand<SfDataGrid> ExportCommand { get; set; }
 
         public DispatcherTimer Dispatcher;
@@ -46,12 +53,11 @@ namespace WpfCeb.Model {
 
         public CebTirage Tirage { get; } = new CebTirage();
 
-        public ObservableCollection<int> Plaques { get; } = new ObservableCollection<int> { -1, -1, -1, -1, -1, -1 };
+        public ObservableCollection<string> Plaques { get; } = new ObservableCollection<string> { "", "", "", "", "", "" };
 
-        public IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
 
-        // public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
-        public ObservableCollection<List<string>> Solutions { get; } = new ObservableCollection<List<string>>();
+        public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
+
 
         public string _date;
 
@@ -63,7 +69,7 @@ namespace WpfCeb.Model {
             }
         }
 
-        public double Duree {
+        public string Duree {
             get => _duree;
             set {
                 _duree = value;
@@ -128,6 +134,7 @@ namespace WpfCeb.Model {
             get => _isCalculed;
             set {
                 _isCalculed = value;
+                NotifyVisibility = _isCalculed ? Visibility.Visible : Visibility.Collapsed;
                 NotifiedChanged();
             }
         }
@@ -139,106 +146,138 @@ namespace WpfCeb.Model {
                 NotifiedChanged();
             }
         }
-
-
-        // public event PropertyChangedEventHandler PropertyChanged;
+        public Visibility NotifyVisibility {
+            get => _notifyVisibility;
+            set {
+                _notifyVisibility = value;
+                NotifiedChanged();
+            }
+        }
 
         /// <summary>
         /// Initialisation
         /// </summary>
         /// <returns></returns>
-        public BindingTirage() {
-            HasardCommand = new DelegateCommand<object>(cmdhasard);
-            ResolveCommand = new DelegateCommand<object>(cmdResolve);
-            ExportCommand = new DelegateCommand<SfDataGrid>(cmdExport);
+        public ViewTirage()
+        {
+
+            HasardCommand = new DelegateCommand<object>(async (_) => await RandomAsync());
+
+            ResolveCommand = new DelegateCommand<object>(
+                 async (_) =>
+                 {
+
+                     switch (Tirage.Status)
+                     {
+                         case CebStatus.Valid:
+                             await ResolveAsync();
+                             break;
+                         case CebStatus.CompteEstBon:
+                         case CebStatus.CompteApproche:
+                             await ClearAsync();
+                             break;
+                         case CebStatus.Erreur:
+                             await RandomAsync();
+                             break;
+                     }
+                 });
+
+            ExportCommand = new DelegateCommand<SfDataGrid>((SfDataGrid grid) =>
+            {
+                if (!IsCalculed) return;
+                var dlg = new SaveFileDialog
+                {
+                    FileName = "Ceb", // Default file name
+                    DefaultExt = ".xlsx", // Default file extension
+                    Filter = "Classeurs Excel|*.xlsx" // Filter files by extension
+                };
+                if (dlg.ShowDialog() == false) return;
+                var options = new ExcelExportingOptions
+                {
+                    ExcelVersion = ExcelVersion.Excel2016
+                };
+
+                using var excelEngine = new ExcelEngine();
+                IWorkbook workBook = excelEngine.Excel.Workbooks.Create();
+                var ws = workBook.Worksheets[0];
+
+                grid.ExportToExcel(grid.View, options, ws);
+                ws.ListObjects.Create("Solutions", ws[$"A1:E{grid.View.Records.Count + 1}"])
+                    .BuiltInTableStyle = TableBuiltInStyles.TableStyleDark2;
+                ws.InsertRow(1, 5);
+
+                for (var i = 1; i <= 6; i++)
+                {
+                    ws.Range[1, i].Value2 = $"Plaque {i}";
+                }
+
+                for (var i = 0; i < 6; i++)
+                {
+                    ws.Range[2, i + 1].Value2 = Plaques[i];
+                }
+                ws.Range[1, 7].Value2 = "Recherche";
+                ws.Range[2, 7].Value2 = Search;
+                ws.ListObjects.Create("Data", ws["A1:G2"])
+                    .BuiltInTableStyle = TableBuiltInStyles.TableStyleDark2;
+
+                ws.UsedRange.AutofitColumns();
+                ws.Range[4, 1].Value2 = Result;
+                ws = workBook.Worksheets[1];
+
+                ws.ImportData(Solutions, 1, 1, true);
+                try
+                {
+                    workBook.SaveAs(dlg.FileName);
+                    System.Diagnostics.Process.Start(dlg.FileName);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message, "Enregistrement impossible");
+
+                }
+
+            });
             _background = new SolidColorBrush(Colors.Navy);
-            Dispatcher = new DispatcherTimer {
+            Dispatcher = new DispatcherTimer
+            {
                 Interval = new TimeSpan(100)
 
             };
-            Dispatcher.Tick += (sender, e) => {
-                Duree = (DateTimeOffset.Now - _time).TotalSeconds;
+            Dispatcher.Tick += (sender, e) =>
+            {
+                Duree = $"{(DateTimeOffset.Now - _time).TotalSeconds:0.000}";
             };
-            dateDispatcher = new DispatcherTimer {
+            dateDispatcher = new DispatcherTimer
+            {
                 Interval = new TimeSpan(1000)
             };
-            dateDispatcher.Tick += (sender, e) => {
-                Date = Date = $"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
+            dateDispatcher.Tick += (sender, e) =>
+            {
+                Date = $"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
 
-            Plaques.CollectionChanged += (sender, e) => {
+            Plaques.CollectionChanged += (sender, e) =>
+            {
                 if (e.Action != NotifyCollectionChangedAction.Replace) return;
                 var i = e.NewStartingIndex;
-                Tirage.Plaques[i].Value = Plaques[i];
+                Tirage.Plaques[i].Text = Plaques[i];
                 ClearData();
             };
             UpdateData();
             UpdateColors();
             Date = $"{DateTime.Now:dddd MM yyyy, HH:mm:ss}";
             dateDispatcher.Start();
-            
+
         }
 
-        private void cmdExport(SfDataGrid grid) {
-            var dlg = new SaveFileDialog {
-                FileName = "Ceb", // Default file name
-                DefaultExt = ".xlsx", // Default file extension
-                Filter = "Classeurs Excel (.xlsx)|*.xlsx" // Filter files by extension
-            };
-            if (dlg.ShowDialog() == false) return;
-            var options = new ExcelExportingOptions {
-                ExcelVersion = ExcelVersion.Excel2016
-            };
 
-            ExcelEngine excelEngine = new ExcelEngine();
-            IWorkbook workBook = excelEngine.Excel.Workbooks.Create();
-            var ws = workBook.Worksheets[0];
-            grid.ExportToExcel(grid.View, options, ws);            
-            ws.ListObjects.Create("Table1", ws[$"A1:E{grid.View.Records.Count + 1}"])
-                .BuiltInTableStyle = TableBuiltInStyles.TableStyleMedium1;
-            ws.InsertRow(1, 3);
-            ws.Range["A1"].Value = "Plaques:";
-            for(var i=0; i < 6; i++) {
-                ws.Range[1, i + 2].Value2 = Plaques[i]; 
-            }
-            ws.Range["A2"].Value2 = "Cherche:";
-            ws.Range["B2"].Value2 = Search;
-            ws.Range["A3"].Value2 = Result;
 
-            try {
-                workBook.SaveAs(dlg.FileName);
-                System.Diagnostics.Process.Start(dlg.FileName);
-            } catch (Exception e) {
-                MessageBox.Show(e.Message, "Enregistrement impossible");
-
-            }
-        }
-
-        private async void cmdResolve(object _) {
-            switch (Tirage.Status) {
+        private void UpdateColors()
+        {
+            switch (Tirage.Status)
+            {
                 case CebStatus.Valid:
-                    await ResolveAsync();
-                    break;
-                case CebStatus.CompteEstBon:
-                case CebStatus.CompteApproche:
-                    await ClearAsync();
-                    break;
-                case CebStatus.Erreur:
-                    await RandomAsync();
-                    break;
-            }
-        }
-
-        private async void cmdhasard(object _) {
-            await RandomAsync();
-        }
-
-        
-
-        private void UpdateColors() {
-            switch (Tirage.Status) {
-                case CebStatus.Valid:
-                    SetBrush(Colors.Navy, Colors.Yellow);
+                    SetBrush(Colors.LightGreen, Colors.Navy);
                     break;
 
                 case CebStatus.Erreur:
@@ -253,51 +292,61 @@ namespace WpfCeb.Model {
                     SetBrush(Colors.Salmon, Colors.White);
                     break;
                 case CebStatus.EnCours:
-                    SetBrush(Colors.Green, Colors.White);
+                    SetBrush(Colors.Yellow, Colors.White);
                     break;
             }
         }
 
         //private void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        private void NotifiedChanged([CallerMemberName] string propertyName = "") {
+        private void NotifiedChanged([CallerMemberName] string propertyName = "")
+        {
             RaisePropertyChanged(propertyName);
         }
-        private void ClearData() {
-            Duree = 0;
+        private void ClearData()
+        {
+            Duree = "0,000";
             FirstSolutionString = "";
             Solutions.Clear();
             IsCalculed = false;
 
-            if (Tirage.Status != CebStatus.Erreur) {
+            if (Tirage.Status != CebStatus.Erreur)
+            {
                 Result = "Résoudre";
-            } else {
+            }
+            else
+            {
                 Result = "Tirage incorrect";
             }
             UpdateColors();
         }
 
-        private void UpdateData() {
-            lock (Plaques) {
+        private void UpdateData()
+        {
+            lock (Plaques)
+            {
                 for (var i = 0; i < Tirage.Plaques.Length; i++)
-                    Plaques[i] = Tirage.Plaques[i];
+                    Plaques[i] = Tirage.Plaques[i].Text;
             }
             NotifiedChanged("Search");
         }
 
         #region Action
 
-        public async Task ClearAsync() {
+        public async Task ClearAsync()
+        {
             await Tirage.ClearAsync();
             ClearData();
         }
 
-        public async Task RandomAsync() {
+        public async Task RandomAsync()
+        {
             await Tirage.RandomAsync();
             FirstSolutionString = "";
             UpdateData();
         }
 
-        public async Task<CebStatus> ResolveAsync() {
+        public async Task<CebStatus> ResolveAsync()
+        {
             IsBusy = true;
 
             Result = "...Calcul...";
@@ -310,14 +359,16 @@ namespace WpfCeb.Model {
                 ? "Le Compte est bon"
                 : (Tirage.Status == CebStatus.CompteApproche ?
                 $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}" : "Tirage incorrect");
+
             IsCalculed = (Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche);
-            FirstSolutionString = Tirage.Solutions[0].ToString();            
+            FirstSolutionString = Tirage.Solutions[0].ToString();
             foreach (var s in Tirage.Solutions)
-                Solutions.Add(s.Operations);
+                Solutions.Add(s.ToCebDetail());
             Dispatcher.Stop();
-            Duree = (DateTimeOffset.Now - _time).TotalSeconds;
+            Duree = $"{(DateTimeOffset.Now - _time).TotalSeconds:0.000}";
             UpdateColors();
             IsBusy = false;
+
             return Tirage.Status;
         }
 
@@ -334,20 +385,24 @@ namespace WpfCeb.Model {
                 NotifiedChanged();
             }
         }
-        public void SetBrush(Color background, Color foreground) {
+        public void SetBrush(Color background, Color foreground)
+        {
             LinearGradientBrush myLinearGradientBrush =
-                new LinearGradientBrush {
+                new LinearGradientBrush
+                {
                     StartPoint = new Point(0, 0),
                     EndPoint = new Point(0, 1)
                 };
 
-            myLinearGradientBrush.GradientStops.Add(new GradientStop {
+            myLinearGradientBrush.GradientStops.Add(new GradientStop
+            {
                 Color = background,
                 Offset = 0.0
             });
 
-            myLinearGradientBrush.GradientStops.Add(new GradientStop {
-                Color = Colors.Black,
+            myLinearGradientBrush.GradientStops.Add(new GradientStop
+            {
+                Color = Colors.Navy,
                 Offset = 1.0
             });
             Background = myLinearGradientBrush;

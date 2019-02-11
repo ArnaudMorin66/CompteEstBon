@@ -1,54 +1,48 @@
-﻿<syncfusion:ChromelessWindow
+﻿<Sf:ChromelessWindow
     x:Class="WpfCeb.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Sf="http://schemas.syncfusion.com/wpf"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:WpfCeb"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:model="clr-namespace:WpfCeb.Model"
-    xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
     Title="Le compte est bon"
     Width="800"
     Height="450"
-    CornerRadius="4"
+    Sf:SkinStorage.EnableOptimization="True"
+    Sf:SkinStorage.VisualStyle="Blend"
     Icon="favicon.ico"
-    Initialized="ChromelessWindow_Initialized"
+    UseNativeChrome="True"
     mc:Ignorable="d">
-    <syncfusion:ChromelessWindow.Resources>
+    <Sf:ChromelessWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="CebDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <Style x:Key="CebComboboxStyle" TargetType="syncfusion:ComboBoxAdv">
-                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                <Setter Property="VerticalAlignment" Value="Stretch" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="IsEditable" Value="True" />
-                <Setter Property="ItemStringFormat" Value="##0" />
-                <Setter Property="MaxDropDownHeight" Value="150" />
-            </Style>
+
         </ResourceDictionary>
-    </syncfusion:ChromelessWindow.Resources>
-    <syncfusion:ChromelessWindow.DataContext>
-        <model:BindingTirage x:Name="bindTirage" />
-    </syncfusion:ChromelessWindow.DataContext>
-    <syncfusion:ChromelessWindow.InputBindings>
+    </Sf:ChromelessWindow.Resources>
+    <Sf:ChromelessWindow.DataContext>
+        <local:ViewTirage x:Name="tirage" />
+    </Sf:ChromelessWindow.DataContext>
+    <Sf:ChromelessWindow.InputBindings>
         <KeyBinding
             Key="H"
             Command="{Binding HasardCommand}"
-            Modifiers="Alt" />
+            CommandTarget="{Binding ElementName=btnHasard, IsAsync=True}"
+            Modifiers="Ctrl" />
         <KeyBinding
             Key="R"
-            Command="{Binding ResolveCommand}"
-            Modifiers="Alt" />
+            Command="{Binding ResolveCommand, IsAsync=True}"
+            CommandTarget="{Binding ElementName=btnResoudre}"
+            Modifiers="Ctrl" />
         <KeyBinding
             Key="X"
             Command="{Binding ExportCommand}"
-            CommandParameter="{Binding ElementName=SolutionsData}"
-            Modifiers="Alt" />
-
-    </syncfusion:ChromelessWindow.InputBindings>
-
+            CommandParameter="{Binding ElementName=SolutionsData, IsAsync=True}"
+            CommandTarget="{Binding ElementName=btnExcel}"
+            Modifiers="Ctrl" />
+    </Sf:ChromelessWindow.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
@@ -76,6 +70,12 @@
             Grid.Row="0"
             Grid.Column="1"
             Grid.ColumnSpan="10">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Color="Green" />
+                    <GradientStop Offset="1" Color="Navy" />
+                </LinearGradientBrush>
+            </Border.Background>
             <TextBlock
                 VerticalAlignment="Stretch"
                 FontSize="32"
@@ -84,6 +84,16 @@
                 <TextBlock.Text>Jeu du compte est bon</TextBlock.Text>
             </TextBlock>
         </Border>
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="8"
+            Grid.ColumnSpan="2"
+            VerticalAlignment="Top"
+            Background="Transparent"
+            FontSize="10"
+            Text="{Binding Date}"
+            HorizontalAlignment="Right"
+            TextAlignment="Right" />
         <Border
             Grid.Row="1"
             Grid.Column="1"
@@ -92,83 +102,77 @@
             <TextBlock Style="{StaticResource TextBoxTitreStyle}"><Run Text="Plaques" /></TextBlock>
         </Border>
         <ComboBox
+            x:Name="Plaque1"
             Grid.Row="1"
             Grid.Column="2"
-            HorizontalAlignment="Stretch" 
-            VerticalAlignment="Stretch" 
-            HorizontalContentAlignment="Center" 
-            VerticalContentAlignment="Center" 
-            IsEditable="True" 
-            ItemStringFormat="##0" 
-            MaxDropDownHeight="150" 
-            IsEnabled="{Binding !IsBusy}"
-            ItemsSource="{Binding ListePlaques}"
-            SelectedValue="{Binding Plaques[0], Mode=TwoWay}"/>
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            IsEditable="true"
+            ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+            MaxDropDownHeight="150"
+            Text="{Binding Plaques[0], Mode=TwoWay}" />
         <ComboBox
+            x:Name="Plaque2"
             Grid.Row="1"
             Grid.Column="3"
-            HorizontalAlignment="Stretch" 
-            VerticalAlignment="Stretch" 
-            HorizontalContentAlignment="Center" 
-            VerticalContentAlignment="Center" 
-            IsEditable="True" 
-            ItemStringFormat="##0" 
-            MaxDropDownHeight="150" 
-            IsEnabled="{Binding !IsBusy}"
-            ItemsSource="{Binding ListePlaques}"
-            SelectedValue="{Binding Plaques[1], Mode=TwoWay}" />
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            IsEditable="true"
+            ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+            MaxDropDownHeight="150"
+            Text="{Binding Plaques[1], Mode=TwoWay}" />
         <ComboBox
+            x:Name="Plaque3"
             Grid.Row="1"
             Grid.Column="4"
-            HorizontalAlignment="Stretch" 
-            VerticalAlignment="Stretch" 
-            HorizontalContentAlignment="Center" 
-            VerticalContentAlignment="Center" 
-            IsEditable="True" 
-            ItemStringFormat="##0" 
-            MaxDropDownHeight="150" 
-            IsEnabled="{Binding !IsBusy}"
-            ItemsSource="{Binding ListePlaques}"
-            SelectedValue="{Binding Plaques[2], Mode=TwoWay}" />
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            IsEditable="true"
+            ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+            MaxDropDownHeight="150"
+            Text="{Binding Plaques[2], Mode=TwoWay}" />
         <ComboBox
+            x:Name="Plaque4"
             Grid.Row="1"
             Grid.Column="5"
-            HorizontalAlignment="Stretch" 
-            VerticalAlignment="Stretch" 
-            HorizontalContentAlignment="Center" 
-            VerticalContentAlignment="Center" 
-            IsEditable="True" 
-            ItemStringFormat="##0" 
-            MaxDropDownHeight="150" 
-            IsEnabled="{Binding !IsBusy}"
-            ItemsSource="{Binding ListePlaques}"
-            SelectedValue="{Binding Plaques[3], Mode=TwoWay}" />
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            IsEditable="true"
+            ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+            MaxDropDownHeight="150"
+            Text="{Binding Plaques[3], Mode=TwoWay}" />
         <ComboBox
+            x:Name="Plaque5"
             Grid.Row="1"
             Grid.Column="6"
-            HorizontalAlignment="Stretch" 
-            VerticalAlignment="Stretch" 
-            HorizontalContentAlignment="Center" 
-            VerticalContentAlignment="Center" 
-            IsEditable="True" 
-            ItemStringFormat="##0" 
-            MaxDropDownHeight="150" 
-            IsEnabled="{Binding !IsBusy}"
-            ItemsSource="{Binding ListePlaques}"
-            SelectedValue="{Binding Plaques[4], Mode=TwoWay}" />
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            IsEditable="true"
+            ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+            MaxDropDownHeight="150"
+            Text="{Binding Plaques[4], Mode=TwoWay}" />
         <ComboBox
+            x:Name="Plaque6"
             Grid.Row="1"
             Grid.Column="7"
-            HorizontalAlignment="Stretch" 
-            VerticalAlignment="Stretch" 
-            HorizontalContentAlignment="Center" 
-            VerticalContentAlignment="Center" 
-            IsEditable="True" 
-            ItemStringFormat="##0" 
-            MaxDropDownHeight="150" 
-            IsEnabled="{Binding !IsBusy}"
-            ItemsSource="{Binding ListePlaques}"
-            SelectedValue="{Binding Plaques[5], Mode=TwoWay}" />
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            IsEditable="true"
+            ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+            MaxDropDownHeight="150"
+            Text="{Binding Plaques[5], Mode=TwoWay}" />
         <Border
             Grid.Row="1"
             Grid.Column="8"
@@ -176,8 +180,8 @@
             Style="{StaticResource BorderTitreStyle}">
             <TextBlock Style="{StaticResource TextBoxTitreStyle}" Text="Cherche" />
         </Border>
-        <syncfusion:UpDown
-            x:Name="inputsearch"
+        <Sf:UpDown
+            x:Name="Search"
             Grid.Row="1"
             Grid.Column="9"
             Grid.ColumnSpan="2"
@@ -186,19 +190,32 @@
             MaxValidation="OnLostFocus"
             MaxValue="999"
             MinValidation="OnLostFocus"
-            MinValue="0"
+            MinValue="100"
             NumberDecimalDigits="0"
             Value="{Binding Search, Mode=TwoWay}" />
-        <syncfusion:ButtonAdv
+        <Button
             x:Name="btnHasard"
             Grid.Row="2"
             Grid.Column="1"
             Grid.ColumnSpan="4"
             Command="{Binding HasardCommand}"
-            Label="Hasard"
             Style="{StaticResource CebButtonStyle}"
-            ToolTipService.ToolTip="Raccourci: Alt+H" />
-        <syncfusion:ButtonAdv
+            Template="{DynamicResource CebButtonTemplate}"
+            ToolTipService.ToolTip="Raccourci: Ctrl+H">
+            <StackPanel Orientation="Horizontal">
+                <Image
+                    Width="24"
+                    Height="24"
+                    HorizontalAlignment="Left"
+                    Source="images/random.png" />
+                <TextBlock
+                    Padding="4"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Text="Hasard" />
+            </StackPanel>
+        </Button>
+        <Button
             x:Name="btnResoudre"
             Grid.Row="2"
             Grid.Column="5"
@@ -206,20 +223,47 @@
             Background="{Binding Background}"
             Command="{Binding ResolveCommand}"
             Foreground="{Binding Foreground}"
-            Label="{Binding Result}"
             Style="{StaticResource CebButtonStyle}"
-            ToolTipService.ToolTip="Raccourci: Alt+R" />
-        <syncfusion:ButtonAdv
+            Template="{DynamicResource CebButtonTemplate}"
+            ToolTipService.ToolTip="Raccourci: Ctrl+R">
+            <StackPanel Orientation="Horizontal">
+                <Image
+                    Width="24"
+                    Height="24"
+                    HorizontalAlignment="Left"
+                    Source="images/exec.png" />
+                <TextBlock
+                    Padding="4"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Text="{Binding Result}" />
+            </StackPanel>
+        </Button>
+        <Button
             x:Name="btnExcel"
             Grid.Row="2"
             Grid.Column="9"
             Grid.ColumnSpan="2"
             Command="{Binding ExportCommand}"
             CommandParameter="{Binding ElementName=SolutionsData}"
-            IsEnabled="{Binding IsCalculed}"
-            Label="Excel"
             Style="{StaticResource CebButtonStyle}"
-            ToolTipService.ToolTip="Raccourci: Alt+X" />
+            Template="{DynamicResource CebButtonTemplate}"
+            ToolTipService.ToolTip="Raccourci: Ctrl+X">
+            <StackPanel Orientation="Horizontal">
+                <Image
+                    Width="24"
+                    Height="24"
+                    HorizontalAlignment="Left"
+                    Source="images/excel.png" />
+                <TextBlock
+                    Padding="4"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center">
+                    Excel
+                </TextBlock>
+
+            </StackPanel>
+        </Button>
         <Grid
             Grid.Row="3"
             Grid.Column="1"
@@ -233,7 +277,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <syncfusion:SfBusyIndicator
+            <Sf:SfBusyIndicator
                 Grid.Column="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
@@ -260,7 +304,7 @@
                 Foreground="White"
                 TextAlignment="Center"><Run FontFamily="Segoe UI" Text="Durée: " /><Run Text=" " /><Run Text="{Binding Duree, Mode=OneWay}" /><Run Text=" " /><Run Text=" s" /></TextBlock>
         </Grid>
-        <syncfusion:SfDataGrid
+        <Sf:SfDataGrid
             x:Name="SolutionsData"
             Grid.Row="4"
             Grid.Column="1"
@@ -274,33 +318,33 @@
             FontSize="14"
             ItemsSource="{Binding Solutions}"
             NavigationMode="Row">
-            <syncfusion:SfDataGrid.Columns>
-                <syncfusion:GridTextColumn
+            <Sf:SfDataGrid.Columns>
+                <Sf:GridTextColumn
                     HeaderText="Opération 1"
-                    MappingName="[0]"
+                    MappingName="op1"
                     TextAlignment="Center"
                     UseBindingValue="True" />
-                <syncfusion:GridTextColumn
+                <Sf:GridTextColumn
                     HeaderText="Opération 2"
-                    MappingName="[1]"
+                    MappingName="op2"
                     TextAlignment="Center"
                     UseBindingValue="True" />
-                <syncfusion:GridTextColumn
+                <Sf:GridTextColumn
                     HeaderText="Opération 3"
-                    MappingName="[2]"
+                    MappingName="op3"
                     TextAlignment="Center"
                     UseBindingValue="True" />
-                <syncfusion:GridTextColumn
+                <Sf:GridTextColumn
                     HeaderText="Opération 4"
-                    MappingName="[3]"
+                    MappingName="op4"
                     TextAlignment="Center"
                     UseBindingValue="True" />
-                <syncfusion:GridTextColumn
+                <Sf:GridTextColumn
                     HeaderText="Opération 5"
-                    MappingName="[4]"
+                    MappingName="op5"
                     TextAlignment="Center"
                     UseBindingValue="True" />
-            </syncfusion:SfDataGrid.Columns>
-        </syncfusion:SfDataGrid>
+            </Sf:SfDataGrid.Columns>
+        </Sf:SfDataGrid>
     </Grid>
-</syncfusion:ChromelessWindow>
+</Sf:ChromelessWindow>

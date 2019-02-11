@@ -34,8 +34,9 @@
     </Page.Resources>
 
     <Page.DataContext>
-        <local:BindingTirage x:Name="bindTirage" />
+        <local:ViewTirage x:Name="bindTirage" />
     </Page.DataContext>
+
     <Grid
         x:Name="Grid"
         x:FieldModifier="public"
@@ -151,12 +152,15 @@
             Grid.Row="2"
             Grid.Column="1"
             Grid.ColumnSpan="4"
-            AccessKey="H"
             Background="{Binding Background}"
-            Click="Hasard_Click"
+            Command="{Binding HasardCommand}"
             Foreground="{Binding Foreground}"
+            KeyboardAcceleratorPlacementMode="Auto"
             Style="{StaticResource CebButtonStyle}"
-            ToolTipService.ToolTip="Raccourci: Alt+H">
+            ToolTipService.ToolTip="Raccourci: Ctrl+H">
+            <Button.KeyboardAccelerators>
+                <KeyboardAccelerator Key="H" Modifiers="Control" />
+            </Button.KeyboardAccelerators>
             <Button.Content>
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Margin="5" Symbol="Shuffle" />
@@ -168,12 +172,14 @@
             Grid.Row="2"
             Grid.Column="5"
             Grid.ColumnSpan="4"
-            AccessKey="R"
             Background="{Binding Background}"
-            Click="Resoudre_Click"
+            Command="{Binding ResolveCommand}"
             Foreground="{Binding Foreground}"
             Style="{StaticResource CebButtonStyle}"
-            ToolTipService.ToolTip="Raccourci: Alt+R">
+            ToolTipService.ToolTip="Raccourci: Ctrl+R">
+            <Button.KeyboardAccelerators>
+                <KeyboardAccelerator Key="R" Modifiers="Control" />
+            </Button.KeyboardAccelerators>
             <Button.Content>
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Margin="5" Symbol="Play" />
@@ -186,12 +192,15 @@
             Grid.Row="2"
             Grid.Column="9"
             Grid.ColumnSpan="2"
-            AccessKey="X"
             Background="{Binding Background}"
-            Click="ExportExcel_Click"
+            Command="{Binding ExportCommand}"
+            CommandParameter="{Binding ElementName=SolutionsData}"
             Foreground="{Binding Foreground}"
             Style="{StaticResource CebButtonStyle}"
-            ToolTipService.ToolTip="Raccourci: Alt+X">
+            ToolTipService.ToolTip="Raccourci: Ctrl+X">
+            <Button.KeyboardAccelerators>
+                <KeyboardAccelerator Key="X" Modifiers="Control" />
+            </Button.KeyboardAccelerators>
             <Button.Content>
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Margin="5" Symbol="Save" />
@@ -270,23 +279,23 @@
             <sf:SfDataGrid.Columns>
                 <sf:GridTextColumn
                     HeaderText="Opération 1"
-                    MappingName="[0]"
+                    MappingName="op1"
                     TextAlignment="Center" />
                 <sf:GridTextColumn
                     HeaderText="Opération 2"
-                    MappingName="[1]"
+                    MappingName="op2"
                     TextAlignment="Center" />
                 <sf:GridTextColumn
                     HeaderText="Opération 3"
-                    MappingName="[2]"
+                    MappingName="op3"
                     TextAlignment="Center" />
                 <sf:GridTextColumn
                     HeaderText="Opération 4"
-                    MappingName="[3]"
+                    MappingName="op4"
                     TextAlignment="Center" />
                 <sf:GridTextColumn
                     HeaderText="Opération 5"
-                    MappingName="[4]"
+                    MappingName="op5"
                     TextAlignment="Center" />
             </sf:SfDataGrid.Columns>
         </sf:SfDataGrid>

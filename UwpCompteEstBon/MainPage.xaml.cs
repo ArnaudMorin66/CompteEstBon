@@ -26,60 +26,6 @@ namespace UwpCompteEstBon
         {
             this.InitializeComponent();
         }
-        private async void Hasard_Click(object sender, RoutedEventArgs e)
-        {
-            await bindTirage.RandomAsync();
-        }
-
-        private async void Resoudre_Click(object sender, RoutedEventArgs e)
-        {
-            switch (bindTirage.Tirage.Status)
-            {
-                case CebStatus.Valid:
-                    await bindTirage.ResolveAsync();
-                    break;
-                case CebStatus.CompteEstBon:
-                case CebStatus.CompteApproche:
-                    await bindTirage.ClearAsync();
-                    break;
-                case CebStatus.Erreur:
-                    await bindTirage.RandomAsync();
-                    break;
-            }
-        }
-        private async System.Threading.Tasks.Task ExportGridToExcelAsync()
-        {
-            FileSavePicker savePicker = new FileSavePicker
-            {
-                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
-            };
-            // Dropdown of file types the user can save the file as
-            savePicker.FileTypeChoices.Add("Excel", new List<string>() { ".xlsx" });
-            // Default file name if the user does not type one in or select a file to replace
-            savePicker.SuggestedFileName = "Ceb";
-            StorageFile file = await savePicker.PickSaveFileAsync();
-            if (file != null)
-            {
-                // Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
-                CachedFileManager.DeferUpdates(file);
-
-                var options = new ExcelExportingOptions
-                {
-                    ExcelVersion = ExcelVersion.Excel2013,
-                    ExportAllPages = true
-                };
-                var excelEngine = SolutionsData.ExportToExcel(SolutionsData.View, options);
-                var workBook = excelEngine.Excel.Workbooks[0];
-                await workBook.SaveAsAsync(file);
-                // Let Windows know that we're finished changing the file so the other app can update the remote version of the file.
-                // Completing updates may require Windows to ask for user input.
-                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
-            }
-        }
-
-        private async void ExportExcel_Click(object sender, RoutedEventArgs e)
-        {
-            await ExportGridToExcelAsync();
-        }
+        
     }
 }
