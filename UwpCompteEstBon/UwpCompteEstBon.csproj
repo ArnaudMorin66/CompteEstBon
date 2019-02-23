@@ -113,28 +113,28 @@
       <Version>6.2.2</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfBusyIndicator.UWP">
-      <Version>16.4.0.52</Version>
+      <Version>16.4.0.54</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfGrid.UWP">
-      <Version>16.4.0.52</Version>
+      <Version>16.4.0.54</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfGridConverter.UWP">
       <Version>16.2.0.46</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfInput.UWP">
-      <Version>16.4.0.52</Version>
+      <Version>16.4.0.54</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.XlsIO.UWP">
-      <Version>16.4.0.52</Version>
+      <Version>16.4.0.54</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="ceb.snk" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CebLib\CebLib.csproj">
-      <Project>{5e976ef9-5db2-4b32-9bd6-50f62f590245}</Project>
-      <Name>CebLib</Name>
+    <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj">
+      <Project>{e870da70-15e2-4113-8c79-2ca7610688bc}</Project>
+      <Name>CompteEstBon</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '15.0' ">

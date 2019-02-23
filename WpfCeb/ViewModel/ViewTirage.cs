@@ -1,6 +1,7 @@
 ﻿#region
 
 using CompteEstBon;
+using Microsoft.Win32;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Converter;
 using Syncfusion.Windows.Shared;
@@ -9,65 +10,53 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using System.IO;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Microsoft.Win32;
-using System.Windows.Input;
-
 
 #endregion
 
 namespace WpfCeb
 {
+    
     public class ViewTirage : NotificationObject
     {
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
         private Brush _background;
         private string _duree;
+        public Stopwatch stopwatch;
 
         private Brush _foreground = new SolidColorBrush(Colors.White);
 
         private bool _isBusy;
 
         private bool _isCalculed = false;
-        private DateTimeOffset _time;
+        // private DateTimeOffset _time;
 
         private string _result = "Résoudre";
 
         private Visibility _visibility = Visibility.Collapsed;
-        private Visibility _notifyVisibility = Visibility.Collapsed;
+        private Visibility _notifyVisibility = Visibility.Hidden;
         public DelegateCommand<object> HasardCommand { get; set; }
 
         public DelegateCommand<object> ResolveCommand { get; set; }
 
         public DelegateCommand<SfDataGrid> ExportCommand { get; set; }
 
-        public DispatcherTimer Dispatcher;
+        public DelegateCommand<SfDataGrid> NotifyCommand { get; set; }
+        // public DispatcherTimer dureeTimer;
         public DispatcherTimer dateDispatcher;
+        public DispatcherTimer notifyTimer;
 
         public CebTirage Tirage { get; } = new CebTirage();
 
         public ObservableCollection<string> Plaques { get; } = new ObservableCollection<string> { "", "", "", "", "", "" };
 
-
         public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
-
-
-        public string _date;
-
-        public string Date {
-            get => _date;
-            set {
-                _date = value;
-                NotifiedChanged();
-            }
-        }
 
         public string Duree {
             get => _duree;
@@ -76,7 +65,9 @@ namespace WpfCeb
                 NotifiedChanged();
             }
         }
+
         private string _symbol;
+
         public string Symbol {
             get => _symbol;
             set {
@@ -85,6 +76,15 @@ namespace WpfCeb
             }
         }
 
+        public string _solution;
+
+        public string Solution {
+            get => _solution;
+            set {
+                _solution = value;
+                NotifiedChanged();
+            }
+        }
 
         public int Search {
             get => Tirage.Search;
@@ -134,7 +134,7 @@ namespace WpfCeb
             get => _isCalculed;
             set {
                 _isCalculed = value;
-                NotifyVisibility = _isCalculed ? Visibility.Visible : Visibility.Collapsed;
+                // NotifyVisibility = _isCalculed ? Visibility.Visible : Visibility.Collapsed;
                 NotifiedChanged();
             }
         }
@@ -146,6 +146,7 @@ namespace WpfCeb
                 NotifiedChanged();
             }
         }
+
         public Visibility NotifyVisibility {
             get => _notifyVisibility;
             set {
@@ -154,28 +155,38 @@ namespace WpfCeb
             }
         }
 
+        private string _titre = "Le compte est bon";
+
+        public string Titre {
+            get => _titre;
+            set {
+                _titre = value;
+                NotifiedChanged();
+            }
+        }
+
         /// <summary>
         /// Initialisation
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public ViewTirage()
         {
-
             HasardCommand = new DelegateCommand<object>(async (_) => await RandomAsync());
-
             ResolveCommand = new DelegateCommand<object>(
                  async (_) =>
                  {
-
                      switch (Tirage.Status)
                      {
                          case CebStatus.Valid:
                              await ResolveAsync();
                              break;
+
                          case CebStatus.CompteEstBon:
                          case CebStatus.CompteApproche:
                              await ClearAsync();
                              break;
+
                          case CebStatus.Erreur:
                              await RandomAsync();
                              break;
@@ -189,42 +200,38 @@ namespace WpfCeb
                 {
                     FileName = "Ceb", // Default file name
                     DefaultExt = ".xlsx", // Default file extension
-                    Filter = "Classeurs Excel|*.xlsx" // Filter files by extension
+                    Filter = "Classeurs xlsx |*.xlsx" // Filter files by extension
                 };
-                if (dlg.ShowDialog() == false) return;
+                if (dlg.ShowDialog(Application.Current.MainWindow) == false) return;
                 var options = new ExcelExportingOptions
                 {
-                    ExcelVersion = ExcelVersion.Excel2016
+                    ExcelVersion = ExcelVersion.Excel2016,
+                    StartRowIndex = 6,
+                    StartColumnIndex = 1
                 };
 
                 using var excelEngine = new ExcelEngine();
                 IWorkbook workBook = excelEngine.Excel.Workbooks.Create();
                 var ws = workBook.Worksheets[0];
 
-                grid.ExportToExcel(grid.View, options, ws);
-                ws.ListObjects.Create("Solutions", ws[$"A1:E{grid.View.Records.Count + 1}"])
-                    .BuiltInTableStyle = TableBuiltInStyles.TableStyleDark2;
-                ws.InsertRow(1, 5);
-
                 for (var i = 1; i <= 6; i++)
                 {
                     ws.Range[1, i].Value2 = $"Plaque {i}";
+                    ws.Range[2, i].Value2 = Plaques[i - 1];
                 }
 
-                for (var i = 0; i < 6; i++)
-                {
-                    ws.Range[2, i + 1].Value2 = Plaques[i];
-                }
                 ws.Range[1, 7].Value2 = "Recherche";
                 ws.Range[2, 7].Value2 = Search;
                 ws.ListObjects.Create("Data", ws["A1:G2"])
-                    .BuiltInTableStyle = TableBuiltInStyles.TableStyleDark2;
+                    .BuiltInTableStyle = TableBuiltInStyles.TableStyleDark1;
 
+                grid.ExportToExcel(grid.View, options, ws);
+                var ls = ws.ListObjects.Create("Solutions", ws[$"A6:E{grid.View.Records.Count + 6}"])
+                    .BuiltInTableStyle = TableBuiltInStyles.TableStyleDark1;
                 ws.UsedRange.AutofitColumns();
+                ws.UsedRange.AutofitRows();
                 ws.Range[4, 1].Value2 = Result;
-                ws = workBook.Worksheets[1];
 
-                ws.ImportData(Solutions, 1, 1, true);
                 try
                 {
                     workBook.SaveAs(dlg.FileName);
@@ -233,29 +240,37 @@ namespace WpfCeb
                 catch (Exception e)
                 {
                     MessageBox.Show(e.Message, "Enregistrement impossible");
-
                 }
-
             });
-            _background = new SolidColorBrush(Colors.Navy);
-            Dispatcher = new DispatcherTimer
-            {
-                Interval = new TimeSpan(100)
 
-            };
-            Dispatcher.Tick += (sender, e) =>
-            {
-                Duree = $"{(DateTimeOffset.Now - _time).TotalSeconds:0.000}";
-            };
+            _background = new SolidColorBrush(Colors.Navy);
+            stopwatch = new Stopwatch();
             dateDispatcher = new DispatcherTimer
             {
-                Interval = new TimeSpan(1000)
+                Interval = TimeSpan.FromMilliseconds(10)
             };
             dateDispatcher.Tick += (sender, e) =>
             {
-                Date = $"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
+                if(stopwatch.IsRunning) {
+                    Duree = stopwatch.Elapsed.ToString();
+                }
+                Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
+            };
+            notifyTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(10)
+            };
+            notifyTimer.Tick += (sender, e) =>
+            {
+                NotifyVisibility = Visibility.Hidden;
+                notifyTimer.Stop();
             };
 
+            NotifyCommand = new DelegateCommand<SfDataGrid>(sf => {
+                if (sf.SelectedIndex < 0) return;
+                Solution = Tirage.Solutions[sf.SelectedIndex].ToString();
+                ShowNotify();
+            });
             Plaques.CollectionChanged += (sender, e) =>
             {
                 if (e.Action != NotifyCollectionChangedAction.Replace) return;
@@ -265,12 +280,9 @@ namespace WpfCeb
             };
             UpdateData();
             UpdateColors();
-            Date = $"{DateTime.Now:dddd MM yyyy, HH:mm:ss}";
+            Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             dateDispatcher.Start();
-
         }
-
-
 
         private void UpdateColors()
         {
@@ -291,24 +303,25 @@ namespace WpfCeb
                 case CebStatus.CompteApproche:
                     SetBrush(Colors.Salmon, Colors.White);
                     break;
+
                 case CebStatus.EnCours:
                     SetBrush(Colors.Yellow, Colors.White);
                     break;
             }
         }
 
-        //private void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         private void NotifiedChanged([CallerMemberName] string propertyName = "")
         {
             RaisePropertyChanged(propertyName);
         }
+
         private void ClearData()
         {
-            Duree = "0,000";
-            FirstSolutionString = "";
+            stopwatch.Reset();
+            Duree = stopwatch.Elapsed.ToString();
             Solutions.Clear();
             IsCalculed = false;
-
+            Solution = "";
             if (Tirage.Status != CebStatus.Erreur)
             {
                 Result = "Résoudre";
@@ -317,6 +330,7 @@ namespace WpfCeb
             {
                 Result = "Tirage incorrect";
             }
+                NotifyVisibility = Visibility.Hidden;
             UpdateColors();
         }
 
@@ -341,7 +355,6 @@ namespace WpfCeb
         public async Task RandomAsync()
         {
             await Tirage.RandomAsync();
-            FirstSolutionString = "";
             UpdateData();
         }
 
@@ -351,8 +364,8 @@ namespace WpfCeb
 
             Result = "...Calcul...";
             SetBrush(Colors.Green, Colors.White);
-            _time = DateTimeOffset.Now;
-            Dispatcher.Start();
+            // dureeTimer.Start();
+            stopwatch.Start();
             await Tirage.ResolveAsync();
 
             Result = Tirage.Status == CebStatus.CompteEstBon
@@ -361,30 +374,28 @@ namespace WpfCeb
                 $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}" : "Tirage incorrect");
 
             IsCalculed = (Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche);
-            FirstSolutionString = Tirage.Solutions[0].ToString();
             foreach (var s in Tirage.Solutions)
                 Solutions.Add(s.ToCebDetail());
-            Dispatcher.Stop();
-            Duree = $"{(DateTimeOffset.Now - _time).TotalSeconds:0.000}";
+            stopwatch.Stop();
+            Duree = stopwatch.Elapsed.ToString();
+            Solution = Tirage.Solution.ToString();
             UpdateColors();
             IsBusy = false;
-
+            Solution = Tirage.Solution.ToString();
+            ShowNotify();
             return Tirage.Status;
         }
 
-
         #endregion Action
-        public string _firstSolutionString;
 
-        public string FirstSolutionString {
-            get {
-                return _firstSolutionString;
-            }
-            set {
-                _firstSolutionString = value;
-                NotifiedChanged();
-            }
+        public void ShowNotify()
+        {
+            if (NotifyVisibility == Visibility.Visible)
+                return;
+            NotifyVisibility = Visibility.Visible;
+            notifyTimer.Start();
         }
+
         public void SetBrush(Color background, Color foreground)
         {
             LinearGradientBrush myLinearGradientBrush =

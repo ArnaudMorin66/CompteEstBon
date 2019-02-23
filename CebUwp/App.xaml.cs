@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Syncfusion.Licensing;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
@@ -20,6 +21,7 @@ namespace CebUwp
         /// </summary>
         public App()
         {
+            SyncfusionLicenseProvider.RegisterLicense("NjU1MjZAMzEzNjJlMzQyZTMwTFpldXcyV3A5czdOeUoxUjRtMVd5RzRiZGhTN2lTUFVqam5jNTFCQXk1cz0=");
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }

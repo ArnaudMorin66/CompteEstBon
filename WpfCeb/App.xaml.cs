@@ -9,7 +9,6 @@ namespace WpfCeb {
     public partial class App : Application {
         public App() {
             SyncfusionLicenseProvider.RegisterLicense(WpfCeb.Properties.Settings.Default.Licence);
-            
             SfSkinManager.ApplyStylesOnApplication = true;
         }
     }

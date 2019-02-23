@@ -5,7 +5,6 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using CompteEstBon;
 using Syncfusion.UI.Xaml.Grid.Converter;
 using Syncfusion.XlsIO;
 using Windows.Storage;
@@ -26,6 +25,23 @@ namespace UwpCompteEstBon
         {
             this.InitializeComponent();
         }
-        
+
+        private void AppFullscreen(object sender, RoutedEventArgs e)
+        {
+            ApplicationView view = ApplicationView.GetForCurrentView();
+            if (view.IsFullScreenMode)
+            {
+                view.ExitFullScreenMode();
+            }
+            else
+            {
+                view.TryEnterFullScreenMode();
+            }
+        }
+
+        private void SelectSolution(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

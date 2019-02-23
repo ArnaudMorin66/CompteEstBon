@@ -25,51 +25,15 @@ namespace CebUwp
             }
         }
 
-        private async void ExportCSV_Click(object sender, RoutedEventArgs e) => await bindTirage.ExportToCsvAsync();
-
-        private async void Hasard_Click(object sender, RoutedEventArgs e)
-        {
-            await bindTirage.RandomAsync();
-        }
-
         private void Page_Unloaded(object sender, RoutedEventArgs e) => this.bindTirage.dateDispatcher.Stop();
 
-        private async void Resoudre_Click(object sender, RoutedEventArgs e)
-        {
-            switch (bindTirage.Tirage.Status)
-            {
-            case CebStatus.Valid:
-                await bindTirage.ResolveAsync();
-                SolutionsData.SelectedIndex = 0;
-                break;
+        
 
-            case CebStatus.CompteEstBon:
-            case CebStatus.CompteApproche:
-                SolutionsData.SelectedIndex = -1;
-                await bindTirage.ClearAsync();
-                break;
-
-            case CebStatus.Erreur:
-                SolutionsData.SelectedIndex = -1;
-                await bindTirage.RandomAsync();
-                break;
-            }
-        }
-
-        private void Result_Click(object sender, RoutedEventArgs e)
-        {
-            cebNotification.Show(5000);
-        }
-
+        
         private void SolutionsData_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (SolutionsData.SelectedIndex == -1)
-            {
-                cebNotification.Dismiss();
-                return;
-            }
-            bindTirage.CurrentSolution = bindTirage.SolutionToString(SolutionsData.SelectedIndex);
-            cebNotification.Show(10000);
+            bindTirage.ShowNotify(SolutionsData.SelectedIndex);
+   
         }
 
         private void TbMoins_Click(object sender, RoutedEventArgs e)
@@ -86,6 +50,11 @@ namespace CebUwp
             {
                 bindTirage.Search++;
             }
+        }
+
+        private void SelectSolution(object sender, RoutedEventArgs e)
+        {
+            bindTirage.ShowNotify(SolutionsData.SelectedIndex);
         }
     }
 }

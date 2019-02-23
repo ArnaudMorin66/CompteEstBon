@@ -6,6 +6,8 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Windows.Storage;
 using Syncfusion.Licensing;
+using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
 
 namespace UwpCompteEstBon {
     /// <summary>
@@ -31,6 +33,25 @@ namespace UwpCompteEstBon {
         /// <param name="e">Détails concernant la requête et le processus de lancement.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitleBar.ExtendViewIntoTitleBar = true;
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+
+            // Set active window colors
+            // titleBar.ForegroundColor = Windows.UI.Colors.White;
+            // titleBar.BackgroundColor = Windows.UI.Colors.Blue;
+            titleBar.ButtonForegroundColor = Windows.UI.Colors.White;
+            titleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
+            titleBar.ButtonHoverForegroundColor = Windows.UI.Colors.Black;
+            titleBar.ButtonHoverBackgroundColor = Windows.UI.Colors.Transparent;
+            titleBar.ButtonPressedForegroundColor = Windows.UI.Colors.Yellow;
+            titleBar.ButtonPressedBackgroundColor = Windows.UI.Colors.Navy;
+
+            // Set inactive window colors
+            titleBar.InactiveForegroundColor = Windows.UI.Colors.Gray;
+            titleBar.InactiveBackgroundColor = Windows.UI.Colors.SeaGreen;
+            titleBar.ButtonInactiveForegroundColor = Windows.UI.Colors.Gray;
+            titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.SeaGreen;
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Ne répétez pas l'initialisation de l'application lorsque la fenêtre comporte déjà du contenu,
