@@ -19,6 +19,11 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="CebDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <LinearGradientBrush x:Key="ButtonBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Offset="0.0" Color="{Binding Background}" />
+                <GradientStop Offset="1.0" Color="Black" />
+            </LinearGradientBrush>
+            <SolidColorBrush x:Key="ButtonForegroundBrush" Color="{Binding Foreground}" />
             <Storyboard x:Key="TextBlockBoard">
                 <DoubleAnimation
                     AutoReverse="True"
@@ -31,6 +36,20 @@
                     AutoReverse="True"
                     RepeatBehavior="Forever"
                     Storyboard.TargetName="MyAnimatedScaleTransform"
+                    Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                    To="0.9"
+                    Duration="0:0:5" />
+                <DoubleAnimation
+                    AutoReverse="True"
+                    RepeatBehavior="Forever"
+                    Storyboard.TargetName="MyAnimatedScaleTransform2"
+                    Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                    To="0.5"
+                    Duration="0:0:5" />
+                <DoubleAnimation
+                    AutoReverse="True"
+                    RepeatBehavior="Forever"
+                    Storyboard.TargetName="MyAnimatedScaleTransform2"
                     Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
                     To="0.9"
                     Duration="0:0:5" />
@@ -49,7 +68,7 @@
         <KeyBinding
             Key="R"
             Command="{Binding ResolveCommand, IsAsync=True}"
-            CommandTarget="{Binding ElementName=btnResoudre,IsAsync=True}"
+            CommandTarget="{Binding ElementName=btnResoudre, IsAsync=True}"
             Modifiers="Ctrl" />
         <KeyBinding
             Key="X"
@@ -64,6 +83,11 @@
             CommandTarget="{Binding ElementName=btnExcel}"
             Modifiers="Ctrl" />
     </s:ChromelessWindow.InputBindings>
+    <s:ChromelessWindow.Triggers>
+        <EventTrigger RoutedEvent="s:ChromelessWindow.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource TextBlockBoard}" />
+        </EventTrigger>
+    </s:ChromelessWindow.Triggers>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
@@ -229,7 +253,7 @@
             Grid.Row="3"
             Grid.Column="0"
             Grid.ColumnSpan="4"
-            Command="{Binding HasardCommand,IsAsync=True}"
+            Command="{Binding HasardCommand, IsAsync=True}"
             Style="{StaticResource CebButtonStyle}"
             TabIndex="7"
             Template="{DynamicResource CebButtonTemplate}"
@@ -252,9 +276,8 @@
             Grid.Row="3"
             Grid.Column="4"
             Grid.ColumnSpan="4"
-            Background="{Binding Background}"
-            Command="{Binding ResolveCommand,IsAsync=True}"
-            Foreground="{Binding Foreground}"
+            Background="{DynamicResource ButtonBackgroundBrush}"
+            Command="{Binding ResolveCommand, IsAsync=True}"
             Style="{StaticResource CebButtonStyle}"
             TabIndex="8"
             Template="{DynamicResource CebButtonTemplate}"
@@ -264,11 +287,14 @@
                     Width="24"
                     Height="24"
                     HorizontalAlignment="Left"
+                    Opacity="50"
+                    OpacityMask="{DynamicResource ButtonForegroundBrush}"
                     Source="images/exec.png" />
                 <TextBlock
                     Padding="4"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
+                    Foreground="{DynamicResource ButtonForegroundBrush}"
                     Text="{Binding Result}"
                     TextWrapping="Wrap" />
             </StackPanel>
@@ -278,7 +304,7 @@
             Grid.Row="3"
             Grid.Column="8"
             Grid.ColumnSpan="2"
-            Command="{Binding ExportCommand,IsAsync=True}"
+            Command="{Binding ExportCommand, IsAsync=True}"
             CommandParameter="{Binding ElementName=SolutionsData}"
             Style="{StaticResource CebButtonStyle}"
             TabIndex="9"
@@ -305,9 +331,10 @@
             Margin="0,0,0,0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            Background="{Binding Background}">
+            Background="{DynamicResource ButtonBackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <s:SfBusyIndicator
@@ -327,20 +354,28 @@
                 VerticalAlignment="Center"
                 FontSize="18"
                 FontWeight="Bold"
-                Foreground="White"
+                Foreground="{DynamicResource ButtonForegroundBrush}"
                 TextAlignment="Center">
                 <Run Text="Nombre de solutions: " />
                 <Run Text="{Binding Solutions.Count, Mode=OneWay}" />
-                <Run FontFamily="Segoe UI" Text="- Durée: " />
-                <Run Text="{Binding Duree, Mode=OneWay}" />
                 <TextBlock.RenderTransform>
                     <ScaleTransform x:Name="MyAnimatedScaleTransform" ScaleX="1" ScaleY="1" />
                 </TextBlock.RenderTransform>
-                <TextBlock.Triggers>
-                    <EventTrigger RoutedEvent="TextBlock.Loaded">
-                        <BeginStoryboard Storyboard="{StaticResource TextBlockBoard}" />
-                    </EventTrigger>
-                </TextBlock.Triggers>
+            </TextBlock>
+            <TextBlock
+                x:Name="textBlock2"
+                Grid.Column="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="18"
+                FontWeight="Bold"
+                Foreground="{DynamicResource ButtonForegroundBrush}"
+                TextAlignment="Center">
+                <Run Text="Durée: " />
+                <Run Text="{Binding Duree, Mode=OneWay}" />
+                <TextBlock.RenderTransform>
+                    <ScaleTransform x:Name="MyAnimatedScaleTransform2" ScaleX="1" ScaleY="1" />
+                </TextBlock.RenderTransform>
             </TextBlock>
         </Grid>
         <s:SfDataGrid
@@ -400,11 +435,11 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 HorizontalContentAlignment="Center"
-                Background="{Binding Background}"
+                Background="{DynamicResource ButtonBackgroundBrush}"
                 Content="{Binding Result}"
                 FontSize="14"
                 FontWeight="Bold"
-                Foreground="{Binding Foreground}" />
+                Foreground="{DynamicResource ButtonForegroundBrush}" />
             <Separator Margin="0,0,0,10" />
             <TextBlock
                 HorizontalAlignment="Center"

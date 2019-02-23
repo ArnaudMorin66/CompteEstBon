@@ -22,15 +22,15 @@ using System.Windows.Threading;
 
 namespace WpfCeb
 {
-    
+
     public class ViewTirage : NotificationObject
     {
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
-        private Brush _background;
+        private Color _background;
         private string _duree;
         public Stopwatch stopwatch;
 
-        private Brush _foreground = new SolidColorBrush(Colors.White);
+        private Color _foreground = Colors.White;
 
         private bool _isBusy;
 
@@ -105,7 +105,7 @@ namespace WpfCeb
             }
         }
 
-        public Brush Background {
+        public Color Background {
             get => _background;
             set {
                 _background = value;
@@ -113,7 +113,7 @@ namespace WpfCeb
             }
         }
 
-        public Brush Foreground {
+        public Color Foreground {
             get => _foreground;
             set {
                 _foreground = value;
@@ -243,7 +243,7 @@ namespace WpfCeb
                 }
             });
 
-            _background = new SolidColorBrush(Colors.Navy);
+            _background = Colors.Navy;
             stopwatch = new Stopwatch();
             dateDispatcher = new DispatcherTimer
             {
@@ -289,23 +289,28 @@ namespace WpfCeb
             switch (Tirage.Status)
             {
                 case CebStatus.Valid:
-                    SetBrush(Colors.LightGreen, Colors.Navy);
+                    Background = Colors.LightGreen;
+                    Foreground = Colors.White;
                     break;
 
                 case CebStatus.Erreur:
-                    SetBrush(Colors.Red, Colors.White);
+                    Background = Colors.Red;
+                    Foreground = Colors.White;
                     break;
 
                 case CebStatus.CompteEstBon:
-                    SetBrush(Colors.Green, Colors.Yellow);
+                    Background = Colors.Green;
+                    Foreground = Colors.Yellow;
                     break;
 
                 case CebStatus.CompteApproche:
-                    SetBrush(Colors.Salmon, Colors.White);
+                    Background = Colors.Salmon;
+                    Foreground = Colors.White;
                     break;
 
                 case CebStatus.EnCours:
-                    SetBrush(Colors.Yellow, Colors.White);
+                    Background = Colors.Yellow;
+                    Foreground = Colors.White;
                     break;
             }
         }
@@ -398,26 +403,8 @@ namespace WpfCeb
 
         public void SetBrush(Color background, Color foreground)
         {
-            LinearGradientBrush myLinearGradientBrush =
-                new LinearGradientBrush
-                {
-                    StartPoint = new Point(0, 0),
-                    EndPoint = new Point(0, 1)
-                };
-
-            myLinearGradientBrush.GradientStops.Add(new GradientStop
-            {
-                Color = background,
-                Offset = 0.0
-            });
-
-            myLinearGradientBrush.GradientStops.Add(new GradientStop
-            {
-                Color = Colors.Navy,
-                Offset = 1.0
-            });
-            Background = myLinearGradientBrush;
-            Foreground = new SolidColorBrush(foreground);
+            Background = background;
+            Foreground = foreground;
         }
     }
 }
