@@ -1,9 +1,9 @@
 ﻿<s:ChromelessWindow
-    x:Class="WpfCeb.MainWindow"
+    x:Class="CompteEstBon.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:WpfCeb"
+    xmlns:local="clr-namespace:CompteEstBon"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:s="http://schemas.syncfusion.com/wpf"
     Title="{Binding Titre}"
@@ -30,7 +30,7 @@
                     RepeatBehavior="Forever"
                     Storyboard.TargetName="MyAnimatedScaleTransform"
                     Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-                    To="0.5"
+                    To="1.5"
                     Duration="0:0:5" />
                 <DoubleAnimation
                     AutoReverse="True"
@@ -44,7 +44,7 @@
                     RepeatBehavior="Forever"
                     Storyboard.TargetName="MyAnimatedScaleTransform2"
                     Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-                    To="0.5"
+                    To="1.5"
                     Duration="0:0:5" />
                 <DoubleAnimation
                     AutoReverse="True"
@@ -359,7 +359,7 @@
                 <Run Text="Nombre de solutions: " />
                 <Run Text="{Binding Solutions.Count, Mode=OneWay}" />
                 <TextBlock.RenderTransform>
-                    <ScaleTransform x:Name="MyAnimatedScaleTransform" ScaleX="1" ScaleY="1" />
+                    <ScaleTransform x:Name="MyAnimatedScaleTransform" ScaleX="0.5" ScaleY="1" />
                 </TextBlock.RenderTransform>
             </TextBlock>
             <TextBlock

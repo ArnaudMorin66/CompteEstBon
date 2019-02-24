@@ -5,7 +5,7 @@ using Syncfusion.Windows.Tools.Controls;
 using System;
 using System.Windows;
 
-namespace WpfCeb
+namespace CompteEstBon
 {
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml

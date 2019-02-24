@@ -2,13 +2,13 @@
 using Syncfusion.Licensing;
 using Syncfusion.SfSkinManager;
 
-namespace WpfCeb {
+namespace CompteEstBon {
     /// <summary>
     /// Logique d'interaction pour App.xaml
     /// </summary>
     public partial class App : Application {
         public App() {
-            SyncfusionLicenseProvider.RegisterLicense(WpfCeb.Properties.Settings.Default.Licence);
+            SyncfusionLicenseProvider.RegisterLicense(CompteEstBon.Properties.Settings.Default.Licence);
             SfSkinManager.ApplyStylesOnApplication = true;
         }
     }

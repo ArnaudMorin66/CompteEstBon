@@ -20,22 +20,21 @@ using System.Windows.Threading;
 
 #endregion
 
-namespace WpfCeb
+namespace CompteEstBon
 {
 
     public class ViewTirage : NotificationObject
     {
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
-        private Color _background;
+
         private string _duree;
         public Stopwatch stopwatch;
 
         private Color _foreground = Colors.White;
-
+        private Color _background = Colors.Navy;
         private bool _isBusy;
 
         private bool _isCalculed = false;
-        // private DateTimeOffset _time;
 
         private string _result = "Résoudre";
 
@@ -48,7 +47,7 @@ namespace WpfCeb
         public DelegateCommand<SfDataGrid> ExportCommand { get; set; }
 
         public DelegateCommand<SfDataGrid> NotifyCommand { get; set; }
-        // public DispatcherTimer dureeTimer;
+
         public DispatcherTimer dateDispatcher;
         public DispatcherTimer notifyTimer;
 
@@ -90,7 +89,6 @@ namespace WpfCeb
             get => Tirage.Search;
             set {
                 Tirage.Search = value;
-                // ClearData();
                 NotifiedChanged();
                 ClearData();
             }
@@ -134,7 +132,6 @@ namespace WpfCeb
             get => _isCalculed;
             set {
                 _isCalculed = value;
-                // NotifyVisibility = _isCalculed ? Visibility.Visible : Visibility.Collapsed;
                 NotifiedChanged();
             }
         }
@@ -243,7 +240,6 @@ namespace WpfCeb
                 }
             });
 
-            _background = Colors.Navy;
             stopwatch = new Stopwatch();
             dateDispatcher = new DispatcherTimer
             {
@@ -251,7 +247,8 @@ namespace WpfCeb
             };
             dateDispatcher.Tick += (sender, e) =>
             {
-                if(stopwatch.IsRunning) {
+                if (stopwatch.IsRunning)
+                {
                     Duree = stopwatch.Elapsed.ToString();
                 }
                 Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
@@ -266,7 +263,8 @@ namespace WpfCeb
                 notifyTimer.Stop();
             };
 
-            NotifyCommand = new DelegateCommand<SfDataGrid>(sf => {
+            NotifyCommand = new DelegateCommand<SfDataGrid>(sf =>
+            {
                 if (sf.SelectedIndex < 0) return;
                 Solution = Tirage.Solutions[sf.SelectedIndex].ToString();
                 ShowNotify();
@@ -289,28 +287,23 @@ namespace WpfCeb
             switch (Tirage.Status)
             {
                 case CebStatus.Valid:
-                    Background = Colors.LightGreen;
-                    Foreground = Colors.White;
+                    (Background, Foreground) = (Colors.LightGreen, Colors.White);
                     break;
 
                 case CebStatus.Erreur:
-                    Background = Colors.Red;
-                    Foreground = Colors.White;
+                    (Background, Foreground) = (Colors.Red, Colors.White);
                     break;
 
                 case CebStatus.CompteEstBon:
-                    Background = Colors.Green;
-                    Foreground = Colors.Yellow;
+                    (Background, Foreground) = (Colors.Green, Colors.Yellow);
                     break;
 
                 case CebStatus.CompteApproche:
-                    Background = Colors.Salmon;
-                    Foreground = Colors.White;
+                    (Background, Foreground) = (Colors.Salmon, Colors.White);
                     break;
 
                 case CebStatus.EnCours:
-                    Background = Colors.Yellow;
-                    Foreground = Colors.White;
+                    (Background, Foreground) = (Colors.Yellow, Colors.White);
                     break;
             }
         }
@@ -327,15 +320,8 @@ namespace WpfCeb
             Solutions.Clear();
             IsCalculed = false;
             Solution = "";
-            if (Tirage.Status != CebStatus.Erreur)
-            {
-                Result = "Résoudre";
-            }
-            else
-            {
-                Result = "Tirage incorrect";
-            }
-                NotifyVisibility = Visibility.Hidden;
+            Result = Tirage.Status != CebStatus.Erreur ? "Résoudre" : "Tirage incorrect";
+            NotifyVisibility = Visibility.Hidden;
             UpdateColors();
         }
 
@@ -368,8 +354,7 @@ namespace WpfCeb
             IsBusy = true;
 
             Result = "...Calcul...";
-            SetBrush(Colors.Green, Colors.White);
-            // dureeTimer.Start();
+            (Background, Foreground) = (Colors.Green, Colors.White);
             stopwatch.Start();
             await Tirage.ResolveAsync();
 
@@ -401,10 +386,5 @@ namespace WpfCeb
             notifyTimer.Start();
         }
 
-        public void SetBrush(Color background, Color foreground)
-        {
-            Background = background;
-            Foreground = foreground;
-        }
     }
 }

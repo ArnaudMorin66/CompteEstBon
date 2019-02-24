@@ -1,9 +1,9 @@
-﻿<Application x:Class="WpfCeb.App"
+﻿<Application x:Class="CompteEstBon.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Luna"
              xmlns:Themes1="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
-             xmlns:local="clr-namespace:WpfCeb"
+             xmlns:local="clr-namespace:CompteEstBon"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
              StartupUri="MainWindow.xaml">
     <Application.Resources>

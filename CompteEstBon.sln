@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CebLib", "CebLib\CebLib.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CebUwp", "CebUwp\CebUwp.csproj", "{1849727E-EDF2-469E-A487-2AC3AC2B8B7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfCeb", "WpfCeb\WpfCeb.csproj", "{7F7C3B68-0610-4D83-985E-464B06EEC312}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wpf.CompteEstBon", "Wpf.CompteEstBon\Wpf.CompteEstBon.csproj", "{7F7C3B68-0610-4D83-985E-464B06EEC312}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
