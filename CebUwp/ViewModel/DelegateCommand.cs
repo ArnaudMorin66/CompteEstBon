@@ -2,7 +2,7 @@
 using System.Windows.Input;
 using Windows.UI.Xaml;
 
-namespace CebUwp
+namespace CompteEstBon
 {
     public sealed class DelegateCommand<T> : ICommand
     {

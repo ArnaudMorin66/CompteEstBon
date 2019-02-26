@@ -7,8 +7,8 @@
     <ProjectGuid>{6E8B1040-C037-4C18-A303-9972072C1E0D}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UwpCompteEstBon</RootNamespace>
-    <AssemblyName>UwpCompteEstBon</AssemblyName>
+    <RootNamespace>CompteEstBon</RootNamespace>
+    <AssemblyName>Uwp.CompteEstBon</AssemblyName>
     <DefaultLanguage>fr-FR</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17134.0</TargetPlatformVersion>
@@ -17,7 +17,6 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
-    <PackageCertificateKeyFile>UwpCompteEstBon_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -130,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ceb.snk" />
+    <None Include="Uwp.CompteEstBon.snk" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj">
@@ -147,7 +147,7 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>ceb.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>Uwp.CompteEstBon.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

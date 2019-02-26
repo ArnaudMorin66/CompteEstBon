@@ -17,16 +17,17 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Syncfusion.XlsIO;
 using Windows.System;
+using Windows.UI.Xaml.Media.Animation;
 
-namespace CebUwp
+namespace CompteEstBon
 {
 
     internal class ViewTirage : INotifyPropertyChanged
     {
-        private Brush _background;
+        private Color _background;
         private double _duree;
 
-        private Brush _foreground;
+        private Color _foreground;
 
         private bool _isBusy;
 
@@ -108,7 +109,7 @@ namespace CebUwp
             }
         }
 
-        public Brush Background {
+        public Color Background {
             get => _background;
             set {
                 _background = value;
@@ -116,7 +117,7 @@ namespace CebUwp
             }
         }
 
-        public Brush Foreground {
+        public Color Foreground {
             get => _foreground;
             set {
                 _foreground = value;
@@ -149,6 +150,8 @@ namespace CebUwp
             }
         }
 
+        public Storyboard storyBoard { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
@@ -159,11 +162,12 @@ namespace CebUwp
         public ViewTirage()
         {
             Symbol = ListeSymbols[CebStatus.Valid];
-            _background = new SolidColorBrush(Colors.Navy);
-            _foreground = new SolidColorBrush(Colors.White);
+            _background = Colors.Navy;
+            _foreground = Colors.White;
             HasardCommand = new DelegateCommand<object>(async _ => await RandomAsync());
             ResolveCommand = new DelegateCommand<object>(async _ =>
             {
+              
                 switch (Tirage.Status)
                 {
                     case CebStatus.Valid:
@@ -224,23 +228,23 @@ namespace CebUwp
             switch (Tirage.Status)
             {
                 case CebStatus.Valid:
-                    SetBrush(Colors.Navy, Colors.Yellow);
+                    (Background, Foreground) = (Colors.Navy, Colors.Yellow);
                     break;
 
                 case CebStatus.Erreur:
-                    SetBrush(Colors.Red, Colors.White);
+                    (Background, Foreground) = (Colors.Red, Colors.White);
                     break;
 
                 case CebStatus.CompteEstBon:
-                    SetBrush(Colors.Green, Colors.Yellow);
+                    (Background, Foreground) = (Colors.Green, Colors.Yellow);
                     break;
 
                 case CebStatus.CompteApproche:
-                    SetBrush(Colors.Salmon, Colors.White);
+                    (Background, Foreground) = (Colors.Salmon, Colors.White);
                     break;
 
                 case CebStatus.EnCours:
-                    SetBrush(Colors.Green, Colors.White);
+                    (Background, Foreground) = (Colors.Green, Colors.White);
                     break;
             }
         }
@@ -250,6 +254,7 @@ namespace CebUwp
         private void ClearData()
         {
             Duree = 0;
+            storyBoard?.Pause();
             if (NotifyTimer.IsEnabled)
             {
                 NotifyTimer.Stop();
@@ -294,7 +299,7 @@ namespace CebUwp
             IsBusy = true;
             Result = "...Calcul...";
             Symbol = ListeSymbols[CebStatus.EnCours];
-            SetBrush(Colors.Green, Colors.White);
+            (Background, Foreground) = (Colors.Green, Colors.White);
             _time = DateTimeOffset.Now;
             heureDispatcher.Start();
             await Tirage.ResolveAsync();
@@ -310,6 +315,7 @@ namespace CebUwp
             Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             UpdateColors();
             IsBusy = false;
+            storyBoard.Resume();
             ShowNotify(0);
             return Tirage.Status;
         }
@@ -318,33 +324,33 @@ namespace CebUwp
 
         public string SolutionToString(int index = 0) => (index == -1) ? "" : Tirage.Solutions[index].ToString();
 
-        public void SetBrush(Color background, Color foreground)
-        {
-            RadialGradientBrush brush = new RadialGradientBrush
-            {
-                AlphaMode = AlphaMode.Premultiplied,
-                RadiusX = 0.6,
-                RadiusY = 0.8
-            };
-            brush.SpreadMethod = GradientSpreadMethod.Reflect;
-            brush.GradientStops.Add(new GradientStop
-            {
-                Color = background,
-                Offset = 0.0
-            });
-            brush.GradientStops.Add(new GradientStop
-            {
-                Color = Colors.Black,
-                Offset = 0.9
-            });
-            brush.GradientStops.Add(new GradientStop
-            {
-                Color = Colors.Transparent,
-                Offset = 1.0
-            });
-            Background = brush;
-            Foreground = new SolidColorBrush(foreground);
-        }
+        //public void SetBrush(Color background, Color foreground)
+        //{
+        //    RadialGradientBrush brush = new RadialGradientBrush
+        //    {
+        //        AlphaMode = AlphaMode.Premultiplied,
+        //        RadiusX = 0.6,
+        //        RadiusY = 0.8
+        //    };
+        //    brush.SpreadMethod = GradientSpreadMethod.Reflect;
+        //    brush.GradientStops.Add(new GradientStop
+        //    {
+        //        Color = background,
+        //        Offset = 0.0
+        //    });
+        //    brush.GradientStops.Add(new GradientStop
+        //    {
+        //        Color = Colors.Black,
+        //        Offset = 0.9
+        //    });
+        //    brush.GradientStops.Add(new GradientStop
+        //    {
+        //        Color = Colors.Transparent,
+        //        Offset = 1.0
+        //    });
+        //    Background = brush;
+        //    Foreground = new SolidColorBrush(foreground);
+        //}
 
         public string _currentSolution;
 
@@ -357,6 +363,11 @@ namespace CebUwp
         }
         public void ShowNotify(int no)
         {
+            if (no < 0)
+            {
+                NotifyVisibility = Visibility.Collapsed;
+                return;
+            }
             if (NotifyVisibility == Visibility.Visible)
                 return;
             CurrentSolution = Tirage.Solutions[no].ToString();

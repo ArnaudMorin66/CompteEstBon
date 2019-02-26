@@ -1,6 +1,5 @@
 ﻿#region
 
-using CompteEstBon;
 using Microsoft.Win32;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Converter;
@@ -16,19 +15,29 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
 #endregion
 
 namespace CompteEstBon
 {
-
     public class ViewTirage : NotificationObject
     {
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
 
         private string _duree;
         public Stopwatch stopwatch;
+        private Storyboard _animation = null;
+
+        public Storyboard Animation { get {
+                if (_animation == null)
+                {
+                    _animation = Application.Current.MainWindow.Resources["AnimationResult"] as Storyboard;
+                }
+                return _animation;
+            }
+        }
 
         private Color _foreground = Colors.White;
         private Color _background = Colors.Navy;
@@ -39,7 +48,8 @@ namespace CompteEstBon
         private string _result = "Résoudre";
 
         private Visibility _visibility = Visibility.Collapsed;
-        private Visibility _notifyVisibility = Visibility.Hidden;
+        // private Visibility _notifyVisibility = Visibility.Hidden;
+        private int _notifyHeight = 0;
         public DelegateCommand<object> HasardCommand { get; set; }
 
         public DelegateCommand<object> ResolveCommand { get; set; }
@@ -144,14 +154,20 @@ namespace CompteEstBon
             }
         }
 
-        public Visibility NotifyVisibility {
-            get => _notifyVisibility;
+        //public Visibility NotifyVisibility {
+        //    get => _notifyVisibility;
+        //    set {
+        //        _notifyVisibility = value;
+        //        NotifiedChanged();
+        //    }
+        //}
+        public int NotifyHeight {
+            get => _notifyHeight;
             set {
-                _notifyVisibility = value;
+                _notifyHeight = value;
                 NotifiedChanged();
             }
         }
-
         private string _titre = "Le compte est bon";
 
         public string Titre {
@@ -170,8 +186,7 @@ namespace CompteEstBon
         public ViewTirage()
         {
             HasardCommand = new DelegateCommand<object>(async (_) => await RandomAsync());
-            ResolveCommand = new DelegateCommand<object>(
-                 async (_) =>
+            ResolveCommand = new DelegateCommand<object>(async (_) =>
                  {
                      switch (Tirage.Status)
                      {
@@ -241,6 +256,7 @@ namespace CompteEstBon
             });
 
             stopwatch = new Stopwatch();
+            
             dateDispatcher = new DispatcherTimer
             {
                 Interval = TimeSpan.FromMilliseconds(10)
@@ -259,7 +275,8 @@ namespace CompteEstBon
             };
             notifyTimer.Tick += (sender, e) =>
             {
-                NotifyVisibility = Visibility.Hidden;
+                // NotifyVisibility = Visibility.Hidden;
+                NotifyHeight = 0;
                 notifyTimer.Stop();
             };
 
@@ -316,12 +333,14 @@ namespace CompteEstBon
         private void ClearData()
         {
             stopwatch.Reset();
+            Animation?.Stop();
             Duree = stopwatch.Elapsed.ToString();
             Solutions.Clear();
             IsCalculed = false;
             Solution = "";
-            Result = Tirage.Status != CebStatus.Erreur ? "Résoudre" : "Tirage incorrect";
-            NotifyVisibility = Visibility.Hidden;
+            Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
+            //NotifyVisibility = Visibility.Hidden;
+            NotifyHeight = 0;
             UpdateColors();
         }
 
@@ -352,7 +371,7 @@ namespace CompteEstBon
         public async Task<CebStatus> ResolveAsync()
         {
             IsBusy = true;
-
+            Animation?.Begin();
             Result = "...Calcul...";
             (Background, Foreground) = (Colors.Green, Colors.White);
             stopwatch.Start();
@@ -373,6 +392,7 @@ namespace CompteEstBon
             IsBusy = false;
             Solution = Tirage.Solution.ToString();
             ShowNotify();
+            
             return Tirage.Status;
         }
 
@@ -380,9 +400,12 @@ namespace CompteEstBon
 
         public void ShowNotify()
         {
-            if (NotifyVisibility == Visibility.Visible)
+            
+            // if (NotifyVisibility == Visibility.Visible)
+            if (NotifyHeight > 0)
                 return;
-            NotifyVisibility = Visibility.Visible;
+            //NotifyVisibility = Visibility.Visible;
+            NotifyHeight = 64;
             notifyTimer.Start();
         }
 

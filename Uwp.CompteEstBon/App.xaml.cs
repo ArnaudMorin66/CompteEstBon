@@ -9,7 +9,7 @@ using Syncfusion.Licensing;
 using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
 
-namespace UwpCompteEstBon {
+namespace CompteEstBon {
     /// <summary>
     /// Fournit un comportement spécifique à l'application afin de compléter la classe Application par défaut.
     /// </summary>

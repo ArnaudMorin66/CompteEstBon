@@ -3,14 +3,20 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace CebUwp
+namespace CompteEstBon
 {
     /// <summary>
     /// Une page vide peut être utilisée seule ou constituer une page de destination au sein d'un frame. 
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public MainPage() => InitializeComponent();
+        public MainPage()
+        {
+            InitializeComponent();
+            bindTirage.storyBoard = TextBlockBoard;
+            TextBlockBoard.Begin();
+            TextBlockBoard.Pause();
+        }
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
@@ -55,6 +61,11 @@ namespace CebUwp
         private void SelectSolution(object sender, RoutedEventArgs e)
         {
             bindTirage.ShowNotify(SolutionsData.SelectedIndex);
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            
         }
     }
 }

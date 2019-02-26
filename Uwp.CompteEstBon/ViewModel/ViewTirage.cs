@@ -27,7 +27,7 @@ using Windows.UI.Xaml.Media;
 
 #endregion
 
-namespace UwpCompteEstBon
+namespace CompteEstBon
 {
     public class ViewTirage : INotifyPropertyChanged
     {

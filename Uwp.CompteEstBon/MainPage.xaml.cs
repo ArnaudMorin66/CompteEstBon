@@ -14,7 +14,7 @@ using Windows.Storage.Provider;
 
 // Pour plus d'informations sur le modèle d'élément Page vierge, consultez la page https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
-namespace UwpCompteEstBon
+namespace CompteEstBon
 {
     /// <summary>
     /// Une page vide peut être utilisée seule ou constituer une page de destination au sein d'un frame.
@@ -37,11 +37,6 @@ namespace UwpCompteEstBon
             {
                 view.TryEnterFullScreenMode();
             }
-        }
-
-        private void SelectSolution(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

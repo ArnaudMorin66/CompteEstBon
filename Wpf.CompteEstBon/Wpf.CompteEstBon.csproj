@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7F7C3B68-0610-4D83-985E-464B06EEC312}</ProjectGuid>
+    <ProjectGuid>{69FE67F1-E57A-49F5-BBA0-A4DE67A61751}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>CompteEstBon</RootNamespace>
     <AssemblyName>Wpf.CompteEstBon</AssemblyName>

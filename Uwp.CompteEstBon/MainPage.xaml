@@ -1,9 +1,9 @@
 ﻿<Page
-    x:Class="UwpCompteEstBon.MainPage"
+    x:Class="CompteEstBon.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:UwpCompteEstBon"
+    xmlns:local="using:CompteEstBon"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sf="using:Syncfusion.UI.Xaml.Grid"
     xmlns:sfi="using:Syncfusion.UI.Xaml.Controls.Input"
@@ -331,11 +331,7 @@
                         Icon="Save"
                         Label="Export"
                         Style="{ThemeResource AppBarButtonRevealStyle}" />
-                    <AppBarButton
-                        Click="SelectSolution"
-                        Icon="SolidStar"
-                        Label="Résultat"
-                        Style="{ThemeResource AppBarButtonRevealStyle}" />
+     
                     <AppBarButton
                         Click="AppFullscreen"
                         Icon="FullScreen"

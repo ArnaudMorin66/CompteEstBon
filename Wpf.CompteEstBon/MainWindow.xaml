@@ -24,36 +24,6 @@
                 <GradientStop Offset="1.0" Color="Black" />
             </LinearGradientBrush>
             <SolidColorBrush x:Key="ButtonForegroundBrush" Color="{Binding Foreground}" />
-            <Storyboard x:Key="TextBlockBoard">
-                <DoubleAnimation
-                    AutoReverse="True"
-                    RepeatBehavior="Forever"
-                    Storyboard.TargetName="MyAnimatedScaleTransform"
-                    Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-                    To="1.5"
-                    Duration="0:0:5" />
-                <DoubleAnimation
-                    AutoReverse="True"
-                    RepeatBehavior="Forever"
-                    Storyboard.TargetName="MyAnimatedScaleTransform"
-                    Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
-                    To="0.9"
-                    Duration="0:0:5" />
-                <DoubleAnimation
-                    AutoReverse="True"
-                    RepeatBehavior="Forever"
-                    Storyboard.TargetName="MyAnimatedScaleTransform2"
-                    Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-                    To="1.5"
-                    Duration="0:0:5" />
-                <DoubleAnimation
-                    AutoReverse="True"
-                    RepeatBehavior="Forever"
-                    Storyboard.TargetName="MyAnimatedScaleTransform2"
-                    Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
-                    To="0.9"
-                    Duration="0:0:5" />
-            </Storyboard>
         </ResourceDictionary>
     </s:ChromelessWindow.Resources>
     <s:ChromelessWindow.DataContext>
@@ -76,28 +46,14 @@
             CommandParameter="{Binding ElementName=SolutionsData, IsAsync=True}"
             CommandTarget="{Binding ElementName=btnExcel}"
             Modifiers="Ctrl" />
-        <KeyBinding
-            Key="N"
-            Command="{Binding NotifyCommand}"
-            CommandParameter="{Binding ElementName=SolutionsData, IsAsync=True}"
-            CommandTarget="{Binding ElementName=btnExcel}"
-            Modifiers="Ctrl" />
     </s:ChromelessWindow.InputBindings>
-    <s:ChromelessWindow.Triggers>
-        <EventTrigger RoutedEvent="s:ChromelessWindow.Loaded">
-            <BeginStoryboard Storyboard="{StaticResource TextBlockBoard}" />
-        </EventTrigger>
-    </s:ChromelessWindow.Triggers>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30" />
-            <RowDefinition Height="30" />
-            <RowDefinition Height="2" />
-            <RowDefinition Height="50" />
-            <RowDefinition Height="2" />
             <RowDefinition Height="40" />
-            <RowDefinition Height="2" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="{Binding NotifyHeight}" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -114,7 +70,7 @@
         <Label
             Grid.Row="0"
             Grid.Column="0"
-            Grid.ColumnSpan="8"
+            Grid.ColumnSpan="7"
             Margin="0"
             Padding="0"
             BorderBrush="Black"
@@ -125,7 +81,7 @@
         <Border
             Grid.Row="1"
             Grid.Column="0"
-            Grid.ColumnSpan="8"
+            Grid.ColumnSpan="7"
             Margin="0"
             Padding="0"
             BorderBrush="Black"
@@ -221,8 +177,8 @@
         </Border>
         <Label
             Grid.Row="0"
-            Grid.Column="8"
-            Grid.ColumnSpan="2"
+            Grid.Column="7"
+            Grid.ColumnSpan="1"
             Margin="0"
             Padding="0"
             BorderBrush="Black"
@@ -233,8 +189,8 @@
         <s:UpDown
             x:Name="Search"
             Grid.Row="1"
-            Grid.Column="8"
-            Grid.ColumnSpan="2"
+            Grid.Column="7"
+            Grid.ColumnSpan="1"
             Margin="0"
             Padding="0"
             VerticalAlignment="Stretch"
@@ -249,10 +205,38 @@
             TabIndex="6"
             Value="{Binding Search, Mode=TwoWay}" />
         <s:ButtonAdv
+            x:Name="btnResoudre"
+            Grid.Row="0"
+            Grid.Column="8"
+            Grid.ColumnSpan="2"
+            Background="{DynamicResource ButtonBackgroundBrush}"
+            Command="{Binding ResolveCommand, IsAsync=True}"
+            Style="{StaticResource CebButtonStyle}"
+            TabIndex="8"
+            Template="{DynamicResource CebButtonTemplate}"
+            ToolTipService.ToolTip="Raccourci: Ctrl+R">
+            <StackPanel Orientation="Horizontal">
+                <Image
+                    Width="16"
+                    Height="16"
+                    HorizontalAlignment="Left"
+                    Opacity="50"
+                    OpacityMask="{DynamicResource ButtonForegroundBrush}"
+                    Source="images/exec.png" />
+                <TextBlock
+                    Padding="4"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Foreground="{DynamicResource ButtonForegroundBrush}"
+                    Text="Résoudre"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+        </s:ButtonAdv>
+        <s:ButtonAdv
             x:Name="btnHasard"
-            Grid.Row="3"
-            Grid.Column="0"
-            Grid.ColumnSpan="4"
+            Grid.Row="1"
+            Grid.Column="8"
+            Grid.ColumnSpan="1"
             Command="{Binding HasardCommand, IsAsync=True}"
             Style="{StaticResource CebButtonStyle}"
             TabIndex="7"
@@ -260,8 +244,8 @@
             ToolTipService.ToolTip="Raccourci: Ctrl+H">
             <StackPanel Orientation="Horizontal">
                 <Image
-                    Width="24"
-                    Height="24"
+                    Width="16"
+                    Height="16"
                     HorizontalAlignment="Left"
                     Source="images/random.png" />
                 <TextBlock
@@ -272,38 +256,10 @@
             </StackPanel>
         </s:ButtonAdv>
         <s:ButtonAdv
-            x:Name="btnResoudre"
-            Grid.Row="3"
-            Grid.Column="4"
-            Grid.ColumnSpan="4"
-            Background="{DynamicResource ButtonBackgroundBrush}"
-            Command="{Binding ResolveCommand, IsAsync=True}"
-            Style="{StaticResource CebButtonStyle}"
-            TabIndex="8"
-            Template="{DynamicResource CebButtonTemplate}"
-            ToolTipService.ToolTip="Raccourci: Ctrl+R">
-            <StackPanel Orientation="Horizontal">
-                <Image
-                    Width="24"
-                    Height="24"
-                    HorizontalAlignment="Left"
-                    Opacity="50"
-                    OpacityMask="{DynamicResource ButtonForegroundBrush}"
-                    Source="images/exec.png" />
-                <TextBlock
-                    Padding="4"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Foreground="{DynamicResource ButtonForegroundBrush}"
-                    Text="{Binding Result}"
-                    TextWrapping="Wrap" />
-            </StackPanel>
-        </s:ButtonAdv>
-        <s:ButtonAdv
             x:Name="btnExcel"
-            Grid.Row="3"
-            Grid.Column="8"
-            Grid.ColumnSpan="2"
+            Grid.Row="1"
+            Grid.Column="9"
+            Grid.ColumnSpan="1"
             Command="{Binding ExportCommand, IsAsync=True}"
             CommandParameter="{Binding ElementName=SolutionsData}"
             Style="{StaticResource CebButtonStyle}"
@@ -312,8 +268,8 @@
             ToolTipService.ToolTip="Raccourci: Ctrl+X">
             <StackPanel Orientation="Horizontal">
                 <Image
-                    Width="24"
-                    Height="24"
+                    Width="16"
+                    Height="16"
                     HorizontalAlignment="Left"
                     Source="images/excel.png" />
                 <TextBlock
@@ -325,7 +281,7 @@
             </StackPanel>
         </s:ButtonAdv>
         <Grid
-            Grid.Row="5"
+            Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="10"
             Margin="0,0,0,0"
@@ -334,6 +290,7 @@
             Background="{DynamicResource ButtonBackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
@@ -348,39 +305,51 @@
                 ViewboxWidth="20"
                 Visibility="{Binding Visibility}" />
             <TextBlock
-                x:Name="textBlock"
+                x:Name="textBlock1"
                 Grid.Column="1"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="18"
-                FontWeight="Bold"
+                FontSize="12"
                 Foreground="{DynamicResource ButtonForegroundBrush}"
                 TextAlignment="Center">
-                <Run Text="Nombre de solutions: " />
-                <Run Text="{Binding Solutions.Count, Mode=OneWay}" />
+                <Run Text="{Binding Result}" />
                 <TextBlock.RenderTransform>
-                    <ScaleTransform x:Name="MyAnimatedScaleTransform" ScaleX="0.5" ScaleY="1" />
+                    <ScaleTransform x:Name="AnimatedScaleResult" ScaleX="1" ScaleY="1" />
                 </TextBlock.RenderTransform>
             </TextBlock>
+
             <TextBlock
                 x:Name="textBlock2"
                 Grid.Column="2"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="18"
-                FontWeight="Bold"
+                FontSize="12"
+                Foreground="{DynamicResource ButtonForegroundBrush}"
+                TextAlignment="Center">
+                <Run Text="Nombre de solutions: " />
+                <Run Text="{Binding Solutions.Count, Mode=OneWay}" />
+                <TextBlock.RenderTransform>
+                    <ScaleTransform x:Name="AnimatedScaleSolutions" ScaleX="0.5" ScaleY="1" />
+                </TextBlock.RenderTransform>
+            </TextBlock>
+            <TextBlock
+                x:Name="textBlock3"
+                Grid.Column="3"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="12"
                 Foreground="{DynamicResource ButtonForegroundBrush}"
                 TextAlignment="Center">
                 <Run Text="Durée: " />
                 <Run Text="{Binding Duree, Mode=OneWay}" />
                 <TextBlock.RenderTransform>
-                    <ScaleTransform x:Name="MyAnimatedScaleTransform2" ScaleX="1" ScaleY="1" />
+                    <ScaleTransform x:Name="AnimatedScaleDuree" ScaleX="1" ScaleY="1" />
                 </TextBlock.RenderTransform>
             </TextBlock>
         </Grid>
         <s:SfDataGrid
             x:Name="SolutionsData"
-            Grid.Row="7"
+            Grid.Row="3"
             Grid.Column="0"
             Grid.ColumnSpan="10"
             x:FieldModifier="public"
@@ -423,43 +392,39 @@
             </s:SfDataGrid.Columns>
         </s:SfDataGrid>
         <StackPanel
-            Grid.Row="7"
+            Grid.Row="4"
             Grid.Column="0"
             Grid.ColumnSpan="10"
-            Width="400"
-            Height="120"
-            Background="#FF404040"
-            Orientation="Vertical"
-            Visibility="{Binding NotifyVisibility}">
-            <Label
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                HorizontalContentAlignment="Center"
-                Background="{DynamicResource ButtonBackgroundBrush}"
-                Content="{Binding Result}"
-                FontSize="14"
-                FontWeight="Bold"
-                Foreground="{DynamicResource ButtonForegroundBrush}" />
-            <Separator Margin="0,0,0,10" />
+            Background="Black"
+            Orientation="Vertical">
+            <Separator Background="Green" />
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontSize="12"
-                FontWeight="Bold"
-                Foreground="White"
+                FontWeight="ExtraBlack"
+                Foreground="Yellow"
+                Text="{Binding Result}" />
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="12"
+                FontWeight="ExtraBlack"
+                Foreground="Yellow"
                 Text="{Binding Solution}" />
+            <Separator Background="Transparent" />
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontSize="12"
-                FontWeight="Bold"
+                FontWeight="Medium"
                 Foreground="White"
                 TextAlignment="Center"><Run Text="Nombre de solutions: " /><Run Text="{Binding Solutions.Count, Mode=OneWay}" /></TextBlock>
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontSize="12"
-                FontWeight="Bold"
+                FontWeight="Medium"
                 Foreground="White"
                 TextAlignment="Center"><Run Text="Durée: " /><Run Text="{Binding Duree, Mode=OneWay}" />
             </TextBlock>
