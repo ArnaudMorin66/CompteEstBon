@@ -1,7 +1,7 @@
 ﻿#region
 
+using CompteEstBon.Properties;
 using Microsoft.Win32;
-using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Converter;
 using Syncfusion.Windows.Shared;
 using Syncfusion.XlsIO;
@@ -25,12 +25,13 @@ namespace CompteEstBon
     public class ViewTirage : NotificationObject
     {
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
-
+        private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(Settings.Default.SolutionTimer);
         private string _duree;
         public Stopwatch stopwatch;
         private Storyboard _animation = null;
 
-        public Storyboard Animation { get {
+        public Storyboard Animation {
+            get {
                 if (_animation == null)
                 {
                     _animation = Application.Current.MainWindow.Resources["AnimationResult"] as Storyboard;
@@ -43,23 +44,20 @@ namespace CompteEstBon
         private Color _background = Colors.Navy;
         private bool _isBusy;
 
-        private bool _isCalculed = false;
-
         private string _result = "Résoudre";
 
         private Visibility _visibility = Visibility.Collapsed;
-        // private Visibility _notifyVisibility = Visibility.Hidden;
         private int _notifyHeight = 0;
         public DelegateCommand<object> HasardCommand { get; set; }
 
         public DelegateCommand<object> ResolveCommand { get; set; }
 
-        public DelegateCommand<SfDataGrid> ExportCommand { get; set; }
+        public DelegateCommand<object> ExportCommand { get; set; }
 
-        public DelegateCommand<SfDataGrid> NotifyCommand { get; set; }
+        public DelegateCommand<int> NotifyCommand { get; set; }
 
         public DispatcherTimer dateDispatcher;
-        public DispatcherTimer notifyTimer;
+        private readonly Stopwatch NotifyWatch = new Stopwatch();
 
         public CebTirage Tirage { get; } = new CebTirage();
 
@@ -71,16 +69,6 @@ namespace CompteEstBon
             get => _duree;
             set {
                 _duree = value;
-                NotifiedChanged();
-            }
-        }
-
-        private string _symbol;
-
-        public string Symbol {
-            get => _symbol;
-            set {
-                _symbol = value;
                 NotifiedChanged();
             }
         }
@@ -138,13 +126,7 @@ namespace CompteEstBon
             }
         }
 
-        public bool IsCalculed {
-            get => _isCalculed;
-            set {
-                _isCalculed = value;
-                NotifiedChanged();
-            }
-        }
+        public bool IsCalculed => Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche;
 
         public Visibility Visibility {
             get => _visibility;
@@ -154,17 +136,18 @@ namespace CompteEstBon
             }
         }
 
-        //public Visibility NotifyVisibility {
-        //    get => _notifyVisibility;
-        //    set {
-        //        _notifyVisibility = value;
-        //        NotifiedChanged();
-        //    }
-        //}
         public int NotifyHeight {
             get => _notifyHeight;
             set {
+                if (_notifyHeight == value) return;
+
                 _notifyHeight = value;
+                NotifyWatch.Stop();
+                NotifyWatch.Reset();
+                if (_notifyHeight != 0)
+                {
+                    NotifyWatch.Start();
+                }
                 NotifiedChanged();
             }
         }
@@ -205,14 +188,14 @@ namespace CompteEstBon
                      }
                  });
 
-            ExportCommand = new DelegateCommand<SfDataGrid>((SfDataGrid grid) =>
+            ExportCommand = new DelegateCommand<object>(_ =>
             {
                 if (!IsCalculed) return;
                 var dlg = new SaveFileDialog
                 {
                     FileName = "Ceb", // Default file name
                     DefaultExt = ".xlsx", // Default file extension
-                    Filter = "Classeurs xlsx |*.xlsx" // Filter files by extension
+                    Filter = "Classeurs xlsx|*.xlsx|Fichiers csv|*.csv" // Filter files by extension
                 };
                 if (dlg.ShowDialog(Application.Current.MainWindow) == false) return;
                 var options = new ExcelExportingOptions
@@ -236,9 +219,11 @@ namespace CompteEstBon
                 ws.Range[2, 7].Value2 = Search;
                 ws.ListObjects.Create("Data", ws["A1:G2"])
                     .BuiltInTableStyle = TableBuiltInStyles.TableStyleDark1;
+                ws.ImportData(Solutions, 6, 1, true);
+                for (var i = 1; i <= 5; i++)
+                    ws.Range[6, i].Value2 = $"Opération {i}";
 
-                grid.ExportToExcel(grid.View, options, ws);
-                var ls = ws.ListObjects.Create("Solutions", ws[$"A6:E{grid.View.Records.Count + 6}"])
+                var ls = ws.ListObjects.Create("Solutions", ws[$"A6:E{Solutions.Count + 6}"])
                     .BuiltInTableStyle = TableBuiltInStyles.TableStyleDark1;
                 ws.UsedRange.AutofitColumns();
                 ws.UsedRange.AutofitRows();
@@ -246,8 +231,11 @@ namespace CompteEstBon
 
                 try
                 {
-                    workBook.SaveAs(dlg.FileName);
-                    System.Diagnostics.Process.Start(dlg.FileName);
+                    if (dlg.FileName.EndsWith(".csv"))
+                        workBook.SaveAs(dlg.FileName, ";");
+                    else 
+                        workBook.SaveAs(dlg.FileName);
+                    Process.Start(dlg.FileName);
                 }
                 catch (Exception e)
                 {
@@ -256,7 +244,7 @@ namespace CompteEstBon
             });
 
             stopwatch = new Stopwatch();
-            
+
             dateDispatcher = new DispatcherTimer
             {
                 Interval = TimeSpan.FromMilliseconds(10)
@@ -267,23 +255,19 @@ namespace CompteEstBon
                 {
                     Duree = stopwatch.Elapsed.ToString();
                 }
+                if (NotifyHeight != 0 && NotifyWatch.Elapsed > SolutionTimer)
+                {
+                    HideNotify();
+                }
+
+
                 Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
-            notifyTimer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromSeconds(10)
-            };
-            notifyTimer.Tick += (sender, e) =>
-            {
-                // NotifyVisibility = Visibility.Hidden;
-                NotifyHeight = 0;
-                notifyTimer.Stop();
-            };
 
-            NotifyCommand = new DelegateCommand<SfDataGrid>(sf =>
+            NotifyCommand = new DelegateCommand<int>(index =>
             {
-                if (sf.SelectedIndex < 0) return;
-                Solution = Tirage.Solutions[sf.SelectedIndex].ToString();
+                if (index < 0) return;
+                Solution = Tirage.Solutions[index].ToString();
                 ShowNotify();
             });
             Plaques.CollectionChanged += (sender, e) =>
@@ -336,11 +320,9 @@ namespace CompteEstBon
             Animation?.Stop();
             Duree = stopwatch.Elapsed.ToString();
             Solutions.Clear();
-            IsCalculed = false;
             Solution = "";
             Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
-            //NotifyVisibility = Visibility.Hidden;
-            NotifyHeight = 0;
+            HideNotify();
             UpdateColors();
         }
 
@@ -382,7 +364,6 @@ namespace CompteEstBon
                 : (Tirage.Status == CebStatus.CompteApproche ?
                 $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}" : "Tirage incorrect");
 
-            IsCalculed = (Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche);
             foreach (var s in Tirage.Solutions)
                 Solutions.Add(s.ToCebDetail());
             stopwatch.Stop();
@@ -392,21 +373,18 @@ namespace CompteEstBon
             IsBusy = false;
             Solution = Tirage.Solution.ToString();
             ShowNotify();
-            
+
             return Tirage.Status;
         }
 
         #endregion Action
-
-        public void ShowNotify()
+        private void ShowNotify()
         {
-            
-            // if (NotifyVisibility == Visibility.Visible)
-            if (NotifyHeight > 0)
-                return;
-            //NotifyVisibility = Visibility.Visible;
-            NotifyHeight = 64;
-            notifyTimer.Start();
+            NotifyHeight = 76;
+        }
+        private void HideNotify()
+        {
+            NotifyHeight = 0;
         }
 
     }

@@ -12,7 +12,9 @@
     BorderThickness="0"
     Icon="favicon.ico"
     TitleBarBackground="{StaticResource CebLinearGradientBrush2}"
+    TitleTextAlignment="Stretch"
     UseNativeChrome="True"
+    WindowStyle="None"
     mc:Ignorable="d">
     <s:ChromelessWindow.Resources>
         <ResourceDictionary>
@@ -27,23 +29,22 @@
         </ResourceDictionary>
     </s:ChromelessWindow.Resources>
     <s:ChromelessWindow.DataContext>
-        <local:ViewTirage x:Name="tirage" />
+        <local:ViewTirage x:Name="Tirage" />
     </s:ChromelessWindow.DataContext>
     <s:ChromelessWindow.InputBindings>
         <KeyBinding
             Key="H"
             Command="{Binding HasardCommand}"
-            CommandTarget="{Binding ElementName=btnHasard, IsAsync=True}"
+            CommandTarget="{Binding ElementName=btnHasard}"
             Modifiers="Ctrl" />
         <KeyBinding
             Key="R"
             Command="{Binding ResolveCommand, IsAsync=True}"
-            CommandTarget="{Binding ElementName=btnResoudre, IsAsync=True}"
+            CommandTarget="{Binding ElementName=btnResoudre}"
             Modifiers="Ctrl" />
         <KeyBinding
             Key="X"
-            Command="{Binding ExportCommand}"
-            CommandParameter="{Binding ElementName=SolutionsData, IsAsync=True}"
+            Command="{Binding ExportCommand, IsAsync=True}"
             CommandTarget="{Binding ElementName=btnExcel}"
             Modifiers="Ctrl" />
     </s:ChromelessWindow.InputBindings>
@@ -261,7 +262,6 @@
             Grid.Column="9"
             Grid.ColumnSpan="1"
             Command="{Binding ExportCommand, IsAsync=True}"
-            CommandParameter="{Binding ElementName=SolutionsData}"
             Style="{StaticResource CebButtonStyle}"
             TabIndex="9"
             Template="{DynamicResource CebButtonTemplate}"
@@ -317,7 +317,6 @@
                     <ScaleTransform x:Name="AnimatedScaleResult" ScaleX="1" ScaleY="1" />
                 </TextBlock.RenderTransform>
             </TextBlock>
-
             <TextBlock
                 x:Name="textBlock2"
                 Grid.Column="2"
@@ -395,16 +394,19 @@
             Grid.Row="4"
             Grid.Column="0"
             Grid.ColumnSpan="10"
+            HorizontalAlignment="Stretch"
             Background="Black"
             Orientation="Vertical">
             <Separator Background="Green" />
-            <TextBlock
-                HorizontalAlignment="Center"
+            <Label
+                HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"
+                HorizontalContentAlignment="Center"
+                Background="{DynamicResource ButtonBackgroundBrush}"
+                Content="{Binding Result}"
                 FontSize="12"
                 FontWeight="ExtraBlack"
-                Foreground="Yellow"
-                Text="{Binding Result}" />
+                Foreground="{DynamicResource ButtonForegroundBrush}" />
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"

@@ -16,7 +16,7 @@ namespace CompteEstBon
 
         private void SolutionsData_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
         {
-            tirage.NotifyCommand.Execute(SolutionsData);
+            Tirage.NotifyCommand.Execute(SolutionsData.SelectedIndex);
         }
     }
 }
