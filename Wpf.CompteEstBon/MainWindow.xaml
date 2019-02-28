@@ -11,8 +11,8 @@
     s:SkinStorage.VisualStyle="Blend"
     BorderThickness="0"
     Icon="favicon.ico"
-    TitleBarBackground="{StaticResource CebLinearGradientBrush2}"
-    TitleTextAlignment="Stretch"
+    TitleBarBackground="{DynamicResource ButtonBackgroundBrush}"
+    TitleTextAlignment="Center"
     UseNativeChrome="True"
     WindowStyle="None"
     mc:Ignorable="d">
@@ -28,23 +28,26 @@
             <SolidColorBrush x:Key="ButtonForegroundBrush" Color="{Binding Foreground}" />
         </ResourceDictionary>
     </s:ChromelessWindow.Resources>
-    <s:ChromelessWindow.DataContext>
+    <!--<s:ChromelessWindow.DataContext>
         <local:ViewTirage x:Name="Tirage" />
-    </s:ChromelessWindow.DataContext>
+    </s:ChromelessWindow.DataContext>-->
     <s:ChromelessWindow.InputBindings>
         <KeyBinding
             Key="H"
-            Command="{Binding HasardCommand}"
+            Command="{Binding}"
+            CommandParameter="random"
             CommandTarget="{Binding ElementName=btnHasard}"
             Modifiers="Ctrl" />
         <KeyBinding
             Key="R"
-            Command="{Binding ResolveCommand, IsAsync=True}"
+            Command="{Binding}"
+            CommandParameter="resolve"
             CommandTarget="{Binding ElementName=btnResoudre}"
             Modifiers="Ctrl" />
         <KeyBinding
             Key="X"
-            Command="{Binding ExportCommand, IsAsync=True}"
+            Command="{Binding}"
+            CommandParameter="export"
             CommandTarget="{Binding ElementName=btnExcel}"
             Modifiers="Ctrl" />
     </s:ChromelessWindow.InputBindings>
@@ -105,6 +108,7 @@
                     VerticalContentAlignment="Center"
                     InputScope="Number"
                     IsEditable="true"
+                    IsTabStop="True"
                     ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
                     MaxDropDownHeight="150"
                     TabIndex="0"
@@ -118,6 +122,7 @@
                     VerticalContentAlignment="Center"
                     InputScope="Number"
                     IsEditable="true"
+                    IsTabStop="True"
                     ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
                     MaxDropDownHeight="150"
                     TabIndex="1"
@@ -131,6 +136,7 @@
                     VerticalContentAlignment="Center"
                     InputScope="Number"
                     IsEditable="true"
+                    IsTabStop="True"
                     ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
                     MaxDropDownHeight="150"
                     TabIndex="2"
@@ -144,6 +150,7 @@
                     VerticalContentAlignment="Center"
                     InputScope="Number"
                     IsEditable="true"
+                    IsTabStop="True"
                     ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
                     MaxDropDownHeight="150"
                     TabIndex="3"
@@ -157,6 +164,7 @@
                     VerticalContentAlignment="Center"
                     InputScope="Number"
                     IsEditable="true"
+                    IsTabStop="True"
                     ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
                     MaxDropDownHeight="150"
                     TabIndex="4"
@@ -170,6 +178,7 @@
                     VerticalContentAlignment="Center"
                     InputScope="Number"
                     IsEditable="true"
+                    IsTabStop="True"
                     ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
                     MaxDropDownHeight="150"
                     TabIndex="5"
@@ -179,7 +188,6 @@
         <Label
             Grid.Row="0"
             Grid.Column="7"
-            Grid.ColumnSpan="1"
             Margin="0"
             Padding="0"
             BorderBrush="Black"
@@ -191,13 +199,13 @@
             x:Name="Search"
             Grid.Row="1"
             Grid.Column="7"
-            Grid.ColumnSpan="1"
             Margin="0"
             Padding="0"
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             BorderBrush="Black"
             BorderThickness="1"
+            IsTabStop="True"
             MaxValidation="OnLostFocus"
             MaxValue="999"
             MinValidation="OnLostFocus"
@@ -211,9 +219,11 @@
             Grid.Column="8"
             Grid.ColumnSpan="2"
             Background="{DynamicResource ButtonBackgroundBrush}"
-            Command="{Binding ResolveCommand, IsAsync=True}"
+            Command="{Binding}"
+            CommandParameter="resolve"
+            IsTabStop="True"
             Style="{StaticResource CebButtonStyle}"
-            TabIndex="8"
+            TabIndex="7"
             Template="{DynamicResource CebButtonTemplate}"
             ToolTipService.ToolTip="Raccourci: Ctrl+R">
             <StackPanel Orientation="Horizontal">
@@ -237,10 +247,12 @@
             x:Name="btnHasard"
             Grid.Row="1"
             Grid.Column="8"
-            Grid.ColumnSpan="1"
-            Command="{Binding HasardCommand, IsAsync=True}"
+            Command="{Binding}"
+            CommandParameter="random"
+            IsTabStop="True"
             Style="{StaticResource CebButtonStyle}"
-            TabIndex="7"
+            Background="{DynamicResource ButtonBackgroundBrush}"
+            TabIndex="8"
             Template="{DynamicResource CebButtonTemplate}"
             ToolTipService.ToolTip="Raccourci: Ctrl+H">
             <StackPanel Orientation="Horizontal">
@@ -260,9 +272,12 @@
             x:Name="btnExcel"
             Grid.Row="1"
             Grid.Column="9"
-            Grid.ColumnSpan="1"
-            Command="{Binding ExportCommand, IsAsync=True}"
+            Command="{Binding}"
+            CommandParameter="export"
+            IsTabStop="True"
+            IsEnabled="{Binding IsCalculed}"
             Style="{StaticResource CebButtonStyle}"
+            Background="{DynamicResource ButtonBackgroundBrush}"
             TabIndex="9"
             Template="{DynamicResource CebButtonTemplate}"
             ToolTipService.ToolTip="Raccourci: Ctrl+X">
@@ -289,24 +304,13 @@
             VerticalAlignment="Stretch"
             Background="{DynamicResource ButtonBackgroundBrush}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="30" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <s:SfBusyIndicator
-                Grid.Column="0"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                Foreground="White"
-                IsBusy="{Binding IsBusy}"
-                ViewboxHeight="20"
-                ViewboxWidth="20"
-                Visibility="{Binding Visibility}" />
             <TextBlock
                 x:Name="textBlock1"
-                Grid.Column="1"
+                Grid.Column="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontSize="12"
@@ -319,7 +323,7 @@
             </TextBlock>
             <TextBlock
                 x:Name="textBlock2"
-                Grid.Column="2"
+                Grid.Column="1"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontSize="12"
@@ -333,7 +337,7 @@
             </TextBlock>
             <TextBlock
                 x:Name="textBlock3"
-                Grid.Column="3"
+                Grid.Column="2"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontSize="12"
@@ -358,6 +362,7 @@
             AutoGenerateColumns="False"
             ColumnSizer="Star"
             FontSize="14"
+            IsTabStop="True"
             ItemsSource="{Binding Solutions}"
             NavigationMode="Row"
             SelectionChanged="SolutionsData_SelectionChanged"
@@ -390,19 +395,29 @@
                     UseBindingValue="True" />
             </s:SfDataGrid.Columns>
         </s:SfDataGrid>
+        <s:SfBusyIndicator
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="10"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch"
+            Foreground="Yellow"
+            IsBusy="{Binding IsBusy}"
+            IsTabStop="False"
+            Visibility="{Binding Visibility}" />
         <StackPanel
             Grid.Row="4"
             Grid.Column="0"
             Grid.ColumnSpan="10"
             HorizontalAlignment="Stretch"
-            Background="Black"
+            Background="{DynamicResource ButtonBackgroundBrush}"
             Orientation="Vertical">
             <Separator Background="Green" />
             <Label
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Center"
                 HorizontalContentAlignment="Center"
-                Background="{DynamicResource ButtonBackgroundBrush}"
                 Content="{Binding Result}"
                 FontSize="12"
                 FontWeight="ExtraBlack"

@@ -8,15 +8,18 @@ namespace CompteEstBon
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
     public partial class MainWindow:  ChromelessWindow {
+        public ViewTirage Tirage { get; private set; } 
         public MainWindow() {
             InitializeComponent();
+            Tirage = new ViewTirage();
+            DataContext = Tirage;
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
             SfSkinManager.SetVisualStyle(this, VisualStyles.Blend);
         }
 
         private void SolutionsData_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
         {
-            Tirage.NotifyCommand.Execute(SolutionsData.SelectedIndex);
+            Tirage.ShowNotify(SolutionsData.SelectedIndex);
         }
     }
 }

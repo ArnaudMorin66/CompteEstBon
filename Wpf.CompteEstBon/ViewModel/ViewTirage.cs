@@ -1,67 +1,97 @@
 ﻿#region
 
-using CompteEstBon.Properties;
-using Microsoft.Win32;
-using Syncfusion.UI.Xaml.Grid.Converter;
-using Syncfusion.Windows.Shared;
-using Syncfusion.XlsIO;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-
+using CompteEstBon.Properties;
+using Microsoft.Win32;
+// using Syncfusion.XlsIO;
+// using Microsoft.Office.Interop.Excel;
+using Excel = Microsoft.Office.Interop.Excel;
 #endregion
 
 namespace CompteEstBon
 {
-    public class ViewTirage : NotificationObject
+    public class ViewTirage : INotifyPropertyChanged, ICommand
     {
-        public static IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
+        private readonly Stopwatch NotifyWatch = new Stopwatch();
         private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(Settings.Default.SolutionTimer);
+        private Storyboard _animation;
+        private Color _background = Colors.Navy;
         private string _duree;
-        public Stopwatch stopwatch;
-        private Storyboard _animation = null;
-
-        public Storyboard Animation {
-            get {
-                if (_animation == null)
-                {
-                    _animation = Application.Current.MainWindow.Resources["AnimationResult"] as Storyboard;
-                }
-                return _animation;
-            }
-        }
 
         private Color _foreground = Colors.White;
-        private Color _background = Colors.Navy;
+        private bool _isUpdating;
         private bool _isBusy;
+        private bool _IsCalculated;
+        private int _notifyHeight;
 
         private string _result = "Résoudre";
 
+        public string _solution;
+        private string _titre = "Le compte est bon";
+
         private Visibility _visibility = Visibility.Collapsed;
-        private int _notifyHeight = 0;
-        public DelegateCommand<object> HasardCommand { get; set; }
-
-        public DelegateCommand<object> ResolveCommand { get; set; }
-
-        public DelegateCommand<object> ExportCommand { get; set; }
-
-        public DelegateCommand<int> NotifyCommand { get; set; }
+        // public DelegateCommand<string> CebCommand { get; set; }
 
         public DispatcherTimer dateDispatcher;
-        private readonly Stopwatch NotifyWatch = new Stopwatch();
+        public Stopwatch stopwatch;
+
+        /// <summary>
+        ///     Initialisation
+        /// </summary>
+        /// <returns>
+        /// </returns>
+        public ViewTirage()
+        {
+            stopwatch = new Stopwatch();
+
+            dateDispatcher = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(10)
+            };
+            dateDispatcher.Tick += (sender, e) =>
+            {
+                if (stopwatch.IsRunning) Duree = stopwatch.Elapsed.ToString();
+                if (NotifyHeight != 0 && NotifyWatch.Elapsed > SolutionTimer) HideNotify();
+                Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
+            };
+
+            Plaques.CollectionChanged += (sender, e) =>
+            {
+                if (e.Action != NotifyCollectionChangedAction.Replace) return;
+                var i = e.NewStartingIndex;
+                Tirage.Plaques[i].Text = Plaques[i];
+                ClearData();
+            };
+            _isUpdating = false;
+            UpdateData();
+            UpdateColors();
+            Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
+            dateDispatcher.Start();
+        }
+
+        public static IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
+
+        public Storyboard Animation =>
+            _animation ??
+            (_animation = Application.Current.MainWindow.Resources["AnimationResult"] as Storyboard);
 
         public CebTirage Tirage { get; } = new CebTirage();
 
-        public ObservableCollection<string> Plaques { get; } = new ObservableCollection<string> { "", "", "", "", "", "" };
+        public ObservableCollection<string> Plaques { get; } =
+            new ObservableCollection<string> { "", "", "", "", "", "" };
 
         public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
 
@@ -72,8 +102,6 @@ namespace CompteEstBon
                 NotifiedChanged();
             }
         }
-
-        public string _solution;
 
         public string Solution {
             get => _solution;
@@ -126,7 +154,14 @@ namespace CompteEstBon
             }
         }
 
-        public bool IsCalculed => Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche;
+        public bool IsCalculed {
+            get => _IsCalculated;
+            set {
+                if (value == _IsCalculated) return;
+                _IsCalculated = value;
+                NotifiedChanged();
+            }
+        }
 
         public Visibility Visibility {
             get => _visibility;
@@ -140,18 +175,13 @@ namespace CompteEstBon
             get => _notifyHeight;
             set {
                 if (_notifyHeight == value) return;
-
                 _notifyHeight = value;
                 NotifyWatch.Stop();
                 NotifyWatch.Reset();
-                if (_notifyHeight != 0)
-                {
-                    NotifyWatch.Start();
-                }
+                if (_notifyHeight != 0) NotifyWatch.Start();
                 NotifiedChanged();
             }
         }
-        private string _titre = "Le compte est bon";
 
         public string Titre {
             get => _titre;
@@ -161,126 +191,100 @@ namespace CompteEstBon
             }
         }
 
-        /// <summary>
-        /// Initialisation
-        /// </summary>
-        /// <returns>
-        /// </returns>
-        public ViewTirage()
+        public event EventHandler CanExecuteChanged {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
+
+        public bool CanExecute(object parameter)
         {
-            HasardCommand = new DelegateCommand<object>(async (_) => await RandomAsync());
-            ResolveCommand = new DelegateCommand<object>(async (_) =>
-                 {
-                     switch (Tirage.Status)
-                     {
-                         case CebStatus.Valid:
-                             await ResolveAsync();
-                             break;
+            return true;
+        }
 
-                         case CebStatus.CompteEstBon:
-                         case CebStatus.CompteApproche:
-                             await ClearAsync();
-                             break;
-
-                         case CebStatus.Erreur:
-                             await RandomAsync();
-                             break;
-                     }
-                 });
-
-            ExportCommand = new DelegateCommand<object>(_ =>
+        public async void Execute(object parameter)
+        {
+            switch ((parameter as string).ToLower())
             {
-                if (!IsCalculed) return;
-                var dlg = new SaveFileDialog
-                {
-                    FileName = "Ceb", // Default file name
-                    DefaultExt = ".xlsx", // Default file extension
-                    Filter = "Classeurs xlsx|*.xlsx|Fichiers csv|*.csv" // Filter files by extension
-                };
-                if (dlg.ShowDialog(Application.Current.MainWindow) == false) return;
-                var options = new ExcelExportingOptions
-                {
-                    ExcelVersion = ExcelVersion.Excel2016,
-                    StartRowIndex = 6,
-                    StartColumnIndex = 1
-                };
+                case "random":
+                    await RandomAsync();
+                    break;
+                case "resolve":
+                    switch (Tirage.Status)
+                    {
+                        case CebStatus.Valid:
+                            await ResolveAsync();
+                            break;
 
-                using var excelEngine = new ExcelEngine();
-                IWorkbook workBook = excelEngine.Excel.Workbooks.Create();
-                var ws = workBook.Worksheets[0];
+                        case CebStatus.CompteEstBon:
+                        case CebStatus.CompteApproche:
+                            await ClearAsync();
+                            break;
 
-                for (var i = 1; i <= 6; i++)
-                {
-                    ws.Range[1, i].Value2 = $"Plaque {i}";
-                    ws.Range[2, i].Value2 = Plaques[i - 1];
-                }
+                        case CebStatus.Erreur:
+                            await RandomAsync();
+                            break;
+                    }
+                    break;
+                case "export":
+                    ExportData();
+                    break;
+            }
+        }
 
-                ws.Range[1, 7].Value2 = "Recherche";
-                ws.Range[2, 7].Value2 = Search;
-                ws.ListObjects.Create("Data", ws["A1:G2"])
-                    .BuiltInTableStyle = TableBuiltInStyles.TableStyleDark1;
-                ws.ImportData(Solutions, 6, 1, true);
-                for (var i = 1; i <= 5; i++)
-                    ws.Range[6, i].Value2 = $"Opération {i}";
+        public event PropertyChangedEventHandler PropertyChanged;
 
-                var ls = ws.ListObjects.Create("Solutions", ws[$"A6:E{Solutions.Count + 6}"])
-                    .BuiltInTableStyle = TableBuiltInStyles.TableStyleDark1;
-                ws.UsedRange.AutofitColumns();
-                ws.UsedRange.AutofitRows();
-                ws.Range[4, 1].Value2 = Result;
-
-                try
-                {
-                    if (dlg.FileName.EndsWith(".csv"))
-                        workBook.SaveAs(dlg.FileName, ";");
-                    else 
-                        workBook.SaveAs(dlg.FileName);
-                    Process.Start(dlg.FileName);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.Message, "Enregistrement impossible");
-                }
-            });
-
-            stopwatch = new Stopwatch();
-
-            dateDispatcher = new DispatcherTimer
+        private void ExportData()
+        {
+            Excel.Application xl;
+            try
             {
-                Interval = TimeSpan.FromMilliseconds(10)
-            };
-            dateDispatcher.Tick += (sender, e) =>
+                xl = (Excel.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
+            }
+            catch (Exception)
             {
-                if (stopwatch.IsRunning)
-                {
-                    Duree = stopwatch.Elapsed.ToString();
-                }
-                if (NotifyHeight != 0 && NotifyWatch.Elapsed > SolutionTimer)
-                {
-                    HideNotify();
-                }
+                xl = new Excel.Application();
+            }
 
-
-                Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
-            };
-
-            NotifyCommand = new DelegateCommand<int>(index =>
+            xl.Visible = true;
+            
+            var workBook = xl.Workbooks.Add();
+            var ws = workBook.Worksheets[1];
+            for (var i = 1; i <= 6; i++)
             {
-                if (index < 0) return;
-                Solution = Tirage.Solutions[index].ToString();
-                ShowNotify();
-            });
-            Plaques.CollectionChanged += (sender, e) =>
+                ws.Cells(1, i).Value = $"Plaque {i}";
+                ws.Cells(2, i).Value = Plaques[i - 1];
+            }
+            ws.Cells(1, 7).Value2 = "Recherche";
+            ws.Cells(2, 7).Value2 = Search;
+            ws.ListObjects.Add(Excel.XlListObjectSourceType.xlSrcRange, ws.Range["A1"].CurrentRegion, null, Excel.XlYesNoGuess.xlYes);
+
+            for (var c = 1; c < 6; c++)
             {
-                if (e.Action != NotifyCollectionChangedAction.Replace) return;
-                var i = e.NewStartingIndex;
-                Tirage.Plaques[i].Text = Plaques[i];
-                ClearData();
-            };
-            UpdateData();
-            UpdateColors();
-            Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
-            dateDispatcher.Start();
+                ws.Cells(6, c).Value2 = $"Opération {c}";
+            }
+            var l = 7;
+            
+            foreach(var s in Tirage.Solutions)
+            {
+                var op = s.Operations.ToArray();
+                ws.Range[ws.Cells(l,1), ws.Cells(l,op.Length)].Value = op;
+                l++;
+            }
+            ws.ListObjects.Add(Excel.XlListObjectSourceType.xlSrcRange, ws.Range["A6"].CurrentRegion, null, Excel.XlYesNoGuess.xlYes);
+            ws.Range["A4"].Value = Result;
+            if (Tirage.Status == CebStatus.CompteEstBon)
+            {
+                ws.Range["A4"].Interior.ThemeColor = Excel.XlThemeColor.xlThemeColorAccent6;
+                ws.Range["A4"].Font.Color = -16711681;
+            }
+            else
+            {
+                ws.Range["A4"].Interior.ThemeColor = Excel.XlThemeColor.xlThemeColorAccent4;
+                ws.Range["A4"].Font.ThemeColor = Excel.XlThemeColor.xlThemeColorLight1;
+            }
+            ws.Range["A4:E4"].MergeCells = true;
+            ws.Range["A4:E4"].HorizontalAlignment = Excel.Constants.xlCenter;
+            
         }
 
         private void UpdateColors()
@@ -288,7 +292,7 @@ namespace CompteEstBon
             switch (Tirage.Status)
             {
                 case CebStatus.Valid:
-                    (Background, Foreground) = (Colors.LightGreen, Colors.White);
+                    (Background, Foreground) = (Colors.DarkOliveGreen, Colors.White);
                     break;
 
                 case CebStatus.Erreur:
@@ -296,7 +300,7 @@ namespace CompteEstBon
                     break;
 
                 case CebStatus.CompteEstBon:
-                    (Background, Foreground) = (Colors.Green, Colors.Yellow);
+                    (Background, Foreground) = (Colors.LightGreen, Colors.Yellow);
                     break;
 
                 case CebStatus.CompteApproche:
@@ -310,30 +314,45 @@ namespace CompteEstBon
         }
 
         private void NotifiedChanged([CallerMemberName] string propertyName = "")
-        {
-            RaisePropertyChanged(propertyName);
-        }
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private void ClearData()
         {
+            if (_isUpdating) return;
             stopwatch.Reset();
             Animation?.Stop();
             Duree = stopwatch.Elapsed.ToString();
+            IsCalculed = false;
             Solutions.Clear();
             Solution = "";
-            Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
+            Result = Tirage.Status != CebStatus.Erreur ? "(...)" : "Tirage incorrect";
             HideNotify();
             UpdateColors();
         }
 
         private void UpdateData()
         {
-            lock (Plaques)
-            {
-                for (var i = 0; i < Tirage.Plaques.Length; i++)
-                    Plaques[i] = Tirage.Plaques[i].Text;
-            }
+            if (_isUpdating) return;
+            _isUpdating = true;
+
+            for (var i = 0; i < Tirage.Plaques.Length; i++)
+                Plaques[i] = Tirage.Plaques[i].Text;
+
+            _isUpdating = false;
+            ClearData();
+
             NotifiedChanged("Search");
+        }
+
+        public void ShowNotify(int index = 0)
+        {
+            Solution = Tirage.Solutions[index].ToString();
+            NotifyHeight = 76;
+        }
+
+        private void HideNotify()
+        {
+            NotifyHeight = 0;
         }
 
         #region Action
@@ -358,11 +377,11 @@ namespace CompteEstBon
             (Background, Foreground) = (Colors.Green, Colors.White);
             stopwatch.Start();
             await Tirage.ResolveAsync();
-
             Result = Tirage.Status == CebStatus.CompteEstBon
                 ? "Le Compte est bon"
-                : (Tirage.Status == CebStatus.CompteApproche ?
-                $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}" : "Tirage incorrect");
+                : Tirage.Status == CebStatus.CompteApproche
+                    ? $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}"
+                    : "Tirage incorrect";
 
             foreach (var s in Tirage.Solutions)
                 Solutions.Add(s.ToCebDetail());
@@ -372,20 +391,11 @@ namespace CompteEstBon
             UpdateColors();
             IsBusy = false;
             Solution = Tirage.Solution.ToString();
+            IsCalculed = Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche;
             ShowNotify();
-
             return Tirage.Status;
         }
 
         #endregion Action
-        private void ShowNotify()
-        {
-            NotifyHeight = 76;
-        }
-        private void HideNotify()
-        {
-            NotifyHeight = 0;
-        }
-
     }
 }
