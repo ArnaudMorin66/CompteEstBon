@@ -8,11 +8,9 @@ namespace CompteEstBon
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
     public partial class MainWindow:  ChromelessWindow {
-        public ViewTirage Tirage { get; private set; } 
+         
         public MainWindow() {
             InitializeComponent();
-            Tirage = new ViewTirage();
-            DataContext = Tirage;
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
             SfSkinManager.SetVisualStyle(this, VisualStyles.Blend);
         }

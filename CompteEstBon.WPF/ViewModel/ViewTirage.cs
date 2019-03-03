@@ -1,5 +1,5 @@
 ﻿#region
-
+using CompteEstBon.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,17 +8,12 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-using CompteEstBon.Properties;
-using Microsoft.Win32;
-// using Syncfusion.XlsIO;
-// using Microsoft.Office.Interop.Excel;
 using Excel = Microsoft.Office.Interop.Excel;
 #endregion
 
@@ -35,7 +30,7 @@ namespace CompteEstBon
         private Color _foreground = Colors.White;
         private bool _isUpdating;
         private bool _isBusy;
-        private bool _isComputed;
+        private bool _IsComputed;
         private int _notifyHeight;
 
         private string _result = "Résoudre";
@@ -44,7 +39,6 @@ namespace CompteEstBon
         private string _titre = "Le compte est bon";
 
         private Visibility _computing = Visibility.Collapsed;
-        // public DelegateCommand<string> CebCommand { get; set; }
 
         public DispatcherTimer dateDispatcher;
         public Stopwatch stopwatch;
@@ -92,7 +86,7 @@ namespace CompteEstBon
         public CebTirage Tirage { get; } = new CebTirage();
 
         public ObservableCollection<string> Plaques { get; } =
-            new ObservableCollection<string> { "", "", "", "", "", "" };
+            new ObservableCollection<string> { "" , "", "", "", "", "" };
 
         public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
 
@@ -150,16 +144,25 @@ namespace CompteEstBon
             get => _isBusy;
             set {
                 _isBusy = value;
+                var story = Application.Current.MainWindow.FindResource("WaitStoryboard") as Storyboard;
+                if (_isBusy)
+                {
+                    story.Begin();
+                }
+                else
+                {
+                    story.Pause();
+                }
                 Computing = _isBusy ? Visibility.Visible : Visibility.Collapsed;
                 NotifiedChanged();
             }
         }
 
         public bool IsComputed {
-            get => _isComputed;
+            get => _IsComputed;
             set {
-                if (value == _isComputed) return;
-                _isComputed = value;
+                if (value == _IsComputed) return;
+                _IsComputed = value;
                 NotifiedChanged();
             }
         }
@@ -246,13 +249,14 @@ namespace CompteEstBon
             }
             return xl;
         }
+
         private void ExportData()
         {
-            Excel.Application xl = ViewTirage.GetExcelApplication();
+            Excel.Application xl = GetExcelApplication();
             xl.Visible = false;
-            
+
             var workBook = xl.Workbooks.Add();
-            
+
             var ws = workBook.Worksheets[1];
             for (var i = 1; i <= 6; i++)
             {
@@ -268,11 +272,11 @@ namespace CompteEstBon
                 ws.Cells(6, c).Value = $"Opération {c}";
             }
             var l = 7;
-            
-            foreach(var s in Tirage.Solutions)
+
+            foreach (var s in Tirage.Solutions)
             {
                 var op = s.Operations.ToArray();
-                ws.Range[ws.Cells(l,1), ws.Cells(l,op.Length)].Value = op;
+                ws.Range[ws.Cells(l, 1), ws.Cells(l, op.Length)].Value = op;
                 l++;
             }
             ws.ListObjects.Add(Excel.XlListObjectSourceType.xlSrcRange, ws.Range["A6"].CurrentRegion, null, Excel.XlYesNoGuess.xlYes);
@@ -292,7 +296,7 @@ namespace CompteEstBon
             ws.Range["A4:E4"].MergeCells = true;
             ws.Range["A4:E4"].HorizontalAlignment = Excel.Constants.xlCenter;
             xl.Visible = true;
-            
+
         }
 
         private void UpdateColors()
@@ -354,10 +358,10 @@ namespace CompteEstBon
 
         public void ShowNotify(int index = 0)
         {
-            if (index >= 0 && index < Solutions.Count)
+            if (index >= 0 && Solutions.Count != 0 && index < Solutions.Count)
             {
                 Solution = Tirage.Solutions[index].ToString();
-                NotifyHeight = 76;
+                NotifyHeight = 84;
             }
         }
 
