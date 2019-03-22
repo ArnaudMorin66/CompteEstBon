@@ -231,6 +231,7 @@ namespace CompteEstBon {
         public IEnumerable<string> ToArray() => Solutions.Select(p => p.ToString());
 
         public IEnumerable<IEnumerable<string>> OperationsSolutions => Solutions.Select(p => p.Operations);
+        public string[][] ArraysSolutions => Solutions.Select(p => p.Operations.ToArray()).ToArray();
 
         public IEnumerable<CebDetail> ToCebDetails() => Solutions.Select(s => s.ToCebDetail());
 

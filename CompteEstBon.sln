@@ -12,12 +12,17 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CebLib", "CebLib\CebLib.csproj", "{5E976EF9-5DB2-4B32-9BD6-50F62F590245}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolkit.UWP.CompteEstBon", "CebUwp\Toolkit.UWP.CompteEstBon.csproj", "{1849727E-EDF2-469E-A487-2AC3AC2B8B7D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163} = {E7348B26-1B9A-45B8-9E03-FB717CBB2163}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uwp.CompteEstBon", "Uwp.CompteEstBon\Uwp.CompteEstBon.csproj", "{6E8B1040-C037-4C18-A303-9972072C1E0D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompteEstBon.WPF", "CompteEstBon.WPF\CompteEstBon.WPF.csproj", "{FDACAEF6-75A4-466D-B38C-91D5C9442F56}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompteEstBon.Syncfusion.WPF", "Wpf.CompteEstBon\CompteEstBon.Syncfusion.WPF.csproj", "{69FE67F1-E57A-49F5-BBA0-A4DE67A61751}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Export.Ceb", "Interop.Excel\Export.Ceb.csproj", "{E7348B26-1B9A-45B8-9E03-FB717CBB2163}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -161,6 +166,22 @@ Global
 		{69FE67F1-E57A-49F5-BBA0-A4DE67A61751}.Release|x64.Build.0 = Release|Any CPU
 		{69FE67F1-E57A-49F5-BBA0-A4DE67A61751}.Release|x86.ActiveCfg = Release|Any CPU
 		{69FE67F1-E57A-49F5-BBA0-A4DE67A61751}.Release|x86.Build.0 = Release|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Debug|ARM.Build.0 = Debug|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Debug|x64.Build.0 = Debug|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Debug|x86.Build.0 = Debug|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Release|ARM.ActiveCfg = Release|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Release|ARM.Build.0 = Release|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Release|x64.ActiveCfg = Release|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Release|x64.Build.0 = Release|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Release|x86.ActiveCfg = Release|Any CPU
+		{E7348B26-1B9A-45B8-9E03-FB717CBB2163}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

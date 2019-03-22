@@ -1,7 +1,8 @@
-﻿using Syncfusion.Licensing;
-using System;
+﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.AppService;
+using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -15,16 +16,43 @@ namespace CompteEstBon
     /// </summary>
     sealed partial class App : Application
     {
+        public static BackgroundTaskDeferral AppServiceDeferral = null;
+        public static AppServiceConnection Connection = null;
+        public static event EventHandler AppServiceConnected;
+
         /// <summary>
         /// Initialise l'objet d'application de singleton.  Il s'agit de la première ligne du code créé
         /// à être exécutée. Elle correspond donc à l'équivalent logique de main() ou WinMain().
         /// </summary>
         public App()
         {
-            SyncfusionLicenseProvider.RegisterLicense("NjU1MjZAMzEzNjJlMzQyZTMwTFpldXcyV3A5czdOeUoxUjRtMVd5RzRiZGhTN2lTUFVqam5jNTFCQXk1cz0=");
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
+
+        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        {
+            // connection established from the fulltrust process
+            if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails)
+            {
+                AppServiceDeferral = args.TaskInstance.GetDeferral();
+                args.TaskInstance.Canceled += OnTaskCanceled;
+
+                if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails details)
+                {
+                    Connection = details.AppServiceConnection;
+                    AppServiceConnected?.Invoke(this, null);
+                }
+            }
+        }
+        private void OnTaskCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
+        {
+            if (AppServiceDeferral != null)
+            {
+                AppServiceDeferral.Complete();
+            }
+        }
+
 
         /// <summary>
         /// Invoqué lorsque l'application est lancée normalement par l'utilisateur final.  D'autres points d'entrée
@@ -38,8 +66,7 @@ namespace CompteEstBon
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
 
             // Set active window colors
-            // titleBar.ForegroundColor = Windows.UI.Colors.White;
-            // titleBar.BackgroundColor = Windows.UI.Colors.Blue;
+
             titleBar.ButtonForegroundColor = Windows.UI.Colors.White;
             titleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
             titleBar.ButtonHoverForegroundColor = Windows.UI.Colors.Black;

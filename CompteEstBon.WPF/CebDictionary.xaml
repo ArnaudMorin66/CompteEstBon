@@ -20,16 +20,17 @@
         <Setter Property="Background" Value="{StaticResource CebLinearGradientBrush2}" />
     </Style>
     <Style x:Key="LabelTitreStyle" TargetType="{x:Type Label}">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderBrush" Value="Black" />
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="VerticalContentAlignment" Value="Bottom" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Background" Value="{StaticResource CebLinearGradientBrush2}" />
-    </Style>
-    <Style x:Key="TextBoxTitreStyle" TargetType="{x:Type TextBlock}">
-        <Setter Property="HorizontalAlignment" Value="Center" />
-        <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontSize" Value="16" />
     </Style>
     <ControlTemplate x:Key="CebButtonTemplate" TargetType="{x:Type Button}">
         <Border
@@ -53,26 +54,12 @@
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="border" Property="Background">
-                    <Setter.Value>
-                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                            <GradientStop Offset="0.0" Color="Green" />
-                            <GradientStop Offset="1.0" Color="White" />
-                        </LinearGradientBrush>
-                    </Setter.Value>
-                </Setter>
-                <Setter TargetName="border" Property="BorderBrush" Value="White" />
+                <Setter TargetName="border" Property="Background" Value="{StaticResource CebLinearGradientBrush2}" />
+                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource CebLinearGradientBrush1}" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter TargetName="border" Property="Background">
-                    <Setter.Value>
-                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                            <GradientStop Offset="0.0" Color="White" />
-                            <GradientStop Offset="1.0" Color="Green" />
-                        </LinearGradientBrush>
-                    </Setter.Value>
-                </Setter>
-                <Setter TargetName="border" Property="BorderBrush" Value="Yellow" />
+                <Setter TargetName="border" Property="Background" Value="{StaticResource CebLinearGradientBrush1}" />
+                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource CebLinearGradientBrush2}" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -217,4 +204,15 @@
             To="360"
             Duration="0:0:0.5" />
     </Storyboard>
+    <Style x:Key="SearchControlStyle" TargetType="{x:Type TextBox}">
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Background" Value="{StaticResource CebLinearGradientBrush2}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="InputScope" Value="Number" />
+        <Setter Property="IsTabStop" Value="True" />
+        <Setter Property="MaxLength" Value="3" />
+        <Setter Property="TabIndex" Value="6" />
+    </Style>
 </ResourceDictionary>

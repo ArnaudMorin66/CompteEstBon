@@ -1,7 +1,4 @@
-﻿using CompteEstBon;
-using Microsoft.Toolkit.Uwp.UI.Controls;
-using Microsoft.Toolkit.Uwp.UI.Media;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -9,21 +6,23 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using Windows.Storage.Provider;
+using System.Windows.Input;
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.AppService;
+using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
 using Windows.UI;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
-using Syncfusion.XlsIO;
-using Windows.System;
 using Windows.UI.Xaml.Media.Animation;
 
-namespace CompteEstBon
+namespace CompteEstBon.ViewModel
 {
 
-    internal class ViewTirage : INotifyPropertyChanged
+    internal class ViewTirage : INotifyPropertyChanged, ICommand
     {
+        private ValueSet xlData;
+
         private Color _background;
         private double _duree;
 
@@ -31,19 +30,13 @@ namespace CompteEstBon
 
         private bool _isBusy;
 
-        private bool _isCalculed;
+        // private bool _isCalculed;
         private DateTimeOffset _time;
 
         private string _result = "Résoudre";
+        
 
         private Visibility _visibility = Visibility.Collapsed;
-        public DelegateCommand<object> HasardCommand { get; set; }
-
-        public DelegateCommand<object> ResolveCommand { get; set; }
-
-        public DelegateCommand<object> ExportCommand { get; set; }
-
-
         public DispatcherTimer heureDispatcher;
         public DispatcherTimer dateDispatcher;
 
@@ -94,7 +87,6 @@ namespace CompteEstBon
             get => Tirage.Search;
             set {
                 Tirage.Search = value;
-                // ClearData();
                 NotifiedChanged();
                 ClearData();
             }
@@ -134,13 +126,16 @@ namespace CompteEstBon
             }
         }
 
-        public bool IsCalculed {
-            get => _isCalculed;
-            set {
-                _isCalculed = value;
-                NotifiedChanged();
-            }
+        public CebStatus Status {
+            get => Tirage.Status;
         }
+        //public bool IsCalculed {
+        //    get => _isCalculed;
+        //    set {
+        //        _isCalculed = value;
+        //        NotifiedChanged();
+        //    }
+        //}
 
         public Visibility Visibility {
             get => _visibility;
@@ -153,6 +148,7 @@ namespace CompteEstBon
         public Storyboard storyBoard { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler CanExecuteChanged;
 
         /// <summary>
         /// Initialisation 
@@ -161,31 +157,10 @@ namespace CompteEstBon
         /// </returns>
         public ViewTirage()
         {
+            App.AppServiceConnected += ViewTirage_AppServiceConnected;
             Symbol = ListeSymbols[CebStatus.Valid];
             _background = Colors.Navy;
             _foreground = Colors.White;
-            HasardCommand = new DelegateCommand<object>(async _ => await RandomAsync());
-            ResolveCommand = new DelegateCommand<object>(async _ =>
-            {
-              
-                switch (Tirage.Status)
-                {
-                    case CebStatus.Valid:
-                        await ResolveAsync();
-                        break;
-
-                    case CebStatus.CompteEstBon:
-                    case CebStatus.CompteApproche:
-                        await ClearAsync();
-                        break;
-
-                    case CebStatus.Erreur:
-                        await RandomAsync();
-                        break;
-                }
-            });
-
-            ExportCommand = new DelegateCommand<object>(async _ => await ExportToExcelAsync());
 
             heureDispatcher = new DispatcherTimer
             {
@@ -220,6 +195,30 @@ namespace CompteEstBon
             UpdateColors();
             Date = $"{DateTime.Now:dddd MM yyyy, HH:mm:ss}";
             dateDispatcher.Start();
+        }
+
+        private async void ViewTirage_AppServiceConnected(object sender, EventArgs e)
+        {
+            AppServiceResponse response = await App.Connection.SendMessageAsync(xlData);
+
+            // check the result
+            object result;
+
+            MessageDialog dialog;
+            if (!response.Message.TryGetValue("RESPONSE", out result))
+            {
+                dialog = new MessageDialog("RESPONSE introuvable");
+                await dialog.ShowAsync();
+            }
+            else if (result.ToString() != "SUCCESS")
+            {
+                dialog = new MessageDialog(result.ToString());
+                await dialog.ShowAsync();
+            }
+
+            // no longer need the AppService connection
+            App.AppServiceDeferral.Complete();
+            IsBusy = false;
         }
 
         private void UpdateColors()
@@ -261,7 +260,10 @@ namespace CompteEstBon
                 NotifyVisibility = Visibility.Collapsed;
             }
             Solutions.Clear();
-            IsCalculed = false;
+            // ReSharper disable once ExplicitCallerInfoArgument
+            NotifiedChanged("Status");
+
+
             Result = (Tirage.Status != CebStatus.Erreur) ? "Résoudre" : "Tirage invalide";
             UpdateColors();
         }
@@ -275,6 +277,7 @@ namespace CompteEstBon
                     Plaques[i] = Tirage.Plaques[i];
                 }
             }
+            // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Search");
         }
 
@@ -288,7 +291,7 @@ namespace CompteEstBon
 
         public async Task RandomAsync()
         {
-         
+
             await Tirage.RandomAsync();
             ClearData();
             UpdateData();
@@ -308,7 +311,8 @@ namespace CompteEstBon
                 ? "Le Compte est bon"
                 : (Tirage.Status == CebStatus.CompteApproche ?
                 $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}" : "Tirage incorrect");
-            IsCalculed = (Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche);
+            // ReSharper disable once ExplicitCallerInfoArgument
+            NotifiedChanged("Status");
             foreach (var s in Tirage.Solutions)
                 Solutions.Add(s.Operations);
             heureDispatcher.Stop();
@@ -324,33 +328,6 @@ namespace CompteEstBon
 
         public string SolutionToString(int index = 0) => (index == -1) ? "" : Tirage.Solutions[index].ToString();
 
-        //public void SetBrush(Color background, Color foreground)
-        //{
-        //    RadialGradientBrush brush = new RadialGradientBrush
-        //    {
-        //        AlphaMode = AlphaMode.Premultiplied,
-        //        RadiusX = 0.6,
-        //        RadiusY = 0.8
-        //    };
-        //    brush.SpreadMethod = GradientSpreadMethod.Reflect;
-        //    brush.GradientStops.Add(new GradientStop
-        //    {
-        //        Color = background,
-        //        Offset = 0.0
-        //    });
-        //    brush.GradientStops.Add(new GradientStop
-        //    {
-        //        Color = Colors.Black,
-        //        Offset = 0.9
-        //    });
-        //    brush.GradientStops.Add(new GradientStop
-        //    {
-        //        Color = Colors.Transparent,
-        //        Offset = 1.0
-        //    });
-        //    Background = brush;
-        //    Foreground = new SolidColorBrush(foreground);
-        //}
 
         public string _currentSolution;
 
@@ -383,59 +360,83 @@ namespace CompteEstBon
             [CebStatus.Erreur] = "ReportHacked"
         };
 
-        public async Task ExportToExcelAsync()
+        public async Task ExportAsync(string cmd)
         {
-            FileSavePicker savePicker = new FileSavePicker
+            try
             {
-                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
-            };
-            // Dropdown of file types the user can save the file as
-            savePicker.FileTypeChoices.Add("Excel", new List<string>() { ".xlsx" });
-            // Default file name if the user does not type one in or select a file to replace
-            savePicker.SuggestedFileName = "Ceb";
-            StorageFile file = await savePicker.PickSaveFileAsync();
-            if (file != null)
+                xlData = new ValueSet {
+                    { "Format", cmd },
+                    { "Plaques", Plaques.ToArray() },
+                    { "Search", Search },
+                    { "Result", Result },
+                    { "Status", (int)Tirage.Status },
+                    { "Solutions", Tirage.Solutions.Select(p=> p.ToString()).ToArray() }
+                 };
+            }
+            catch (Exception e)
             {
-                // Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
-                CachedFileManager.DeferUpdates(file);
-                using (var excelEngine = new ExcelEngine())
-                {
-                    var xlApp = excelEngine.Excel;
-                    xlApp.DefaultVersion = ExcelVersion.Excel2016;
+                MessageDialog d = new MessageDialog(e.ToString());
+                await d.ShowAsync();
+                return;
+            }
+            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
+            {
+                IsBusy = true; 
+                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
+            }
+            else
+            {
 
-                    var workBook = xlApp.Workbooks.Create(1);
-                    var ws = workBook.Worksheets[0];
-                   
-                    for (var i = 0; i < 6; i++)
-                    {
-                        ws.Range[1, i + 1].Value2 = $"Plaque {i + 1}";
-                        ws.Range[2, i + 1].Value2 = Plaques[i];
-                    }
-                    
-                    ws.Range[1, 7].Value2 = "Cherche";
-                    ws.Range[2, 7].Value2 = Search;
-                    ws.ListObjects.Create("Table1", ws["A1:G2"])
-                       .BuiltInTableStyle = TableBuiltInStyles.TableStyleMedium1;
-
-                    ws.Range[4, 1].Value2 = Result;
-
-                    ws.ImportData(Tirage.Solutions.Select(s => s.ToCebDetail()), 7, 1, true);
-                    for (var i = 1; i < 6; i++)
-                    {
-                        ws.Range[7, i].Value2 = $"Opération {i}";
-                    }
-
-                    ws.ListObjects.Create("Table1", ws[$"A7:E{Solutions.Count + 7}"])
-                        .BuiltInTableStyle = TableBuiltInStyles.TableStyleMedium1;
-                    await workBook.SaveAsAsync(file);
-                }
-                // Let Windows know that we're finished changing the file so the other app can update the remote version of the file.
-                // Completing updates may require Windows to ask for user input.
-                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
-
-                await Launcher.LaunchFileAsync(file);
-
+                MessageDialog dialog = new MessageDialog("This feature is only available on Windows 10 Desktop SKU");
+                await dialog.ShowAsync();
             }
         }
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public async void Execute(object parameter)
+        {
+            try
+            {
+                switch ((parameter as string)?.ToLower())
+                {
+                    case "random":
+                        await RandomAsync();
+                        break;
+                    case "resolve":
+                        switch (Tirage.Status)
+                        {
+                            case CebStatus.Valid:
+                                if (IsBusy) return;
+                                await ResolveAsync();
+                                break;
+
+                            case CebStatus.CompteEstBon:
+                            case CebStatus.CompteApproche:
+                                await ClearAsync();
+                                break;
+
+                            case CebStatus.Erreur:
+                                await RandomAsync();
+                                break;
+                        }
+                        break;
+                    case "excel":
+                        await ExportAsync("excel");
+                        break;
+                    case "word":
+                        await ExportAsync("word");
+                        break;
+                }
+            }
+            catch (Exception) {
+                // ignored
+            }
+        }
+
     }
+
 }

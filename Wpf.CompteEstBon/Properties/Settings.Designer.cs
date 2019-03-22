@@ -25,19 +25,6 @@ namespace CompteEstBon.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("NjU1MjZAMzEzNjJlMzQyZTMwTFpldXcyV3A5czdOeUoxUjRtMVd5RzRiZGhTN2lTUFVqam5jNTFCQXk1c" +
-            "z0=")]
-        public string Licence {
-            get {
-                return ((string)(this["Licence"]));
-            }
-            set {
-                this["Licence"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
         public int SolutionTimer {
             get {
