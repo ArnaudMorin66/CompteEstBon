@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,10 +75,10 @@ namespace CompteEstBon {
 
         public void SetPlaques(params int[] plaq) {
             EventActif = false;
-            for (var i = 0; i < 6; i++) {
-                if (i >= plaq.Length) { break; }
-                Plaques[i].Value = plaq[i];
+            foreach (var (p ,i) in plaq.WithIndex().Where((p,i)=>i < 6)) {
+                Plaques[i].Value = p;
             }
+            
             Clear();
             EventActif = true;
         }
@@ -166,8 +165,10 @@ namespace CompteEstBon {
                 throw new ArgumentException("Nombre de plaques incorrecte");
             _search = search;
             EventActif = false;
-            for (var i = 0; i < 6; i++)
-                Plaques[i].Value = plq[i];
+            foreach (var (p, i) in plq.WithIndex().Where((p,i) => i < 6))
+                Plaques[i].Value = p; 
+            //for (var i = 0; i < 6; i++)
+            //    Plaques[i].Value = plq[i];
             EventActif = true;
             return Resolve();
         }
@@ -190,14 +191,19 @@ namespace CompteEstBon {
 
         private void Resolve(List<CebBase> liste) {
             liste.Sort((p, q) => q.Value.CompareTo(p.Value));
-            for (var i = 0; i < liste.Count; i++) {
-                UpdateSolutions(liste[i]);
-                for (var j = i + 1; j < liste.Count; j++) {
-                    foreach (var oper in
-                        CebOperation.ListeOperations.Select(operation => new CebOperation(liste[i], operation, liste[j]))
-                            .Where(oper => oper.IsValid))
+            foreach(var (p, i) in liste.WithIndex())
+            {
+                UpdateSolutions(p);
+                foreach (var (q, j) in liste.WithIndex().Where((q,j)=> j > i)) {
+                    foreach (var oper in 
+                        CebOperation.ListeOperations.Select(operation =>
+                            CebOperation.@new(p, operation,q))
+                                .Where(o=>o.IsValid)) {
                         Resolve(
-                            liste.Where((t, k) => k != i && k != j).Concat(new[] { oper }).ToList());
+                            liste.Where( (t,k)=> k!= i && k != j).Concat(new [] {oper}).ToList()
+                        );
+
+                    }
                 }
             }
         }
@@ -235,10 +241,8 @@ namespace CompteEstBon {
 
         public IEnumerable<CebDetail> ToCebDetails() => Solutions.Select(s => s.ToCebDetail());
 
-        public static (int search, int[] plaques, CebStatus status, CebFind found, IList<string[]> solutions) Calcul(int search = -1, params int[] plaques) {
-            var t = new CebTirage(search, plaques);
-            t.Resolve();
-            return (t.Search, t.Plaques.Select(p => p.Value).ToArray(), t.Status, t.Found, t.Solutions.Select((s) => s.Operations.ToArray()).ToArray());
-        }
+    }
+    public static class CebUtils {
+        public static IEnumerable<(T, int)> WithIndex<T>(this IEnumerable<T> self) => self.Select((value, index) => (value, index));
     }
 }

@@ -26,7 +26,7 @@ namespace CompteEstBon {
 
         public string Text {
             get => Value.ToString();
-            set { Value = int.TryParse(value, out int res) ? res : 0; }
+            set => Value = int.TryParse(value, out int res) ? res : 0;
         }
 
         public override List<string> Operations => new List<string> {
@@ -34,14 +34,14 @@ namespace CompteEstBon {
                 };
 
         public override int Value {
-            // get => base.Value;
+            get => base.Value;
             set {
                 if (base.Value == value) return;
                 base.Value = value;
                 ValueEvent?.Invoke();
             }
         }
-
+        
         /// <summary>
         /// Rang
         /// </summary>

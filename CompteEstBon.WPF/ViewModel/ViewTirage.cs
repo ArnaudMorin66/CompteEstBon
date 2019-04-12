@@ -202,6 +202,12 @@ namespace CompteEstBon.ViewModel {
                             case CebStatus.Erreur:
                                 await RandomAsync();
                                 break;
+                            case CebStatus.Indefini:
+                                break;
+                            case CebStatus.EnCours:
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
                         }
 
                         break;
@@ -311,6 +317,8 @@ namespace CompteEstBon.ViewModel {
             await Tirage.RandomAsync();
             UpdateData();
         }
+
+        
 
         public async Task<CebStatus> ResolveAsync() {
             IsBusy = true;

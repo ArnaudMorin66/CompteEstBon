@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace CompteEstBon {
@@ -20,6 +21,9 @@ namespace CompteEstBon {
             Right = d;
             Evaluate();
         }
+
+        public static CebOperation @new(CebBase g, char op, CebBase d) => new CebOperation(g, op, d);
+
         public CebBase Left { get; }
         public CebBase Right { get; }
         public char Oper { get; }

@@ -19,8 +19,7 @@ namespace CompteEstBon {
         /// Initialise l'objet d'application de singleton.  Il s'agit de la première ligne du code créé
         /// à être exécutée. Elle correspond donc à l'équivalent logique de main() ou WinMain().
         /// </summary>
-        public App()
-        {
+        public App() {
             SyncfusionLicenseProvider.RegisterLicense((string)ApplicationData.Current.LocalSettings.Values["sflicence"]);
             InitializeComponent();
             Suspending += OnSuspending;
