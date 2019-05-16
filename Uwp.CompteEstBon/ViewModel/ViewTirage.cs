@@ -340,9 +340,9 @@ namespace CompteEstBon
                 : (Tirage.Status == CebStatus.CompteApproche ?
                 $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}" : "Tirage incorrect");
             IsCalculed = (Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche);
-            FirstSolutionString = Tirage.Solutions[0].ToString();
+            FirstSolutionString = Tirage.Solutions.ElementAt(0).ToString();
             foreach (var s in Tirage.Solutions)
-                Solutions.Add(s.ToCebDetail());
+                Solutions.Add(s.ToCebDetail);
             Dispatcher.Stop();
             Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             UpdateColors();

@@ -14,13 +14,13 @@ namespace CompteEstBon.ViewModel {
                     : "Tableau Liste 3 - Accentuation 2";
                 var doc = word.Documents.Add("Normal");
                 doc.UpdateStyles();
-                Word.Style st = doc.Styles.get_Item("Normal");
+                var st = doc.Styles.get_Item("Normal");
                 st.ParagraphFormat.SpaceAfter = 0;
-                Word.Style tbStyle = doc.Styles
+                var tbStyle = doc.Styles
                     .Cast<Word.Style>().First(p => p.Type == Word.WdStyleType.wdStyleTypeTable &&
                                               p.NameLocal == nomstyle);
-                
-                Word.Table tb = doc.Tables.Add(doc.Content, 2, 7);
+
+                var tb = doc.Tables.Add(doc.Content, 2, 7);
                 for (var i = 1; i <= 6; i++) {
                     tb.Cell(1, i).Range.Text = $"Plaque {i}";
                     tb.Cell(2, i).Range.Text = $"{tirage.Plaques[i - 1]}";
@@ -32,7 +32,7 @@ namespace CompteEstBon.ViewModel {
                 doc.Bookmarks.Add("Data", tb.Range);
 
                 tb.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
-                
+
                 tb.set_Style(tbStyle);
                 tb.ApplyStyleHeadingRows = true;
                 tb.ApplyStyleFirstColumn = false;
@@ -58,7 +58,7 @@ namespace CompteEstBon.ViewModel {
                 }
 
                 tb.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
-                tb.Rows[1].Range.Rows.HeadingFormat = (int) Word.WdConstants.wdToggle;
+                tb.Rows[1].Range.Rows.HeadingFormat = (int)Word.WdConstants.wdToggle;
                 doc.Bookmarks.Add("ListeSolutions", tb.Range);
 
                 var para = doc.Paragraphs[nopara];

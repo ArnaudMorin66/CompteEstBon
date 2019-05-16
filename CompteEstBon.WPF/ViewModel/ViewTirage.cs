@@ -1,5 +1,6 @@
 ﻿#region
 
+using CompteEstBon.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,7 +15,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-using CompteEstBon.Properties;
 
 #endregion
 
@@ -143,8 +143,7 @@ namespace CompteEstBon.ViewModel {
                 if (_isBusy) {
                     WaitStory.Begin();
                     AnimationStory.Begin();
-                }
-                else {
+                } else {
                     WaitStory.Pause();
                 }
 
@@ -183,84 +182,76 @@ namespace CompteEstBon.ViewModel {
 
         public async void Execute(object parameter) {
             try {
+
                 switch ((parameter as string)?.ToLower()) {
                     case "random":
-                        await RandomAsync();
-                        break;
-                    case "resolve":
+                    await RandomAsync();
+                    break;
+                    case "resolve": {
+
                         switch (Tirage.Status) {
                             case CebStatus.Valid:
-                                if (IsBusy) return;
-                                await ResolveAsync();
-                                break;
+                            if (IsBusy) return;
+                            await ResolveAsync();
+                            break;
 
                             case CebStatus.CompteEstBon:
                             case CebStatus.CompteApproche:
-                                await ClearAsync();
-                                break;
+                            await ClearAsync();
+                            break;
 
                             case CebStatus.Erreur:
-                                await RandomAsync();
-                                break;
+                            await RandomAsync();
+                            break;
                             case CebStatus.Indefini:
-                                break;
+                            break;
                             case CebStatus.EnCours:
-                                break;
+                            break;
                             default:
-                                throw new ArgumentOutOfRangeException();
+                            throw new ArgumentOutOfRangeException();
                         }
 
                         break;
+                    }
                     case "excel":
                     case "word":
-                        await Export((string) parameter);
-                        break;
+                    await ExportAsync((string)parameter);
+                    break;
                 }
-            }
-            catch (Exception) {
+            } catch (Exception) {
                 // ignored
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async Task Export(string fmt) {
+        private async Task ExportAsync(string fmt) {
             IsBusy = true;
             await Task.Run(() => {
                 switch (fmt.ToLower()) {
                     case "excel":
-                        Tirage.ToExcel();
-                        break;
+                    Tirage.ToExcel();
+                    break;
                     case "word":
-                        Tirage.ToWord();
-                        break;
+                    Tirage.ToWord();
+                    break;
                 }
             });
             IsBusy = false;
         }
 
         private void UpdateColors() {
-            switch (Tirage.Status) {
-                case CebStatus.Valid:
-                    (Background, Foreground) = (Colors.DarkOliveGreen, Colors.White);
-                    break;
+#pragma warning disable CS8509 // L'expression switch ne prend pas en charge toutes les entrées possibles (elle n'est pas exhaustive).
+            (Background, Foreground) = Tirage.Status switch
+#pragma warning restore CS8509 // L'expression switch ne prend pas en charge toutes les entrées possibles (elle n'est pas exhaustive).
+            {
+                CebStatus.Valid => (Colors.DarkOliveGreen, Colors.White),
+                CebStatus.Erreur => (Colors.Red, Colors.White),
+                CebStatus.CompteEstBon => (Colors.LightGreen, Colors.Black),
+                CebStatus.CompteApproche => (Colors.Salmon, Colors.White),
+                CebStatus.EnCours => (Colors.Yellow, Colors.White)
 
-                case CebStatus.Erreur:
-                    (Background, Foreground) = (Colors.Red, Colors.White);
-                    break;
-
-                case CebStatus.CompteEstBon:
-                    (Background, Foreground) = (Colors.LightGreen, Colors.Black);
-                    break;
-
-                case CebStatus.CompteApproche:
-                    (Background, Foreground) = (Colors.Salmon, Colors.White);
-                    break;
-
-                case CebStatus.EnCours:
-                    (Background, Foreground) = (Colors.Yellow, Colors.White);
-                    break;
-            }
+            };
         }
 
         private void NotifiedChanged([CallerMemberName] string propertyName = "") {
@@ -297,7 +288,7 @@ namespace CompteEstBon.ViewModel {
 
         public void ShowNotify(int index = 0) {
             if (index >= 0 && Solutions.Count != 0 && index < Solutions.Count) {
-                Solution = Tirage.Solutions[index].ToString();
+                Solution = Tirage.Solutions.ElementAt(index).ToString();
                 NotifyHeight = 84;
             }
         }
@@ -318,9 +309,9 @@ namespace CompteEstBon.ViewModel {
             UpdateData();
         }
 
-        
 
-        public async Task<CebStatus> ResolveAsync() {
+
+        public async Task ResolveAsync() {
             IsBusy = true;
             Result = "...Calcul...";
             (Background, Foreground) = (Colors.Green, Colors.White);
@@ -333,7 +324,7 @@ namespace CompteEstBon.ViewModel {
                     : "Tirage incorrect";
 
             foreach (var s in Tirage.Solutions)
-                Solutions.Add(s.ToCebDetail());
+                Solutions.Add(s.ToCebDetail);
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
             Solution = Tirage.Solution.ToString();
@@ -343,7 +334,7 @@ namespace CompteEstBon.ViewModel {
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");
             ShowNotify();
-            return Tirage.Status;
+            // return Tirage.Status;
         }
 
         #endregion Action

@@ -356,7 +356,7 @@ namespace CompteEstBon
         {
             if (index >= 0 && index < Solutions.Count)
             {
-                Solution = Tirage.Solutions[index].ToString();
+                Solution = Tirage.Solutions.ElementAt(index).ToString();
                 NotifyHeight = 76;
             }
         }
@@ -395,7 +395,7 @@ namespace CompteEstBon
                     : "Tirage incorrect";
 
             foreach (var s in Tirage.Solutions)
-                Solutions.Add(s.ToCebDetail());
+                Solutions.Add(s.ToCebDetail);
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
             Solution = Tirage.Solution.ToString();

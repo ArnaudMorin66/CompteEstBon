@@ -326,7 +326,7 @@ namespace CompteEstBon.ViewModel
 
         #endregion Action
 
-        public string SolutionToString(int index = 0) => (index == -1) ? "" : Tirage.Solutions[index].ToString();
+        public string SolutionToString(int index = 0) => (index == -1) ? "" : Tirage.Solutions.ElementAt(index).ToString();
 
 
         public string _currentSolution;
@@ -347,7 +347,7 @@ namespace CompteEstBon.ViewModel
             }
             if (NotifyVisibility == Visibility.Visible)
                 return;
-            CurrentSolution = Tirage.Solutions[no].ToString();
+            CurrentSolution = Tirage.Solutions.ElementAt(no).ToString();
             NotifyVisibility = Visibility.Visible;
             NotifyTimer.Start();
         }

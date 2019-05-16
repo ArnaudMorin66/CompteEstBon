@@ -1,32 +1,36 @@
 // Plage Compte est bon
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace CompteEstBon {
-    public delegate void ValueChange();
 
     [System.Runtime.InteropServices.Guid("A21F3DEC-8531-4F59-AF11-863BEF5ED340")]
     public sealed class CebPlaque : CebBase {
-        internal static event ValueChange ValueEvent;
+
         public static readonly int[] ListePlaques = {
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
             25, 50, 75, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,25
         };
 
+        public event EventHandler<int> ValueChanged;
+
         /// <summary>
         /// Plaque
         /// </summary>
-        /// <param name="tirage">
-        /// </param>
         /// <param name="value">
         /// </param>
         /// <param name="handler"></param>
-        public CebPlaque(int value) => Value = value;
+        public CebPlaque(int value, EventHandler<int> handler = null) {
+            Value = value;
+            if (handler != null)
+                ValueChanged += handler;
+        }
 
         public string Text {
             get => Value.ToString();
-            set => Value = int.TryParse(value, out int res) ? res : 0;
+            set => Value = int.TryParse(value, out var res) ? res : 0;
         }
 
         public override List<string> Operations => new List<string> {
@@ -38,10 +42,19 @@ namespace CompteEstBon {
             set {
                 if (base.Value == value) return;
                 base.Value = value;
-                ValueEvent?.Invoke();
+                OnValueChanged(value);
             }
         }
-        
+
+        public int Value2 {
+            get => Value;
+            set {
+                if (Value == value) return;
+                base.Value = value;
+            }
+
+        }
+
         /// <summary>
         /// Rang
         /// </summary>
@@ -54,7 +67,10 @@ namespace CompteEstBon {
         /// </summary>
         /// <returns>
         /// </returns>
-        public override string ToString() => Value.ToString();
+        public override string ToString() {
+            return Value.ToString();
+        }
+
         public static implicit operator int(CebPlaque p) => p.Value;
         /// <summary>
         /// D�termine si le <see cref="T:System.Object" /> sp�cifi� est �gal au
@@ -71,21 +87,17 @@ namespace CompteEstBon {
         /// 2
         /// </filterpriority>
         public override bool Equals(object obj) {
-            if (obj == null) {
-                return false;
-            }
-            if (GetType() != obj.GetType()) {
-                return false;
-            }
-
-            return ((CebPlaque)obj).Value == Value;
+            return obj is CebPlaque p ? p.Value == Value : false;
         }
 
         public override int GetHashCode() {
             return 391 + Value.GetHashCode();
         }
-        public override CebDetail ToCebDetail() {
-            return new CebDetail { op1 = ToString() };
+
+        public override CebDetail ToCebDetail => new CebDetail { op1 = ToString() };
+
+        private void OnValueChanged(int e) {
+            ValueChanged?.Invoke(this, e);
         }
     }
 }

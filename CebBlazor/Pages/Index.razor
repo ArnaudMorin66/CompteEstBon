@@ -1,0 +1,207 @@
+﻿@page "/"
+@using System.Diagnostics
+@using CompteEstBon
+
+<div class="card">
+    <div class="row">
+        <div class="card-header col-2 bg-primary">
+            <i class="fas fa-home fa-2x"></i>
+        </div>
+        <div class="col-10 card-header text-center bg-primary">
+            Jeu du compte est bon
+        </div>
+    </div>
+</div>
+@if (tirage == null) {
+    <p><em>Chargement...</em></p>
+} else {
+    <div class="row center-block">
+        <div class="col card text-center">
+
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-bars"></i> &nbsp;Plaques
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    @foreach (var plq in tirage.Plaques) {
+                        <div class="col-md-2">
+                            <select bind="@plq.Value" class="text-center w-100">
+                                @foreach (var vp in CebPlaque.ListePlaques.Distinct()) {
+                                    <option value="@vp" class="text-center">@vp</option>
+                                }
+                            </select>
+
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-2 text-center">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-search"></i>&nbsp;Trouver
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <input type="number" bind="@tirage.Search" class="w-100 text-center" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="btn-group w-100" role="group" aria-label="hasard">
+                <button id="hasard" title="Initialisation du tirage (ALT-H)"
+                        class="btn btn-primary btn-lg btn-block"
+                        role="button" type="button" onclick="@RandomAsync" accesskey="h">
+                    <i class="fas fa-random"></i> Hasard
+                </button>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="btn-group w-100" role="group" aria-label="hasard">
+                @switch (tirage.Status) {
+                    case CebStatus.EnCours:
+                    <button class="btn btn-info btn-lg btn-block">
+                        <i class="fas fa-sync fa-spin"></i>
+                    </button>
+                    break;
+                    case CebStatus.CompteEstBon:
+                    <button class="btn btn-success btn-lg btn-block" onclick="@tirage.ClearAsync" title="Initialisation des résultats (ALT-R)"
+                            role="button" type="button" accesskey="r">
+                        <i class="fas fa-thumbs-up"></i>&nbsp;R&eacute;soudre
+                    </button>
+                    break;
+                    case CebStatus.CompteApproche:
+                    <button class="btn btn-warning btn-lg btn-block" onclick="@tirage.ClearAsync" title="Initialisation des résultats (ALT-R)"
+                            role="button" type="button" accesskey="r">
+                        <i class="fas fa-thumbs-down"></i>&nbsp;R&eacute;soudre
+                    </button>
+                    break;
+                    case CebStatus.Erreur:
+                    <button class="btn btn-danger btn-lg btn-block" onclick="@RandomAsync" title="Aléatoire"
+                            role="button" type="button" accesskey="r">
+                        <i class="fas fa-exclamation-triangle"></i>&nbsp;R&eacute;soudre
+                    </button>
+                    break;
+                    default:
+                    <button class="btn btn-primary btn-lg btn-block" onclick="@ResolveAsync" title="Résoudre"
+                            role="button" type="button" accesskey="r">
+                        <i class="fas fa-bolt"></i>&nbsp;R&eacute;soudre
+                    </button>
+                    break;
+
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="text-white text-center" style="height: 1.8rem; font-weight: bold; align-self: center; flex-wrap: wrap">
+        @switch (tirage.Status) {
+            case CebStatus.CompteEstBon:
+            <div class="bg-success h-100 border border-dark" style="cursor: pointer;">
+                Compte est bon,&nbsp;@(tirage.Solutions.Count())&nbsp;solutions,&nbsp;Dur&eacute;e:&nbsp;@duree
+            </div>
+            break;
+            case CebStatus.CompteApproche:
+            <div class="bg-warning h-100 border border-dark" style="cursor: pointer;">
+                <span style="color: black;">
+                    &nbsp;Compte  approch&eacute;:&nbsp;@(tirage.Found),&nbsp;&eacute;cart:@tirage.Diff,&nbsp;@(tirage.Solutions.Count())&nbsp;solutions,&nbsp;Dur&eacute;e:&nbsp;@duree
+                    &nbsp;solutions
+                </span>
+            </div>
+            break;
+            case CebStatus.Erreur:
+            <div class="bg-danger h-100 border border-dark" onclick="@RandomAsync" style="cursor: pointer;">
+                Tirage invalide
+            </div>
+            break;
+
+            case CebStatus.EnCours:
+            <div class="bg-info h-100 border border-dark">
+                Patientez, calcul en cours...
+            </div>
+            break;
+
+            default:
+            <div class="h-100">&nbsp;</div>
+            break;
+
+        }
+    </div>
+
+    <table class="table table-sm table-info table-striped table-fixed w-100">
+        <caption>@tirage.Solutions.Count() solutions</caption>
+        <thead class="bg-primary text-white">
+            <tr>
+                <th style="width:2rem">#</th>
+                <th>Op&eacute;ration 1</th>
+                <th>Op&eacute;ration 2</th>
+                <th>Op&eacute;ration 3</th>
+                <th>Op&eacute;ration 4</th>
+                <th>Op&eacute;ration 5</th>
+            </tr>
+        </thead>
+        <tbody>
+            @try {
+                @foreach (var (solution, ix) in tirage.Solutions.Select((s, i) => (s, i))) {
+                    <tr>
+                        <td style="width:2rem">@(ix + 1)</td>
+                        @for (var i = 0; i < 6; i++) {
+                            <td>@(i < solution.Operations.Count() ? solution.Operations[i] : "")</td>
+                        }
+                    </tr>
+                }
+            } catch (Exception _) {
+                <tr>
+                    <td>Patientez...</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <style>
+        .table-fixed tbody {
+            display: block;
+            height: 15rem;
+            overflow: auto;
+        }
+
+            .table-fixed thead, .table-fixed tbody tr {
+                display: table;
+                table-layout: fixed;
+            }
+
+        .table-fixed thead, .table-fixed tbody {
+            width: 100%;
+        }
+
+
+        .table-fixed th, .table-fixed td {
+            width: 20%;
+        }
+    </style>
+}
+
+@functions {
+    protected CebTirage tirage = new CebTirage();
+    protected IEnumerable<int> listep = CebPlaque.ListePlaques.Distinct();
+    protected TimeSpan duree = TimeSpan.FromSeconds(0);
+
+    protected override async Task OnInitAsync() {
+        await tirage.RandomAsync();
+        this.StateHasChanged();
+    }
+
+
+
+    protected async Task ResolveAsync() {
+        var watch = new Stopwatch();
+        watch.Start();
+        await tirage.ResolveAsync();
+        watch.Stop();
+        duree = watch.Elapsed;
+    }
+    protected async Task RandomAsync() {
+        await tirage.RandomAsync();
+    }
+}
