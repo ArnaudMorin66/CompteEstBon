@@ -13,6 +13,7 @@
     BorderThickness="0"
     Icon="favicon.ico"
     TitleBarBackground="{DynamicResource ButtonBackgroundBrush}"
+    TitleBarHeight="40"
     TitleTextAlignment="Center"
     UseNativeChrome="True"
     WindowStyle="None"
@@ -43,8 +44,14 @@
         <KeyBinding
             Key="X"
             Command="{Binding}"
-            CommandParameter="export"
+            CommandParameter="excel"
             CommandTarget="{Binding ElementName=btnExcel}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="W"
+            Command="{Binding}"
+            CommandParameter="word"
+            CommandTarget="{Binding ElementName=btnWord}"
             Modifiers="Ctrl" />
     </s:ChromelessWindow.InputBindings>
     <Grid>
@@ -53,7 +60,6 @@
             <RowDefinition Height="40" />
             <RowDefinition Height="40" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="{Binding NotifyHeight}" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -217,31 +223,48 @@
                     Text="Hasard" />
             </StackPanel>
         </s:ButtonAdv>
-        <s:ButtonAdv
-            x:Name="btnExcel"
-            Grid.Row="1"
-            Grid.Column="9"
-            Background="{DynamicResource ButtonBackgroundBrush}"
-            Command="{Binding}"
-            CommandParameter="export"
-            IsEnabled="{Binding IsCalculed}"
-            IsTabStop="True"
-            Style="{StaticResource CebButtonStyle}"
-            TabIndex="9"
-            Template="{DynamicResource CebButtonTemplate}"
-            ToolTipService.ToolTip="Raccourci: Ctrl+X">
-            <StackPanel Orientation="Horizontal">
+        <Grid Grid.Row="1" Grid.Column="9">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <s:ButtonAdv
+                x:Name="btnExcel"
+                Grid.Column="0"
+                Background="{DynamicResource ButtonBackgroundBrush}"
+                Command="{Binding}"
+                CommandParameter="excel"
+                IsEnabled="{Binding IsCalculed}"
+                IsTabStop="True"
+                Style="{StaticResource CebButtonStyle}"
+                TabIndex="9"
+                Template="{DynamicResource CebButtonTemplate}"
+                ToolTipService.ToolTip="Raccourci: Ctrl+X">
                 <Image
                     Width="16"
                     Height="16"
                     HorizontalAlignment="Left"
                     Source="images/excel.png" />
-                <TextBlock
-                    Padding="4"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"><Run Text="Excel" /></TextBlock>
-            </StackPanel>
-        </s:ButtonAdv>
+            </s:ButtonAdv>
+            <s:ButtonAdv
+                x:Name="btnWord"
+                Grid.Column="1"
+                Background="{DynamicResource ButtonBackgroundBrush}"
+                Command="{Binding}"
+                CommandParameter="word"
+                IsEnabled="{Binding IsCalculed}"
+                IsTabStop="True"
+                Style="{StaticResource CebButtonStyle}"
+                TabIndex="9"
+                Template="{DynamicResource CebButtonTemplate}"
+                ToolTipService.ToolTip="Raccourci: Ctrl+X">
+                <Image
+                    Width="16"
+                    Height="16"
+                    HorizontalAlignment="Left"
+                    Source="images/word.png" />
+            </s:ButtonAdv>
+        </Grid>
         <Grid
             Grid.Row="2"
             Grid.Column="0"
@@ -289,6 +312,7 @@
                     <ScaleTransform x:Name="AnimatedScaleDuree" ScaleX="1" ScaleY="1" />
                 </TextBlock.RenderTransform><Run Text="Durée: " /><Run Text=" " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
         </Grid>
+
         <s:SfDataGrid
             x:Name="SolutionsData"
             Grid.Row="3"
@@ -337,6 +361,7 @@
                     TextAlignment="Center"
                     UseBindingValue="True" />
             </s:SfDataGrid.Columns>
+
         </s:SfDataGrid>
         <s:SfBusyIndicator
             Grid.Row="3"
@@ -349,44 +374,49 @@
             IsBusy="{Binding IsBusy}"
             IsTabStop="False"
             Visibility="{Binding Computing}" />
-        <StackPanel
-            Grid.Row="4"
-            Grid.Column="0"
-            Grid.ColumnSpan="10"
-            HorizontalAlignment="Stretch"
-            Background="{DynamicResource ButtonBackgroundBrush}"
-            Orientation="Vertical">
-            <Separator Background="Green" />
-            <Label
+        <Popup
+            Width="480"
+            Height="120"
+            IsOpen="{Binding Popup}"
+            Placement="Center"
+            PlacementTarget="{Binding ElementName=SolutionsData}"
+            PopupAnimation="Slide">
+            <StackPanel
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Center"
-                HorizontalContentAlignment="Center"
-                Content="{Binding Result}"
-                FontSize="12"
-                FontWeight="ExtraBlack"
-                Foreground="{DynamicResource ButtonForegroundBrush}" />
-            <TextBlock
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="12"
-                FontWeight="ExtraBlack"
-                Foreground="Yellow"
-                Text="{Binding Solution}" />
-            <Separator Background="Transparent" />
-            <TextBlock
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="12"
-                FontWeight="Medium"
-                Foreground="White"
-                TextAlignment="Center"><Run Text="Nombre de solutions: " /><Run Text="{Binding Solutions.Count, Mode=OneWay}" /></TextBlock>
-            <TextBlock
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="12"
-                FontWeight="Medium"
-                Foreground="White"
-                TextAlignment="Center"><Run Text="Durée: " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
-        </StackPanel>
+                Background="Black"
+                Orientation="Vertical">
+                <Label
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Content="{Binding Result}"
+                    FontSize="12"
+                    FontWeight="ExtraBlack"
+                    Foreground="{DynamicResource ButtonForegroundBrush}" />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    FontWeight="ExtraBlack"
+                    Foreground="Yellow"
+                    Text="{Binding Solution}" />
+                <Separator Background="Transparent" />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    TextAlignment="Center"><Run Text="Nombre de solutions: " /><Run Text="{Binding Solutions.Count, Mode=OneWay}" /></TextBlock>
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    TextAlignment="Center"><Run Text="Durée: " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
+            </StackPanel>
+        </Popup>
     </Grid>
 </s:ChromelessWindow>

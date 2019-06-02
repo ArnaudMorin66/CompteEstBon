@@ -61,7 +61,7 @@ namespace CompteEstBon.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à NjU1MjZAMzEzNjJlMzQyZTMwTFpldXcyV3A5czdOeUoxUjRtMVd5RzRiZGhTN2lTUFVqam5jNTFCQXk1cz0=.
+        ///   Recherche une chaîne localisée semblable à MTA0MDY3QDMxMzcyZTMxMmUzMFkrNXhBZXJRRnBPbUJxeGlnUVJyOWtua3BFSHhpWXljeWxURFhDSTlWYzA9.
         /// </summary>
         internal static string License {
             get {

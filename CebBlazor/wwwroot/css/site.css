@@ -1,7 +1,19 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: lightslategray;
 }
 
+.card {
+    background-color: darkslategray;
+    border-color: black;
+}
+
+.bg-primary {
+    background-color: darkslategray;
+}
+.primary {
+    background-color: darkslategray;
+}
 app {
     position: relative;
     display: flex;
@@ -13,11 +25,31 @@ app {
     display: flex;
     align-items: center;
 }
+k-searchbar > .k-input, .k-numeric-wrap > .k-input {
+    background-color: white;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+}
+.k-input, .k-textbox > input{
+    text-align:center;
+}
 
+.k-grid-header th {
+    background-color: darkslategray;
+    text-align: center;
+    color: white;
+}
+.k-grid-content tr {
+   
+    text-align: center;
+}
 .main {
     flex: 1;
 }
-
+.solutions {
+    height: 20rem;
+}
     .main .top-row {
         background-color: #e6e6e6;
         border-bottom: 1px solid #d6d5d5;

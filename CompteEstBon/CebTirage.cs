@@ -216,9 +216,7 @@ namespace CompteEstBon {
             return Status;
         }
 
-        public async Task<CebStatus> ResolveAsync() {
-            return await Task.Run(() => Resolve());
-        }
+        public async Task<CebStatus> ResolveAsync() => await Task.Run(Resolve);
 
         public async Task<CebStatus> ResolveAsync(int search, params int[] plq) {
             return await Task.Run(() => ResolveWithParam(search, plq));
@@ -229,19 +227,15 @@ namespace CompteEstBon {
             buffer.AppendLine("## Tirage du compte est bon ###");
             buffer.AppendLine($"Search : {Search}, plaques : [{string.Join(",", Plaques.Select(p => p.ToString()))}]");
             buffer.AppendLine($"Found:  {Found}, Status: {Status}, Nb de solutions: {Count}");
-            buffer.AppendLine(string.Join(";", Solutions.Select((p) => p.ToString())));
+            buffer.AppendLine(string.Join(";", Solutions.Select(p=> p.ToString())));
             return buffer.ToString();
         }
 
-        public IEnumerable<string> ToArray() {
-            return Solutions.Select(p => p.ToString());
-        }
+        public IEnumerable<string> ToArray() => Solutions.Select(p=> p.ToString());
 
         public IEnumerable<IEnumerable<string>> OperationsSolutions => Solutions.Select(p => p.Operations);
         public string[][] ArraysSolutions => Solutions.Select(p => p.Operations.ToArray()).ToArray();
 
-        public IEnumerable<CebDetail> ToCebDetails() {
-            return Solutions.Select(s => s.ToCebDetail);
-        }
+        public IEnumerable<CebDetail> ToCebDetails() => Solutions.Select(s => s.Detail);
     }
 }

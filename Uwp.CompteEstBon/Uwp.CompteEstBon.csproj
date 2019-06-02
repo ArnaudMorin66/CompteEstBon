@@ -114,19 +114,19 @@
       <Version>6.2.8</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfBusyIndicator.UWP">
-      <Version>17.1.0.42</Version>
+      <Version>17.1.0.49</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfGrid.UWP">
-      <Version>17.1.0.42</Version>
+      <Version>17.1.0.49</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfGridConverter.UWP">
       <Version>16.2.0.46</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfInput.UWP">
-      <Version>17.1.0.42</Version>
+      <Version>17.1.0.49</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.XlsIO.UWP">
-      <Version>17.1.0.42</Version>
+      <Version>17.1.0.49</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

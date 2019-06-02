@@ -96,7 +96,7 @@ namespace CompteEstBon {
         }
 
         /// <inheritdoc />
-        public override CebDetail ToCebDetail {
+        public override CebDetail Detail {
             get {
                 var elt = new CebDetail();
                 var ty = typeof(CebDetail);

@@ -20,6 +20,7 @@ namespace CompteEstBon {
         /// à être exécutée. Elle correspond donc à l'équivalent logique de main() ou WinMain().
         /// </summary>
         public App() {
+            // ApplicationData.Current.LocalSettings.Values["sflicence"] = "MTA2OTY3QDMxMzcyZTMxMmUzMEN4MmRZRjAzTDQ5cnNvZGlCVWFmRzBmQlVUVGZRRHJuVkxwdG9penFNUE09";
             SyncfusionLicenseProvider.RegisterLicense((string)ApplicationData.Current.LocalSettings.Values["sflicence"]);
             InitializeComponent();
             Suspending += OnSuspending;

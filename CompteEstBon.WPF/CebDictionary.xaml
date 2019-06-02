@@ -181,6 +181,7 @@
     <Style x:Key="DataGridColumnHeaderStyle" TargetType="DataGridColumnHeader">
         <Setter Property="Background" Value="{StaticResource CebLinearGradientBrush1}" />
         <Setter Property="Foreground" Value="Yellow" />
+        <Setter Property="Height" Value="30"/>
         <Setter Property="HorizontalContentAlignment" Value="Center" />
     </Style>
     <Style x:Key="DataGridRowStyle" TargetType="DataGridRow">

@@ -1,5 +1,6 @@
 ﻿#region
 
+using CompteEstBon.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,35 +9,27 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-using CompteEstBon.Properties;
-using Microsoft.Win32;
-// using Syncfusion.XlsIO;
-// using Microsoft.Office.Interop.Excel;
-using Excel = Microsoft.Office.Interop.Excel;
 #endregion
 
-namespace CompteEstBon
-{
-    public class ViewTirage : INotifyPropertyChanged, ICommand
-    {
+namespace CompteEstBon {
+    public class ViewTirage : INotifyPropertyChanged, ICommand {
         private readonly Stopwatch NotifyWatch = new Stopwatch();
         private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(Settings.Default.SolutionTimer);
         private Storyboard _animation;
-        private Color _background = Colors.Navy;
+        private Color _background = Colors.DarkSlateGray;
         private string _duree;
 
         private Color _foreground = Colors.White;
         private bool _isUpdating;
         private bool _isBusy;
         private bool _isComputed;
-        private int _notifyHeight;
+        private bool _popup;
 
         private string _result = "Résoudre";
 
@@ -54,23 +47,19 @@ namespace CompteEstBon
         /// </summary>
         /// <returns>
         /// </returns>
-        public ViewTirage()
-        {
+        public ViewTirage() {
             stopwatch = new Stopwatch();
 
-            dateDispatcher = new DispatcherTimer
-            {
+            dateDispatcher = new DispatcherTimer {
                 Interval = TimeSpan.FromMilliseconds(10)
             };
-            dateDispatcher.Tick += (sender, e) =>
-            {
+            dateDispatcher.Tick += (sender, e) => {
                 if (stopwatch.IsRunning) Duree = stopwatch.Elapsed.ToString();
-                if (NotifyHeight != 0 && NotifyWatch.Elapsed > SolutionTimer) HideNotify();
+                if (Popup  && NotifyWatch.Elapsed > SolutionTimer) HidePopup();
                 Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
 
-            Plaques.CollectionChanged += (sender, e) =>
-            {
+            Plaques.CollectionChanged += (sender, e) => {
                 if (e.Action != NotifyCollectionChangedAction.Replace) return;
                 var i = e.NewStartingIndex;
                 Tirage.Plaques[i].Text = Plaques[i];
@@ -172,14 +161,14 @@ namespace CompteEstBon
             }
         }
 
-        public int NotifyHeight {
-            get => _notifyHeight;
+        public bool Popup {
+            get => _popup;
             set {
-                if (_notifyHeight == value) return;
-                _notifyHeight = value;
+                if (_popup == value) return;
+                _popup = value;
                 NotifyWatch.Stop();
                 NotifyWatch.Reset();
-                if (_notifyHeight != 0) NotifyWatch.Start();
+                if (_popup) NotifyWatch.Start();
                 NotifiedChanged();
             }
         }
@@ -197,135 +186,74 @@ namespace CompteEstBon
             remove => CommandManager.RequerySuggested -= value;
         }
 
-        public bool CanExecute(object parameter)
-        {
+        public bool CanExecute(object parameter) {
             return true;
         }
 
-        public async void Execute(object parameter)
-        {
-            switch ((parameter as string).ToLower())
-            {
+        public async void Execute(object parameter) {
+            switch ((parameter as string).ToLower()) {
                 case "random":
+                await RandomAsync();
+                break;
+                case "resolve":
+                switch (Tirage.Status) {
+                    case CebStatus.Valid:
+                    await ResolveAsync();
+                    break;
+
+                    case CebStatus.CompteEstBon:
+                    case CebStatus.CompteApproche:
+                    await ClearAsync();
+                    break;
+
+                    case CebStatus.Erreur:
                     await RandomAsync();
                     break;
-                case "resolve":
-                    switch (Tirage.Status)
-                    {
-                        case CebStatus.Valid:
-                            await ResolveAsync();
-                            break;
-
-                        case CebStatus.CompteEstBon:
-                        case CebStatus.CompteApproche:
-                            await ClearAsync();
-                            break;
-
-                        case CebStatus.Erreur:
-                            await RandomAsync();
-                            break;
-                    }
-                    break;
-                case "export":
-                    ExportData();
-                    break;
+                }
+                break;
+                case "excel":
+                case "word":
+                await ExportAsync((string)parameter);
+                break;
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public static Excel.Application GetExcelApplication()
-        {
-            Excel.Application xl;
-            try
-            {
-                xl = (Excel.Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Excel.Application");
-            }
-            catch (Exception)
-            {
-                xl = new Excel.Application();
-            }
-            return xl;
+        private async Task ExportAsync(string fmt) {
+            IsBusy = true;
+            await Task.Run(() => {
+                switch (fmt.ToLower()) {
+                    case "excel":
+                    Tirage.ToExcel();
+                    break;
+                    case "word":
+                    Tirage.ToWord();
+                    break;
+                }
+            });
+            IsBusy = false;
         }
-        private void ExportData()
-        {
-            Excel.Application xl = ViewTirage.GetExcelApplication();
-            xl.Visible = false;
-            
-            var workBook = xl.Workbooks.Add();
-            
-            var ws = workBook.Worksheets[1];
-            for (var i = 1; i <= 6; i++)
+       
+        
+        
+        private void UpdateColors() {
+            (Background, Foreground) = Tirage.Status switch
             {
-                ws.Cells(1, i).Value = $"Plaque {i}";
-                ws.Cells(2, i).Value = Plaques[i - 1];
-            }
-            ws.Cells(1, 7).Value = "Recherche";
-            ws.Cells(2, 7).Value = Search;
-            ws.ListObjects.Add(Excel.XlListObjectSourceType.xlSrcRange, ws.Range["A1"].CurrentRegion, null, Excel.XlYesNoGuess.xlYes);
+                CebStatus.Valid => (Colors.DarkOliveGreen, Colors.White),
+                CebStatus.Erreur => (Colors.Red, Colors.White),
+                CebStatus.CompteEstBon => (Colors.LightGreen, Colors.Yellow),
+                CebStatus.CompteApproche => (Colors.Salmon, Colors.White),
+                CebStatus.EnCours => (Colors.Yellow, Colors.White),
+                _ => (Colors.Red, Colors.White)
 
-            for (var c = 1; c < 6; c++)
-            {
-                ws.Cells(6, c).Value = $"Opération {c}";
-            }
-            var l = 7;
-            
-            foreach(var s in Tirage.Solutions)
-            {
-                var op = s.Operations.ToArray();
-                ws.Range[ws.Cells(l,1), ws.Cells(l,op.Length)].Value = op;
-                l++;
-            }
-            ws.ListObjects.Add(Excel.XlListObjectSourceType.xlSrcRange, ws.Range["A6"].CurrentRegion, null, Excel.XlYesNoGuess.xlYes);
-            ws.Range["A4"].Value = Result;
-            if (Tirage.Status == CebStatus.CompteEstBon)
-            {
-                ws.Range["A4"].Interior.ThemeColor = Excel.XlThemeColor.xlThemeColorAccent6;
-                ws.Range["A4"].Font.ThemeColor = Excel.XlThemeColor.xlThemeColorDark1;
-                ws.Range["A4"].Font.Bold = true;
-            }
-            else
-            {
-                ws.Range["A4"].Interior.ThemeColor = Excel.XlThemeColor.xlThemeColorAccent4;
-                ws.Range["A4"].Font.ThemeColor = Excel.XlThemeColor.xlThemeColorLight1;
-                ws.Range["A4"].Font.Bold = true;
-            }
-            ws.Range["A4:E4"].MergeCells = true;
-            ws.Range["A4:E4"].HorizontalAlignment = Excel.Constants.xlCenter;
-            xl.Visible = true;
-            
+            };
         }
 
-        private void UpdateColors()
-        {
-            switch (Tirage.Status)
-            {
-                case CebStatus.Valid:
-                    (Background, Foreground) = (Colors.DarkOliveGreen, Colors.White);
-                    break;
-
-                case CebStatus.Erreur:
-                    (Background, Foreground) = (Colors.Red, Colors.White);
-                    break;
-
-                case CebStatus.CompteEstBon:
-                    (Background, Foreground) = (Colors.LightGreen, Colors.Yellow);
-                    break;
-
-                case CebStatus.CompteApproche:
-                    (Background, Foreground) = (Colors.Salmon, Colors.White);
-                    break;
-
-                case CebStatus.EnCours:
-                    (Background, Foreground) = (Colors.Yellow, Colors.White);
-                    break;
-            }
+        private void NotifiedChanged([CallerMemberName] string propertyName = "") {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private void NotifiedChanged([CallerMemberName] string propertyName = "")
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-        private void ClearData()
-        {
+        private void ClearData() {
             if (_isUpdating) return;
             stopwatch.Reset();
             Animation?.Stop();
@@ -334,12 +262,11 @@ namespace CompteEstBon
             Solutions.Clear();
             Solution = "";
             Result = Tirage.Status != CebStatus.Erreur ? "(...)" : "Tirage incorrect";
-            HideNotify();
+            HidePopup();
             UpdateColors();
         }
 
-        private void UpdateData()
-        {
+        private void UpdateData() {
             if (_isUpdating) return;
             _isUpdating = true;
 
@@ -352,36 +279,30 @@ namespace CompteEstBon
             NotifiedChanged("Search");
         }
 
-        public void ShowNotify(int index = 0)
-        {
-            if (index >= 0 && index < Solutions.Count)
-            {
+        public void ShowPopup(int index = 0) {
+            if (index >= 0 && index < Solutions.Count) {
                 Solution = Tirage.Solutions.ElementAt(index).ToString();
-                NotifyHeight = 76;
+                Popup = true;
             }
         }
 
-        private void HideNotify()
-        {
-            NotifyHeight = 0;
+        private void HidePopup() {
+            Popup = false;
         }
 
         #region Action
 
-        public async Task ClearAsync()
-        {
+        public async Task ClearAsync() {
             await Tirage.ClearAsync();
             ClearData();
         }
 
-        public async Task RandomAsync()
-        {
+        public async Task RandomAsync() {
             await Tirage.RandomAsync();
             UpdateData();
         }
 
-        public async Task<CebStatus> ResolveAsync()
-        {
+        public async Task<CebStatus> ResolveAsync() {
             IsBusy = true;
             Animation?.Begin();
             Result = "...Calcul...";
@@ -395,7 +316,7 @@ namespace CompteEstBon
                     : "Tirage incorrect";
 
             foreach (var s in Tirage.Solutions)
-                Solutions.Add(s.ToCebDetail);
+                Solutions.Add(s.Detail);
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
             Solution = Tirage.Solution.ToString();
@@ -403,7 +324,7 @@ namespace CompteEstBon
             IsBusy = false;
             Solution = Tirage.Solution.ToString();
             IsComputed = Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche;
-            ShowNotify();
+            ShowPopup();
             return Tirage.Status;
         }
 

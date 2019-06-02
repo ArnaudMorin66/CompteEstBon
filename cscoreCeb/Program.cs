@@ -60,7 +60,7 @@ namespace cscoreCeb {
                 Console.WriteLine($", nombre de solutions {tirage.Solutions.Count}");
                 Console.WriteLine();
                 foreach (var (solution, i) in tirage.Solutions.Select((elt, i) => (elt,i))) {
-                    Console.WriteLine($"{i:D4}: {solution.ToCebDetail}");
+                    Console.WriteLine($"{i:D4}: {solution.Detail}");
                 }
             }
             Console.WriteLine();

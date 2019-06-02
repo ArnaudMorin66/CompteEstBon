@@ -342,7 +342,7 @@ namespace CompteEstBon
             IsCalculed = (Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche);
             FirstSolutionString = Tirage.Solutions.ElementAt(0).ToString();
             foreach (var s in Tirage.Solutions)
-                Solutions.Add(s.ToCebDetail);
+                Solutions.Add(s.Detail);
             Dispatcher.Stop();
             Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             UpdateColors();

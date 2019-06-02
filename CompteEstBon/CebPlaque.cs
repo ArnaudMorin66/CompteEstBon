@@ -94,7 +94,7 @@ namespace CompteEstBon {
             return 391 + Value.GetHashCode();
         }
 
-        public override CebDetail ToCebDetail => new CebDetail { op1 = ToString() };
+        public override CebDetail Detail => new CebDetail { op1 = ToString() };
 
         private void OnValueChanged(int e) {
             ValueChanged?.Invoke(this, e);

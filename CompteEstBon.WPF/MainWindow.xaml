@@ -1,19 +1,20 @@
-﻿<Window x:Class="CompteEstBon.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewModel="clr-namespace:CompteEstBon.ViewModel"
-        Width="800"
-        Height="480"
-        Background="Transparent"
-        BorderThickness="0"
-        Icon="favicon.ico"
-        MouseLeftButtonDown="Window_MouseLeftButtonDown"
-        ResizeMode="CanResize"
-        WindowStartupLocation="CenterScreen"
-        WindowStyle="None"
-        mc:Ignorable="d">
+﻿<Window
+    x:Class="CompteEstBon.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="clr-namespace:CompteEstBon.ViewModel"
+    Width="800"
+    Height="480"
+    Background="Transparent"
+    BorderThickness="0"
+    Icon="favicon.ico"
+    MouseLeftButtonDown="Window_MouseLeftButtonDown"
+    ResizeMode="CanResize"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -26,38 +27,43 @@
         </ResourceDictionary>
     </Window.Resources>
     <Window.TaskbarItemInfo>
-        <TaskbarItemInfo x:Name="CebTaskbarInfo"
-                         Description="Le compte est bon"
-                         Overlay="favicon.ico">
+        <TaskbarItemInfo
+            x:Name="CebTaskbarInfo"
+            Description="Le compte est bon"
+            Overlay="favicon.ico">
             <TaskbarItemInfo.ThumbButtonInfos>
                 <ThumbButtonInfoCollection>
-                    <ThumbButtonInfo Command="{Binding}"
-                                     CommandParameter="random"
-                                     Description="Hasard"
-                                     DismissWhenClicked="True"
-                                     ImageSource="Images/random.png"
-                                     IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
-                    <ThumbButtonInfo Command="{Binding}"
-                                     CommandParameter="Resolve"
-                                     CommandTarget="{Binding ElementName=btnResoudre}"
-                                     Description="Résoudre"
-                                     DismissWhenClicked="True"
-                                     ImageSource="Images/resolve.png"
-                                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
-                    <ThumbButtonInfo Command="{Binding}"
-                                     CommandParameter="Excel"
-                                     CommandTarget="{Binding ElementName=btnExcel}"
-                                     Description="Exportation vers Excel"
-                                     DismissWhenClicked="True"
-                                     ImageSource="Images/excel.png"
-                                     IsEnabled="{Binding Status, Converter={StaticResource StatusConverter}}" />
-                    <ThumbButtonInfo Command="{Binding}"
-                                     CommandParameter="Word"
-                                     CommandTarget="{Binding ElementName=btnWord}"
-                                     Description="Exportation vers Word"
-                                     DismissWhenClicked="True"
-                                     ImageSource="Images/word.png"
-                                     IsEnabled="{Binding Status, Converter={StaticResource StatusConverter}}" />
+                    <ThumbButtonInfo
+                        Command="{Binding}"
+                        CommandParameter="random"
+                        Description="Hasard"
+                        DismissWhenClicked="True"
+                        ImageSource="Images/random.png"
+                        IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
+                    <ThumbButtonInfo
+                        Command="{Binding}"
+                        CommandParameter="Resolve"
+                        CommandTarget="{Binding ElementName=btnResoudre}"
+                        Description="Résoudre"
+                        DismissWhenClicked="True"
+                        ImageSource="Images/resolve.png"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
+                    <ThumbButtonInfo
+                        Command="{Binding}"
+                        CommandParameter="Excel"
+                        CommandTarget="{Binding ElementName=btnExcel}"
+                        Description="Exportation vers Excel"
+                        DismissWhenClicked="True"
+                        ImageSource="Images/excel.png"
+                        IsEnabled="{Binding Status, Converter={StaticResource StatusConverter}}" />
+                    <ThumbButtonInfo
+                        Command="{Binding}"
+                        CommandParameter="Word"
+                        CommandTarget="{Binding ElementName=btnWord}"
+                        Description="Exportation vers Word"
+                        DismissWhenClicked="True"
+                        ImageSource="Images/word.png"
+                        IsEnabled="{Binding Status, Converter={StaticResource StatusConverter}}" />
                 </ThumbButtonInfoCollection>
             </TaskbarItemInfo.ThumbButtonInfos>
         </TaskbarItemInfo>
@@ -66,33 +72,36 @@
         <viewModel:ViewTirage x:Name="Tirage" />
     </Window.DataContext>
     <Window.InputBindings>
-        <KeyBinding Key="H"
-                    Command="{Binding}"
-                    CommandParameter="random"
-                    CommandTarget="{Binding ElementName=btnHasard}"
-                    Modifiers="Ctrl" />
-        <KeyBinding Key="R"
-                    Command="{Binding}"
-                    CommandParameter="resolve"
-                    CommandTarget="{Binding ElementName=btnResoudre}"
-                    Modifiers="Ctrl" />
-        <KeyBinding Key="X"
-                    Command="{Binding}"
-                    CommandParameter="excel"
-                    CommandTarget="{Binding ElementName=btnExcel}"
-                    Modifiers="Ctrl" />
-        <KeyBinding Key="W"
-                    Command="{Binding}"
-                    CommandParameter="word"
-                    CommandTarget="{Binding ElementName=btnExcel}"
-                    Modifiers="Ctrl" />
+        <KeyBinding
+            Key="H"
+            Command="{Binding}"
+            CommandParameter="random"
+            CommandTarget="{Binding ElementName=btnHasard}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="R"
+            Command="{Binding}"
+            CommandParameter="resolve"
+            CommandTarget="{Binding ElementName=btnResoudre}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="X"
+            Command="{Binding}"
+            CommandParameter="excel"
+            CommandTarget="{Binding ElementName=btnExcel}"
+            Modifiers="Ctrl" />
+        <KeyBinding
+            Key="W"
+            Command="{Binding}"
+            CommandParameter="word"
+            CommandTarget="{Binding ElementName=btnExcel}"
+            Modifiers="Ctrl" />
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="{Binding NotifyHeight}" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -108,18 +117,20 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Label Grid.Row="0"
-               Grid.Column="0"
-               Grid.ColumnSpan="8"
-               Content="Plaques"
-               Style="{StaticResource LabelTitreStyle}" />
-        <Border Grid.Row="1"
-                Grid.Column="0"
-                Grid.ColumnSpan="8"
-                Margin="0"
-                Padding="0"
-                BorderBrush="Black"
-                BorderThickness="1">
+        <Label
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="8"
+            Content="Plaques"
+            Style="{StaticResource LabelTitreStyle}" />
+        <Border
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="8"
+            Margin="0"
+            Padding="0"
+            BorderBrush="Black"
+            BorderThickness="1">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
@@ -129,219 +140,251 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <ComboBox x:Name="Plaque1"
-                          Grid.Column="0"
-                          IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                          TabIndex="0"
-                          Text="{Binding Plaques[0], Mode=TwoWay}" />
-                <ComboBox x:Name="Plaque2"
-                          Grid.Column="1"
-                          IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                          TabIndex="1"
-                          Text="{Binding Plaques[1], Mode=TwoWay}" />
-                <ComboBox x:Name="Plaque3"
-                          Grid.Column="2"
-                          IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                          TabIndex="2"
-                          Text="{Binding Plaques[2], Mode=TwoWay}" />
-                <ComboBox x:Name="Plaque4"
-                          Grid.Column="3"
-                          IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                          TabIndex="3"
-                          Text="{Binding Plaques[3], Mode=TwoWay}" />
-                <ComboBox x:Name="Plaque5"
-                          Grid.Column="4"
-                          IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                          TabIndex="4"
-                          Text="{Binding Plaques[4], Mode=TwoWay}" />
-                <ComboBox x:Name="Plaque6"
-                          Grid.Column="5"
-                          IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                          Text="{Binding Plaques[5], Mode=TwoWay}" />
+                <ComboBox
+                    x:Name="Plaque1"
+                    Grid.Column="0"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    TabIndex="0"
+                    Text="{Binding Plaques[0], Mode=TwoWay}" />
+                <ComboBox
+                    x:Name="Plaque2"
+                    Grid.Column="1"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    TabIndex="1"
+                    Text="{Binding Plaques[1], Mode=TwoWay}" />
+                <ComboBox
+                    x:Name="Plaque3"
+                    Grid.Column="2"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    TabIndex="2"
+                    Text="{Binding Plaques[2], Mode=TwoWay}" />
+                <ComboBox
+                    x:Name="Plaque4"
+                    Grid.Column="3"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    TabIndex="3"
+                    Text="{Binding Plaques[3], Mode=TwoWay}" />
+                <ComboBox
+                    x:Name="Plaque5"
+                    Grid.Column="4"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    TabIndex="4"
+                    Text="{Binding Plaques[4], Mode=TwoWay}" />
+                <ComboBox
+                    x:Name="Plaque6"
+                    Grid.Column="5"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    Text="{Binding Plaques[5], Mode=TwoWay}" />
             </Grid>
         </Border>
-        <Label Grid.Row="0"
-               Grid.Column="8"
-               Grid.ColumnSpan="2"
-               Content="Chercher"
-               Style="{StaticResource LabelTitreStyle}" />
-        <Border Grid.Row="1"
-                Grid.Column="8"
-                Grid.ColumnSpan="2"
-                Style="{StaticResource BorderTitreStyle}">
+        <Label
+            Grid.Row="0"
+            Grid.Column="8"
+            Grid.ColumnSpan="2"
+            Content="Chercher"
+            Style="{StaticResource LabelTitreStyle}" />
+        <Border
+            Grid.Row="1"
+            Grid.Column="8"
+            Grid.ColumnSpan="2"
+            Style="{StaticResource BorderTitreStyle}">
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="16" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="16" />
                 </Grid.ColumnDefinitions>
-                <RepeatButton x:Name="tbMoins"
-                              Grid.Column="0"
-                              Click="TbMoins_Click"
-                              Content="-"
-                              IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                              Style="{StaticResource CebRepeatButtonStyle}" />
-                <TextBox Grid.Column="1"
-                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                         Style="{StaticResource SearchControlStyle}"
-                         Text="{Binding Search, Mode=TwoWay}" />
-                <RepeatButton x:Name="tbPlus"
-                              Grid.Column="2"
-                              Click="TbPlus_Click"
-                              Content="+"
-                              IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                              Style="{StaticResource CebRepeatButtonStyle}" />
+                <RepeatButton
+                    x:Name="tbMoins"
+                    Grid.Column="0"
+                    Click="TbMoins_Click"
+                    Content="-"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    Style="{StaticResource CebRepeatButtonStyle}" />
+                <TextBox
+                    Grid.Column="1"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    Style="{StaticResource SearchControlStyle}"
+                    Text="{Binding Search, Mode=TwoWay}" />
+                <RepeatButton
+                    x:Name="tbPlus"
+                    Grid.Column="2"
+                    Click="TbPlus_Click"
+                    Content="+"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    Style="{StaticResource CebRepeatButtonStyle}" />
             </Grid>
         </Border>
-        <DataGrid x:Name="SolutionsData"
-                  Grid.Row="2"
-                  Grid.Column="0"
-                  Grid.ColumnSpan="10"
-                  x:FieldModifier="public"
-                  AutoGenerateColumns="False"
-                  Background="{DynamicResource CebLinearGradientBrush2}"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  CanUserReorderColumns="False"
-                  CanUserResizeColumns="False"
-                  CanUserResizeRows="False"
-                  CanUserSortColumns="False"
-                  ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-                  FontSize="14"
-                  HeadersVisibility="Column"
-                  IsTabStop="True"
-                  ItemsSource="{Binding Solutions}"
-                  RowStyle="{StaticResource DataGridRowStyle}"
-                  SelectionChanged="SolutionsData_SelectionChanged"
-                  TabIndex="7">
+        <DataGrid
+            x:Name="SolutionsData"
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="10"
+            x:FieldModifier="public"
+            AutoGenerateColumns="False"
+            Background="{DynamicResource CebLinearGradientBrush2}"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
+            CanUserReorderColumns="False"
+            CanUserResizeColumns="False"
+            CanUserResizeRows="False"
+            CanUserSortColumns="False"
+            ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+            FontSize="14"
+            HeadersVisibility="Column"
+            IsTabStop="True"
+            ItemsSource="{Binding Solutions}"
+            RowStyle="{StaticResource DataGridRowStyle}"
+            SelectionChanged="SolutionsData_SelectionChanged"
+            TabIndex="7">
             <DataGrid.Columns>
-                <DataGridTextColumn Width="*"
-                                    Binding="{Binding op1}"
-                                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
-                                    Header="Opération 1" />
-                <DataGridTextColumn Width="*"
-                                    Binding="{Binding op2}"
-                                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
-                                    Header="Opération 2" />
-                <DataGridTextColumn Width="*"
-                                    Binding="{Binding op3}"
-                                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
-                                    Header="Opération 3" />
-                <DataGridTextColumn Width="*"
-                                    Binding="{Binding op4}"
-                                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
-                                    Header="Opération 4" />
-                <DataGridTextColumn Width="*"
-                                    Binding="{Binding op5}"
-                                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
-                                    Header="Opération 5" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding op1}"
+                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
+                    Header="Opération 1" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding op2}"
+                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
+                    Header="Opération 2" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding op3}"
+                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
+                    Header="Opération 3" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding op4}"
+                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
+                    Header="Opération 4" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding op5}"
+                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
+                    Header="Opération 5" />
             </DataGrid.Columns>
         </DataGrid>
-        <StackPanel Grid.Row="3"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="10"
+        <Popup
+            Width="400"
+            Height="120"
+            IsOpen="{Binding Popup}"
+            Placement="Center"
+            PlacementTarget="{Binding ElementName=SolutionsData}">
+            <StackPanel
+                HorizontalAlignment="Stretch"
+                Background="Black"
+                Orientation="Vertical">
+                <Label
                     HorizontalAlignment="Stretch"
-                    Background="{StaticResource ButtonBackgroundBrush}"
-                    Orientation="Vertical">
-            <Separator Background="Green" />
-            <Label HorizontalAlignment="Stretch"
-                   VerticalAlignment="Center"
-                   HorizontalContentAlignment="Center"
-                   Content="{Binding Result}"
-                   FontSize="12"
-                   FontWeight="ExtraBlack"
-                   Foreground="{DynamicResource ButtonForegroundBrush}" />
-            <TextBlock HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       FontSize="12"
-                       FontWeight="ExtraBlack"
-                       Foreground="Yellow"
-                       Text="{Binding Solution}" />
-            <Separator Background="Transparent" />
-            <TextBlock HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       FontSize="12"
-                       FontWeight="Medium"
-                       Foreground="White"
-                       TextAlignment="Center"><Run Text="Nombre de solutions: " /><Run Text="{Binding Solutions.Count, Mode=OneWay}" /></TextBlock>
-            <TextBlock HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       FontSize="12"
-                       FontWeight="Medium"
-                       Foreground="White"
-                       TextAlignment="Center"><Run Text="Durée: " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
-        </StackPanel>
-        <TextBlock Name="Wait"
-                   Grid.Row="2"
-                   Grid.Column="0"
-                   Grid.ColumnSpan="10"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Panel.ZIndex="10"
-                   FontFamily="Wingdings 3"
-                   FontSize="50"
-                   FontWeight="Bold"
-                   Foreground="Yellow"
-                   RenderTransformOrigin="0.5, 0.5"
-                   Text="&#x50;"
-                   Visibility="{Binding IsBusy, Converter={StaticResource BusyVisibilityConverter}}">
+                    VerticalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Content="{Binding Result}"
+                    FontSize="12"
+                    FontWeight="ExtraBlack"
+                    Foreground="{DynamicResource ButtonForegroundBrush}" />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    FontWeight="ExtraBlack"
+                    Foreground="Yellow"
+                    Text="{Binding Solution}" />
+                <Separator Background="Transparent" />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    TextAlignment="Center"><Run Text="Nombre de solutions: " /><Run Text="{Binding Solutions.Count, Mode=OneWay}" /></TextBlock>
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    TextAlignment="Center"><Run Text="Durée: " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
+            </StackPanel>
+        </Popup>
+        <TextBlock
+            Name="Wait"
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="10"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Panel.ZIndex="10"
+            FontFamily="Wingdings 3"
+            FontSize="50"
+            FontWeight="Bold"
+            Foreground="Yellow"
+            RenderTransformOrigin="0.5, 0.5"
+            Text="&#x50;"
+            Visibility="{Binding IsBusy, Converter={StaticResource BusyVisibilityConverter}}">
             <TextBlock.RenderTransform>
                 <RotateTransform Angle="0" />
             </TextBlock.RenderTransform>
         </TextBlock>
-        <Grid Grid.Row="4"
-              Grid.Column="0"
-              Grid.ColumnSpan="10"
-              Margin="0,0,0,0"
-              HorizontalAlignment="Stretch"
-              VerticalAlignment="Center"
-              Background="{DynamicResource ButtonBackgroundBrush}">
+        <Grid
+            Grid.Row="4"
+            Grid.Column="0"
+            Grid.ColumnSpan="10"
+            Margin="0,0,0,0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
+            Background="{DynamicResource ButtonBackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="textBlock1"
-                       Grid.Column="0"
-                       Height="35"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       FontWeight="Bold"
-                       Foreground="{DynamicResource ButtonForegroundBrush}"
-                       TextAlignment="Center"
-                       Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
+            <TextBlock
+                x:Name="textBlock1"
+                Grid.Column="0"
+                Height="35"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontWeight="Bold"
+                Foreground="{DynamicResource ButtonForegroundBrush}"
+                TextAlignment="Center"
+                Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
                 <TextBlock.RenderTransform>
                     <ScaleTransform x:Name="AnimatedScaleResult" ScaleX="1" ScaleY="1" />
                 </TextBlock.RenderTransform><Run Text="{Binding Result}" /></TextBlock>
-            <TextBlock x:Name="textBlock2"
-                       Grid.Column="1"
-                       Height="35"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       FontWeight="Bold"
-                       Foreground="{DynamicResource ButtonForegroundBrush}"
-                       TextAlignment="Center"
-                       Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
+            <TextBlock
+                x:Name="textBlock2"
+                Grid.Column="1"
+                Height="35"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontWeight="Bold"
+                Foreground="{DynamicResource ButtonForegroundBrush}"
+                TextAlignment="Center"
+                Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
                 <TextBlock.RenderTransform>
                     <ScaleTransform x:Name="AnimatedScaleSolutions" ScaleX="0.5" ScaleY="1" />
                 </TextBlock.RenderTransform><Run Text="Nombre de solutions: " /><Run Text=" " /><Run Text="{Binding Solutions.Count, Mode=OneWay}" /></TextBlock>
-            <TextBlock x:Name="textBlock3"
-                       Grid.Column="2"
-                       Height="35"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       FontWeight="Bold"
-                       Foreground="{DynamicResource ButtonForegroundBrush}"
-                       TextAlignment="Center"
-                       Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
+            <TextBlock
+                x:Name="textBlock3"
+                Grid.Column="2"
+                Height="35"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontWeight="Bold"
+                Foreground="{DynamicResource ButtonForegroundBrush}"
+                TextAlignment="Center"
+                Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
                 <TextBlock.RenderTransform>
                     <ScaleTransform x:Name="AnimatedScaleDuree" ScaleX="1" ScaleY="1" />
                 </TextBlock.RenderTransform><Run Text="Durée: " /><Run Text=" " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
         </Grid>
-        <Grid Grid.Row="5"
-              Grid.Column="0"
-              Grid.ColumnSpan="10"
-              Background="{StaticResource ButtonBackgroundBrush}">
+        <Grid
+            Grid.Row="4"
+            Grid.Column="0"
+            Grid.ColumnSpan="10"
+            Background="{StaticResource ButtonBackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -353,179 +396,195 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button x:Name="btnMenu"
-                    Grid.Column="0"
-                    Width="24"
-                    Height="24"
-                    Margin="5"
-                    Click="BtnMenu_Click"
-                    MouseRightButtonDown="TextBlock_MouseRightButtonUp">
+            <Button
+                x:Name="btnMenu"
+                Grid.Column="0"
+                Width="24"
+                Height="24"
+                Margin="5"
+                Click="BtnMenu_Click"
+                MouseRightButtonDown="TextBlock_MouseRightButtonUp">
                 <Button.Content>
-                    <Image Width="24"
-                           Height="24"
-                           Source="favicon.ico" />
+                    <Image
+                        Width="24"
+                        Height="24"
+                        Source="favicon.ico" />
                 </Button.Content>
             </Button>
-            <Button x:Name="btnHasard"
-                    Grid.Column="1"
-                    Width="80"
-                    Margin="0"
-                    Background="{DynamicResource ButtonBackgroundBrush}"
-                    BorderThickness="0"
-                    Command="{Binding}"
-                    CommandParameter="random"
-                    Foreground="White"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    IsTabStop="True"
-                    TabIndex="8"
-                    Template="{DynamicResource CebButtonTemplate}"
-                    ToolTipService.ToolTip="Choisir les plaques,  Ctrl+H">
+            <Button
+                x:Name="btnHasard"
+                Grid.Column="1"
+                Width="80"
+                Margin="0"
+                Background="{DynamicResource ButtonBackgroundBrush}"
+                BorderThickness="0"
+                Command="{Binding}"
+                CommandParameter="random"
+                Foreground="White"
+                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                IsTabStop="True"
+                TabIndex="8"
+                Template="{DynamicResource CebButtonTemplate}"
+                ToolTipService.ToolTip="Choisir les plaques,  Ctrl+H">
                 <StackPanel Orientation="Horizontal">
-                    <Image Width="16"
-                           Height="16"
-                           HorizontalAlignment="Left"
-                           Source="images/random.png" />
-                    <TextBlock Padding="4"
-                               HorizontalAlignment="Right"
-                               VerticalAlignment="Center"
-                               Text="Hasard" />
+                    <Image
+                        Width="16"
+                        Height="16"
+                        HorizontalAlignment="Left"
+                        Source="images/random.png" />
+                    <TextBlock
+                        Padding="4"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Text="Hasard" />
                 </StackPanel>
             </Button>
-            <Button x:Name="btnResoudre"
-                    Grid.Column="2"
-                    Width="80"
-                    Background="{DynamicResource ButtonBackgroundBrush}"
-                    BorderThickness="0"
-                    Command="{Binding}"
-                    CommandParameter="resolve"
-                    FontWeight="Bold"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    IsTabStop="True"
-                    TabIndex="9"
-                    Template="{DynamicResource CebButtonTemplate}"
-                    ToolTipService.ToolTip="Résoudre le compte, Ctrl+R">
+            <Button
+                x:Name="btnResoudre"
+                Grid.Column="2"
+                Width="80"
+                Background="{DynamicResource ButtonBackgroundBrush}"
+                BorderThickness="0"
+                Command="{Binding}"
+                CommandParameter="resolve"
+                FontWeight="Bold"
+                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                IsTabStop="True"
+                TabIndex="9"
+                Template="{DynamicResource CebButtonTemplate}"
+                ToolTipService.ToolTip="Résoudre le compte, Ctrl+R">
                 <StackPanel Orientation="Horizontal">
-                    <Image Width="16"
-                           Height="16"
-                           HorizontalAlignment="Left"
-                           Opacity="50"
-                           OpacityMask="{DynamicResource ButtonForegroundBrush}"
-                           Source="images/resolve.png" />
-                    <TextBlock Padding="4"
-                               HorizontalAlignment="Right"
-                               VerticalAlignment="Center"
-                               Foreground="White"
-                               Text="Résoudre" />
+                    <Image
+                        Width="16"
+                        Height="16"
+                        HorizontalAlignment="Left"
+                        Opacity="50"
+                        OpacityMask="{DynamicResource ButtonForegroundBrush}"
+                        Source="images/resolve.png" />
+                    <TextBlock
+                        Padding="4"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Foreground="White"
+                        Text="Résoudre" />
                 </StackPanel>
             </Button>
-            <Button x:Name="btnExcel"
-                    Grid.Column="3"
-                    Width="40"
-                    Background="{DynamicResource ButtonBackgroundBrush}"
-                    BorderThickness="0"
-                    Command="{Binding}"
-                    CommandParameter="Excel"
-                    IsEnabled="{Binding Status, Converter={StaticResource StatusConverter}}"
-                    IsTabStop="True"
-                    TabIndex="10"
-                    Template="{DynamicResource CebButtonTemplate}"
-                    ToolTipService.ToolTip="Exportation vers Excel">
+            <Button
+                x:Name="btnExcel"
+                Grid.Column="3"
+                Width="40"
+                Background="{DynamicResource ButtonBackgroundBrush}"
+                BorderThickness="0"
+                Command="{Binding}"
+                CommandParameter="Excel"
+                IsEnabled="{Binding Status, Converter={StaticResource StatusConverter}}"
+                IsTabStop="True"
+                TabIndex="10"
+                Template="{DynamicResource CebButtonTemplate}"
+                ToolTipService.ToolTip="Exportation vers Excel">
                 <StackPanel Orientation="Horizontal">
-                    <Image Width="16"
-                           Height="16"
-                           HorizontalAlignment="Left"
-                           Opacity="50"
-                           OpacityMask="{DynamicResource ButtonForegroundBrush}"
-                           Source="images/excel.png" />
+                    <Image
+                        Width="16"
+                        Height="16"
+                        HorizontalAlignment="Left"
+                        Opacity="50"
+                        OpacityMask="{DynamicResource ButtonForegroundBrush}"
+                        Source="images/excel.png" />
                 </StackPanel>
             </Button>
-            <Button x:Name="btnWord"
-                    Grid.Column="4"
-                    Width="40"
-                    Background="{DynamicResource ButtonBackgroundBrush}"
-                    BorderThickness="0"
-                    Command="{Binding}"
-                    CommandParameter="Word"
-                    IsEnabled="{Binding Status, Converter={StaticResource StatusConverter}}"
-                    IsTabStop="True"
-                    TabIndex="11"
-                    Template="{DynamicResource CebButtonTemplate}"
-                    ToolTipService.ToolTip="Exportation vers Word">
+            <Button
+                x:Name="btnWord"
+                Grid.Column="4"
+                Width="40"
+                Background="{DynamicResource ButtonBackgroundBrush}"
+                BorderThickness="0"
+                Command="{Binding}"
+                CommandParameter="Word"
+                IsEnabled="{Binding Status, Converter={StaticResource StatusConverter}}"
+                IsTabStop="True"
+                TabIndex="11"
+                Template="{DynamicResource CebButtonTemplate}"
+                ToolTipService.ToolTip="Exportation vers Word">
                 <StackPanel Orientation="Horizontal">
-                    <Image Width="16"
-                           Height="16"
-                           HorizontalAlignment="Left"
-                           Opacity="50"
-                           OpacityMask="{DynamicResource ButtonForegroundBrush}"
-                           Source="images/word.png" />
+                    <Image
+                        Width="16"
+                        Height="16"
+                        HorizontalAlignment="Left"
+                        Opacity="50"
+                        OpacityMask="{DynamicResource ButtonForegroundBrush}"
+                        Source="images/word.png" />
                 </StackPanel>
             </Button>
-            <Label Grid.Column="5"
-                   Margin="5"
-                   VerticalAlignment="Center"
-                   HorizontalContentAlignment="Center"
-                   Content="{Binding Titre}"
-                   Foreground="White"
-                   MouseDoubleClick="Window_MouseDoubleClick"
-                   MouseRightButtonUp="TextBlock_MouseRightButtonUp" />
-            <Button x:Name="btnMinimize"
-                    Grid.Column="6"
-                    Width="24"
-                    Height="24"
-                    Margin="2"
-                    Padding="0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    VerticalContentAlignment="Center"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Click="BtnMinimize_Click"
-                    Content="&#xAC;"
-                    Cursor="Hand"
-                    FontFamily="Wingdings 3"
-                    FontSize="16"
-                    FontWeight="Bold"
-                    Foreground="White"
-                    ToolTipService.ToolTip="Réduire" />
-            <Button x:Name="btnSize"
-                    Grid.Column="7"
-                    Width="24"
-                    Height="24"
-                    Margin="2"
-                    Padding="0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="top"
-                    VerticalContentAlignment="Center"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Click="BtnSize_Click"
-                    Content="&#x6F;"
-                    Cursor="Hand"
-                    FontFamily="Wingdings"
-                    FontSize="16"
-                    FontWeight="Bold"
-                    Foreground="White"
-                    ToolTipService.ToolTip="Rétablir précédent" />
-            <Button x:Name="btnClose"
-                    Grid.Column="8"
-                    Width="24"
-                    Height="24"
-                    Margin="2"
-                    Padding="0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="top"
-                    VerticalContentAlignment="Center"
-                    Background="Red"
-                    BorderBrush="Black"
-                    BorderThickness="0"
-                    Click="BtnClose_Click"
-                    Content="&#x78;"
-                    Cursor="Hand"
-                    FontFamily="Wingdings"
-                    FontSize="16"
-                    FontWeight="Bold"
-                    Foreground="White"
-                    ToolTipService.ToolTip="Fermer" />
+            <Label
+                Grid.Column="5"
+                Margin="5"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Center"
+                Content="{Binding Titre}"
+                Foreground="White"
+                MouseDoubleClick="Window_MouseDoubleClick"
+                MouseRightButtonUp="TextBlock_MouseRightButtonUp" />
+            <Button
+                x:Name="btnMinimize"
+                Grid.Column="6"
+                Width="24"
+                Height="24"
+                Margin="2"
+                Padding="0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                VerticalContentAlignment="Center"
+                Background="Transparent"
+                BorderThickness="0"
+                Click="BtnMinimize_Click"
+                Content="&#xAC;"
+                Cursor="Hand"
+                FontFamily="Wingdings 3"
+                FontSize="16"
+                FontWeight="Bold"
+                Foreground="White"
+                ToolTipService.ToolTip="Réduire" />
+            <Button
+                x:Name="btnSize"
+                Grid.Column="7"
+                Width="24"
+                Height="24"
+                Margin="2"
+                Padding="0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="top"
+                VerticalContentAlignment="Center"
+                Background="Transparent"
+                BorderThickness="0"
+                Click="BtnSize_Click"
+                Content="&#x6F;"
+                Cursor="Hand"
+                FontFamily="Wingdings"
+                FontSize="16"
+                FontWeight="Bold"
+                Foreground="White"
+                ToolTipService.ToolTip="Rétablir précédent" />
+            <Button
+                x:Name="btnClose"
+                Grid.Column="8"
+                Width="24"
+                Height="24"
+                Margin="2"
+                Padding="0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="top"
+                VerticalContentAlignment="Center"
+                Background="Red"
+                BorderBrush="Black"
+                BorderThickness="0"
+                Click="BtnClose_Click"
+                Content="&#x78;"
+                Cursor="Hand"
+                FontFamily="Wingdings"
+                FontSize="16"
+                FontWeight="Bold"
+                Foreground="White"
+                ToolTipService.ToolTip="Fermer" />
         </Grid>
     </Grid>
 </Window>

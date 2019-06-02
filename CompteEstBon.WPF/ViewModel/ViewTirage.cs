@@ -36,7 +36,7 @@ namespace CompteEstBon.ViewModel {
         private Color _foreground = Colors.White;
         private bool _isBusy;
         private bool _isUpdating;
-        private int _notifyHeight;
+        private bool _popup;
 
         private string _result = "Résoudre";
 
@@ -59,7 +59,7 @@ namespace CompteEstBon.ViewModel {
             };
             dateDispatcher.Tick += (sender, e) => {
                 if (stopwatch.IsRunning) Duree = stopwatch.Elapsed.ToString();
-                if (NotifyHeight != 0 && NotifyWatch.Elapsed > SolutionTimer) HideNotify();
+                if (Popup && NotifyWatch.Elapsed > SolutionTimer) HidePopup();
                 Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
             Plaques.CollectionChanged += (sender, e) => {
@@ -151,14 +151,14 @@ namespace CompteEstBon.ViewModel {
             }
         }
 
-        public int NotifyHeight {
-            get => _notifyHeight;
+        public bool Popup {
+            get => _popup;
             set {
-                if (_notifyHeight == value) return;
-                _notifyHeight = value;
+                if (_popup == value) return;
+                _popup = value;
                 NotifyWatch.Stop();
                 NotifyWatch.Reset();
-                if (_notifyHeight != 0) NotifyWatch.Start();
+                if (_popup) NotifyWatch.Start();
                 NotifiedChanged();
             }
         }
@@ -247,7 +247,7 @@ namespace CompteEstBon.ViewModel {
             {
                 CebStatus.Valid => (Colors.DarkOliveGreen, Colors.White),
                 CebStatus.Erreur => (Colors.Red, Colors.White),
-                CebStatus.CompteEstBon => (Colors.LightGreen, Colors.Black),
+                CebStatus.CompteEstBon => (Colors.LightGreen, Colors.Yellow),
                 CebStatus.CompteApproche => (Colors.Salmon, Colors.White),
                 CebStatus.EnCours => (Colors.Yellow, Colors.White)
 
@@ -268,7 +268,7 @@ namespace CompteEstBon.ViewModel {
             Solutions.Clear();
             Solution = "";
             Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
-            HideNotify();
+            HidePopup();
             UpdateColors();
         }
 
@@ -289,12 +289,12 @@ namespace CompteEstBon.ViewModel {
         public void ShowNotify(int index = 0) {
             if (index >= 0 && Solutions.Count != 0 && index < Solutions.Count) {
                 Solution = Tirage.Solutions.ElementAt(index).ToString();
-                NotifyHeight = 84;
+                Popup = true;
             }
         }
 
-        private void HideNotify() {
-            NotifyHeight = 0;
+        private void HidePopup() {
+            Popup = false;
         }
 
         #region Action
@@ -324,7 +324,7 @@ namespace CompteEstBon.ViewModel {
                     : "Tirage incorrect";
 
             foreach (var s in Tirage.Solutions)
-                Solutions.Add(s.ToCebDetail);
+                Solutions.Add(s.Detail);
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
             Solution = Tirage.Solution.ToString();

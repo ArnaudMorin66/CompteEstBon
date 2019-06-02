@@ -9,7 +9,7 @@
     <RootNamespace>CebExcel</RootNamespace>
     <AssemblyName>CebExcel</AssemblyName>
     <VSTO_HostDocumentName>Ceb.xlsx</VSTO_HostDocumentName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <DefineConstants>VSTO40</DefineConstants>
     <OfficeApplication>Excel</OfficeApplication>
     <ProjectGuid>{C46ED5C8-8E57-466D-AF3B-A535D1D0C2A2}</ProjectGuid>
