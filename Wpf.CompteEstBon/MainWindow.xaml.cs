@@ -8,9 +8,9 @@ namespace CompteEstBon
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
     public partial class MainWindow:  ChromelessWindow {
-         
         public MainWindow() {
             InitializeComponent();
+            
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
             SfSkinManager.SetVisualStyle(this, VisualStyles.Blend);
         }

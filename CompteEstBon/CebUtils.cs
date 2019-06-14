@@ -7,8 +7,6 @@ using System.Linq;
 
 namespace CompteEstBon {
     public static class CebUtils {
-        public static IEnumerable<(T, int)> WithIndex<T>(this IEnumerable<T> self) {
-            return self.Select((value, index) => (value, index));
-        }
+        public static IEnumerable<(T, int)> WithIndex<T>(this IEnumerable<T> self) => self.Select((value, index) => (value, index));
     }
 }

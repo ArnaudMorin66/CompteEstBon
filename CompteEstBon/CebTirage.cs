@@ -26,9 +26,7 @@ namespace CompteEstBon {
         }
 
 
-        private void IsUpdated(object sender, int e) {
-            Clear();
-        }
+        private void IsUpdated(object sender, int e) => Clear();
 
         /// <summary>
         /// Constructeur Tirage du Compte est bon
@@ -132,9 +130,7 @@ namespace CompteEstBon {
             Clear();
         }
 
-        public async Task RandomAsync() {
-            await Task.Run(Random);
-        }
+        public async Task RandomAsync() => await Task.Run(Random);
 
         public void Clear() {
             Solutions.Clear();
@@ -143,9 +139,7 @@ namespace CompteEstBon {
             Valid();
         }
 
-        public async Task ClearAsync() {
-            await Task.Run(Clear);
-        }
+        public async Task ClearAsync() => await Task.Run(Clear);
 
         /// <summary>
         /// resolution du compte
@@ -218,9 +212,7 @@ namespace CompteEstBon {
 
         public async Task<CebStatus> ResolveAsync() => await Task.Run(Resolve);
 
-        public async Task<CebStatus> ResolveAsync(int search, params int[] plq) {
-            return await Task.Run(() => ResolveWithParam(search, plq));
-        }
+        public async Task<CebStatus> ResolveAsync(int search, params int[] plq) => await Task.Run(() => ResolveWithParam(search, plq));
 
         public override string ToString() {
             var buffer = new StringBuilder();
@@ -237,5 +229,15 @@ namespace CompteEstBon {
         public string[][] ArraysSolutions => Solutions.Select(p => p.Operations.ToArray()).ToArray();
 
         public IEnumerable<CebDetail> ToCebDetails() => Solutions.Select(s => s.Detail);
+        public CebResult GetCebResult() {
+            return new CebResult {
+                Search = this.Search,
+                Plaques = Plaques.Select(p => p.Value),
+                Status = this.Status,
+                Diff = this.Diff,
+                Solutions = this.OperationsSolutions,
+                Found = this.Found.ToString()
+            };
+        }
     }
 }

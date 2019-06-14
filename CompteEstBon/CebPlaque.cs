@@ -67,9 +67,7 @@ namespace CompteEstBon {
         /// </summary>
         /// <returns>
         /// </returns>
-        public override string ToString() {
-            return Value.ToString();
-        }
+        public override string ToString() => Value.ToString();
 
         public static implicit operator int(CebPlaque p) => p.Value;
         /// <summary>
@@ -86,18 +84,12 @@ namespace CompteEstBon {
         /// <filterpriority>
         /// 2
         /// </filterpriority>
-        public override bool Equals(object obj) {
-            return obj is CebPlaque p ? p.Value == Value : false;
-        }
+        public override bool Equals(object obj) => obj is CebPlaque p ? p.Value == Value : false;
 
-        public override int GetHashCode() {
-            return 391 + Value.GetHashCode();
-        }
+        public override int GetHashCode() => 391 + Value.GetHashCode();
 
         public override CebDetail Detail => new CebDetail { op1 = ToString() };
 
-        private void OnValueChanged(int e) {
-            ValueChanged?.Invoke(this, e);
-        }
+        private void OnValueChanged(int e) => ValueChanged?.Invoke(this, e);
     }
 }

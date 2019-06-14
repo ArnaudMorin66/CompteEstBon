@@ -32,7 +32,8 @@
                     <div class="col-md-2">
                             <TelerikDropDownList class="form-control text-center w-100 bg-white"
                                                  Data="@plaques"
-                                                 bind-Value="@plq.Value"
+                                                 @bind-Value="plq.Value"
+                                                 
                                                  TextField="Value"
                                                  Enabled="Tirage.Status != CebStatus.EnCours">
                             </TelerikDropDownList>
@@ -45,7 +46,7 @@
                 <i class="fas fa-search"></i>&nbsp;Trouver
             </div>
             <TelerikNumericTextBox Format="N0" Max="999" Min="100"
-                                   Step="1" bind-Value="@Tirage.Search"
+                                   Step="1" @bind-Value="Tirage.Search"
                                    Enabled="Tirage.Status != CebStatus.EnCours">
             </TelerikNumericTextBox>
         </div>
@@ -53,7 +54,7 @@
             <div class="btn-group w-100" role="group" aria-label="hasard">
                 <a id="hasard" title="Initialisation du tirage (ALT-H)"
                    class="btn btn-primary btn-lg btn-block" style="cursor:pointer"
-                   role="button" onclick="@RandomAsync" accesskey="h">
+                   role="button" @onclick="@RandomAsync" accesskey="h">
                     <i class="fas fa-random"></i>&nbsp;Hasard
                 </a>
             </div>
@@ -65,28 +66,28 @@
                     </a>
                     break;
                     case CebStatus.CompteEstBon:
-                    <a class="btn btn-success btn-block" onclick="@ClearAsync" title="Initialisation des résultats (ALT-R)"
+                    <a class="btn btn-success btn-block" @onclick="@ClearAsync" title="Initialisation des résultats (ALT-R)"
                        style="cursor:pointer"
                        role="button" accesskey="r">
                         <i class="fas fa-thumbs-up"></i>&nbsp;R&eacute;soudre
                     </a>
                     break;
                     case CebStatus.CompteApproche:
-                    <a class="btn btn-warning btn-block" onclick="@ClearAsync"
+                    <a class="btn btn-warning btn-block" @onclick="@ClearAsync"
                        title="Initialisation des résultats (ALT-R)" style="cursor:pointer"
                        role="button" accesskey="r">
                         <i class="fas fa-thumbs-down"></i>&nbsp;R&eacute;soudre
                     </a>
                     break;
                     case CebStatus.Erreur:
-                    <a class="btn btn-danger btn-block" onclick="@RandomAsync" title="Aléatoire"
+                    <a class="btn btn-danger btn-block" @onclick="@RandomAsync" title="Aléatoire"
                        style="cursor:pointer"
                        role="button" accesskey="r">
                         <i class="fas fa-exclamation-triangle"></i>&nbsp;R&eacute;soudre
                     </a>
                     break;
                     default:
-                    <a class="btn btn-primary btn-block" onclick="@ResolveAsync" title="Résoudre"
+                    <a class="btn btn-primary btn-block" @onclick="@ResolveAsync" title="Résoudre"
                        style="cursor:pointer"
                        role="button" accesskey="r">
                         <i class="fas fa-bolt"></i>&nbsp;R&eacute;soudre
@@ -112,7 +113,7 @@
             </div>
             break;
             case CebStatus.Erreur:
-            <div class="bg-danger h-100 border border-dark" onclick="@RandomAsync" style="cursor: pointer;">
+            <div class="bg-danger h-100 border border-dark" @onclick="RandomAsync" style="cursor: pointer;">
                 Tirage invalide
             </div>
             break;
@@ -196,16 +197,16 @@
 
 }
 
-@functions {
-    public CompteEstBon.CebTirage Tirage; 
-    public bool Visible { get; set; } = false;
-    public string Solution { get; set; } = "";
-    public DateTime timer = DateTime.Now;
-    public Timer aTimer;
-    protected IEnumerable<CPlaque> plaques = CebPlaque.ListePlaques.Distinct()
-        .Select(p => new CPlaque {
+@code {
+        public CompteEstBon.CebTirage Tirage;
+        public bool Visible { get; set; } = false;
+        public string Solution { get; set; } = "";
+        public DateTime timer = DateTime.Now;
+        public Timer aTimer;
+        protected IEnumerable<CPlaque> plaques = CebPlaque.ListePlaques.Distinct()
+            .Select(p => new CPlaque {
             Value = p.ToString()
-        });
+    });
 
     protected double duree = 0.0;
     protected Stopwatch watch = new Stopwatch();
@@ -240,6 +241,7 @@
         StateHasChanged();
 
     }
+    
     protected async Task ClearAsync() {
         if (Tirage.Status == CebStatus.EnCours) { return; }
         await Tirage.ClearAsync();

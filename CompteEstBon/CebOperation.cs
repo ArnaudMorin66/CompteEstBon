@@ -81,19 +81,15 @@ namespace CompteEstBon {
         /// </summary>
         /// <returns>
         /// </returns>
-        public override string ToString() {
-            return _string ?? (_string = string.Join(", ", Operations));
-        }
+        public override string ToString() => _string ?? (_string = string.Join(", ", Operations));
 
         /// <summary> Test égalité
-        public override bool Equals(object obj) {
-            return obj is CebOperation op
-? op.Value == Value
-&& op.Oper == Oper
-&& ((op.Left.Equals(Left) && op.Right.Equals(Right))
-|| (op.Left.Equals(Right) && op.Right.Equals(Left)))
-: false;
-        }
+        public override bool Equals(object obj) => obj is CebOperation op
+                ? op.Value == Value
+                && op.Oper == Oper
+                && ((op.Left.Equals(Left) && op.Right.Equals(Right))
+                || (op.Left.Equals(Right) && op.Right.Equals(Left)))
+                : false;
 
         /// <inheritdoc />
         public override CebDetail Detail {
