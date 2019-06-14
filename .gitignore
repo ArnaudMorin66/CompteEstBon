@@ -268,3 +268,5 @@ obj
 bin
 obj
 /CebBlazor/wwwroot/lib/font-awesome
+/CebControllerCore/bin
+obj
