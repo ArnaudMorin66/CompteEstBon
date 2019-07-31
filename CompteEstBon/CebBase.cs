@@ -19,8 +19,7 @@ namespace CompteEstBon {
 
         public abstract CebDetail Detail { get; }
 
-        //  User-defined conversion from double to Digit
         public static implicit operator int(CebBase b) => b.Value;
     }
-    
+
 }

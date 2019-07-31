@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CompteEstBon;
+using Microsoft.Extensions.CommandLineUtils;
+using System;
 using System.Diagnostics;
 using System.Linq;
-using CompteEstBon;
-using Microsoft.Extensions.CommandLineUtils;
 
 namespace cscoreCeb {
     internal class Program {
@@ -23,7 +23,7 @@ namespace cscoreCeb {
                     }
                 }
 
-                foreach (var (value,i) in argPlaques.Values.Select((value, i)=> (value, i))) {
+                foreach (var (value, i) in argPlaques.Values.Select((value, i) => (value, i))) {
                     if (int.TryParse(value, out int plaque)) {
                         tirage.Plaques[i].Value2 = plaque;
                     }
@@ -34,7 +34,7 @@ namespace cscoreCeb {
                 return 0;
             });
             parser.Execute(args);
-            if(parser.IsShowingInformation)
+            if (parser.IsShowingInformation)
                 return;
 
             var ts = ElapsedTime(tirage.Resolve);
@@ -59,7 +59,7 @@ namespace cscoreCeb {
 
                 Console.WriteLine($", nombre de solutions {tirage.Solutions.Count}");
                 Console.WriteLine();
-                foreach (var (solution, i) in tirage.Solutions.Select((elt, i) => (elt,i))) {
+                foreach (var (solution, i) in tirage.Solutions.Select((elt, i) => (elt, i))) {
                     Console.WriteLine($"{i:D4}: {solution.Detail}");
                 }
             }

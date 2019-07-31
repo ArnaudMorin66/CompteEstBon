@@ -55,7 +55,7 @@ namespace CompteEstBon {
             };
             dateDispatcher.Tick += (sender, e) => {
                 if (stopwatch.IsRunning) Duree = stopwatch.Elapsed.ToString();
-                if (Popup  && NotifyWatch.Elapsed > SolutionTimer) HidePopup();
+                if (Popup && NotifyWatch.Elapsed > SolutionTimer) HidePopup();
                 Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
 
@@ -186,35 +186,33 @@ namespace CompteEstBon {
             remove => CommandManager.RequerySuggested -= value;
         }
 
-        public bool CanExecute(object parameter) {
-            return true;
-        }
+        public bool CanExecute(object parameter) => true;
 
         public async void Execute(object parameter) {
             switch ((parameter as string).ToLower()) {
                 case "random":
-                await RandomAsync();
-                break;
-                case "resolve":
-                switch (Tirage.Status) {
-                    case CebStatus.Valid:
-                    await ResolveAsync();
-                    break;
-
-                    case CebStatus.CompteEstBon:
-                    case CebStatus.CompteApproche:
-                    await ClearAsync();
-                    break;
-
-                    case CebStatus.Erreur:
                     await RandomAsync();
                     break;
-                }
-                break;
+                case "resolve":
+                    switch (Tirage.Status) {
+                        case CebStatus.Valid:
+                            await ResolveAsync();
+                            break;
+
+                        case CebStatus.CompteEstBon:
+                        case CebStatus.CompteApproche:
+                            await ClearAsync();
+                            break;
+
+                        case CebStatus.Erreur:
+                            await RandomAsync();
+                            break;
+                    }
+                    break;
                 case "excel":
                 case "word":
-                await ExportAsync((string)parameter);
-                break;
+                    await ExportAsync((string)parameter);
+                    break;
             }
         }
 
@@ -224,18 +222,18 @@ namespace CompteEstBon {
             await Task.Run(() => {
                 switch (fmt.ToLower()) {
                     case "excel":
-                    Tirage.ToExcel();
-                    break;
+                        Tirage.ToExcel();
+                        break;
                     case "word":
-                    Tirage.ToWord();
-                    break;
+                        Tirage.ToWord();
+                        break;
                 }
             });
             IsBusy = false;
         }
-       
-        
-        
+
+
+
         private void UpdateColors() {
             (Background, Foreground) = Tirage.Status switch
             {

@@ -88,7 +88,7 @@ namespace CompteEstBon {
 
         public override int GetHashCode() => 391 + Value.GetHashCode();
 
-        public override CebDetail Detail => new CebDetail { op1 = ToString() };
+        public override CebDetail Detail => new CebDetail { Op1 = ToString() };
 
         private void OnValueChanged(int e) => ValueChanged?.Invoke(this, e);
     }

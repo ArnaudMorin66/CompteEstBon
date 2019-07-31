@@ -16,11 +16,9 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Animation;
 
-namespace CompteEstBon.ViewModel
-{
+namespace CompteEstBon.ViewModel {
 
-    internal class ViewTirage : INotifyPropertyChanged, ICommand
-    {
+    internal class ViewTirage : INotifyPropertyChanged, ICommand {
         private ValueSet xlData;
 
         private Color _background;
@@ -34,7 +32,7 @@ namespace CompteEstBon.ViewModel
         private DateTimeOffset _time;
 
         private string _result = "Résoudre";
-        
+
 
         private Visibility _visibility = Visibility.Collapsed;
         public DispatcherTimer heureDispatcher;
@@ -155,37 +153,30 @@ namespace CompteEstBon.ViewModel
         /// </summary>
         /// <returns>
         /// </returns>
-        public ViewTirage()
-        {
+        public ViewTirage() {
             App.AppServiceConnected += ViewTirage_AppServiceConnected;
             Symbol = ListeSymbols[CebStatus.Valid];
             _background = Colors.Navy;
             _foreground = Colors.White;
 
-            heureDispatcher = new DispatcherTimer
-            {
+            heureDispatcher = new DispatcherTimer {
                 Interval = new TimeSpan(100)
             };
             heureDispatcher.Tick += (sender, e) => Duree = (DateTimeOffset.Now - _time).TotalSeconds;
-            dateDispatcher = new DispatcherTimer
-            {
+            dateDispatcher = new DispatcherTimer {
                 Interval = new TimeSpan(1000)
             };
-            dateDispatcher.Tick += (sender, e) =>
-            {
+            dateDispatcher.Tick += (sender, e) => {
                 Date = Date = $"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
-            NotifyTimer = new DispatcherTimer
-            {
+            NotifyTimer = new DispatcherTimer {
                 Interval = TimeSpan.FromSeconds(5)
             };
-            NotifyTimer.Tick += (sender, e) =>
-             {
-                 NotifyVisibility = Visibility.Collapsed;
-                 NotifyTimer.Stop();
-             };
-            Plaques.CollectionChanged += (sender, e) =>
-            {
+            NotifyTimer.Tick += (sender, e) => {
+                NotifyVisibility = Visibility.Collapsed;
+                NotifyTimer.Stop();
+            };
+            Plaques.CollectionChanged += (sender, e) => {
                 if (e.Action != NotifyCollectionChangedAction.Replace) return;
                 var i = e.NewStartingIndex;
                 Tirage.Plaques[i].Value = Plaques[i];
@@ -197,21 +188,18 @@ namespace CompteEstBon.ViewModel
             dateDispatcher.Start();
         }
 
-        private async void ViewTirage_AppServiceConnected(object sender, EventArgs e)
-        {
+        private async void ViewTirage_AppServiceConnected(object sender, EventArgs e) {
             AppServiceResponse response = await App.Connection.SendMessageAsync(xlData);
 
             // check the result
             object result;
 
             MessageDialog dialog;
-            if (!response.Message.TryGetValue("RESPONSE", out result))
-            {
+            if (!response.Message.TryGetValue("RESPONSE", out result)) {
                 dialog = new MessageDialog("RESPONSE introuvable");
                 await dialog.ShowAsync();
             }
-            else if (result.ToString() != "SUCCESS")
-            {
+            else if (result.ToString() != "SUCCESS") {
                 dialog = new MessageDialog(result.ToString());
                 await dialog.ShowAsync();
             }
@@ -221,11 +209,9 @@ namespace CompteEstBon.ViewModel
             IsBusy = false;
         }
 
-        private void UpdateColors()
-        {
+        private void UpdateColors() {
             Symbol = ListeSymbols[Tirage.Status];
-            switch (Tirage.Status)
-            {
+            switch (Tirage.Status) {
                 case CebStatus.Valid:
                     (Background, Foreground) = (Colors.Navy, Colors.Yellow);
                     break;
@@ -250,12 +236,10 @@ namespace CompteEstBon.ViewModel
 
         private void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        private void ClearData()
-        {
+        private void ClearData() {
             Duree = 0;
             storyBoard?.Pause();
-            if (NotifyTimer.IsEnabled)
-            {
+            if (NotifyTimer.IsEnabled) {
                 NotifyTimer.Stop();
                 NotifyVisibility = Visibility.Collapsed;
             }
@@ -268,12 +252,9 @@ namespace CompteEstBon.ViewModel
             UpdateColors();
         }
 
-        private void UpdateData()
-        {
-            lock (Plaques)
-            {
-                for (var i = 0; i < Tirage.Plaques.Length; i++)
-                {
+        private void UpdateData() {
+            lock (Plaques) {
+                for (var i = 0; i < Tirage.Plaques.Length; i++) {
                     Plaques[i] = Tirage.Plaques[i];
                 }
             }
@@ -283,22 +264,19 @@ namespace CompteEstBon.ViewModel
 
         #region Action
 
-        public async Task ClearAsync()
-        {
+        public async Task ClearAsync() {
             await Tirage.ClearAsync();
             ClearData();
         }
 
-        public async Task RandomAsync()
-        {
+        public async Task RandomAsync() {
 
             await Tirage.RandomAsync();
             ClearData();
             UpdateData();
         }
 
-        public async Task<CebStatus> ResolveAsync()
-        {
+        public async Task<CebStatus> ResolveAsync() {
             IsBusy = true;
             Result = "...Calcul...";
             Symbol = ListeSymbols[CebStatus.EnCours];
@@ -338,10 +316,8 @@ namespace CompteEstBon.ViewModel
                 NotifiedChanged();
             }
         }
-        public void ShowNotify(int no)
-        {
-            if (no < 0)
-            {
+        public void ShowNotify(int no) {
+            if (no < 0) {
                 NotifyVisibility = Visibility.Collapsed;
                 return;
             }
@@ -351,8 +327,7 @@ namespace CompteEstBon.ViewModel
             NotifyVisibility = Visibility.Visible;
             NotifyTimer.Start();
         }
-        public Dictionary<CebStatus, string> ListeSymbols { get; } = new Dictionary<CebStatus, String>()
-        {
+        public Dictionary<CebStatus, string> ListeSymbols { get; } = new Dictionary<CebStatus, String>() {
             [CebStatus.CompteApproche] = "Dislike",
             [CebStatus.CompteEstBon] = "Like",
             [CebStatus.Valid] = "Play",
@@ -360,10 +335,8 @@ namespace CompteEstBon.ViewModel
             [CebStatus.Erreur] = "ReportHacked"
         };
 
-        public async Task ExportAsync(string cmd)
-        {
-            try
-            {
+        public async Task ExportAsync(string cmd) {
+            try {
                 xlData = new ValueSet {
                     { "Format", cmd },
                     { "Plaques", Plaques.ToArray() },
@@ -373,42 +346,34 @@ namespace CompteEstBon.ViewModel
                     { "Solutions", Tirage.Solutions.Select(p=> p.ToString()).ToArray() }
                  };
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 MessageDialog d = new MessageDialog(e.ToString());
                 await d.ShowAsync();
                 return;
             }
-            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0))
-            {
-                IsBusy = true; 
+            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0)) {
+                IsBusy = true;
                 await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
             }
-            else
-            {
+            else {
 
                 MessageDialog dialog = new MessageDialog("This feature is only available on Windows 10 Desktop SKU");
                 await dialog.ShowAsync();
             }
         }
 
-        public bool CanExecute(object parameter)
-        {
+        public bool CanExecute(object parameter) {
             return true;
         }
 
-        public async void Execute(object parameter)
-        {
-            try
-            {
-                switch ((parameter as string)?.ToLower())
-                {
+        public async void Execute(object parameter) {
+            try {
+                switch ((parameter as string)?.ToLower()) {
                     case "random":
                         await RandomAsync();
                         break;
                     case "resolve":
-                        switch (Tirage.Status)
-                        {
+                        switch (Tirage.Status) {
                             case CebStatus.Valid:
                                 if (IsBusy) return;
                                 await ResolveAsync();

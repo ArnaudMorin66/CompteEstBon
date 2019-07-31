@@ -119,7 +119,7 @@ namespace CompteEstBon {
         /// Select the value and the plaque's list
         /// </summary>
         public void Random() {
-            var rnd = new Random();
+            //  var rnd = new Random();
             _search = rnd.Next(100, 1000);
             var liste = new List<int>(CebPlaque.ListePlaques); // .ToList();
             foreach (var plaque in Plaques) {
@@ -219,23 +219,26 @@ namespace CompteEstBon {
             buffer.AppendLine("## Tirage du compte est bon ###");
             buffer.AppendLine($"Search : {Search}, plaques : [{string.Join(",", Plaques.Select(p => p.ToString()))}]");
             buffer.AppendLine($"Found:  {Found}, Status: {Status}, Nb de solutions: {Count}");
-            buffer.AppendLine(string.Join(";", Solutions.Select(p=> p.ToString())));
+            buffer.AppendLine(string.Join(";", Solutions.Select(p => p.ToString())));
             return buffer.ToString();
         }
 
-        public IEnumerable<string> ToArray() => Solutions.Select(p=> p.ToString());
+        public IEnumerable<string> ToArray() => Solutions.Select(p => p.ToString());
 
         public IEnumerable<IEnumerable<string>> OperationsSolutions => Solutions.Select(p => p.Operations);
         public string[][] ArraysSolutions => Solutions.Select(p => p.Operations.ToArray()).ToArray();
 
+        private static readonly Random rnd = new Random();
+
         public IEnumerable<CebDetail> ToCebDetails() => Solutions.Select(s => s.Detail);
+
         public CebResult GetCebResult() {
             return new CebResult {
                 Search = this.Search,
                 Plaques = Plaques.Select(p => p.Value),
                 Status = this.Status,
                 Diff = this.Diff,
-                Solutions = this.OperationsSolutions,
+                Solutions = ToCebDetails(),
                 Found = this.Found.ToString()
             };
         }

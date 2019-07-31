@@ -1,18 +1,19 @@
-﻿<Page x:Class="CompteEstBon.MainPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:cvt="using:Microsoft.Toolkit.Uwp.UI.Converters"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="using:CompteEstBon"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
-      xmlns:tlk="using:Microsoft.Toolkit.Uwp.UI.Controls"
-      xmlns:viewModel="using:CompteEstBon.ViewModel"
-      Background="{ThemeResource SystemControlAltHighAcrylicWindowBrush}"
-      Loaded="Page_Loaded"
-      RequestedTheme="Dark"
-      Unloaded="Page_Unloaded"
-      mc:Ignorable="d">
+﻿<Page
+    x:Class="CompteEstBon.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cvt="using:Microsoft.Toolkit.Uwp.UI.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:CompteEstBon"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
+    xmlns:tlk="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:viewModel="using:CompteEstBon.ViewModel"
+    Background="{ThemeResource SystemControlAltHighAcrylicWindowBrush}"
+    Loaded="Page_Loaded"
+    RequestedTheme="Dark"
+    Unloaded="Page_Unloaded"
+    mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -20,24 +21,28 @@
             </ResourceDictionary.MergedDictionaries>
             <DataTemplate x:Key="NotificationTemplate">
                 <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
-                    <TextBlock HorizontalAlignment="Center"
-                               FontSize="18"
-                               FontWeight="Bold"
-                               Foreground="Yellow"
-                               HorizontalTextAlignment="Center"
-                               Text="Jeu du compte est bon" />
-                    <TextBlock HorizontalAlignment="Center"
-                               HorizontalTextAlignment="Center"
-                               Text="{Binding CurrentSolution}" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Foreground="Yellow"
+                        HorizontalTextAlignment="Center"
+                        Text="Jeu du compte est bon" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        HorizontalTextAlignment="Center"
+                        Text="{Binding CurrentSolution}" />
                     <TextBlock Text="" />
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <SymbolIcon Margin="5"
-                                    Foreground="{StaticResource ButtonForegroundBrush}"
-                                    Symbol="{Binding Symbol}" />
-                        <TextBlock Margin="5"
-                                   Foreground="{StaticResource ButtonForegroundBrush}"
-                                   HorizontalTextAlignment="Center"
-                                   Text="{Binding Result}" />
+                        <SymbolIcon
+                            Margin="5"
+                            Foreground="{StaticResource ButtonForegroundBrush}"
+                            Symbol="{Binding Symbol}" />
+                        <TextBlock
+                            Margin="5"
+                            Foreground="{StaticResource ButtonForegroundBrush}"
+                            HorizontalTextAlignment="Center"
+                            Text="{Binding Result}" />
                     </StackPanel>
                     <TextBlock HorizontalTextAlignment="Center">
                         <Run Text="Nombre de solutions: " />
@@ -56,30 +61,34 @@
             </LinearGradientBrush>
             <SolidColorBrush x:Key="ButtonForegroundBrush" Color="{Binding Foreground}" />
             <Storyboard x:Name="TextBlockBoard" x:FieldModifier="public">
-                <DoubleAnimation AutoReverse="True"
-                                 RepeatBehavior="Forever"
-                                 Storyboard.TargetName="AnimatedScaleSolutions"
-                                 Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-                                 To="1.5"
-                                 Duration="0:0:5" />
-                <DoubleAnimation AutoReverse="True"
-                                 RepeatBehavior="Forever"
-                                 Storyboard.TargetName="AnimatedScaleSolutions"
-                                 Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
-                                 To="0.9"
-                                 Duration="0:0:5" />
-                <DoubleAnimation AutoReverse="True"
-                                 RepeatBehavior="Forever"
-                                 Storyboard.TargetName="AnimatedScaleDuree"
-                                 Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-                                 To="1.5"
-                                 Duration="0:0:5" />
-                <DoubleAnimation AutoReverse="True"
-                                 RepeatBehavior="Forever"
-                                 Storyboard.TargetName="AnimatedScaleDuree"
-                                 Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
-                                 To="0.9"
-                                 Duration="0:0:5" />
+                <DoubleAnimation
+                    AutoReverse="True"
+                    RepeatBehavior="Forever"
+                    Storyboard.TargetName="AnimatedScaleSolutions"
+                    Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                    To="1.5"
+                    Duration="0:0:5" />
+                <DoubleAnimation
+                    AutoReverse="True"
+                    RepeatBehavior="Forever"
+                    Storyboard.TargetName="AnimatedScaleSolutions"
+                    Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                    To="0.9"
+                    Duration="0:0:5" />
+                <DoubleAnimation
+                    AutoReverse="True"
+                    RepeatBehavior="Forever"
+                    Storyboard.TargetName="AnimatedScaleDuree"
+                    Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
+                    To="1.5"
+                    Duration="0:0:5" />
+                <DoubleAnimation
+                    AutoReverse="True"
+                    RepeatBehavior="Forever"
+                    Storyboard.TargetName="AnimatedScaleDuree"
+                    Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
+                    To="0.9"
+                    Duration="0:0:5" />
             </Storyboard>
             <viewModel:InverseBooleanConverter x:Key="InverseBooleanConverter" />
 
@@ -109,55 +118,65 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Border Grid.Row="0"
-                Grid.Column="0"
-                Grid.ColumnSpan="10">
+        <Border
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="10">
             <Border.Background>
-                <media:RadialGradientBrush AlphaMode="Premultiplied"
-                                           RadiusX="0.8"
-                                           RadiusY="0.8">
+                <media:RadialGradientBrush
+                    AlphaMode="Premultiplied"
+                    RadiusX="0.8"
+                    RadiusY="0.8">
                     <GradientStop Color="Transparent" />
                     <GradientStop Offset="0.5" Color="Black" />
                     <GradientStop Offset="1" Color="Navy" />
                 </media:RadialGradientBrush>
             </Border.Background>
-            <TextBlock VerticalAlignment="Stretch"
-                       FontSize="32"
-                       FontWeight="Bold"
-                       Foreground="AliceBlue"
-                       TextAlignment="Center">
+            <TextBlock
+                VerticalAlignment="Stretch"
+                FontSize="32"
+                FontWeight="Bold"
+                Foreground="AliceBlue"
+                TextAlignment="Center">
                 <TextBlock.Text>Jeu du compte est bon</TextBlock.Text>
             </TextBlock>
         </Border>
-        <Border Grid.Row="1"
-                Grid.Column="0"
-                Grid.ColumnSpan="8"
-                Style="{StaticResource BorderTitreStyle}">
-            <StackPanel HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal">
-                <SymbolIcon Margin="5"
-                            Foreground="White"
-                            Symbol="GlobalNavigationButton" />
+        <Border
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="8"
+            Style="{StaticResource BorderTitreStyle}">
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <SymbolIcon
+                    Margin="5"
+                    Foreground="White"
+                    Symbol="GlobalNavigationButton" />
                 <TextBlock Margin="5">Plaques</TextBlock>
             </StackPanel>
         </Border>
-        <Border Grid.Row="1"
-                Grid.Column="8"
-                Grid.ColumnSpan="2"
-                Style="{StaticResource BorderTitreStyle}">
-            <StackPanel HorizontalAlignment="Center"
-                        VerticalAlignment="Stretch"
-                        Orientation="Horizontal">
-                <SymbolIcon Margin="5"
-                            Foreground="White"
-                            Symbol="Calculator" />
+        <Border
+            Grid.Row="1"
+            Grid.Column="8"
+            Grid.ColumnSpan="2"
+            Style="{StaticResource BorderTitreStyle}">
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Stretch"
+                Orientation="Horizontal">
+                <SymbolIcon
+                    Margin="5"
+                    Foreground="White"
+                    Symbol="Calculator" />
                 <TextBlock Margin="5">Trouver</TextBlock>
             </StackPanel>
         </Border>
-        <Grid Grid.Row="2"
-              Grid.Column="0"
-              Grid.ColumnSpan="8">
+        <Grid
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -166,136 +185,155 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <ComboBox Grid.Column="0"
-                      IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                      ItemsSource="{Binding ListePlaques}"
-                      SelectedValue="{Binding Plaques[0], Mode=TwoWay}"
-                      Style="{StaticResource ComboboxStyle}" />
-            <ComboBox Grid.Column="1"
-                      IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                      ItemsSource="{Binding ListePlaques}"
-                      SelectedValue="{Binding Plaques[1], Mode=TwoWay}"
-                      Style="{StaticResource ComboboxStyle}" />
-            <ComboBox Grid.Column="2"
-                      IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                      ItemsSource="{Binding ListePlaques}"
-                      SelectedValue="{Binding Plaques[2], Mode=TwoWay}"
-                      Style="{StaticResource ComboboxStyle}" />
-            <ComboBox Grid.Column="3"
-                      IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                      ItemsSource="{Binding ListePlaques}"
-                      SelectedValue="{Binding Plaques[3], Mode=TwoWay}"
-                      Style="{StaticResource ComboboxStyle}" />
-            <ComboBox Grid.Column="4"
-                      IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                      ItemsSource="{Binding ListePlaques}"
-                      SelectedValue="{Binding Plaques[4], Mode=TwoWay}"
-                      Style="{StaticResource ComboboxStyle}" />
-            <ComboBox Grid.Column="5"
-                      IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                      ItemsSource="{Binding ListePlaques}"
-                      SelectedValue="{Binding Plaques[5], Mode=TwoWay}"
-                      Style="{StaticResource ComboboxStyle}" />
+            <ComboBox
+                Grid.Column="0"
+                IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                ItemsSource="{Binding ListePlaques}"
+                SelectedValue="{Binding Plaques[0], Mode=TwoWay}"
+                Style="{StaticResource ComboboxStyle}" />
+            <ComboBox
+                Grid.Column="1"
+                IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                ItemsSource="{Binding ListePlaques}"
+                SelectedValue="{Binding Plaques[1], Mode=TwoWay}"
+                Style="{StaticResource ComboboxStyle}" />
+            <ComboBox
+                Grid.Column="2"
+                IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                ItemsSource="{Binding ListePlaques}"
+                SelectedValue="{Binding Plaques[2], Mode=TwoWay}"
+                Style="{StaticResource ComboboxStyle}" />
+            <ComboBox
+                Grid.Column="3"
+                IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                ItemsSource="{Binding ListePlaques}"
+                SelectedValue="{Binding Plaques[3], Mode=TwoWay}"
+                Style="{StaticResource ComboboxStyle}" />
+            <ComboBox
+                Grid.Column="4"
+                IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                ItemsSource="{Binding ListePlaques}"
+                SelectedValue="{Binding Plaques[4], Mode=TwoWay}"
+                Style="{StaticResource ComboboxStyle}" />
+            <ComboBox
+                Grid.Column="5"
+                IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                ItemsSource="{Binding ListePlaques}"
+                SelectedValue="{Binding Plaques[5], Mode=TwoWay}"
+                Style="{StaticResource ComboboxStyle}" />
         </Grid>
-        <Border Grid.Row="2"
-                Grid.Column="8"
-                Grid.ColumnSpan="2"
-                Style="{StaticResource BorderTitreStyle}">
+        <Border
+            Grid.Row="2"
+            Grid.Column="8"
+            Grid.ColumnSpan="2"
+            Style="{StaticResource BorderTitreStyle}">
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="40" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="40" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0"
-                        Click="TbMoins_Click"
-                        Foreground="White"
-                        IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                        IsTabStop="False">
+                <Button
+                    Grid.Column="0"
+                    Click="TbMoins_Click"
+                    Foreground="White"
+                    IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    IsTabStop="False">
                     <Button.Content>
                         <SymbolIcon Symbol="Remove" />
                     </Button.Content>
                 </Button>
-                <TextBox Grid.Column="1"
-                         IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                         MaxLength="3"
-                         Style="{StaticResource ChercheTextBoxStyle}"
-                         Text="{Binding Search, Mode=TwoWay}" />
-                <Button Grid.Column="2"
-                        Click="TbPlus_Click"
-                        Foreground="White"
-                        IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                        IsTabStop="False">
+                <TextBox
+                    Grid.Column="1"
+                    IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    MaxLength="3"
+                    Style="{StaticResource ChercheTextBoxStyle}"
+                    Text="{Binding Search, Mode=TwoWay}" />
+                <Button
+                    Grid.Column="2"
+                    Click="TbPlus_Click"
+                    Foreground="White"
+                    IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    IsTabStop="False">
                     <Button.Content>
                         <SymbolIcon Symbol="Add" />
                     </Button.Content>
                 </Button>
             </Grid>
         </Border>
-        <tlk:DataGrid x:Name="SolutionsData"
-                      Grid.Row="3"
-                      Grid.Column="0"
-                      Grid.ColumnSpan="10"
-                      x:FieldModifier="public"
-                      AutoGenerateColumns="False"
-                      CellStyle="{StaticResource cellStyle}"
-                      ColumnHeaderStyle="{StaticResource headerCellStyle}"
-                      GridLinesVisibility="All"
-                      HeadersVisibility="All"
-                      IsReadOnly="True"
-                      IsTabStop="False"
-                      ItemsSource="{Binding Solutions}"
-                      SelectionChanged="SolutionsData_SelectionChanged"
-                      VerticalGridLinesBrush="Gray">
+        <tlk:DataGrid
+            x:Name="SolutionsData"
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="10"
+            x:FieldModifier="public"
+            AutoGenerateColumns="False"
+            CellStyle="{StaticResource cellStyle}"
+            ColumnHeaderStyle="{StaticResource headerCellStyle}"
+            GridLinesVisibility="All"
+            HeadersVisibility="All"
+            IsReadOnly="True"
+            IsTabStop="False"
+            ItemsSource="{Binding Solutions}"
+            SelectionChanged="SolutionsData_SelectionChanged"
+            VerticalGridLinesBrush="Gray">
             <tlk:DataGrid.Columns>
-                <tlk:DataGridTextColumn Width="*"
-                                        Binding="{Binding [0]}"
-                                        Header="Opération 1" />
-                <tlk:DataGridTextColumn Width="*"
-                                        Binding="{Binding [1]}"
-                                        Header="Opération 2" />
-                <tlk:DataGridTextColumn x:Name="dgCol3"
-                                        Width="*"
-                                        Binding="{Binding [2]}"
-                                        Header="Opération 3" />
-                <tlk:DataGridTextColumn Width="*"
-                                        Binding="{Binding [3]}"
-                                        Header="Opération 4" />
-                <tlk:DataGridTextColumn Width="*"
-                                        Binding="{Binding [4]}"
-                                        Header="Opération 5" />
+                <tlk:DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding [0]}"
+                    Header="Opération 1" />
+                <tlk:DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding [1]}"
+                    Header="Opération 2" />
+                <tlk:DataGridTextColumn
+                    x:Name="dgCol3"
+                    Width="*"
+                    Binding="{Binding [2]}"
+                    Header="Opération 3" />
+                <tlk:DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding [3]}"
+                    Header="Opération 4" />
+                <tlk:DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding [4]}"
+                    Header="Opération 5" />
             </tlk:DataGrid.Columns>
         </tlk:DataGrid>
-        <tlk:InAppNotification x:Name="cebNotification"
-                               Grid.Row="3"
-                               Grid.Column="0"
-                               Grid.ColumnSpan="10"
-                               VerticalContentAlignment="Center"
-                               x:FieldModifier="public"
-                               ContentTemplate="{StaticResource NotificationTemplate}"
-                               HorizontalOffset="0"
-                               StackMode="QueueBehind"
-                               VerticalOffset="200"
-                               Visibility="{Binding NotifyVisibility}" />
-        <Border Grid.Row="4"
-                Grid.Column="0"
-                Grid.ColumnSpan="10"
-                Margin="0"
-                Background="{StaticResource ButtonBackgroundBrush}">
+        <tlk:InAppNotification
+            x:Name="cebNotification"
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="10"
+            VerticalContentAlignment="Center"
+            x:FieldModifier="public"
+            ContentTemplate="{StaticResource NotificationTemplate}"
+            HorizontalOffset="0"
+            StackMode="QueueBehind"
+            VerticalOffset="200"
+            Visibility="{Binding NotifyVisibility}" />
+        <Border
+            Grid.Row="4"
+            Grid.Column="0"
+            Grid.ColumnSpan="10"
+            Margin="0"
+            Background="{StaticResource ButtonBackgroundBrush}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="50" />
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           FontSize="14"
-                           FontWeight="Normal"
-                           Foreground="White"
-                           HorizontalTextAlignment="Center"
-                           TextAlignment="Center">
+                <TextBlock
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    FontWeight="Normal"
+                    Foreground="White"
+                    HorizontalTextAlignment="Center"
+                    TextAlignment="Center">
                     <Run Text=" " />
                     <Run Text="Nombre de solutions: " />
                     <Run Text="{Binding Solutions.Count, Mode=OneWay}" />
@@ -303,14 +341,15 @@
                         <ScaleTransform x:Name="AnimatedScaleSolutions" ScaleX="0.5" ScaleY="1" />
                     </TextBlock.RenderTransform>
                 </TextBlock>
-                <TextBlock Grid.Column="1"
-                           HorizontalAlignment="Stretch"
-                           VerticalAlignment="Center"
-                           FontSize="14"
-                           FontWeight="Normal"
-                           Foreground="White"
-                           HorizontalTextAlignment="Left"
-                           TextAlignment="Center">
+                <TextBlock
+                    Grid.Column="1"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    FontWeight="Normal"
+                    Foreground="White"
+                    HorizontalTextAlignment="Left"
+                    TextAlignment="Center">
                     <Run Text="Durée: " />
                     <Run Text="{Binding Duree, Mode=OneWay, Converter={StaticResource NumberStringFormatConverter}, ConverterParameter=#0.000}" />
                     <Run Text=" s" />
@@ -318,33 +357,36 @@
                         <ScaleTransform x:Name="AnimatedScaleDuree" ScaleX="1" ScaleY="1" />
                     </TextBlock.RenderTransform>
                 </TextBlock>
-                <ProgressRing x:Name="RingProgress"
-                              Grid.Column="2"
-                              HorizontalAlignment="Center"
-                              Canvas.ZIndex="1"
-                              FontFamily="Segoe UI"
-                              Foreground="Yellow"
-                              IsActive="{Binding IsBusy}" />
+                <ProgressRing
+                    x:Name="RingProgress"
+                    Grid.Column="2"
+                    HorizontalAlignment="Center"
+                    Canvas.ZIndex="1"
+                    FontFamily="Segoe UI"
+                    Foreground="Yellow"
+                    IsActive="{Binding IsBusy}" />
             </Grid>
         </Border>
-        <Grid Grid.Row="5"
-              Grid.Column="0"
-              Grid.ColumnSpan="10">
+        <Grid
+            Grid.Row="5"
+            Grid.Column="0"
+            Grid.ColumnSpan="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0"
-                    AccessKey="H"
-                    Background="{StaticResource ButtonBackgroundBrush}"
-                    Command="{Binding}"
-                    CommandParameter="random"
-                    Foreground="{StaticResource ButtonForegroundBrush}"
-                    IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    Style="{StaticResource CebButtonStyle}"
-                    ToolTipService.ToolTip="Raccourci: Alt+H">
+            <Button
+                Grid.Column="0"
+                AccessKey="H"
+                Background="{StaticResource ButtonBackgroundBrush}"
+                Command="{Binding}"
+                CommandParameter="random"
+                Foreground="{StaticResource ButtonForegroundBrush}"
+                IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                Style="{StaticResource CebButtonStyle}"
+                ToolTipService.ToolTip="Raccourci: Alt+H">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
                         <SymbolIcon Margin="5" Symbol="Shuffle" />
@@ -352,15 +394,16 @@
                     </StackPanel>
                 </Button.Content>
             </Button>
-            <Button Grid.Column="1"
-                    AccessKey="R"
-                    Background="{StaticResource ButtonBackgroundBrush}"
-                    Command="{Binding}"
-                    CommandParameter="resolve"
-                    Foreground="{StaticResource ButtonForegroundBrush}"
-                    IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    Style="{StaticResource CebButtonStyle}"
-                    ToolTipService.ToolTip="Raccourci: Alt+R">
+            <Button
+                Grid.Column="1"
+                AccessKey="R"
+                Background="{StaticResource ButtonBackgroundBrush}"
+                Command="{Binding}"
+                CommandParameter="resolve"
+                Foreground="{StaticResource ButtonForegroundBrush}"
+                IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                Style="{StaticResource CebButtonStyle}"
+                ToolTipService.ToolTip="Raccourci: Alt+R">
                 <Button.Content>
                     <StackPanel Orientation="Horizontal">
                         <SymbolIcon Margin="5" Symbol="{Binding Symbol}" />
@@ -368,45 +411,48 @@
                     </StackPanel>
                 </Button.Content>
             </Button>
-            <Button Grid.Column="2"
-                    AccessKey="W"
-                    Background="{StaticResource ButtonBackgroundBrush}"
-                    Command="{Binding}"
-                    CommandParameter="word"
-                    Foreground="{StaticResource ButtonForegroundBrush}"
-                    IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    Style="{StaticResource CebButtonStyle}"
-                    ToolTipService.ToolTip="Raccourci: Alt+W">
+            <Button
+                Grid.Column="2"
+                AccessKey="W"
+                Background="{StaticResource ButtonBackgroundBrush}"
+                Command="{Binding}"
+                CommandParameter="word"
+                Foreground="{StaticResource ButtonForegroundBrush}"
+                IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                Style="{StaticResource CebButtonStyle}"
+                ToolTipService.ToolTip="Raccourci: Alt+W">
                 <Button.Content>
                     <Image Source="/Assets/Word.png" />
                 </Button.Content>
 
             </Button>
-            <Button Grid.Column="3"
-                    AccessKey="X"
-                    Background="{StaticResource ButtonBackgroundBrush}"
-                    Command="{Binding}"
-                    CommandParameter="excel"
-                    IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    Foreground="{StaticResource ButtonForegroundBrush}"
-                    Style="{StaticResource CebButtonStyle}"
-                    ToolTipService.ToolTip="Raccourci: Alt+X">
+            <Button
+                Grid.Column="3"
+                AccessKey="X"
+                Background="{StaticResource ButtonBackgroundBrush}"
+                Command="{Binding}"
+                CommandParameter="excel"
+                Foreground="{StaticResource ButtonForegroundBrush}"
+                IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                Style="{StaticResource CebButtonStyle}"
+                ToolTipService.ToolTip="Raccourci: Alt+X">
                 <Button.Content>
                     <Image Source="/Assets/Excel.png" />
                 </Button.Content>
             </Button>
         </Grid>
-        <ProgressRing x:Name="RingProgress2"
-                      Grid.Row="3"
-                      Grid.Column="0"
-                      Grid.ColumnSpan="10"
-                      Width="100"
-                      Height="100"
-                      Margin="2"
-                      Background="Transparent"
-                      Canvas.ZIndex="1"
-                      Foreground="Yellow"
-                      IsActive="{Binding IsBusy}" />
+        <ProgressRing
+            x:Name="RingProgress2"
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="10"
+            Width="100"
+            Height="100"
+            Margin="2"
+            Background="Transparent"
+            Canvas.ZIndex="1"
+            Foreground="Yellow"
+            IsActive="{Binding IsBusy}" />
     </Grid>
     <Page.BottomAppBar>
         <AppBar IsOpen="False" IsSticky="False">
@@ -416,54 +462,62 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal">
-                    <AppBarButton Command="{Binding}"
-                                  CommandParameter="random"
-                                  Icon="Shuffle"
-                                  IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                                  Label="Hasard"
-                                  Style="{ThemeResource AppBarButtonRevealStyle}" />
-                    <AppBarButton Command="{Binding}"
-                                  CommandParameter="resolve"
-                                  Icon="Play"
-                                  IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                                  Label="Résoudre"
-                                  Style="{ThemeResource AppBarButtonRevealStyle}" />
-                    <AppBarButton Command="{Binding}"
-                                  CommandParameter="word"
-                                  IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                                  Label="Word"
-                                  Style="{ThemeResource AppBarButtonRevealStyle}">
+                    <AppBarButton
+                        Command="{Binding}"
+                        CommandParameter="random"
+                        Icon="Shuffle"
+                        IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                        Label="Hasard"
+                        Style="{ThemeResource AppBarButtonRevealStyle}" />
+                    <AppBarButton
+                        Command="{Binding}"
+                        CommandParameter="resolve"
+                        Icon="Play"
+                        IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                        Label="Résoudre"
+                        Style="{ThemeResource AppBarButtonRevealStyle}" />
+                    <AppBarButton
+                        Command="{Binding}"
+                        CommandParameter="word"
+                        IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                        Label="Word"
+                        Style="{ThemeResource AppBarButtonRevealStyle}">
                         <AppBarButton.Icon>
                             <BitmapIcon UriSource="ms-appx:///Assets/Word.png" />
                         </AppBarButton.Icon>
                     </AppBarButton>
-                    <AppBarButton Command="{Binding}"
-                                  CommandParameter="excel"
-                                  IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                                  Label="Excel"
-                                  Style="{ThemeResource AppBarButtonRevealStyle}">
+                    <AppBarButton
+                        Command="{Binding}"
+                        CommandParameter="excel"
+                        IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                        Label="Excel"
+                        Style="{ThemeResource AppBarButtonRevealStyle}">
                         <AppBarButton.Icon>
                             <BitmapIcon UriSource="ms-appx:///Assets/Excel.png" />
                         </AppBarButton.Icon>
                     </AppBarButton>
-                    <AppBarButton Click="SelectSolution"
-                                  Icon="SolidStar"
-                                  IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                                  Label="Résultat"
-                                  Style="{ThemeResource AppBarButtonRevealStyle}" />
-                    <AppBarButton Click="AppBarButton_Click"
-                                  Icon="FullScreen"
-                                  Label="Plein écran"
-                                  Style="{ThemeResource AppBarButtonRevealStyle}" />
+                    <AppBarButton
+                        Click="SelectSolution"
+                        Icon="SolidStar"
+                        IsEnabled="{Binding Path=IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                        Label="Résultat"
+                        Style="{ThemeResource AppBarButtonRevealStyle}" />
+                    <AppBarButton
+                        Click="AppBarButton_Click"
+                        Icon="FullScreen"
+                        Label="Plein écran"
+                        Style="{ThemeResource AppBarButtonRevealStyle}" />
                 </StackPanel>
-                <StackPanel Grid.Column="1"
-                            HorizontalAlignment="Right"
-                            Orientation="Horizontal">
-                    <TextBlock Padding="5"
-                               VerticalAlignment="Center"
-                               Foreground="White"
-                               Text="{Binding Date}"
-                               TextAlignment="Center" />
+                <StackPanel
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        Padding="5"
+                        VerticalAlignment="Center"
+                        Foreground="White"
+                        Text="{Binding Date}"
+                        TextAlignment="Center" />
                 </StackPanel>
             </Grid>
         </AppBar>

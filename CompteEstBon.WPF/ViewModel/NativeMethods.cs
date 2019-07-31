@@ -11,7 +11,7 @@ namespace CompteEstBon.ViewModel {
         public int Bottom;      // position of lower-bottom corner
     }
 
-    static class InteropClass {
+    static class NativeMethods {
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
         [DllImport("user32.dll")]
@@ -46,7 +46,8 @@ namespace CompteEstBon.ViewModel {
             var isNew = false;
             try {
                 excel = (Microsoft.Office.Interop.Excel.Application)Marshal.GetActiveObject("Excel.Application");
-            } catch (Exception) {
+            }
+            catch (Exception) {
                 excel = new Microsoft.Office.Interop.Excel.Application();
                 isNew = true;
             }
@@ -57,7 +58,8 @@ namespace CompteEstBon.ViewModel {
             bool isNew = false;
             try {
                 word = (Microsoft.Office.Interop.Word.Application)Marshal.GetActiveObject("Excel.Application");
-            } catch (Exception) {
+            }
+            catch (Exception) {
                 word = new Microsoft.Office.Interop.Word.Application();
                 isNew = true;
             }

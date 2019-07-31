@@ -8,7 +8,7 @@ namespace CompteEstBon.ViewModel {
     public static class ExportData {
         public static void ToWord(this CebTirage tirage) {
             try {
-                InteropClass.GetApplication(out Word.Application word);
+                NativeMethods.GetApplication(out Word.Application word);
                 var nomstyle = tirage.Status == CebStatus.CompteEstBon
                     ? "Tableau Grille 4 - Accentuation 6"
                     : "Tableau Liste 3 - Accentuation 2";
@@ -78,7 +78,7 @@ namespace CompteEstBon.ViewModel {
 
                 para.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                 doc.Bookmarks.Add("Résultat", para.Range);
-                InteropClass.SetFocusWindow(doc.Windows[1].Hwnd);
+                NativeMethods.SetFocusWindow(doc.Windows[1].Hwnd);
             }
             catch (Exception e) {
                 MessageBox.Show(e.Message, e.Source);
@@ -86,7 +86,7 @@ namespace CompteEstBon.ViewModel {
         }
 
         public static void ToExcel(this CebTirage tirage) {
-            InteropClass.GetApplication(out Excel.Application excel);
+            NativeMethods.GetApplication(out Excel.Application excel);
             excel.Visible = true;
             var workBook = excel.Workbooks.Add();
             Excel.Worksheet ws = workBook.Worksheets[1];
@@ -134,7 +134,7 @@ namespace CompteEstBon.ViewModel {
             rg.HorizontalAlignment = Excel.Constants.xlCenter;
             ws.Range["C4:G4"].MergeCells = true;
             workBook.Activate();
-            InteropClass.SetFocusWindow(excel.Hwnd);
+            NativeMethods.SetFocusWindow(excel.Hwnd);
         }
     }
 }

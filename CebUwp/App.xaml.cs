@@ -9,13 +9,11 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-namespace CompteEstBon
-{
+namespace CompteEstBon {
     /// <summary>
     /// Fournit un comportement spécifique à l'application afin de compléter la classe Application par défaut.
     /// </summary>
-    sealed partial class App : Application
-    {
+    sealed partial class App : Application {
         public static BackgroundTaskDeferral AppServiceDeferral = null;
         public static AppServiceConnection Connection = null;
         public static event EventHandler AppServiceConnected;
@@ -24,31 +22,25 @@ namespace CompteEstBon
         /// Initialise l'objet d'application de singleton.  Il s'agit de la première ligne du code créé
         /// à être exécutée. Elle correspond donc à l'équivalent logique de main() ou WinMain().
         /// </summary>
-        public App()
-        {
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
+        public App() {
+            InitializeComponent();
+            Suspending += OnSuspending;
         }
 
-        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
-        {
+        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args) {
             // connection established from the fulltrust process
-            if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails)
-            {
+            if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails) {
                 AppServiceDeferral = args.TaskInstance.GetDeferral();
                 args.TaskInstance.Canceled += OnTaskCanceled;
 
-                if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails details)
-                {
+                if (args.TaskInstance.TriggerDetails is AppServiceTriggerDetails details) {
                     Connection = details.AppServiceConnection;
                     AppServiceConnected?.Invoke(this, null);
                 }
             }
         }
-        private void OnTaskCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason)
-        {
-            if (AppServiceDeferral != null)
-            {
+        private void OnTaskCanceled(IBackgroundTaskInstance sender, BackgroundTaskCancellationReason reason) {
+            if (AppServiceDeferral != null) {
                 AppServiceDeferral.Complete();
             }
         }
@@ -59,8 +51,7 @@ namespace CompteEstBon
         /// seront utilisés par exemple au moment du lancement de l'application pour l'ouverture d'un fichier spécifique.
         /// </summary>
         /// <param name="e">Détails concernant la requête et le processus de lancement.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
-        {
+        protected override void OnLaunched(LaunchActivatedEventArgs e) {
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
@@ -83,15 +74,13 @@ namespace CompteEstBon
 
             // Ne répétez pas l'initialisation de l'application lorsque la fenêtre comporte déjà du contenu,
             // assurez-vous juste que la fenêtre est active
-            if (rootFrame == null)
-            {
+            if (rootFrame == null) {
                 // Créez un Frame utilisable comme contexte de navigation et naviguez jusqu'à la première page
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
+                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated) {
                     //TODO: chargez l'état de l'application précédemment suspendue
                 }
 
@@ -99,10 +88,8 @@ namespace CompteEstBon
                 Window.Current.Content = rootFrame;
             }
 
-            if (e.PrelaunchActivated == false)
-            {
-                if (rootFrame.Content == null)
-                {
+            if (e.PrelaunchActivated == false) {
+                if (rootFrame.Content == null) {
                     // Quand la pile de navigation n'est pas restaurée, accédez à la première page,
                     // puis configurez la nouvelle page en transmettant les informations requises en tant que
                     // paramètre
@@ -118,8 +105,7 @@ namespace CompteEstBon
         /// </summary>
         /// <param name="sender">Frame à l'origine de l'échec de navigation.</param>
         /// <param name="e">Détails relatifs à l'échec de navigation</param>
-        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
-        {
+        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e) {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
@@ -130,8 +116,7 @@ namespace CompteEstBon
         /// </summary>
         /// <param name="sender">Source de la requête de suspension.</param>
         /// <param name="e">Détails de la requête de suspension.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
-        {
+        private void OnSuspending(object sender, SuspendingEventArgs e) {
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: enregistrez l'état de l'application et arrêtez toute activité en arrière-plan
             deferral.Complete();

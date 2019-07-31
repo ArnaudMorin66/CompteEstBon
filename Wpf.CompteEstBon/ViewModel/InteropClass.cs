@@ -46,7 +46,8 @@ namespace CompteEstBon {
             var isNew = false;
             try {
                 excel = (Microsoft.Office.Interop.Excel.Application)Marshal.GetActiveObject("Excel.Application");
-            } catch (Exception) {
+            }
+            catch (Exception) {
                 excel = new Microsoft.Office.Interop.Excel.Application();
                 isNew = true;
             }
@@ -57,7 +58,8 @@ namespace CompteEstBon {
             bool isNew = false;
             try {
                 word = (Microsoft.Office.Interop.Word.Application)Marshal.GetActiveObject("Word.Application");
-            } catch (Exception) {
+            }
+            catch (Exception) {
                 word = new Microsoft.Office.Interop.Word.Application();
                 isNew = true;
             }

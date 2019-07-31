@@ -240,27 +240,27 @@
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding op1}"
+                    Binding="{Binding Op1}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 1" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding op2}"
+                    Binding="{Binding Op2}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 2" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding op3}"
+                    Binding="{Binding Op3}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 3" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding op4}"
+                    Binding="{Binding Op4}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 4" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding op5}"
+                    Binding="{Binding Op5}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 5" />
             </DataGrid.Columns>

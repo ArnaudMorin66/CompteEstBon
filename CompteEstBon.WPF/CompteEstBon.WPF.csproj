@@ -41,7 +41,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -99,7 +99,7 @@
     </ApplicationDefinition>
     <Compile Include="ViewModel\BusyVisibilityConverter.cs" />
     <Compile Include="ViewModel\InverseBooleanConverter.cs" />
-    <Compile Include="ViewModel\InteropClass.cs" />
+    <Compile Include="ViewModel\NativeMethods.cs" />
     <Compile Include="ViewModel\CebStatusConverter.cs" />
     <Compile Include="ViewModel\ViewTirage.cs" />
     <Compile Include="ViewModel\ExportData.cs" />

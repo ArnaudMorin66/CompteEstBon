@@ -11,7 +11,7 @@ namespace CompteEstBon.ViewModel {
     public class CebStatusConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
             // ReSharper disable once PossibleNullReferenceException
-            var st =  value as CebStatus?;
+            var st = value as CebStatus?;
             if (targetType == typeof(bool)) {
                 return st == CebStatus.CompteApproche || st == CebStatus.CompteEstBon;
             }

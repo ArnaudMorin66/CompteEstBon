@@ -2,11 +2,11 @@
 
 namespace CompteEstBon {
     public class CebDetail {
-        public string op1 { get; set; }
-        public string op2 { get; set; }
-        public string op3 { get; set; }
-        public string op4 { get; set; }
-        public string op5 { get; set; }
+        public string Op1 { get; set; }
+        public string Op2 { get; set; }
+        public string Op3 { get; set; }
+        public string Op4 { get; set; }
+        public string Op5 { get; set; }
         public override string ToString() {
             var result = string.Empty;
             foreach (var item in GetType().GetProperties()

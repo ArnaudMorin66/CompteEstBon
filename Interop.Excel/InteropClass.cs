@@ -1,6 +1,6 @@
-﻿using System.Runtime.InteropServices;
-using System;
+﻿using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace ExportCeb {
     [StructLayout(LayoutKind.Sequential)]
@@ -42,7 +42,8 @@ namespace ExportCeb {
             bool isNew = false;
             try {
                 excel = (Microsoft.Office.Interop.Excel.Application)Marshal.GetActiveObject("Excel.Application");
-            } catch (Exception) {
+            }
+            catch (Exception) {
                 excel = new Microsoft.Office.Interop.Excel.Application();
                 isNew = true;
             }
@@ -55,7 +56,8 @@ namespace ExportCeb {
 
             try {
                 word = (Microsoft.Office.Interop.Word.Application)Marshal.GetActiveObject("Excel.Application");
-            } catch (Exception) {
+            }
+            catch (Exception) {
                 word = new Microsoft.Office.Interop.Word.Application();
                 isNew = true;
             }

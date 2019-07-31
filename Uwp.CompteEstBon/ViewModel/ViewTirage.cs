@@ -1,9 +1,7 @@
 ﻿#region
 
-using CompteEstBon;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Converter;
-using Syncfusion.UI.Xaml.Utility;
 using Syncfusion.UI.Xaml.Utils;
 using Syncfusion.XlsIO;
 using System;
@@ -14,28 +12,23 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using Windows.Data.Xml.Dom;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
 using Windows.System;
 using Windows.UI;
-using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
 #endregion
 
-namespace CompteEstBon
-{
-    public class ViewTirage : INotifyPropertyChanged
-    {
+namespace CompteEstBon {
+    public class ViewTirage : INotifyPropertyChanged {
         private Brush _background;
         private double _duree;
 
         private Brush _foreground = new SolidColorBrush(Colors.White);
-        
+
 
         private bool _isBusy;
 
@@ -153,23 +146,20 @@ namespace CompteEstBon
         /// Initialisation
         /// </summary>
         /// <returns></returns>
-        public ViewTirage()
-        {
+        public ViewTirage() {
             _background = new SolidColorBrush(Colors.Navy);
             HasardCommand = new DelegateCommand(Hasardcmd);
             ResolveCommand = new DelegateCommand(Resolvecmd);
             ExportCommand = new DelegateCommand(Exportcmd);
 
-            Dispatcher = new DispatcherTimer
-            {
+            Dispatcher = new DispatcherTimer {
                 Interval = new TimeSpan(100)
 
             };
             Dispatcher.Tick += (sender, e) => {
                 Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             };
-            dateDispatcher = new DispatcherTimer
-            {
+            dateDispatcher = new DispatcherTimer {
                 Interval = new TimeSpan(1000)
             };
             dateDispatcher.Tick += (sender, e) => {
@@ -188,14 +178,11 @@ namespace CompteEstBon
             dateDispatcher.Start();
         }
 
-        private async void Hasardcmd(object obj)
-        {
+        private async void Hasardcmd(object obj) {
             await RandomAsync();
         }
-        private async void Resolvecmd(object obj)
-        {
-            switch (Tirage.Status)
-            {
+        private async void Resolvecmd(object obj) {
+            switch (Tirage.Status) {
                 case CebStatus.Valid:
                     await ResolveAsync();
                     break;
@@ -208,11 +195,9 @@ namespace CompteEstBon
                     break;
             }
         }
-        private async void Exportcmd(object obj)
-        {
+        private async void Exportcmd(object obj) {
             var SolutionsData = (SfDataGrid)obj;
-            FileSavePicker savePicker = new FileSavePicker
-            {
+            FileSavePicker savePicker = new FileSavePicker {
                 SuggestedStartLocation = PickerLocationId.DocumentsLibrary
             };
             // Dropdown of file types the user can save the file as
@@ -220,13 +205,11 @@ namespace CompteEstBon
             // Default file name if the user does not type one in or select a file to replace
             savePicker.SuggestedFileName = "Ceb";
             StorageFile file = await savePicker.PickSaveFileAsync();
-            if (file != null)
-            {
+            if (file != null) {
                 // Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
                 CachedFileManager.DeferUpdates(file);
 
-                var options = new ExcelExportingOptions
-                {
+                var options = new ExcelExportingOptions {
                     ExcelVersion = ExcelVersion.Excel2016,
                     ExportAllPages = true
                 };
@@ -237,8 +220,7 @@ namespace CompteEstBon
                     .BuiltInTableStyle = TableBuiltInStyles.TableStyleMedium1;
                 ws.InsertRow(1, 3);
                 ws.Range["A1"].Value = "Plaques:";
-                for (var i = 0; i < 6; i++)
-                {
+                for (var i = 0; i < 6; i++) {
                     ws.Range[1, i + 2].Value2 = Plaques[i];
                 }
                 ws.Range["A2"].Value2 = "Cherche:";
@@ -249,16 +231,14 @@ namespace CompteEstBon
                 // Let Windows know that we're finished changing the file so the other app can update the remote version of the file.
                 // Completing updates may require Windows to ask for user input.
                 FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
-                
+
                 await Launcher.LaunchFileAsync(file);
 
             }
         }
 
-        private void UpdateColors()
-        {
-            switch (Tirage.Status)
-            {
+        private void UpdateColors() {
+            switch (Tirage.Status) {
                 case CebStatus.Valid:
                     SetBrush(Colors.Navy, Colors.Yellow);
                     break;
@@ -282,28 +262,23 @@ namespace CompteEstBon
 
         private void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        private void ClearData()
-        {
+        private void ClearData() {
             Duree = 0;
             FirstSolutionString = "";
             Solutions.Clear();
             IsCalculed = false;
 
-            if (Tirage.Status != CebStatus.Erreur)
-            {
+            if (Tirage.Status != CebStatus.Erreur) {
                 Result = "Résoudre";
             }
-            else
-            {
+            else {
                 Result = "Tirage incorrect";
             }
             UpdateColors();
         }
 
-        private void UpdateData()
-        {
-            lock (Plaques)
-            {
+        private void UpdateData() {
+            lock (Plaques) {
                 for (var i = 0; i < Tirage.Plaques.Length; i++)
                     Plaques[i] = Tirage.Plaques[i];
             }
@@ -312,21 +287,18 @@ namespace CompteEstBon
 
         #region Action
 
-        public async Task ClearAsync()
-        {
+        public async Task ClearAsync() {
             await Tirage.ClearAsync();
             ClearData();
         }
 
-        public async Task RandomAsync()
-        {
+        public async Task RandomAsync() {
             await Tirage.RandomAsync();
             FirstSolutionString = "";
             UpdateData();
         }
 
-        public async Task<CebStatus> ResolveAsync()
-        {
+        public async Task<CebStatus> ResolveAsync() {
             IsBusy = true;
 
             Result = "...Calcul...";
@@ -363,23 +335,19 @@ namespace CompteEstBon
                 NotifiedChanged();
             }
         }
-        public void SetBrush(Color background, Color foreground)
-        {
+        public void SetBrush(Color background, Color foreground) {
             LinearGradientBrush myLinearGradientBrush =
-                new LinearGradientBrush
-                {
+                new LinearGradientBrush {
                     StartPoint = new Windows.Foundation.Point(0, 0),
                     EndPoint = new Windows.Foundation.Point(0, 1)
                 };
 
-            myLinearGradientBrush.GradientStops.Add(new GradientStop
-            {
+            myLinearGradientBrush.GradientStops.Add(new GradientStop {
                 Color = background,
                 Offset = 0.0
             });
 
-            myLinearGradientBrush.GradientStops.Add(new GradientStop
-            {
+            myLinearGradientBrush.GradientStops.Add(new GradientStop {
                 Color = Colors.Black,
                 Offset = 1.0
             });

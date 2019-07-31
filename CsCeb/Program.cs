@@ -1,43 +1,32 @@
 ﻿using CompteEstBon;
 using Microsoft.Extensions.CommandLineUtils;
 using System;
-using System.Collections.Generic;
 using static System.Console;
 
-namespace CsCeb
-{
-    internal class Program
-    {
-        private static void Main(string[] args)
-        {
+namespace CsCeb {
+    internal class Program {
+        private static void Main(string[] args) {
             var tirage = new CebTirage();
             var parser = new CommandLineApplication(false);
             var argPlaques = parser.Argument("plaques", "liste des plaques", multipleValues: true);
             var searchOption = parser.Option("-s | --search", "valeur à rechercher", CommandOptionType.SingleValue);
             var waitOption = parser.Option("-w | --wait", "Attente fin calcul", CommandOptionType.NoValue);
             parser.HelpOption("-h | --help");
-            parser.OnExecute(() =>
-            {
-                if (searchOption.HasValue())
-                {
-                    if (int.TryParse(searchOption.Value(), out int search))
-                    {
+            parser.OnExecute(() => {
+                if (searchOption.HasValue()) {
+                    if (int.TryParse(searchOption.Value(), out int search)) {
                         tirage.Search = search;
                     }
-                    else
-                    {
+                    else {
                         return -2;
                     }
                 }
                 var ix = 0;
-                foreach (var value in argPlaques.Values)
-                {
-                    if (int.TryParse(value, out int plaque))
-                    {
+                foreach (var value in argPlaques.Values) {
+                    if (int.TryParse(value, out int plaque)) {
                         tirage.Plaques[ix++].Value = plaque;
                     }
-                    else
-                    {
+                    else {
                         return -1;
                     }
                 }
@@ -49,28 +38,24 @@ namespace CsCeb
             Write("Tirage:\t");
             WriteLine($"Recherche: {tirage.Search}");
             Write("Plaques: ");
-            foreach (var plaque in tirage.Plaques)
-            {
+            foreach (var plaque in tirage.Plaques) {
                 Write($"{plaque.Value} ");
             }
             WriteLine();
             WriteLine();
             WriteLine($"Durée du calcul: {ts.TotalMilliseconds / 1000}");
 
-            if (tirage.Status == CebStatus.Erreur)
-            {
+            if (tirage.Status == CebStatus.Erreur) {
                 WriteLine("Tirage invalide");
             }
-            else
-            {
+            else {
                 Write(tirage.Status == CebStatus.CompteEstBon
                     ? "Compte est bon"
                     : $"Compte approché: {tirage.Found} ");
 
                 WriteLine($", nombre de solutions {tirage.Solutions.Count}");
                 WriteLine();
-                foreach (var solution in tirage.Solutions)
-                {
+                foreach (var solution in tirage.Solutions) {
                     WriteLine(solution);
                 }
             }
@@ -80,8 +65,7 @@ namespace CsCeb
                 ReadLine();
         }
 
-        private static TimeSpan EvalTime(Func<CebStatus> action)
-        {
+        private static TimeSpan EvalTime(Func<CebStatus> action) {
             var dt = DateTime.Now;
             action();
             return DateTime.Now - dt;

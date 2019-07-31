@@ -1,6 +1,6 @@
-﻿using System.Windows;
-using Syncfusion.Licensing;
+﻿using Syncfusion.Licensing;
 using Syncfusion.SfSkinManager;
+using System.Windows;
 
 namespace CompteEstBon {
     /// <summary>

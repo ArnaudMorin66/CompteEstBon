@@ -283,23 +283,23 @@
             <sf:SfDataGrid.Columns>
                 <sf:GridTextColumn
                     HeaderText="Opération 1"
-                    MappingName="op1"
+                    MappingName="Op1"
                     TextAlignment="Center" />
                 <sf:GridTextColumn
                     HeaderText="Opération 2"
-                    MappingName="op2"
+                    MappingName="Op2"
                     TextAlignment="Center" />
                 <sf:GridTextColumn
                     HeaderText="Opération 3"
-                    MappingName="op3"
+                    MappingName="Op3"
                     TextAlignment="Center" />
                 <sf:GridTextColumn
                     HeaderText="Opération 4"
-                    MappingName="op4"
+                    MappingName="Op4"
                     TextAlignment="Center" />
                 <sf:GridTextColumn
                     HeaderText="Opération 5"
-                    MappingName="op5"
+                    MappingName="Op5"
                     TextAlignment="Center" />
             </sf:SfDataGrid.Columns>
         </sf:SfDataGrid>
@@ -331,7 +331,7 @@
                         Icon="Save"
                         Label="Export"
                         Style="{ThemeResource AppBarButtonRevealStyle}" />
-     
+
                     <AppBarButton
                         Click="AppFullscreen"
                         Icon="FullScreen"

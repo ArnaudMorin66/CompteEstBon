@@ -6,43 +6,35 @@ using System.Linq;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
-namespace CebExcel
-{
-    public partial class Ceb
-    {
+namespace CebExcel {
+    public partial class Ceb {
         private bool blocked;
         public CebTirage Tirage { get; } = new CebTirage();
 
-        private void Feuil1_Startup(object sender, EventArgs e)
-        {
+        private void Feuil1_Startup(object sender, EventArgs e) {
             InitData();
         }
 
-        private void InitData()
-        {
+        private void InitData() {
             blocked = true;
-            plaques.Value = Tirage.Plaques.Select(p=>p.Value).ToArray();
+            plaques.Value = Tirage.Plaques.Select(p => p.Value).ToArray();
             Recherche.Value = Tirage.Search;
-           
+
             Clear();
             blocked = false;
         }
 
-        private void Feuil1_Shutdown(object sender, EventArgs e)
-        {
+        private void Feuil1_Shutdown(object sender, EventArgs e) {
         }
 
-        private void Clear()
-        {
+        private void Clear() {
             Unprotect();
-            if (Tirage.Status == CebStatus.Erreur)
-            {
+            if (Tirage.Status == CebStatus.Erreur) {
                 Resultat.Value = "Tirage invalide";
                 Resultat.Font.Color = Color.White;
                 Resultat.Interior.Color = Color.Red;
             }
-            else
-            {
+            else {
                 Resultat.Value = null;
                 Resultat.Font.Color = Color.Black;
                 Resultat.Interior.Color = Color.White;
@@ -53,8 +45,7 @@ namespace CebExcel
             Protect(drawingObjects: true, contents: true, scenarios: true);
         }
 
-        public async void Hasard()
-        {
+        public async void Hasard() {
             await Tirage.RandomAsync();
             InitData();
         }
@@ -65,8 +56,7 @@ namespace CebExcel
         /// Méthode requise pour la prise en charge du concepteur - ne modifiez pas
         /// le contenu de cette méthode avec l'éditeur de code.
         /// </summary>
-        private void InternalStartup()
-        {
+        private void InternalStartup() {
             btnHasard.Click += new EventHandler(btnHasard_Click);
             btnResoudre.Click += new EventHandler(btnResoudre_Click);
             Recherche.Change += new Excel.DocEvents_ChangeEventHandler(Recherche_Change);
@@ -78,22 +68,19 @@ namespace CebExcel
 
         #endregion Code généré par le Concepteur VSTO
 
-        private void plaque_changed(Excel.Range Target)
-        {
-            if (blocked) return; 
+        private void plaque_changed(Excel.Range Target) {
+            if (blocked) return;
             Tirage.Plaques[Target.Column - plaques.Column].Value = int.TryParse(Target.Text, out int val) ? val : 0;
             Clear();
         }
 
-        private void Recherche_Change(Excel.Range Target)
-        {
+        private void Recherche_Change(Excel.Range Target) {
             if (blocked) return;
             Tirage.Search = int.TryParse(Target.Text, out int val) ? val : 0;
             Clear();
         }
 
-        private void btnHasard_Click(object sender, EventArgs e)
-        {
+        private void btnHasard_Click(object sender, EventArgs e) {
             Hasard();
         }
 
@@ -112,7 +99,8 @@ namespace CebExcel
                 Resultat.Value = "Compte est bon";
                 Resultat.Font.Color = Color.Yellow;
                 Resultat.Interior.Color = Color.Blue;
-            } else {
+            }
+            else {
                 Resultat.Value = $"Compte approché: {Tirage.Found} - Écart: {Tirage.Diff}";
                 Resultat.Interior.Color = Color.Green;
                 Resultat.Font.Color = Color.White;
@@ -126,8 +114,7 @@ namespace CebExcel
             Protect(drawingObjects: true, contents: true, scenarios: true);
         }
 
-        private void btnResoudre_Click(object sender, EventArgs e)
-        {
+        private void btnResoudre_Click(object sender, EventArgs e) {
             Resoudre();
         }
     }

@@ -111,6 +111,8 @@ namespace CebControllerCore {
             _cache.Remove(HttpContext.Session.Id);
             HttpContext.Session.Remove("ceb");
         }
+        [HttpGet("[action]")]
+        public string GetVersion() => $"{Environment.Version}";
 
     }
 }

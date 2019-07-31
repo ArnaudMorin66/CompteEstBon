@@ -143,7 +143,8 @@ namespace CompteEstBon.ViewModel {
                 if (_isBusy) {
                     WaitStory.Begin();
                     AnimationStory.Begin();
-                } else {
+                }
+                else {
                     WaitStory.Pause();
                 }
 
@@ -185,40 +186,41 @@ namespace CompteEstBon.ViewModel {
 
                 switch ((parameter as string)?.ToLower()) {
                     case "random":
-                    await RandomAsync();
-                    break;
+                        await RandomAsync();
+                        break;
                     case "resolve": {
 
                         switch (Tirage.Status) {
                             case CebStatus.Valid:
-                            if (IsBusy) return;
-                            await ResolveAsync();
-                            break;
+                                if (IsBusy) return;
+                                await ResolveAsync();
+                                break;
 
                             case CebStatus.CompteEstBon:
                             case CebStatus.CompteApproche:
-                            await ClearAsync();
-                            break;
+                                await ClearAsync();
+                                break;
 
                             case CebStatus.Erreur:
-                            await RandomAsync();
-                            break;
+                                await RandomAsync();
+                                break;
                             case CebStatus.Indefini:
-                            break;
+                                break;
                             case CebStatus.EnCours:
-                            break;
+                                break;
                             default:
-                            throw new ArgumentOutOfRangeException();
+                                throw new ArgumentOutOfRangeException();
                         }
 
                         break;
                     }
                     case "excel":
                     case "word":
-                    await ExportAsync((string)parameter);
-                    break;
+                        await ExportAsync((string)parameter);
+                        break;
                 }
-            } catch (Exception) {
+            }
+            catch (Exception) {
                 // ignored
             }
         }
@@ -230,11 +232,11 @@ namespace CompteEstBon.ViewModel {
             await Task.Run(() => {
                 switch (fmt.ToLower()) {
                     case "excel":
-                    Tirage.ToExcel();
-                    break;
+                        Tirage.ToExcel();
+                        break;
                     case "word":
-                    Tirage.ToWord();
-                    break;
+                        Tirage.ToWord();
+                        break;
                 }
             });
             IsBusy = false;
