@@ -10,10 +10,8 @@ namespace CompteEstBon {
         /// </summary>
         public virtual int Value { get; set; } = 0;
 
-        public abstract int Rank { get; }
-        public string this[int index] => index < Operations.Count ? Operations[index] : null;
-
-        public abstract List<string> Operations { get; }
+        public int Rank { get; set; } = 0;
+        public List<string> Operations { get; } = new List<string>();
 
         public abstract bool IsValid { get; }
 

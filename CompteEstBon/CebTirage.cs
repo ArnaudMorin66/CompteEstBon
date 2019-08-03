@@ -225,12 +225,12 @@ namespace CompteEstBon {
 
         public IEnumerable<string> ToArray() => Solutions.Select(p => p.ToString());
 
-        public IEnumerable<IEnumerable<string>> OperationsSolutions => Solutions.Select(p => p.Operations);
-        public string[][] ArraysSolutions => Solutions.Select(p => p.Operations.ToArray()).ToArray();
+        // public IEnumerable<IEnumerable<string>> OperationsSolutions => Solutions.Select(p => p.Operations);
+        public string[][] ArrayOfSolutions => Solutions.Select(p => p.Operations.ToArray()).ToArray();
 
         private static readonly Random rnd = new Random();
 
-        public IEnumerable<CebDetail> ToCebDetails() => Solutions.Select(s => s.Detail);
+        public IEnumerable<CebDetail> Details => Solutions.Select(s => s.Detail);
 
         public CebResult GetCebResult() {
             return new CebResult {
@@ -238,7 +238,7 @@ namespace CompteEstBon {
                 Plaques = Plaques.Select(p => p.Value),
                 Status = this.Status,
                 Diff = this.Diff,
-                Solutions = ToCebDetails(),
+                Solutions = Details,
                 Found = this.Found.ToString()
             };
         }

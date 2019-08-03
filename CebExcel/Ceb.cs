@@ -106,7 +106,7 @@ namespace CebExcel {
                 Resultat.Font.Color = Color.White;
             }
 
-            tbSolutions.DataSource = Tirage.ToCebDetails().ToArray();
+            tbSolutions.DataSource = Tirage.Details.ToArray();
             NbSolutions.Value = Tirage.Solutions.Count;
             Durée.Value = (DateTime.Now - time).Milliseconds / 1000.0;
             Application.EnableEvents = true;

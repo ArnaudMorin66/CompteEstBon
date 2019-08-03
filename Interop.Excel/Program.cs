@@ -33,19 +33,12 @@ namespace ExportCeb {
 
 
         private static async void Connection_RequestReceived(AppServiceConnection sender, AppServiceRequestReceivedEventArgs args) {
-            string result;
-            switch ((args.Request.Message["Format"] as string)?.ToLower()) {
-                case "excel":
-                    result = args.Request.Message.ToExcel();
-                    break;
-                case "word":
-                    result = args.Request.Message.ToWord();
-                    break;
-                default:
-                    result = "Format introuvable";
-                    break;
-            }
-
+            var result = (args.Request.Message["Format"] as string)?.ToLower() switch
+            {
+                "excel" => args.Request.Message.ToExcel(),
+                "word" => args.Request.Message.ToWord(),
+                _ => "Format introuvable",
+            };
             ValueSet response = new ValueSet { { "RESPONSE", result } };
             await args.Request.SendResponseAsync(response);
         }

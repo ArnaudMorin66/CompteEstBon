@@ -24,6 +24,7 @@ namespace CompteEstBon {
         /// <param name="handler"></param>
         public CebPlaque(int value, EventHandler<int> handler = null) {
             Value = value;
+            this.Operations.Add(value.ToString());
             if (handler != null)
                 ValueChanged += handler;
         }
@@ -33,15 +34,14 @@ namespace CompteEstBon {
             set => Value = int.TryParse(value, out var res) ? res : 0;
         }
 
-        public override List<string> Operations => new List<string> {
-                    ToString()
-                };
+    
 
         public override int Value {
             get => base.Value;
             set {
                 if (base.Value == value) return;
                 base.Value = value;
+                this.Operations[0] = value.ToString();
                 OnValueChanged(value);
             }
         }
@@ -58,7 +58,6 @@ namespace CompteEstBon {
         /// <summary>
         /// Rang
         /// </summary>
-        public override int Rank => 0;
 
         public override bool IsValid => ListePlaques.Contains(Value);
 

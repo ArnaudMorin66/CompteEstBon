@@ -292,7 +292,7 @@ namespace CompteEstBon.ViewModel {
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");
             foreach (var s in Tirage.Solutions)
-                Solutions.Add(s.Operations);
+                Solutions.Add(s.Operations.ToList());
             heureDispatcher.Stop();
             Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             UpdateColors();

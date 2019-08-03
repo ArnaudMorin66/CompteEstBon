@@ -8,9 +8,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0-preview7.19365.7" />
-    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.48" />
+    <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.76" />
     <PackageReference Include="Telerik.DataSource.Trial" Version="1.0.0" />
-    <PackageReference Include="Telerik.UI.for.Blazor.Trial" Version="1.3.0" />
+    <PackageReference Include="Telerik.UI.for.Blazor.Trial" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>
