@@ -9,7 +9,8 @@ namespace CompteEstBon {
     public sealed partial class MainPage : Page {
         public MainPage() {
             InitializeComponent();
-            bindTirage.storyBoard = TextBlockBoard;
+            Tirage.InAppNotification = cebNotification;
+            Tirage.StoryBoard = TextBlockBoard;
             TextBlockBoard.Begin();
             TextBlockBoard.Pause();
         }
@@ -24,35 +25,41 @@ namespace CompteEstBon {
             }
         }
 
-        private void Page_Unloaded(object sender, RoutedEventArgs e) => bindTirage.dateDispatcher.Stop();
+        private void Page_Unloaded(object sender, RoutedEventArgs e) => Tirage.dateDispatcher.Stop();
 
 
 
 
         private void SolutionsData_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            bindTirage.ShowNotify(SolutionsData.SelectedIndex);
+            Tirage.ShowNotify(SolutionsData.SelectedIndex);
 
         }
 
         private void TbMoins_Click(object sender, RoutedEventArgs e) {
-            if (bindTirage.Search > 100) {
-                bindTirage.Search--;
+            if (Tirage.Search > 100) {
+                Tirage.Search--;
             }
         }
 
         private void TbPlus_Click(object sender, RoutedEventArgs e) {
-            if (bindTirage.Search < 999) {
-                bindTirage.Search++;
+            if (Tirage.Search < 999) {
+                Tirage.Search++;
             }
         }
 
         private void SelectSolution(object sender, RoutedEventArgs e) {
-            bindTirage.ShowNotify(SolutionsData.SelectedIndex);
+            Tirage.ShowNotify(SolutionsData.SelectedIndex);
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e) {
 
         }
 
+        
+
+        private void Search_GotFocus(object sender, RoutedEventArgs e)
+        {
+            search.SelectAll();
+        }
     }
 }

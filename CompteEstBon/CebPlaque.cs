@@ -34,7 +34,6 @@ namespace CompteEstBon {
             set => Value = int.TryParse(value, out var res) ? res : 0;
         }
 
-    
 
         public override int Value {
             get => base.Value;
@@ -83,7 +82,7 @@ namespace CompteEstBon {
         /// <filterpriority>
         /// 2
         /// </filterpriority>
-        public override bool Equals(object obj) => obj is CebPlaque p ? p.Value == Value : false;
+        public override bool Equals(object obj) => obj is CebPlaque p && p.Value == Value;
 
         public override int GetHashCode() => 391 + Value.GetHashCode();
 

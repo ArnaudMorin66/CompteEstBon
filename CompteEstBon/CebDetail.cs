@@ -9,11 +9,12 @@ namespace CompteEstBon {
         public string Op5 { get; set; }
         public override string ToString() {
             var result = string.Empty;
+            
             foreach (var item in GetType().GetProperties()
-                .Where(item => item.Name.StartsWith("op"))) {
+                .Where(item => item.Name.StartsWith("Op"))) {
                 var value = item.GetValue(this) as string;
                 if (string.IsNullOrEmpty(value)) break;
-                result += (string.IsNullOrEmpty(result) ? "" : ", ") + $"{item.Name} = { value }";
+                result += $"{(string.IsNullOrEmpty(result) ? "" : ", ")} {item.Name} = { value }";
             }
             return result;
         }

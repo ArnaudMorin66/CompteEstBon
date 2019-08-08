@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
+
 namespace CompteEstBon.ViewModel {
     [StructLayout(LayoutKind.Sequential)]
     public struct RECT {

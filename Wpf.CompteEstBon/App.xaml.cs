@@ -8,7 +8,7 @@ namespace CompteEstBon {
     /// </summary>
     public partial class App : Application {
         public App() {
-            SyncfusionLicenseProvider.RegisterLicense(CompteEstBon.Properties.Resources.License);
+            SyncfusionLicenseProvider.RegisterLicense(CompteEstBon.Properties.Settings.Default.SfLicense);
             SfSkinManager.ApplyStylesOnApplication = true;
         }
     }

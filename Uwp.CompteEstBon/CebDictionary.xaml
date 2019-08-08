@@ -1,16 +1,19 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                    mc:Ignorable="d">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:grid="using:Syncfusion.UI.Xaml.Grid"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
     <LinearGradientBrush x:Key="CebLinearGradientBrush1" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Offset="0.0" Color="LightGreen" />
-        <GradientStop Offset="1.0" Color="Navy" />
+        <GradientStop Offset="0.0" Color="DarkGreen" />
+        <GradientStop Offset="1.0" Color="DarkSlateGray" />
     </LinearGradientBrush>
     <LinearGradientBrush x:Key="CebLinearGradientBrush2" StartPoint="0.5,0" EndPoint="0.5,1">
-        <GradientStop Offset="0.0" Color="Green" />
-        <GradientStop Offset="1.0" Color="Navy" />
+        <GradientStop Offset="0.0" Color="Black" />
+        <GradientStop Offset="1.0" Color="DarkSlateGray" />
     </LinearGradientBrush>
+  
     <Style x:Key="CebButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
@@ -22,25 +25,26 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontSize" Value="12" />
         <Setter Property="UseSystemFocusVisuals" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid" Background="Transparent">
-                        <ContentPresenter x:Name="ContentPresenter"
-                                          Padding="{TemplateBinding Padding}"
-                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          AutomationProperties.AccessibilityView="Raw"
-                                          Background="{TemplateBinding Background}"
-                                          BorderBrush="{TemplateBinding BorderBrush}"
-                                          BorderThickness="{TemplateBinding BorderThickness}"
-                                          Content="{TemplateBinding Content}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          ContentTransitions="{TemplateBinding ContentTransitions}"
-                                          CornerRadius="3"
-                                          Foreground="{TemplateBinding Foreground}" />
+                        <ContentPresenter
+                            x:Name="ContentPresenter"
+                            Padding="{TemplateBinding Padding}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            AutomationProperties.AccessibilityView="Raw"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            ContentTransitions="{TemplateBinding ContentTransitions}"
+                            CornerRadius="3"
+                            Foreground="{TemplateBinding Foreground}" />
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal">
@@ -90,14 +94,7 @@
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="Background">
-            <Setter.Value>
-                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                    <GradientStop Offset="0.0" Color="Navy" />
-                    <GradientStop Offset="1.0" Color="Black" />
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Background" Value="{StaticResource CebLinearGradientBrush2}" />
         <Setter Property="BorderBrush" Value="White" />
         <Setter Property="CornerRadius" Value="4" />
     </Style>
@@ -105,17 +102,26 @@
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Foreground" Value="White" />
-        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontSize" Value="12" />
     </Style>
-    <AcrylicBrush x:Key="CustomAcrylicBrush"
-                  BackgroundSource="Backdrop"
-                  FallbackColor="#FF808080"
-                  TintColor="Black"
-                  TintOpacity="0.50" />
-    <AcrylicBrush x:Key="DatagridAcrylicBrush"
-                  BackgroundSource="Backdrop"
-                  FallbackColor="White"
-                  TintColor="DeepSkyBlue"
-                  TintOpacity="0.75" />
+    <AcrylicBrush
+        x:Key="CustomAcrylicBrush"
+        BackgroundSource="Backdrop"
+        FallbackColor="#FF808080"
+        TintColor="Black"
+        TintOpacity="0.50" />
+    <AcrylicBrush
+        x:Key="DatagridAcrylicBrush"
+        BackgroundSource="Backdrop"
+        FallbackColor="White"
+        TintColor="DeepSkyBlue"
+        TintOpacity="0.75" />
     <CompositeTransform x:Key="Transformation" />
+    <Style x:Key="SfDataGridHeaderStyle" TargetType="grid:GridHeaderCellControl">
+        <Setter Property="Background" Value="{StaticResource CebLinearGradientBrush2}" />
+        <Setter Property="Foreground" Value="Yellow" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+    </Style>
+
 </ResourceDictionary>

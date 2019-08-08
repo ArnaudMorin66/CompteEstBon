@@ -1,5 +1,6 @@
 ﻿using Syncfusion.Licensing;
 using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
@@ -20,7 +21,6 @@ namespace CompteEstBon {
         /// </summary>
         public App() {
             // ApplicationData.Current.LocalSettings.Values["sflicence"] = "MTA2OTY3QDMxMzcyZTMxMmUzMEN4MmRZRjAzTDQ5cnNvZGlCVWFmRzBmQlVUVGZRRHJuVkxwdG9penFNUE09";
-            SyncfusionLicenseProvider.RegisterLicense((string)ApplicationData.Current.LocalSettings.Values["sflicence"]);
             InitializeComponent();
             Suspending += OnSuspending;
         }
@@ -30,7 +30,9 @@ namespace CompteEstBon {
         /// seront utilisés par exemple au moment du lancement de l'application pour l'ouverture d'un fichier spécifique.
         /// </summary>
         /// <param name="e">Détails concernant la requête et le processus de lancement.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e) {
+        protected override async void OnLaunched(LaunchActivatedEventArgs e)
+        {
+            await RegisterLicenseAsync();
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
@@ -80,6 +82,21 @@ namespace CompteEstBon {
             }
         }
 
+        async Task RegisterLicenseAsync()
+        {
+            try
+            {
+                var storageFolder =
+                    ApplicationData.Current.LocalFolder;
+                var licenseFile =
+                    await storageFolder.GetFileAsync("syncfusion_uwp.lic");
+                SyncfusionLicenseProvider.RegisterLicense(await FileIO.ReadTextAsync(licenseFile));
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
         /// <summary>
         /// Appelé lorsque la navigation vers une page donnée échoue
         /// </summary>

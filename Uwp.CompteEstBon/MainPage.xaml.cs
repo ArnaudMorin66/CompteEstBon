@@ -22,5 +22,10 @@ namespace CompteEstBon {
                 view.TryEnterFullScreenMode();
             }
         }
+
+        private void SolutionsData_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
+        {
+            bindTirage.ShowNotify(SolutionsData.SelectedIndex);
+        }
     }
 }

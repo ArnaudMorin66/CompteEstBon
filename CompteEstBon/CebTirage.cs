@@ -120,10 +120,10 @@ namespace CompteEstBon {
         /// </summary>
         public void Random() {
             //  var rnd = new Random();
-            _search = rnd.Next(100, 1000);
+            _search = Rnd.Next(100, 1000);
             var liste = new List<int>(CebPlaque.ListePlaques); // .ToList();
             foreach (var plaque in Plaques) {
-                var n = rnd.Next(0, liste.Count());
+                var n = Rnd.Next(0, liste.Count());
                 plaque.Value2 = liste[n];
                 liste.RemoveAt(n);
             }
@@ -228,7 +228,7 @@ namespace CompteEstBon {
         // public IEnumerable<IEnumerable<string>> OperationsSolutions => Solutions.Select(p => p.Operations);
         public string[][] ArrayOfSolutions => Solutions.Select(p => p.Operations.ToArray()).ToArray();
 
-        private static readonly Random rnd = new Random();
+        private static readonly Random Rnd = new Random();
 
         public IEnumerable<CebDetail> Details => Solutions.Select(s => s.Detail);
 

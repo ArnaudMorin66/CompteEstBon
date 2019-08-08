@@ -25,7 +25,8 @@ using Windows.UI.Xaml.Media;
 namespace CompteEstBon {
     public class ViewTirage : INotifyPropertyChanged {
         private Brush _background;
-        private double _duree;
+        private string _duree;
+        private bool _popupIsOpen;
 
         private Brush _foreground = new SolidColorBrush(Colors.White);
 
@@ -62,7 +63,7 @@ namespace CompteEstBon {
             }
         }
 
-        public double Duree {
+        public string Duree {
             get => _duree;
             set {
                 _duree = value;
@@ -139,6 +140,16 @@ namespace CompteEstBon {
             }
         }
 
+        public bool PopupIsOpen
+        {
+            get => _popupIsOpen;
+            set
+            {
+                _popupIsOpen = value;
+                NotifiedChanged();
+            }
+        }
+        public DispatcherTimer NotifyTimer;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -147,17 +158,25 @@ namespace CompteEstBon {
         /// </summary>
         /// <returns></returns>
         public ViewTirage() {
-            _background = new SolidColorBrush(Colors.Navy);
+            _background = new SolidColorBrush(Colors.DarkSlateGray);
             HasardCommand = new DelegateCommand(Hasardcmd);
             ResolveCommand = new DelegateCommand(Resolvecmd);
             ExportCommand = new DelegateCommand(Exportcmd);
-
+            NotifyTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(5)
+            };
+            NotifyTimer.Tick += (sender, e) =>
+            {
+                PopupIsOpen = false;
+                NotifyTimer.Stop();
+            };
             Dispatcher = new DispatcherTimer {
                 Interval = new TimeSpan(100)
 
             };
             Dispatcher.Tick += (sender, e) => {
-                Duree = (DateTimeOffset.Now - _time).TotalSeconds;
+                Duree = $"{(DateTimeOffset.Now - _time).TotalSeconds:N5}";
             };
             dateDispatcher = new DispatcherTimer {
                 Interval = new TimeSpan(1000)
@@ -176,6 +195,7 @@ namespace CompteEstBon {
             UpdateColors();
             Date = $"{DateTime.Now:dddd MM yyyy, HH:mm:ss}";
             dateDispatcher.Start();
+            
         }
 
         private async void Hasardcmd(object obj) {
@@ -238,9 +258,10 @@ namespace CompteEstBon {
         }
 
         private void UpdateColors() {
+
             switch (Tirage.Status) {
                 case CebStatus.Valid:
-                    SetBrush(Colors.Navy, Colors.Yellow);
+                    SetBrush(Colors.Black, Colors.Yellow);
                     break;
 
                 case CebStatus.Erreur:
@@ -248,14 +269,14 @@ namespace CompteEstBon {
                     break;
 
                 case CebStatus.CompteEstBon:
-                    SetBrush(Colors.Green, Colors.Yellow);
+                    SetBrush(Colors.DarkGreen, Colors.Yellow);
                     break;
 
                 case CebStatus.CompteApproche:
                     SetBrush(Colors.Salmon, Colors.White);
                     break;
                 case CebStatus.EnCours:
-                    SetBrush(Colors.Green, Colors.White);
+                    SetBrush(Colors.DarkGreen, Colors.White);
                     break;
             }
         }
@@ -263,7 +284,12 @@ namespace CompteEstBon {
         private void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private void ClearData() {
-            Duree = 0;
+            if (NotifyTimer.IsEnabled)
+            {
+                NotifyTimer.Stop();
+                PopupIsOpen = false;
+            }
+            Duree = $"{0:N5}";
             FirstSolutionString = "";
             Solutions.Clear();
             IsCalculed = false;
@@ -276,8 +302,29 @@ namespace CompteEstBon {
             }
             UpdateColors();
         }
+        public string _currentSolution;
 
-        private void UpdateData() {
+        public string CurrentSolution {
+            get => _currentSolution;
+            set {
+                _currentSolution = value;
+                NotifiedChanged();
+            }
+        }
+        /// <summary>
+        /// 
+        public void ShowNotify(int no) {
+            if (PopupIsOpen)
+            {
+                NotifyTimer.Stop();
+                PopupIsOpen = false;
+            }
+        
+            CurrentSolution = Tirage.Solutions.ElementAt(no).ToString();
+            PopupIsOpen = true; // Visibility.Visible;
+            NotifyTimer.Start();
+    }
+private void UpdateData() {
             lock (Plaques) {
                 for (var i = 0; i < Tirage.Plaques.Length; i++)
                     Plaques[i] = Tirage.Plaques[i];
@@ -316,9 +363,10 @@ namespace CompteEstBon {
             foreach (var s in Tirage.Solutions)
                 Solutions.Add(s.Detail);
             Dispatcher.Stop();
-            Duree = (DateTimeOffset.Now - _time).TotalSeconds;
+            Duree = $"{(DateTimeOffset.Now - _time).TotalSeconds:N5}";
             UpdateColors();
             IsBusy = false;
+            ShowNotify(0);
             return Tirage.Status;
         }
 
@@ -338,8 +386,8 @@ namespace CompteEstBon {
         public void SetBrush(Color background, Color foreground) {
             LinearGradientBrush myLinearGradientBrush =
                 new LinearGradientBrush {
-                    StartPoint = new Windows.Foundation.Point(0, 0),
-                    EndPoint = new Windows.Foundation.Point(0, 1)
+                    StartPoint = new Windows.Foundation.Point(0.5, 0),
+                    EndPoint = new Windows.Foundation.Point(0.5, 1)
                 };
 
             myLinearGradientBrush.GradientStops.Add(new GradientStop {
@@ -348,7 +396,7 @@ namespace CompteEstBon {
             });
 
             myLinearGradientBrush.GradientStops.Add(new GradientStop {
-                Color = Colors.Black,
+                Color = Colors.DarkSlateGray,
                 Offset = 1.0
             });
             Background = myLinearGradientBrush;

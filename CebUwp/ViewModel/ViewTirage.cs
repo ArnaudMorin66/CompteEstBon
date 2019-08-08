@@ -15,6 +15,8 @@ using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Animation;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using Windows.UI.Xaml.Controls;
 
 namespace CompteEstBon.ViewModel {
 
@@ -27,6 +29,8 @@ namespace CompteEstBon.ViewModel {
         private Color _foreground;
 
         private bool _isBusy;
+
+        public InAppNotification InAppNotification { get; set; }
 
         // private bool _isCalculed;
         private DateTimeOffset _time;
@@ -43,16 +47,8 @@ namespace CompteEstBon.ViewModel {
         public ObservableCollection<int> Plaques { get; } = new ObservableCollection<int> { -1, -1, -1, -1, -1, -1 };
 
         public IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
-        private Visibility _notifyVisibility = Visibility.Collapsed;
-        public Visibility NotifyVisibility {
-            get => _notifyVisibility;
-            set {
-                _notifyVisibility = value;
-                NotifiedChanged();
-            }
-        }
-        public DispatcherTimer NotifyTimer;
-        public ObservableCollection<IList<string>> Solutions { get; } = new ObservableCollection<IList<string>>();
+
+        public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
         public string _date;
 
         public string Date {
@@ -127,14 +123,6 @@ namespace CompteEstBon.ViewModel {
         public CebStatus Status {
             get => Tirage.Status;
         }
-        //public bool IsCalculed {
-        //    get => _isCalculed;
-        //    set {
-        //        _isCalculed = value;
-        //        NotifiedChanged();
-        //    }
-        //}
-
         public Visibility Visibility {
             get => _visibility;
             set {
@@ -143,10 +131,13 @@ namespace CompteEstBon.ViewModel {
             }
         }
 
-        public Storyboard storyBoard { get; set; }
+        public Storyboard StoryBoard { get; set; }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
+        #pragma warning disable CS0067
         public event EventHandler CanExecuteChanged;
+        #pragma warning restore CS0067
 
         /// <summary>
         /// Initialisation 
@@ -154,9 +145,11 @@ namespace CompteEstBon.ViewModel {
         /// <returns>
         /// </returns>
         public ViewTirage() {
+            
             App.AppServiceConnected += ViewTirage_AppServiceConnected;
+            
             Symbol = ListeSymbols[CebStatus.Valid];
-            _background = Colors.Navy;
+            _background = Colors.DarkSlateGray;
             _foreground = Colors.White;
 
             heureDispatcher = new DispatcherTimer {
@@ -169,13 +162,7 @@ namespace CompteEstBon.ViewModel {
             dateDispatcher.Tick += (sender, e) => {
                 Date = Date = $"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
-            NotifyTimer = new DispatcherTimer {
-                Interval = TimeSpan.FromSeconds(5)
-            };
-            NotifyTimer.Tick += (sender, e) => {
-                NotifyVisibility = Visibility.Collapsed;
-                NotifyTimer.Stop();
-            };
+
             Plaques.CollectionChanged += (sender, e) => {
                 if (e.Action != NotifyCollectionChangedAction.Replace) return;
                 var i = e.NewStartingIndex;
@@ -198,8 +185,7 @@ namespace CompteEstBon.ViewModel {
             if (!response.Message.TryGetValue("RESPONSE", out result)) {
                 dialog = new MessageDialog("RESPONSE introuvable");
                 await dialog.ShowAsync();
-            }
-            else if (result.ToString() != "SUCCESS") {
+            } else if (result.ToString() != "SUCCESS") {
                 dialog = new MessageDialog(result.ToString());
                 await dialog.ShowAsync();
             }
@@ -211,38 +197,27 @@ namespace CompteEstBon.ViewModel {
 
         private void UpdateColors() {
             Symbol = ListeSymbols[Tirage.Status];
-            switch (Tirage.Status) {
-                case CebStatus.Valid:
-                    (Background, Foreground) = (Colors.Navy, Colors.Yellow);
-                    break;
+            
+            (Background, Foreground) = Tirage.Status switch
+            {
+                CebStatus.Valid => (Colors.DarkSlateGray, Colors.Yellow),
+                CebStatus.Erreur => (Colors.Red, Colors.White),
+                CebStatus.CompteEstBon => (Colors.DarkGreen, Colors.Yellow),
+                CebStatus.CompteApproche => (Colors.Salmon, Colors.White),
+                CebStatus.EnCours => (Colors.Green, Colors.White),
+                _ => (Colors.DarkSlateGray, Colors.Yellow)
 
-                case CebStatus.Erreur:
-                    (Background, Foreground) = (Colors.Red, Colors.White);
-                    break;
+            };
 
-                case CebStatus.CompteEstBon:
-                    (Background, Foreground) = (Colors.Green, Colors.Yellow);
-                    break;
-
-                case CebStatus.CompteApproche:
-                    (Background, Foreground) = (Colors.Salmon, Colors.White);
-                    break;
-
-                case CebStatus.EnCours:
-                    (Background, Foreground) = (Colors.Green, Colors.White);
-                    break;
-            }
         }
 
         private void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private void ClearData() {
             Duree = 0;
-            storyBoard?.Pause();
-            if (NotifyTimer.IsEnabled) {
-                NotifyTimer.Stop();
-                NotifyVisibility = Visibility.Collapsed;
-            }
+            StoryBoard?.Pause();
+
+            InAppNotification?.Dismiss();
             Solutions.Clear();
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");
@@ -292,12 +267,12 @@ namespace CompteEstBon.ViewModel {
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");
             foreach (var s in Tirage.Solutions)
-                Solutions.Add(s.Operations.ToList());
+                Solutions.Add(s.Detail);
             heureDispatcher.Stop();
             Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             UpdateColors();
             IsBusy = false;
-            storyBoard.Resume();
+            StoryBoard.Resume();
             ShowNotify(0);
             return Tirage.Status;
         }
@@ -317,17 +292,17 @@ namespace CompteEstBon.ViewModel {
             }
         }
         public void ShowNotify(int no) {
+            InAppNotification?.Dismiss();
             if (no < 0) {
-                NotifyVisibility = Visibility.Collapsed;
+
                 return;
             }
-            if (NotifyVisibility == Visibility.Visible)
-                return;
-            CurrentSolution = Tirage.Solutions.ElementAt(no).ToString();
-            NotifyVisibility = Visibility.Visible;
-            NotifyTimer.Start();
+
+            CurrentSolution = Tirage.Solutions[no].ToString();
+            InAppNotification?.Show(10000);
+
         }
-        public Dictionary<CebStatus, string> ListeSymbols { get; } = new Dictionary<CebStatus, String>() {
+        public Dictionary<CebStatus, string> ListeSymbols { get; } = new Dictionary<CebStatus, string>() {
             [CebStatus.CompteApproche] = "Dislike",
             [CebStatus.CompteEstBon] = "Like",
             [CebStatus.Valid] = "Play",
@@ -338,15 +313,14 @@ namespace CompteEstBon.ViewModel {
         public async Task ExportAsync(string cmd) {
             try {
                 xlData = new ValueSet {
-                    { "Format", cmd },
+                    { "Command", cmd },
                     { "Plaques", Plaques.ToArray() },
                     { "Search", Search },
                     { "Result", Result },
                     { "Status", (int)Tirage.Status },
                     { "Solutions", Tirage.Solutions.Select(p=> p.ToString()).ToArray() }
                  };
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 MessageDialog d = new MessageDialog(e.ToString());
                 await d.ShowAsync();
                 return;
@@ -354,8 +328,7 @@ namespace CompteEstBon.ViewModel {
             if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0)) {
                 IsBusy = true;
                 await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
-            }
-            else {
+            } else {
 
                 MessageDialog dialog = new MessageDialog("This feature is only available on Windows 10 Desktop SKU");
                 await dialog.ShowAsync();
@@ -396,8 +369,7 @@ namespace CompteEstBon.ViewModel {
                         await ExportAsync("word");
                         break;
                 }
-            }
-            catch (Exception) {
+            } catch (Exception) {
                 // ignored
             }
         }

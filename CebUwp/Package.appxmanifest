@@ -5,7 +5,7 @@
          xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
          xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
          xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4" xmlns:iot2="http://schemas.microsoft.com/appx/manifest/iot/windows10/2" IgnorableNamespaces="uap mp desktop4 iot2">
-  <Identity Name="91384a3a-d2b9-4dab-b3a9-53e2a6258200" Publisher="CN=Arnaud - UWP" Version="1.0.0.0" />
+  <Identity Name="ToolkitUWPCompteEstBon" Publisher="CN=Arnaud Morin, O=Arnaud Morin, C=FR" Version="1.0.2.0" />
   <mp:PhoneIdentity PhoneProductId="91384a3a-d2b9-4dab-b3a9-53e2a6258200" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>CompteEstBon</DisplayName>

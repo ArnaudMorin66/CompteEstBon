@@ -59,14 +59,5 @@ namespace CompteEstBon.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à MTE3Mzc3QDMxMzcyZTMyMmUzMEs2a1JVRk43aFhpRUFjckRiTUFzUUJtYzVqM1FyVkdMY2h3eUxzMnVmUUU9.
-        /// </summary>
-        internal static string License {
-            get {
-                return ResourceManager.GetString("License", resourceCulture);
-            }
-        }
     }
 }
