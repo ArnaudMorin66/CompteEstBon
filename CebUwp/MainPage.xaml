@@ -19,7 +19,7 @@
             <DataTemplate x:Key="NotificationTemplate">
                 <StackPanel
                     HorizontalAlignment="Center"
-                    Background="{ThemeResource SystemControlBaseLowAcrylicElementBrush}"
+                    Background="Transparent"
                     Orientation="Vertical">
                     <TextBlock
                         HorizontalAlignment="Center"
@@ -50,7 +50,7 @@
                     </TextBlock>
                     <TextBlock HorizontalAlignment="Center" HorizontalTextAlignment="Center">
                         <Run Text="Durée: " />
-                        <Run Text="{Binding Duree, Mode=OneWay, Converter={StaticResource NumberStringFormatConverter}, ConverterParameter=#0.###}" />
+                        <Run Text="{Binding Duree, Mode=OneWay, Converter={StaticResource NumberStringFormatConverter}, ConverterParameter=#0.0000}" />
                         <Run Text=" s" />
                     </TextBlock>
                 </StackPanel>
@@ -108,14 +108,11 @@
             <ColumnDefinition />
             <ColumnDefinition />
             <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Border
             Grid.Row="0"
             Grid.Column="0"
-            Grid.ColumnSpan="10"
+            Grid.ColumnSpan="7"
             Background="{ThemeResource SystemControlForegroundTransparentBrush}">
             <TextBlock
                 VerticalAlignment="Stretch"
@@ -129,7 +126,7 @@
         <Border
             Grid.Row="1"
             Grid.Column="0"
-            Grid.ColumnSpan="8"
+            Grid.ColumnSpan="6"
             Style="{StaticResource BorderTitreStyle}">
             <StackPanel
                 HorizontalAlignment="Center"
@@ -144,8 +141,8 @@
         </Border>
         <Border
             Grid.Row="1"
-            Grid.Column="8"
-            Grid.ColumnSpan="2"
+            Grid.Column="6"
+            Grid.ColumnSpan="1"
             Style="{StaticResource BorderTitreStyle}">
             <StackPanel
                 HorizontalAlignment="Center"
@@ -158,76 +155,70 @@
                 <TextBlock Margin="5">Trouver</TextBlock>
             </StackPanel>
         </Border>
-        <Grid
+        <ComboBox
             Grid.Row="2"
             Grid.Column="0"
-            Grid.ColumnSpan="8">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <ComboBox
-                Grid.Column="0"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                ItemsSource="{Binding ListePlaques}"
-                SelectedValue="{Binding Plaques[0], Mode=TwoWay}"
-                Style="{StaticResource ComboboxStyle}" />
-            <ComboBox
-                Grid.Column="1"
-                IsEnabled="{x:Bind Path=Tirage.IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                ItemsSource="{Binding ListePlaques}"
-                SelectedValue="{Binding Plaques[1], Mode=TwoWay}"
-                Style="{StaticResource ComboboxStyle}" />
-            <ComboBox
-                Grid.Column="2"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                ItemsSource="{Binding ListePlaques}"
-                SelectedValue="{Binding Plaques[2], Mode=TwoWay}"
-                Style="{StaticResource ComboboxStyle}" />
-            <ComboBox
-                Grid.Column="3"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                ItemsSource="{Binding ListePlaques}"
-                SelectedValue="{Binding Plaques[3], Mode=TwoWay}"
-                Style="{StaticResource ComboboxStyle}" />
-            <ComboBox
-                Grid.Column="4"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                ItemsSource="{Binding ListePlaques}"
-                SelectedValue="{Binding Plaques[4], Mode=TwoWay}"
-                Style="{StaticResource ComboboxStyle}" />
-            <ComboBox
-                Grid.Column="5"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                ItemsSource="{Binding ListePlaques}"
-                SelectedValue="{Binding Plaques[5], Mode=TwoWay}"
-                Style="{StaticResource ComboboxStyle}" />
-        </Grid>
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            ItemsSource="{Binding ListePlaques}"
+            SelectedValue="{Binding Plaques[0], Mode=TwoWay}"
+            Style="{StaticResource ComboboxStyle}" />
+        <ComboBox
+            Grid.Row="2"
+            Grid.Column="1"
+            IsEnabled="{x:Bind Path=Tirage.IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            ItemsSource="{Binding ListePlaques}"
+            SelectedValue="{Binding Plaques[1], Mode=TwoWay}"
+            Style="{StaticResource ComboboxStyle}" />
+        <ComboBox
+            Grid.Row="2"
+            Grid.Column="2"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            ItemsSource="{Binding ListePlaques}"
+            SelectedValue="{Binding Plaques[2], Mode=TwoWay}"
+            Style="{StaticResource ComboboxStyle}" />
+        <ComboBox
+            Grid.Row="2"
+            Grid.Column="3"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            ItemsSource="{Binding ListePlaques}"
+            SelectedValue="{Binding Plaques[3], Mode=TwoWay}"
+            Style="{StaticResource ComboboxStyle}" />
+        <ComboBox
+            Grid.Row="2"
+            Grid.Column="4"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            ItemsSource="{Binding ListePlaques}"
+            SelectedValue="{Binding Plaques[4], Mode=TwoWay}"
+            Style="{StaticResource ComboboxStyle}" />
+        <ComboBox
+            Grid.Row="2"
+            Grid.Column="5"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            ItemsSource="{Binding ListePlaques}"
+            SelectedValue="{Binding Plaques[5], Mode=TwoWay}"
+            Style="{StaticResource ComboboxStyle}" />
         <Border
             Grid.Row="2"
-            Grid.Column="8"
-            Grid.ColumnSpan="2"
+            Grid.Column="6"
+            Grid.ColumnSpan="1"
+            HorizontalAlignment="Stretch"
+            BorderBrush="Gray"
+            BorderThickness="0.2"
             Style="{StaticResource BorderTitreStyle}">
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="25" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="25" />
                 </Grid.ColumnDefinitions>
-                <Button
+                <RepeatButton
                     Grid.Column="0"
+                    HorizontalAlignment="Stretch"
                     Click="TbMoins_Click"
+                    Content="-"
                     Foreground="White"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    IsTabStop="False">
-                    <Button.Content>
-                        <SymbolIcon Symbol="Remove" />
-                    </Button.Content>
-                </Button>
+                    IsTabStop="False" />
                 <TextBox
                     x:Name="search"
                     Grid.Column="1"
@@ -236,22 +227,21 @@
                     MaxLength="3"
                     Style="{StaticResource ChercheTextBoxStyle}"
                     Text="{Binding Search, Mode=TwoWay}" />
-                <Button
+                <RepeatButton
                     Grid.Column="2"
+                    HorizontalAlignment="Stretch"
                     Click="TbPlus_Click"
+                    Content="+"
                     Foreground="White"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    IsTabStop="False">
-                    <Button.Content>
-                        <SymbolIcon Symbol="Add" />
-                    </Button.Content>
-                </Button>
+                    IsTabStop="False" />
+
             </Grid>
         </Border>
         <Grid
             Grid.Row="3"
             Grid.Column="0"
-            Grid.ColumnSpan="10">
+            Grid.ColumnSpan="7">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -323,7 +313,7 @@
             x:Name="SolutionsData"
             Grid.Row="4"
             Grid.Column="0"
-            Grid.ColumnSpan="10"
+            Grid.ColumnSpan="7"
             x:FieldModifier="public"
             AutoGenerateColumns="False"
             CellStyle="{StaticResource cellStyle}"
@@ -363,10 +353,11 @@
             x:Name="cebNotification"
             Grid.Row="4"
             Grid.Column="0"
-            Grid.ColumnSpan="10"
+            Grid.ColumnSpan="7"
             VerticalContentAlignment="Center"
             x:FieldModifier="public"
             AnimationDuration="00:00:00.5"
+            Background="{StaticResource AcrylicButtonBackgroundBrush}"
             ContentTemplate="{StaticResource NotificationTemplate}"
             HorizontalOffset="0"
             StackMode="Replace"
@@ -374,7 +365,7 @@
         <Border
             Grid.Row="5"
             Grid.Column="0"
-            Grid.ColumnSpan="10"
+            Grid.ColumnSpan="7"
             Margin="0"
             Background="{StaticResource AcrylicButtonBackgroundBrush}">
             <Grid>
@@ -429,7 +420,7 @@
             x:Name="RingProgress2"
             Grid.Row="4"
             Grid.Column="0"
-            Grid.ColumnSpan="10"
+            Grid.ColumnSpan="7"
             Width="100"
             Height="100"
             Margin="2"

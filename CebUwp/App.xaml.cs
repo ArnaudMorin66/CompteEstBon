@@ -62,7 +62,7 @@ namespace CompteEstBon {
             titleBar.ButtonBackgroundColor = Windows.UI.Colors.Transparent;
             titleBar.ButtonHoverForegroundColor = Windows.UI.Colors.Black;
             titleBar.ButtonHoverBackgroundColor = Windows.UI.Colors.Transparent;
-            titleBar.ButtonPressedForegroundColor = Windows.UI.Colors.Yellow;
+            titleBar.ButtonPressedForegroundColor = Windows.UI.Colors.DarkSalmon;
             titleBar.ButtonPressedBackgroundColor = Windows.UI.Colors.Navy;
 
             // Set inactive window colors

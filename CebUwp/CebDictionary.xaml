@@ -9,12 +9,11 @@
     mc:Ignorable="d">
     <AcrylicBrush
         x:Key="AcrylicButtonBackgroundBrush"
-        Windows10version1903:TintLuminosityOpacity="0.5"
         AlwaysUseFallback="False"
-        BackgroundSource="HostBackdrop"
-        FallbackColor="{Binding Foreground}"
+        BackgroundSource="Backdrop"
+        FallbackColor="Transparent"
         TintColor="{Binding Background}"
-        TintOpacity="0.5" />
+        TintOpacity="0.2" />
     <Style x:Key="CebButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource AcrylicButtonBackgroundBrush}" />
         <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
@@ -95,7 +94,7 @@
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="Background" Value="{ThemeResource SystemControlForegroundTransparentBrush}" />
-        <Setter Property="BorderBrush" Value="White" />
+        <Setter Property="BorderBrush" Value="Gray" />
     </Style>
     <Style x:Key="TextBlockTitreStyle" TargetType="TextBlock">
         <Setter Property="HorizontalAlignment" Value="Right" />
@@ -105,8 +104,8 @@
 
     <CompositeTransform x:Key="Transformation" />
     <Style x:Key="ComboboxStyle" TargetType="ComboBox">
-        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundTransparentBrush}" />
-        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="Gray" />
+        <Setter Property="BorderThickness" Value="0.2" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalAlignment" Value="Stretch" />

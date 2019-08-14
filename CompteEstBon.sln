@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toolkit.UWP.CompteEstBon", 
 		{E7348B26-1B9A-45B8-9E03-FB717CBB2163} = {E7348B26-1B9A-45B8-9E03-FB717CBB2163}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uwp.CompteEstBon", "Uwp.CompteEstBon\Uwp.CompteEstBon.csproj", "{6E8B1040-C037-4C18-A303-9972072C1E0D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Syncfusion.Uwp.CompteEstBon", "Uwp.CompteEstBon\Syncfusion.Uwp.CompteEstBon.csproj", "{6E8B1040-C037-4C18-A303-9972072C1E0D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompteEstBon.WPF", "CompteEstBon.WPF\CompteEstBon.WPF.csproj", "{FDACAEF6-75A4-466D-B38C-91D5C9442F56}"
 EndProject

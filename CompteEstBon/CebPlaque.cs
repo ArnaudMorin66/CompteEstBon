@@ -2,19 +2,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace CompteEstBon {
 
     [System.Runtime.InteropServices.Guid("A21F3DEC-8531-4F59-AF11-863BEF5ED340")]
-    public sealed class CebPlaque : CebBase {
+    public sealed class CebPlaque : CebBase, INotifyPropertyChanged   {
 
         public static readonly int[] ListePlaques = {
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
             25, 50, 75, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,25
         };
 
-        public event EventHandler<int> ValueChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
         /// Plaque
@@ -22,11 +24,11 @@ namespace CompteEstBon {
         /// <param name="value">
         /// </param>
         /// <param name="handler"></param>
-        public CebPlaque(int value, EventHandler<int> handler = null) {
+        public CebPlaque(int value, PropertyChangedEventHandler /* EventHandler<int>*/ handler = null) {
             Value = value;
             this.Operations.Add(value.ToString());
             if (handler != null)
-                ValueChanged += handler;
+                PropertyChanged += handler;
         }
 
         public string Text {
@@ -41,7 +43,7 @@ namespace CompteEstBon {
                 if (base.Value == value) return;
                 base.Value = value;
                 this.Operations[0] = value.ToString();
-                OnValueChanged(value);
+                NotifyPropertyChanged();
             }
         }
 
@@ -88,6 +90,6 @@ namespace CompteEstBon {
 
         public override CebDetail Detail => new CebDetail { Op1 = ToString() };
 
-        private void OnValueChanged(int e) => ValueChanged?.Invoke(this, e);
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

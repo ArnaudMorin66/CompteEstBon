@@ -2,7 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Math;
@@ -15,7 +17,7 @@ namespace CompteEstBon {
     /// Gestion tirage Compte est bon
     /// </summary>
     [System.Runtime.InteropServices.Guid("EC9CF01C-34A0-414C-BF2A-D06C5A61503D")]
-    public sealed class CebTirage {
+    public sealed class CebTirage : INotifyPropertyChanged {
         private int _search;
 
         public CebTirage() {
@@ -25,8 +27,12 @@ namespace CompteEstBon {
             Random();
         }
 
+        private void IsUpdated(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
+            Clear();
+            NotifiedChanged("Plaques");
+        }
 
-        private void IsUpdated(object sender, int e) => Clear();
+        // private void IsUpdated(object sender, int e) => Clear();
 
         /// <summary>
         /// Constructeur Tirage du Compte est bon
@@ -55,6 +61,7 @@ namespace CompteEstBon {
                 if (value == _search) return;
                 _search = value;
                 Clear();
+                NotifiedChanged("Search");
             }
         }
 
@@ -103,6 +110,12 @@ namespace CompteEstBon {
         }
 
         public CebBase Solution => Solutions.Count == 0 ? null : Solutions[0];
+        public string SolutionIndex(int no) {
+
+            if (Solutions.Count == 0 || no >= Solutions.Count) return "";
+            if (no < 0) no = 0;
+            return Solutions[no].ToString();
+        }
 
         /// <summary>
         /// Valid the search value
@@ -120,6 +133,7 @@ namespace CompteEstBon {
         /// </summary>
         public void Random() {
             //  var rnd = new Random();
+            Status = CebStatus.EnCours;
             _search = Rnd.Next(100, 1000);
             var liste = new List<int>(CebPlaque.ListePlaques); // .ToList();
             foreach (var plaque in Plaques) {
@@ -128,6 +142,7 @@ namespace CompteEstBon {
                 liste.RemoveAt(n);
             }
             Clear();
+            NotifiedChanged();
         }
 
         public async Task RandomAsync() => await Task.Run(Random);
@@ -207,6 +222,7 @@ namespace CompteEstBon {
             Solutions.Sort((p, q) => p.Rank.CompareTo(q.Rank));
 
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
+            NotifiedChanged("Details");
             return Status;
         }
 
@@ -229,6 +245,10 @@ namespace CompteEstBon {
         public string[][] ArrayOfSolutions => Solutions.Select(p => p.Operations.ToArray()).ToArray();
 
         private static readonly Random Rnd = new Random();
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
 
         public IEnumerable<CebDetail> Details => Solutions.Select(s => s.Detail);
 

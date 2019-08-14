@@ -14,7 +14,7 @@ namespace CompteEstBon {
                 .Where(item => item.Name.StartsWith("Op"))) {
                 var value = item.GetValue(this) as string;
                 if (string.IsNullOrEmpty(value)) break;
-                result += $"{(string.IsNullOrEmpty(result) ? "" : ", ")} {item.Name} = { value }";
+                result += $"{(string.IsNullOrEmpty(result) ? "" : ", ")} {item.Name}: { value }";
             }
             return result;
         }

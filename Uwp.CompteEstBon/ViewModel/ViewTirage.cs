@@ -24,11 +24,11 @@ using Windows.UI.Xaml.Media;
 
 namespace CompteEstBon {
     public class ViewTirage : INotifyPropertyChanged {
-        private Brush _background;
-        private string _duree;
+        private Color _background;
+        private double _duree;
         private bool _popupIsOpen;
 
-        private Brush _foreground = new SolidColorBrush(Colors.White);
+        private Color _foreground = Colors.White;
 
 
         private bool _isBusy;
@@ -63,7 +63,7 @@ namespace CompteEstBon {
             }
         }
 
-        public string Duree {
+        public double Duree {
             get => _duree;
             set {
                 _duree = value;
@@ -99,7 +99,7 @@ namespace CompteEstBon {
             }
         }
 
-        public Brush Background {
+        public Color Background {
             get => _background;
             set {
                 _background = value;
@@ -107,7 +107,7 @@ namespace CompteEstBon {
             }
         }
 
-        public Brush Foreground {
+        public Color Foreground {
             get => _foreground;
             set {
                 _foreground = value;
@@ -140,11 +140,9 @@ namespace CompteEstBon {
             }
         }
 
-        public bool PopupIsOpen
-        {
+        public bool PopupIsOpen {
             get => _popupIsOpen;
-            set
-            {
+            set {
                 _popupIsOpen = value;
                 NotifiedChanged();
             }
@@ -158,16 +156,15 @@ namespace CompteEstBon {
         /// </summary>
         /// <returns></returns>
         public ViewTirage() {
-            _background = new SolidColorBrush(Colors.DarkSlateGray);
+            _background = Colors.DarkSlateGray;
             HasardCommand = new DelegateCommand(Hasardcmd);
             ResolveCommand = new DelegateCommand(Resolvecmd);
             ExportCommand = new DelegateCommand(Exportcmd);
-            NotifyTimer = new DispatcherTimer
-            {
+            
+            NotifyTimer = new DispatcherTimer {
                 Interval = TimeSpan.FromSeconds(5)
             };
-            NotifyTimer.Tick += (sender, e) =>
-            {
+            NotifyTimer.Tick += (sender, e) => {
                 PopupIsOpen = false;
                 NotifyTimer.Stop();
             };
@@ -176,7 +173,7 @@ namespace CompteEstBon {
 
             };
             Dispatcher.Tick += (sender, e) => {
-                Duree = $"{(DateTimeOffset.Now - _time).TotalSeconds:N5}";
+                Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             };
             dateDispatcher = new DispatcherTimer {
                 Interval = new TimeSpan(1000)
@@ -184,22 +181,27 @@ namespace CompteEstBon {
             dateDispatcher.Tick += (sender, e) => {
                 Date = Date = $"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
-
+           
+            
             Plaques.CollectionChanged += (sender, e) => {
                 if (e.Action != NotifyCollectionChangedAction.Replace) return;
                 var i = e.NewStartingIndex;
-                Tirage.Plaques[i].Value = Plaques[i];
-                ClearData();
+                if (Tirage.Plaques[i].Value != Plaques[i]) {
+                    Tirage.Plaques[i].Value = Plaques[i];
+                    ClearData();
+                }
             };
+            
             UpdateData();
             UpdateColors();
             Date = $"{DateTime.Now:dddd MM yyyy, HH:mm:ss}";
             dateDispatcher.Start();
-            
+
         }
 
         private async void Hasardcmd(object obj) {
             await RandomAsync();
+            
         }
         private async void Resolvecmd(object obj) {
             switch (Tirage.Status) {
@@ -241,7 +243,7 @@ namespace CompteEstBon {
                 ws.InsertRow(1, 3);
                 ws.Range["A1"].Value = "Plaques:";
                 for (var i = 0; i < 6; i++) {
-                    ws.Range[1, i + 2].Value2 = Plaques[i];
+                    ws.Range[1, i + 2].Value2 = Tirage.Plaques[i].Value;
                 }
                 ws.Range["A2"].Value2 = "Cherche:";
                 ws.Range["B2"].Value2 = Search;
@@ -258,48 +260,33 @@ namespace CompteEstBon {
         }
 
         private void UpdateColors() {
+           
+            (Background, Foreground) = Tirage.Status switch
+            {
+                CebStatus.Valid => (Colors.DarkSlateGray, Colors.Yellow),
+                CebStatus.Erreur => (Colors.Red, Colors.White),
+                CebStatus.CompteEstBon => (Colors.DarkGreen, Colors.Yellow),
+                CebStatus.CompteApproche => (Colors.Salmon, Colors.White),
+                CebStatus.EnCours => (Colors.Green, Colors.White),
+                _ => (Colors.DarkSlateGray, Colors.Yellow)
 
-            switch (Tirage.Status) {
-                case CebStatus.Valid:
-                    SetBrush(Colors.Black, Colors.Yellow);
-                    break;
+            };
 
-                case CebStatus.Erreur:
-                    SetBrush(Colors.Red, Colors.White);
-                    break;
-
-                case CebStatus.CompteEstBon:
-                    SetBrush(Colors.DarkGreen, Colors.Yellow);
-                    break;
-
-                case CebStatus.CompteApproche:
-                    SetBrush(Colors.Salmon, Colors.White);
-                    break;
-                case CebStatus.EnCours:
-                    SetBrush(Colors.DarkGreen, Colors.White);
-                    break;
-            }
         }
 
         private void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private void ClearData() {
-            if (NotifyTimer.IsEnabled)
-            {
+            if (NotifyTimer.IsEnabled) {
                 NotifyTimer.Stop();
                 PopupIsOpen = false;
             }
-            Duree = $"{0:N5}";
+            Duree = 0;
             FirstSolutionString = "";
             Solutions.Clear();
             IsCalculed = false;
 
-            if (Tirage.Status != CebStatus.Erreur) {
-                Result = "Résoudre";
-            }
-            else {
-                Result = "Tirage incorrect";
-            }
+            Result = Tirage.Status != CebStatus.Erreur ? "Résoudre" : "Tirage incorrect";
             UpdateColors();
         }
         public string _currentSolution;
@@ -314,21 +301,21 @@ namespace CompteEstBon {
         /// <summary>
         /// 
         public void ShowNotify(int no) {
-            if (PopupIsOpen)
-            {
+            if (PopupIsOpen) {
                 NotifyTimer.Stop();
                 PopupIsOpen = false;
             }
-        
+
             CurrentSolution = Tirage.Solutions.ElementAt(no).ToString();
             PopupIsOpen = true; // Visibility.Visible;
             NotifyTimer.Start();
-    }
-private void UpdateData() {
+        }
+        private void UpdateData() {
             lock (Plaques) {
                 for (var i = 0; i < Tirage.Plaques.Length; i++)
                     Plaques[i] = Tirage.Plaques[i];
             }
+            ClearData();
             NotifiedChanged("Search");
         }
 
@@ -341,6 +328,7 @@ private void UpdateData() {
 
         public async Task RandomAsync() {
             await Tirage.RandomAsync();
+            
             FirstSolutionString = "";
             UpdateData();
         }
@@ -349,7 +337,7 @@ private void UpdateData() {
             IsBusy = true;
 
             Result = "...Calcul...";
-            SetBrush(Colors.Green, Colors.White);
+            // SetBrush((Colors.Green, Colors.White));
             _time = DateTimeOffset.Now;
             Dispatcher.Start();
             await Tirage.ResolveAsync();
@@ -363,7 +351,7 @@ private void UpdateData() {
             foreach (var s in Tirage.Solutions)
                 Solutions.Add(s.Detail);
             Dispatcher.Stop();
-            Duree = $"{(DateTimeOffset.Now - _time).TotalSeconds:N5}";
+            Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             UpdateColors();
             IsBusy = false;
             ShowNotify(0);
@@ -383,24 +371,6 @@ private void UpdateData() {
                 NotifiedChanged();
             }
         }
-        public void SetBrush(Color background, Color foreground) {
-            LinearGradientBrush myLinearGradientBrush =
-                new LinearGradientBrush {
-                    StartPoint = new Windows.Foundation.Point(0.5, 0),
-                    EndPoint = new Windows.Foundation.Point(0.5, 1)
-                };
-
-            myLinearGradientBrush.GradientStops.Add(new GradientStop {
-                Color = background,
-                Offset = 0.0
-            });
-
-            myLinearGradientBrush.GradientStops.Add(new GradientStop {
-                Color = Colors.DarkSlateGray,
-                Offset = 1.0
-            });
-            Background = myLinearGradientBrush;
-            Foreground = new SolidColorBrush(foreground);
-        }
+        
     }
 }

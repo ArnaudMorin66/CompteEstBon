@@ -9,7 +9,7 @@
     xmlns:sfi="using:Syncfusion.UI.Xaml.Controls.Input"
     xmlns:sfn="using:Syncfusion.UI.Xaml.Controls.Notification"
     xmlns:sys="using:System"
-    Background="{ThemeResource SystemControlAltHighAcrylicWindowBrush}"
+    Background="Black"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -17,7 +17,8 @@
                 <ResourceDictionary Source="CebDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style x:Key="SfComboboxStyle" TargetType="sfi:SfComboBox">
-                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="BorderThickness" Value="0.25" />
+                <Setter Property="BorderBrush" Value="White" />
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="HorizontalContentAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Stretch" />
@@ -26,20 +27,7 @@
                 <Setter Property="Foreground" Value="White" />
                 <Setter Property="FontSize" Value="12" />
             </Style>
-
-
-            <!--<Style x:Key="ComboBoxTextBoxStyle" TargetType="sfi:SfTextBoxExt">
-                <Setter Property="MinWidth" Value="{StaticResource TextControlThemeMinWidth}" />
-                <Setter Property="MinHeight" Value="{StaticResource TextControlThemeMinHeight}" />
-                <Setter Property="BorderThickness" Value="{StaticResource TextControlBorderThemeThickness}" />
-                <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}" />
-                <Setter Property="FontSize" Value="{StaticResource ControlContentThemeFontSize}" />
-                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden" />
-                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
-                <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False" />
-                <Setter Property="Padding" Value="{StaticResource TextControlThemePadding}" />
-
-            </Style>-->
+            <local:FormatConverter x:Key="formatConverter" />
 
         </ResourceDictionary>
     </Page.Resources>
@@ -93,7 +81,6 @@
             Style="{StaticResource BorderTitreStyle}">
             <TextBlock Style="{StaticResource TextBoxTitreStyle}">Plaques</TextBlock>
         </Border>
-
         <sfi:SfComboBox
             Grid.Row="2"
             Grid.Column="0"
@@ -140,26 +127,28 @@
         <sfi:SfNumericUpDown
             Grid.Row="2"
             Grid.Column="6"
+            HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
             VerticalContentAlignment="Stretch"
             Background="{StaticResource CebLinearGradientBrush2}"
-            BorderThickness="0"
+            BorderBrush="White"
+            BorderThickness="0.25"
             FontSize="12"
             Foreground="White"
             FormatString="{}0"
             Maximum="999"
             MaximumNumberDecimalDigits="0"
             Minimum="0"
-            SpinButtonsAlignment="Right"
+            SpinButtonsAlignment="Both"
             TextAlignment="Center"
+            UpDownButtonColor="White"
             Value="{Binding Search, Mode=TwoWay}" />
         <Button
             Grid.Row="1"
             Grid.Column="7"
             Grid.ColumnSpan="3"
-            Background="{Binding Background}"
             Command="{Binding ResolveCommand}"
-            Foreground="{Binding Foreground}"
             Style="{StaticResource CebButtonStyle}"
             ToolTipService.ToolTip="Raccourci: Ctrl+R">
             <Button.KeyboardAccelerators>
@@ -176,9 +165,7 @@
             Grid.Row="2"
             Grid.Column="7"
             Grid.ColumnSpan="2"
-            Background="{Binding Background}"
             Command="{Binding HasardCommand}"
-            Foreground="{Binding Foreground}"
             KeyboardAcceleratorPlacementMode="Auto"
             Style="{StaticResource CebButtonStyle}"
             ToolTipService.ToolTip="Raccourci: Ctrl+H">
@@ -197,10 +184,8 @@
             x:Name="ExportExcel"
             Grid.Row="2"
             Grid.Column="9"
-            Background="{Binding Background}"
             Command="{Binding ExportCommand}"
             CommandParameter="{Binding ElementName=SolutionsData}"
-            Foreground="{Binding Foreground}"
             Style="{StaticResource CebButtonStyle}"
             ToolTipService.ToolTip="Raccourci: Ctrl+X">
             <Button.KeyboardAccelerators>
@@ -257,7 +242,7 @@
                 Foreground="White"
                 TextAlignment="Center">
                 <Run FontFamily="Segoe UI" Text="Durée: " />
-                <Run Text="{Binding Duree, Mode=OneWay}" />
+                <Run Text="{Binding Duree, Mode=OneWay, Converter={StaticResource formatConverter}, ConverterParameter=#0.0000}" />
                 <Run Text=" s" />
             </TextBlock>
         </Grid>
@@ -312,13 +297,15 @@
             Grid.Row="4"
             Grid.Column="0"
             Grid.ColumnSpan="10"
-            HorizontalOffset="400"
-            IsOpen="{Binding PopupIsOpen}"
-            VerticalOffset="10">
+            Width="600"
+            Height="160"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            IsOpen="{Binding PopupIsOpen}">
             <StackPanel
                 Width="600"
-                HorizontalAlignment="Center"
-                Background="{StaticResource CebLinearGradientBrush2}"
+                Height="160"
+                Background="{StaticResource CebBackgroundBrush}"
                 BorderBrush="White"
                 BorderThickness="1"
                 Orientation="Vertical">
@@ -335,14 +322,12 @@
                     HorizontalTextAlignment="Center"
                     Text="{Binding CurrentSolution}" />
                 <TextBlock Text="" />
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <SymbolIcon Margin="5" Symbol="{Binding Symbol}" />
-                    <TextBlock
-                        Margin="5"
-                        Foreground="White"
-                        HorizontalTextAlignment="Center"
-                        Text="{Binding Result}" />
-                </StackPanel>
+                <TextBlock
+                    Margin="5"
+                    Foreground="{Binding Foreground}"
+                    HorizontalTextAlignment="Center"
+                    Text="{Binding Result}" />
+
                 <TextBlock Foreground="White" HorizontalTextAlignment="Center">
                     <Run Text="Nombre de solutions: " />
                     <Run Text="{Binding Solutions.Count, Mode=OneWay}" />
@@ -352,7 +337,7 @@
                     Foreground="White"
                     HorizontalTextAlignment="Center">
                     <Run Text="Durée: " />
-                    <Run Text="{Binding Duree, Mode=OneWay}" />
+                    <Run Text="{Binding Duree, Mode=OneWay, Converter={StaticResource formatConverter}, ConverterParameter=#0.0000}" />
                     <Run Text=" s" />
                 </TextBlock>
             </StackPanel>

@@ -11,49 +11,53 @@ html, body {
 .bg-primary {
     background-color: darkslategray;
 }
+
 .primary {
     background-color: darkslategray;
 }
-app {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-}
+
 
 .top-row {
     height: 3.5rem;
     display: flex;
     align-items: center;
 }
-k-searchbar > .k-input, .k-numeric-wrap > .k-input {
-    background-color: white;
-    color: black;
-    font-weight: bold;
-    text-align: center;
-}
-.k-input, .k-textbox > input{
-    text-align:center;
-}
 
-.k-grid-header th {
-    background-color: darkslategray;
+.e-grid .e-content{
+    background: lightslategray;
+    color: white;
+}
+.e-grid .e-gridheader,.e-grid .e-headercell, .e-columnheader {
+    background: darkslategray;
     text-align: center;
     color: white;
 }
-.k-grid-content tr {
-   
+.e-emptyrow > td {
+    background-color: lightslategray;
     text-align: center;
+    color: white;
 }
+
+
+.card-body, .card-text {
+    background-color: lightslategray;
+    color: white;
+  }
+  
+
+
 .main {
     flex: 1;
 }
+
 .solutions {
     height: 20rem;
 }
-    .main .top-row {
-        background-color: #e6e6e6;
-        border-bottom: 1px solid #d6d5d5;
-    }
+
+.main .top-row {
+    background-color: #e6e6e6;
+    border-bottom: 1px solid #d6d5d5;
+}
 
 .sidebar {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
