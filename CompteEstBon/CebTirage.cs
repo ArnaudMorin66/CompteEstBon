@@ -29,7 +29,7 @@ namespace CompteEstBon {
 
         private void IsUpdated(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
             Clear();
-            NotifiedChanged("Plaques");
+            // NotifiedChanged("Plaques");
         }
 
         // private void IsUpdated(object sender, int e) => Clear();
@@ -142,12 +142,16 @@ namespace CompteEstBon {
                 liste.RemoveAt(n);
             }
             Clear();
-            NotifiedChanged();
+            // NotifiedChanged();
         }
 
         public async Task RandomAsync() => await Task.Run(Random);
 
         public void Clear() {
+            if (Details.Count != 0) {
+                Details.Clear();
+                NotifiedChanged("Details");
+            }
             Solutions.Clear();
             Diff = int.MaxValue;
             Found.Reset();
@@ -222,6 +226,7 @@ namespace CompteEstBon {
             Solutions.Sort((p, q) => p.Rank.CompareTo(q.Rank));
 
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
+            Details.AddRange(Solutions.Select(s => s.Detail));
             NotifiedChanged("Details");
             return Status;
         }
@@ -249,8 +254,8 @@ namespace CompteEstBon {
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+        public List<CebDetail> Details { get; set; } = new List<CebDetail>();
 
-        public IEnumerable<CebDetail> Details => Solutions.Select(s => s.Detail);
 
         public CebResult GetCebResult() {
             return new CebResult {

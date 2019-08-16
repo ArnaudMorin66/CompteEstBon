@@ -10,21 +10,17 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <title>Compte est bon</title>
     <base href="~/" />
-
-    <link rel="stylesheet" href="~/css/bootstrap.css" />
-    <link href="~/css/ej2/bootstrap4.css" rel="stylesheet" />
     <link href="css/site.css" rel="stylesheet" />
-
-    <script defer src="~/lib/font-awesome/js/all.js" crossorigin="anonymous"></script>
-    <script defer src="~/lib/jquery/jquery.js"></script>
-    <script defer src="~/lib/popper.js/popper.js"></script>
-    <script defer src="~/lib/bootstrap/js/bootstrap.js"></script>
-    <script defer src="~/lib/ej2/ej2.min.js"></script>
-    <script defer src="~/lib/ej2/ejs.interop.min.js"></script>
+    
+    <script defer src="~/lib/fontawesome/js/all.min.js" data-auto-replace-svg="nest"></script>
+    
+    <script defer src="~/lib/jquery/jquery.min.js"></script>
+    <script defer src="~/lib/ej2/js/ej2.min.js"></script>
+    <script defer src="~/lib/ej2/js/ejs.interop.min.js"></script>
 </head>
 <body>
     <app>@(await Html.RenderComponentAsync<App>())</app>
-    
     <script src="_framework/blazor.server.js"></script>
 </body>
 </html>
+

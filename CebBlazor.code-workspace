@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "CebBlazor"
+		},
+		{
+			"path": "CompteEstBon"
+		}
+	],
+	"settings": {
+		"razor.disabled": true
+	}
+}

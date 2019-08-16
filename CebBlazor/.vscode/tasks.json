@@ -13,7 +13,8 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "dependsOn":["sass"]
         },
         {
             "label": "publish",
@@ -35,6 +36,16 @@
                 "${workspaceFolder}/CebBlazor.csproj"
             ],
             "problemMatcher": "$tsc"
+        },
+        {
+            "label": "sass",
+            "command": "yarn",
+            "type": "shell",
+            "args": [
+                "run",
+                "sass"
+            ],
+            "problemMatcher": "$node-sass"
         }
     ]
 }

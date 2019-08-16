@@ -2,20 +2,8 @@
 @using Microsoft.JSInterop
 @inject IJSRuntime JSRuntime
 @using CompteEstBon
-<div class="row center-block">
-    <div class="col"> 
-        <div class="card">
-            <div class=" card-body bg-primary border  row">
-                <div class="col-md-2">
-                    <i class="fas fa-home fa-2x"></i>
-                </div>
-                <div class="col-md text-center">
-                    Jeu du compte est bon
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<cebheader Titre="Jeu du compte est bon" />
+
 @if (tirage == null) {
     <p><i class="fa fa-spin fa-spinner fa-spin fa-5x"></i> <em>Chargement...</em></p>
 } else {
@@ -26,87 +14,95 @@
                     <i class="fas fa-bars"></i> &nbsp;Plaques
                 </div>
                 <div class="card-body">
-                <div class="row">
-                    @foreach (var plq in tirage.Plaques) {
-                        <div class="col-md-2">
-                            <EjsComboBox @bind-Value="@plq.Value" DataSource="@listeplaques"
-                                        CssClass="bg-white text-center" TValue="int"
-                                        Enabled="tirage.Status != CebStatus.EnCours">
-                            </EjsComboBox>
-                        </div>
-                    }
+                    <div class="row">
+                        @foreach (var plq in tirage.Plaques) {
+                            <div class="col-md-2">
+                                <EjsComboBox @bind-Value="@plq.Value" DataSource="@listeplaques"
+                                             CssClass="bg-white text-center" TValue="int"
+                                             Enabled="tirage.Status != CebStatus.EnCours">
+                                </EjsComboBox>
+                            </div>
+                        }
+                    </div>
                 </div>
-             </div>
             </div>
         </div>
         <div class="col-md-2">
             <div class="card text-center">
                 <div class="card-header bg-primary text-white">
                     <i class="fas fa-search"></i>&nbsp;Trouver
-                </div>     
+                </div>
                 <div class="card-body">
                     <EjsNumericTextBox @bind-Value="@tirage.Search"
-                                    Max="999" Min="100" Format="N0" Step="1"
-                                    CssClass="bg-white" TValue="int"
-                                    Enabled="tirage.Status != CebStatus.EnCours"></EjsNumericTextBox>
+                                       Max="999" Min="100" Format="N0" Step="1"
+                                       CssClass="bg-white" TValue="int"
+                                       Enabled="tirage.Status != CebStatus.EnCours"></EjsNumericTextBox>
                 </div>
             </div>
         </div>
         <div class="col-md-2">
-            <div class="btn-group w-100" aria-label="resolve">
+            <div class="btn-group w-100" role="group" aria-label="Action">
                 @switch (tirage.Status) {
                     case CebStatus.EnCours:
-                        <a class="btn btn-info btn-block" role="button">
-                            <i class="fas fa-sync fa-spin"></i>
-                        </a>
+                        <button class="btn btn-info  w-100">
+                            <i class="fas fa-sync fa-spin"></i>&nbsp;
+                        </button>
                         break;
                     case CebStatus.CompteEstBon:
-                        <a class="btn btn-success btn-block" @onclick="@(async ()=> await ClearAsync())" title="Initialisation des résultats (ALT-R)"
-                           style="cursor:pointer"
-                           role="button" accesskey="r">
-                            <i class="fas fa-thumbs-up"></i>&nbsp;R&eacute;soudre
-                        </a>
+                        <button class="btn btn-success w-100"
+                                @onclick="@(async ()=> await ClearAsync())" title="Initialisation des résultats (ALT-R)" role="button" type="button"
+                                accesskey="r">
+                            <i class="fas fa-thumbs-up fa-xs"></i>
+                        </button>
                         break;
                     case CebStatus.CompteApproche:
-                        <a class="btn btn-warning btn-block" @onclick="@(async ()=> await ClearAsync())"
-                           title="Initialisation des résultats (ALT-R)" style="cursor:pointer"
-                           role="button" accesskey="r">
-                            <i class="fas fa-thumbs-down"></i>&nbsp;R&eacute;soudre
-                        </a>
+                        <button class="btn btn-warning w-100" role="button" type="button" title="Initialisation des résultats (ALT-R)"
+                                @onclick="@(async ()=> await ClearAsync())"
+                                accesskey="r">
+                            <i class="text-danger fas fa-thumbs-down faxs"></i>
+                        </button>
                         break;
                     case CebStatus.Erreur:
-                        <a class="btn btn-danger btn-block" @onclick="@(async ()=> await RandomAsync())" title="Aléatoire"
-                           style="cursor:pointer"
-                           role="button" accesskey="r">
-                            <i class="fas fa-exclamation-triangle"></i>&nbsp;R&eacute;soudre
-                        </a>
+                        <button class="btn btn-danger w-100" role="button" type="button" title="Initialisation du tirage (ALT-R)"
+                                @onclick="@(async ()=> await RandomAsync())" accesskey="r">
+                            <i class="fas fa-exclamation-triangle fa-xs"></i>
+                        </button>
                         break;
                     default:
-                        <a class="btn btn-primary btn-block" @onclick="@(async ()=> await ResolveAsync())" title="Résoudre"
-                           style="cursor:pointer"
-                           role="button" accesskey="r">
-                            <i class="fas fa-bolt"></i>&nbsp;R&eacute;soudre
-                        </a>
+                        <button id="resoudre" title="Résolution du tirage (ALT-R)"
+                                class="btn btn-primary w-100" role="button"
+                                @onclick="@(async ()=> await ResolveAsync())"
+                                type="button" accesskey="r">
+                            <i class="fas fa-bolt fa-xs"></i>
+                        </button>
                         break;
                 }
             </div>
-            
-                   <a id="hasard" title="Initialisation du tirage (ALT-H)"
-                    class="btn btn-primary btn-lg w-100 btn-block" style="cursor:pointer"
-                    role="button" @onclick="@(async ()=> await RandomAsync())" accesskey="h">
-                        <i class="fas fa-random"></i>&nbsp;Hasard
-                    </a>
-                
-                    <a id="excel" title="Export Excel"
-                    class="btn btn-primary w-100" style="cursor:pointer"
-                    role="button" @onclick="@ExcelExport" accesskey="h">
-                        <i class="fas fa-file-export"></i>&nbsp;Excel
-                    </a>
-            
+            <div class="w-100 btn-group" role="group" aria-label="Action">
+                <button id="hasard" class="btn btn-primary" accesskey="h"
+                        title="Tirage aléatoire (ALT-H)"
+                        @onclick="@(async ()=> await RandomAsync())">
+                    <i class="fas fa-random"></i>
+                </button>
+
+                <button id="excel"
+                        @onclick="@ExcelExport"
+                        title="Exportation vers Excel (ALT-X)" accesskey="x"
+                        class="btn btn-primary " type="button"
+                        Enabled="@(tirage.Status == CebStatus.CompteEstBon || tirage.Status == CebStatus.CompteApproche)"
+                        role="button">
+                    <i class="fas fa-file-excel fa-xs"></i>
+                </button>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <EjsGrid @ref="grille" DataSource="tirage.Details" Height="320" AllowSelection="true" AllowExcelExport="true">
+    <div class="col-lg-12 control-section">
+    <div class="content-wrapper">
+        <div class="row">
+        <EjsGrid @ref="grille" DataSource="tirage.Details" Height="320" AllowSelection="true" 
+            EnableVirtualization="true"
+            AllowExcelExport="true"
+                 GridLines="GridLine.Both" EnableAltRow="true" id="solutions" >  
             <GridSelectionSettings Type="SelectionType.Single"></GridSelectionSettings>
             <GridEvents RowSelected="RowSelectHandler" TValue="CebDetail"></GridEvents>
             <GridColumns>
@@ -118,52 +114,9 @@
             </GridColumns>
         </EjsGrid>
     </div>
-
-    <div id="notif_content" class="card w-100 border border-primary row">
-        @switch (tirage.Status) {
-            case CebStatus.CompteEstBon:
-                <div class="card-header bg-success text-white text-center text-uppercase text-white">
-                    <i class="fas fa-thumbs-up fa-2x"></i>&nbsp;Compte est bon
-                </div>
-                <div class="card-text font-weight-bold text-center h-100">
-                    <div>Trouvé:&nbsp;@tirage.Found</div>
-                    <div>Nombre de solutions:&nbsp;@tirage.Solutions.Count</div>
-                    <div>Durée:&nbsp;@duree&nbsp;s</div>
-                    <hr class="separator bg-success">
-                    <div style="font-weight: 400;">@SolutionSelect</div>
-                </div>
-                break;
-            case CebStatus.CompteApproche:
-                <div class="card-header bg-warning text-center text-uppercase text-dark">
-                    <i class="text-danger fas fa-thumbs-down fa-2x"></i>&nbsp;Compte
-                    approché
-                </div>
-                <div class="card-text text-center font-weight-bold">
-                    <div>Trouvé(s):&nbsp;@tirage.Found</div>
-                    <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
-                    <div>Nombre de solutions:&nbsp;@tirage.Solutions.Count</div>
-                    <div>Durée:&nbsp;@duree&nbsp;s </div>
-                    <hr class="separator bg-warning">
-                    <div style="font-weight: 400;">@SolutionSelect</div>
-                </div>
-                break;
-            case CebStatus.Erreur:
-                <div class="card-header bg-danger text-center text-uppercase text-white">
-                    <i class="fas fa-exclamation-triangle fa-2x"></i>&nbsp;Tirage invalide
-                </div>
-                break;
-            case CebStatus.EnCours:
-                <div class="card-header bg-info text-center">
-                    <i class="align-middle fas fa-compass fa-spin fa-2x"></i>En
-                    attente
-                </div>
-                break;
-            default:
-                <div></div>
-                break;
-        }
-    </div>
-
+ </div>
+        </div>
+    <CebFooter Tirage="@tirage" Solution="@SolutionSelect" Duree="@duree" />
 
 }
 <style>
@@ -180,14 +133,20 @@
     protected CompteEstBon.CebTirage tirage;
     protected IEnumerable<int> listeplaques;
 
-    protected override void  OnInit() {
+    protected override void OnInit() {
         //    await Task.Run(()=> {
         tirage = new CompteEstBon.CebTirage();
         listeplaques = CompteEstBon.CebPlaque.ListePlaques.Distinct();
         duree = 0;
-        tirage.PropertyChanged += (sender, e) => {
+        tirage.PropertyChanged += async  (sender, e) => {
+            // if (e.PropertyName == "Plaques" || e.PropertyName=="Search") {
+                //grille.Refresh();
+                await Refresh();
+               // StateHasChanged();
+
+            // }
             // StateHasChanged;
-            grille.Refresh();
+           
 
         };
         //  });
@@ -200,7 +159,7 @@
         try {
             var heure = DateTime.Now;
             await tirage.ResolveAsync();
-            //grille.Refresh();
+            // await Refresh();
             duree = (DateTime.Now - heure).TotalSeconds;
             SolutionSelect = tirage.SolutionIndex(0);
         } catch { }
@@ -208,12 +167,16 @@
         StateHasChanged();
 
     }
+    protected async Task Refresh(){
+        await Task.Run(()=> grille.Refresh());
+    }
     protected async Task RandomAsync() {
 
         // if (tirage.Status == CompteEstBon.CebStatus.EnCours) { return; }
 
         try {
             await tirage.RandomAsync();
+            // await Refresh();
         } catch (Exception) { }
         StateHasChanged();
 
@@ -223,8 +186,8 @@
         if (tirage.Status == CompteEstBon.CebStatus.EnCours) { return; }
         try {
             await tirage.ClearAsync();
-            // grille.Refresh();
-        } catch  { }
+            // await Refresh();
+        } catch { }
         StateHasChanged();
     }
 
@@ -234,8 +197,8 @@
 
     }
     public void ExcelExport() {
-        //object excelExportProperties = new { exportType = "CurrentPage" };
-        //this.grille.ExcelExport(excelExportProperties);
+        object excelExportProperties = new { exportType = "CurrentPage" };
+        this.grille.ExcelExport(excelExportProperties);
     }
 
 }
