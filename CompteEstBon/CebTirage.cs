@@ -7,6 +7,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using static System.Math;
 
 #endregion using
@@ -29,7 +31,7 @@ namespace CompteEstBon {
 
         private void IsUpdated(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
             Clear();
-            // NotifiedChanged("Plaques");
+            
         }
 
         // private void IsUpdated(object sender, int e) => Clear();
@@ -80,7 +82,6 @@ namespace CompteEstBon {
             foreach (var (p, i) in plaq.WithIndex().Where((p, i) => i < 6)) {
                 Plaques[i].Value2 = p;
             }
-
             Clear();
         }
 
@@ -142,7 +143,6 @@ namespace CompteEstBon {
                 liste.RemoveAt(n);
             }
             Clear();
-            // NotifiedChanged();
         }
 
         public async Task RandomAsync() => await Task.Run(Random);
@@ -254,10 +254,8 @@ namespace CompteEstBon {
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public List<CebDetail> Details { get; set; } = new List<CebDetail>();
-
-
-        public CebResult GetCebResult() {
+         public List<CebDetail> Details { get; set; } = new List<CebDetail>();
+                public CebResult GetCebResult() {
             return new CebResult {
                 Search = this.Search,
                 Plaques = Plaques.Select(p => p.Value),

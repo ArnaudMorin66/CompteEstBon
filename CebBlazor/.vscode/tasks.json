@@ -27,6 +27,18 @@
             "problemMatcher": "$tsc"
         },
         {
+            "label": "publish-release",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/CebBlazor.csproj",
+                "-c",
+                "Release"
+            ],
+            "problemMatcher": "$tsc"
+        },
+        {
             "label": "watch",
             "command": "dotnet",
             "type": "process",

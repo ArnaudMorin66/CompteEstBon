@@ -1,0 +1,153 @@
+// $primary: darkslategray;
+$primary:#303030;
+$bg-body: #404040;
+
+$font-size: 10px;
+$enable-gradients: true;
+
+
+
+@import "bootstrap4";
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+html,
+body {
+    background-color: $bg-body; //  lightslategray !important;
+    font-size:$font-size;
+}
+
+#solutions {
+    
+    .e-grid, .e-table, .e-columnheader, .e-gridheader, .e-headercontent, e.gridcontent {
+        border-color: $secondary;
+        border-spacing:0px;
+        border-collapse:separate;
+        
+    }
+    .e-content {
+        background-color: $bg-body;
+        text-align: center;
+        color: white;
+        font-size: $font-size;
+ 
+    }
+
+    .e-emptyrow {
+        color: $bg-body;
+        background-color: $bg-body;
+        border-color:$secondary;
+        border-style:none;
+        border-width: 0;
+        margin:0;
+        padding:0;
+    }
+
+    .e-headertext {
+        text-align: center;
+        font-size: $font-size;
+    }
+
+    .e-headercell {
+        background: radial-gradient($primary, $gray-700);
+        color: white;
+        font-weight: bold;
+        border-color: $secondary;
+        font-size: $font-size;
+
+        >div {
+            text-align: center;
+            border:none;
+        }
+    }
+
+    .e-row {
+        td.e-rowcell {
+            border-color: $secondary;
+            font-size: $font-size;
+            border:none;
+        }
+        td.e-active {
+            background-color: $black;
+            color: $white;
+        }
+
+        td.e-rowcell.e-focus {
+            background-color: #222222;
+            color: $yellow;
+            font-weight: 700;
+        }
+
+        .e-rowcell:not(.e-active) {
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        &:not(.e-altrow)> :not(.e-active) {
+            background-color: $bg-body;
+            color: yellow;
+        }
+
+        &.e-altrow> :not(.e-active) {
+            background-color: $primary;
+            color: white;
+        }
+    }
+
+}
+
+.card-body,
+.card-text {
+    background-color: $bg-body; //  lightslategray;
+    color: black; // white;
+}
+
+
+.solutions {
+    height: 20rem;
+}
+
+
+.content {
+    padding-top: 1.1rem;
+}
+
+.cebheader {
+    color: $primary;
+}
+
+hr .separator {
+    margin: 0%;
+    padding: 0%;
+    height: 1pt;
+}
+
+.e-input-group {
+    // &:not(.e-success):not(.e-warning):not(.e-error),
+    &.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error){
+        border-color: $secondary;
+    }
+    &.e-control-wrapper input.e-input {
+        background-color: $primary;
+        text-align: center;
+        color: white;
+        font-size: $font-size;
+    }
+    
+    &.e-control-wrapper {
+        background-color: $primary; // $bg-body;
+    }
+}
+.a-toast {
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    min-width:400px;
+    z-index: 10;
+    background-color: $primary;
+    color:white;
+    border-style:none;
+    border-width:0pt;
+    border-color:white;
+}

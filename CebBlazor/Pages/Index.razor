@@ -1,205 +1,226 @@
 ﻿@page "/"
-@using Microsoft.JSInterop
-@inject IJSRuntime JSRuntime
+@using System.Collections.ObjectModel
+@using Syncfusion.EJ2.Blazor.Data
+@using System.Threading
 @using CompteEstBon
-<cebheader Titre="Jeu du compte est bon" />
+@inject CebTirage tirage
 
-@if (tirage == null) {
-    <p><i class="fa fa-spin fa-spinner fa-spin fa-5x"></i> <em>Chargement...</em></p>
-} else {
-    <div class="row center-block">
-        <div class="col text-center">
-            <div class="card text-center">
-                <div class="card-header bg-primary text-white">
-                    <i class="fas fa-bars"></i> &nbsp;Plaques
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        @foreach (var plq in tirage.Plaques) {
-                            <div class="col-md-2">
-                                <EjsComboBox @bind-Value="@plq.Value" DataSource="@listeplaques"
-                                             CssClass="bg-white text-center" TValue="int"
-                                             Enabled="tirage.Status != CebStatus.EnCours">
-                                </EjsComboBox>
-                            </div>
-                        }
-                    </div>
-                </div>
+<CebHeader>
+    <Titre>
+        <cite>Jeu du compte est bon</cite>
+    </Titre>
+</CebHeader>
+<div class="row center-block">
+    <div class="col text-center">
+        <div class="card text-center border border-secondary">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-bars"></i>
+                &nbsp;Plaques
             </div>
-        </div>
-        <div class="col-md-2">
-            <div class="card text-center">
-                <div class="card-header bg-primary text-white">
-                    <i class="fas fa-search"></i>&nbsp;Trouver
+            <div class="card-body">
+                <div class="row">
+                    @foreach (var plq in tirage.Plaques) {
+                        <div class="col-md-2">
+                            <EjsComboBox @bind-Value="@plq.Value"
+                                         DataSource="@listeplaques"
+                                         TValue="int"
+                                         ShowClearButton="false"
+                                         Enabled="tirage.Status != CebStatus.EnCours">
+                            </EjsComboBox>
+                        </div>
+                    }
                 </div>
-                <div class="card-body">
-                    <EjsNumericTextBox @bind-Value="@tirage.Search"
-                                       Max="999" Min="100" Format="N0" Step="1"
-                                       CssClass="bg-white" TValue="int"
-                                       Enabled="tirage.Status != CebStatus.EnCours"></EjsNumericTextBox>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2">
-            <div class="btn-group w-100" role="group" aria-label="Action">
-                @switch (tirage.Status) {
-                    case CebStatus.EnCours:
-                        <button class="btn btn-info  w-100">
-                            <i class="fas fa-sync fa-spin"></i>&nbsp;
-                        </button>
-                        break;
-                    case CebStatus.CompteEstBon:
-                        <button class="btn btn-success w-100"
-                                @onclick="@(async ()=> await ClearAsync())" title="Initialisation des résultats (ALT-R)" role="button" type="button"
-                                accesskey="r">
-                            <i class="fas fa-thumbs-up fa-xs"></i>
-                        </button>
-                        break;
-                    case CebStatus.CompteApproche:
-                        <button class="btn btn-warning w-100" role="button" type="button" title="Initialisation des résultats (ALT-R)"
-                                @onclick="@(async ()=> await ClearAsync())"
-                                accesskey="r">
-                            <i class="text-danger fas fa-thumbs-down faxs"></i>
-                        </button>
-                        break;
-                    case CebStatus.Erreur:
-                        <button class="btn btn-danger w-100" role="button" type="button" title="Initialisation du tirage (ALT-R)"
-                                @onclick="@(async ()=> await RandomAsync())" accesskey="r">
-                            <i class="fas fa-exclamation-triangle fa-xs"></i>
-                        </button>
-                        break;
-                    default:
-                        <button id="resoudre" title="Résolution du tirage (ALT-R)"
-                                class="btn btn-primary w-100" role="button"
-                                @onclick="@(async ()=> await ResolveAsync())"
-                                type="button" accesskey="r">
-                            <i class="fas fa-bolt fa-xs"></i>
-                        </button>
-                        break;
-                }
-            </div>
-            <div class="w-100 btn-group" role="group" aria-label="Action">
-                <button id="hasard" class="btn btn-primary" accesskey="h"
-                        title="Tirage aléatoire (ALT-H)"
-                        @onclick="@(async ()=> await RandomAsync())">
-                    <i class="fas fa-random"></i>
-                </button>
-
-                <button id="excel"
-                        @onclick="@ExcelExport"
-                        title="Exportation vers Excel (ALT-X)" accesskey="x"
-                        class="btn btn-primary " type="button"
-                        Enabled="@(tirage.Status == CebStatus.CompteEstBon || tirage.Status == CebStatus.CompteApproche)"
-                        role="button">
-                    <i class="fas fa-file-excel fa-xs"></i>
-                </button>
             </div>
         </div>
     </div>
-    <div class="col-lg-12 control-section">
-    <div class="content-wrapper">
-        <div class="row">
-        <EjsGrid @ref="grille" DataSource="tirage.Details" Height="320" AllowSelection="true" 
-            EnableVirtualization="true"
-            AllowExcelExport="true"
-                 GridLines="GridLine.Both" EnableAltRow="true" id="solutions" >  
-            <GridSelectionSettings Type="SelectionType.Single"></GridSelectionSettings>
-            <GridEvents RowSelected="RowSelectHandler" TValue="CebDetail"></GridEvents>
-            <GridColumns>
-                <GridColumn Field=@nameof(CompteEstBon.CebDetail.Op1) HeaderText="Opération 1" TextAlign="TextAlign.Center"></GridColumn>
-                <GridColumn Field=@nameof(CompteEstBon.CebDetail.Op2) HeaderText="Opération 2" TextAlign="TextAlign.Center"></GridColumn>
-                <GridColumn Field=@nameof(CompteEstBon.CebDetail.Op3) HeaderText="Opération 3" TextAlign="TextAlign.Center"></GridColumn>
-                <GridColumn Field=@nameof(CompteEstBon.CebDetail.Op4) HeaderText="Opération 4" TextAlign="TextAlign.Center"></GridColumn>
-                <GridColumn Field=@nameof(CompteEstBon.CebDetail.Op5) HeaderText="Opération 5" TextAlign="TextAlign.Center"></GridColumn>
-            </GridColumns>
-        </EjsGrid>
-    </div>
- </div>
+    <div class="col-md-2">
+        <div class="card text-center border border-secondary">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-search"></i>
+                &nbsp;Trouver
+            </div>
+            <div class="card-body">
+                <EjsNumericTextBox @bind-Value="@tirage.Search"
+                                   Max="999"
+                                   Min="100"
+                                   Format="N0"
+                                   Step="1"
+                                   TValue="int"
+                                   Enabled="tirage.Status != CebStatus.EnCours">
+                </EjsNumericTextBox>
+            </div>
         </div>
-    <CebFooter Tirage="@tirage" Solution="@SolutionSelect" Duree="@duree" />
-
-}
-<style>
-    #toast_default .e-meeting::before {
-        content: "\e705";
-        font-size: 17px;
+    </div>
+    <div class="col-md-2">
+        <div class="d-flex flex-column">
+            @switch (tirage.Status) {
+                case CebStatus.EnCours:
+                    <button class="btn btn-info">
+                        <i class="fas fa-sync fa-spin"></i>
+                        &nbsp;
+                    </button>
+                    break;
+                case CebStatus.CompteEstBon:
+                    <button class="btn btn-success"
+                            @onclick="tirage.ClearAsync"
+                            title="Initialisation des résultats (ALT-R)"
+                            role="button"
+                            type="button"
+                            accesskey="r">
+                        <i class="fas fa-thumbs-up fa-xs"></i>
+                    </button>
+                    break;
+                case CebStatus.CompteApproche:
+                    <button class="btn btn-warning"
+                            role="button"
+                            type="button"
+                            title="Initialisation des résultats (ALT-R)"
+                            @onclick="tirage.ClearAsync"
+                            accesskey="r">
+                        <i class="text-danger fas fa-thumbs-down faxs"></i>
+                    </button>
+                    break;
+                case CebStatus.Erreur:
+                    <button class="btn btn-danger"
+                            role="button"
+                            type="button"
+                            title="Initialisation du tirage (ALT-R)"
+                            @onclick="tirage.RandomAsync"
+                            accesskey="r">
+                        <i class="fas fa-exclamation-triangle fa-xs"></i>
+                    </button>
+                    break;
+                default:
+                    <button id="resoudre"
+                            title="Résolution du tirage (ALT-R)"
+                            class="btn btn-primary"
+                            role="button"
+                            @onclick="ResolveAsync"
+                            type="button"
+                            accesskey="r">
+                        <i class="fas fa-bolt fa-xs"></i>
+                    </button>
+                    break;
+            }
+            <button id="hasard"
+                    class="btn btn-primary"
+                    accesskey="h"
+                    title="tirage aléatoire (ALT-H)"
+                    role="button"
+                    type="button"
+                    Enabled="@(tirage.Status != CebStatus.EnCours)"
+                    @onclick="tirage.RandomAsync">
+                <i class="fas fa-random"></i>
+            </button>
+            <button id="excel"
+                    @onclick="@ExcelExport"
+                    title="Exportation vers Excel (ALT-X)"
+                    accesskey="x"
+                    class="btn btn-primary "
+                    type="button"
+                    Enabled="@(tirage.Status == CebStatus.CompteEstBon || tirage.Status == CebStatus.CompteApproche)"
+                    role="button">
+                <i class="fas fa-file-excel"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="row">&nbsp;</div>
+<div class="text-white text-center" style="height: 1.8rem; font-weight: bold; align-self: center; flex-wrap: wrap">
+    @switch (tirage.Status) {
+        case CebStatus.EnCours:
+            <div class="bg-info h-100 border border-dark">
+                <i class="fas fa-spinner fa-spin"></i>&nbsp;Patientez, calcul en cours...
+            </div>
+            break;
+        case CebStatus.Erreur:
+            <div class="bg-danger h-100 border border-dark" style="cursor: pointer;" @onclick="tirage.RandomAsync">
+                <i class="fas fa-exclamation-triangle fa-spin"></i>&nbsp;Tirage invalide
+            </div>
+            break;
+        case CebStatus.CompteApproche:
+            <div class="bg-warning h-100 border border-dark" style="cursor: pointer;"  @onclick="tirage.ClearAsync">
+                <i class="text-danger fas fa-thumbs-down"></i>&nbsp;
+                <span style="color: black;">
+                    &nbsp;Compte
+                    approch&eacute;:&nbsp;@tirage.Found,&nbsp;&eacute;cart:@tirage.Diff,&nbsp;@tirage.Solutions.Count
+                    &nbsp;solutions,&nbsp;durée:&nbsp;@($"{duree:N3}")"&nbsp;s
+                </span>
+            </div>
+            break;
+        case CebStatus.CompteEstBon:
+            <div class="bg-success h-100 border border-dark" style="cursor: pointer;"  @onclick="tirage.ClearAsync" >
+                <i class="fas fa-thumbs-up"></i>
+                &nbsp;Compte est bon,&nbsp;@tirage.Solutions.Count&nbsp;
+                solutions,&nbsp;durée:&nbsp;@($"{duree:N3}")&nbsp;s
+            </div>
+            break;
+        default:
+            <div class="h-100">&nbsp;</div>
+            break;
     }
-</style>
+</div>
+<div class="row">&nbsp;</div>
+<EjsGrid @ref="solutions" @ref:suppressField
+         DataSource="@tirage.Details"
+         TValue="CebDetail"
+         Height="320"
+         AllowSelection="true"
+         AllowExcelExport="true"
+         GridLines="GridLine.None"
+         EnableAltRow="true"
+         id="solutions">
+    <GridSelectionSettings Type="SelectionType.Single"></GridSelectionSettings>
+    <GridEvents RowSelected="@((args)=> { toast.Show((int) args.RowIndex, duree);  })" TValue="CebDetail"></GridEvents>
+    <GridColumns>
+        <GridColumn Field="Op1" HeaderText="Opération 1"></GridColumn>
+        <GridColumn Field="Op2" HeaderText="Opération 2"></GridColumn>
+        <GridColumn Field="Op3" HeaderText="Opération 3"></GridColumn>
+        <GridColumn Field="Op4" HeaderText="Opération 4"></GridColumn>
+        <GridColumn Field="Op5" HeaderText="Opération 5"></GridColumn>
+    </GridColumns>
+</EjsGrid>
+<div class="row">&nbsp;</div>
+<CebToast @ref="toast" @ref:suppressField ></CebToast>
+<CebFooter></CebFooter>
 
-@code{
-    protected string SolutionSelect;
-    protected double duree;
-    protected EjsGrid<CebDetail> grille;
-    protected CompteEstBon.CebTirage tirage;
-    protected IEnumerable<int> listeplaques;
+@code {
 
-    protected override void OnInit() {
-        //    await Task.Run(()=> {
-        tirage = new CompteEstBon.CebTirage();
-        listeplaques = CompteEstBon.CebPlaque.ListePlaques.Distinct();
-        duree = 0;
-        tirage.PropertyChanged += async  (sender, e) => {
-            // if (e.PropertyName == "Plaques" || e.PropertyName=="Search") {
-                //grille.Refresh();
-                await Refresh();
-               // StateHasChanged();
+    int SelectedIndex { get; set; }
+    double duree { get; set; } = 0;
+    CebToast toast;
 
-            // }
-            // StateHasChanged;
-           
+
+
+    EjsGrid<CebDetail> solutions { get; set; }
+
+    IEnumerable<int> listeplaques { get; set; } = CompteEstBon.CebPlaque.ListePlaques.Distinct();
+
+    protected override void OnInitialized() {
+        tirage.PropertyChanged += (sender, e) => {
+            toast.Hide();
+            solutions.Refresh();
+            InvokeAsync(StateHasChanged);
 
         };
-        //  });
-        base.OnInit();
+
+        base.OnInitialized();
     }
 
-    protected async Task ResolveAsync() {
-        //if (tirage.Status == CompteEstBon.CebStatus.EnCours) { return; };
-
-        try {
-            var heure = DateTime.Now;
-            await tirage.ResolveAsync();
-            // await Refresh();
-            duree = (DateTime.Now - heure).TotalSeconds;
-            SolutionSelect = tirage.SolutionIndex(0);
-        } catch { }
-
+    async Task ResolveAsync() {
+        var heure = DateTime.Now;
+        await tirage.ResolveAsync();
+        duree = (DateTime.Now - heure).TotalSeconds;
+        SelectedIndex = 0;
         StateHasChanged();
-
-    }
-    protected async Task Refresh(){
-        await Task.Run(()=> grille.Refresh());
-    }
-    protected async Task RandomAsync() {
-
-        // if (tirage.Status == CompteEstBon.CebStatus.EnCours) { return; }
-
-        try {
-            await tirage.RandomAsync();
-            // await Refresh();
-        } catch (Exception) { }
-        StateHasChanged();
-
+        toast.Show(0, duree);
     }
 
-    protected async Task ClearAsync() {
-        if (tirage.Status == CompteEstBon.CebStatus.EnCours) { return; }
-        try {
-            await tirage.ClearAsync();
-            // await Refresh();
-        } catch { }
-        StateHasChanged();
+    void ExcelExport() {
+        ExcelExportProperties excelExportProperties = new ExcelExportProperties { ExportType = ExportType.AllPages };
+        this.solutions.ExcelExport(excelExportProperties);
     }
 
-    public void RowSelectHandler(RowSelectEventArgs<CebDetail> args) {
-        SolutionSelect = tirage.SolutionIndex((int)args.RowIndex);
-        StateHasChanged();
-
-    }
-    public void ExcelExport() {
-        object excelExportProperties = new { exportType = "CurrentPage" };
-        this.grille.ExcelExport(excelExportProperties);
-    }
 
 }
 

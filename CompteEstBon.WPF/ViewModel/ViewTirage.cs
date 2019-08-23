@@ -68,11 +68,16 @@ namespace CompteEstBon.ViewModel {
                 Tirage.Plaques[i].Text = Plaques[i];
                 ClearData();
             };
+     
             _isUpdating = false;
             UpdateData();
             UpdateColors();
             Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             dateDispatcher.Start();
+        }
+
+        private void Tirage_PropertyChanged(object sender, PropertyChangedEventArgs e) {
+            throw new NotImplementedException();
         }
 
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();

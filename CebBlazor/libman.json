@@ -4,7 +4,7 @@
   "libraries": [
     {
       "library": "node_modules/@syncfusion/ej2",
-      "destination": "wwwroot/lib/ej2/css/",
+      "destination": "scss/",
       "files": [
         "material.css",
         "bootstrap4.css",
