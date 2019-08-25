@@ -2,9 +2,10 @@
 $primary:#303030;
 $bg-body: #404040;
 
-$font-size: 10px;
+$font-size: 0.9rem;
 $enable-gradients: true;
-
+$enable-shadows: true;
+$enable-responsive-font-sizes:   true;
 
 
 @import "bootstrap4";
@@ -12,18 +13,19 @@ $enable-gradients: true;
 
 html,
 body {
-    background-color: $bg-body; //  lightslategray !important;
+    background-color: $bg-body; 
     font-size:$font-size;
 }
 
 #solutions {
-    
-    .e-grid, .e-table, .e-columnheader, .e-gridheader, .e-headercontent, e.gridcontent {
-        border-color: $secondary;
+    &.e-grid , .e-table {
         border-spacing:0px;
         border-collapse:separate;
-        
+        border-color: $secondary;
+        border-radius:0;
+        border-width: 1pt;
     }
+   
     .e-content {
         background-color: $bg-body;
         text-align: center;
@@ -32,12 +34,10 @@ body {
  
     }
 
+
     .e-emptyrow {
         color: $bg-body;
         background-color: $bg-body;
-        border-color:$secondary;
-        border-style:none;
-        border-width: 0;
         margin:0;
         padding:0;
     }
@@ -51,23 +51,26 @@ body {
         background: radial-gradient($primary, $gray-700);
         color: white;
         font-weight: bold;
-        border-color: $secondary;
         font-size: $font-size;
 
-        >div {
+        > div {
             text-align: center;
-            border:none;
         }
     }
-
+    .e-lastrowcell{
+        border-bottom-color: $primary;
+        border-style:none;
+    }
+    .e-gridheader {
+        border-color: $primary;
+    }
     .e-row {
         td.e-rowcell {
-            border-color: $secondary;
             font-size: $font-size;
-            border:none;
         }
+        
         td.e-active {
-            background-color: $black;
+            background-color: $gray-800;
             color: $white;
         }
 
@@ -116,11 +119,12 @@ body {
     color: $primary;
 }
 
-hr .separator {
+.separator {
     margin: 0%;
     padding: 0%;
-    height: 1pt;
+    height: 0.1rem;
 }
+
 
 .e-input-group {
     // &:not(.e-success):not(.e-warning):not(.e-error),
@@ -147,7 +151,25 @@ hr .separator {
     z-index: 10;
     background-color: $primary;
     color:white;
-    border-style:none;
-    border-width:0pt;
+    border-style:solid;
+    border-spacing: 0;
+    border-width: thin;
     border-color:white;
+}
+@keyframes slidein {
+  from {
+    margin-left: 0%;
+    width: 100%; 
+  }
+
+  to {
+    margin-left: 25%;
+    width: 50%;
+  }
+}
+.animation {
+  animation-duration: 5s;
+  animation-name: slidein;
+  animation-direction: alternate;
+  animation-iteration-count:infinite;
 }

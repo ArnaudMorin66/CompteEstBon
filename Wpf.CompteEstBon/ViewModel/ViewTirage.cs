@@ -83,8 +83,6 @@ namespace CompteEstBon {
         public ObservableCollection<string> Plaques { get; } =
             new ObservableCollection<string> { "", "", "", "", "", "" };
 
-        public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
-
         public string Duree {
             get => _duree;
             set {
@@ -257,7 +255,6 @@ namespace CompteEstBon {
             Animation?.Stop();
             Duree = stopwatch.Elapsed.ToString();
             IsComputed = false;
-            Solutions.Clear();
             Solution = "";
             Result = Tirage.Status != CebStatus.Erreur ? "(...)" : "Tirage incorrect";
             HidePopup();
@@ -278,8 +275,8 @@ namespace CompteEstBon {
         }
 
         public void ShowPopup(int index = 0) {
-            if (index >= 0 && index < Solutions.Count) {
-                Solution = Tirage.Solutions.ElementAt(index).ToString();
+            if (index >= 0 && index < Tirage.Solutions.Count) {
+                Solution = Tirage.SolutionIndex(index);
                 Popup = true;
             }
         }
@@ -313,8 +310,6 @@ namespace CompteEstBon {
                     ? $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}"
                     : "Tirage incorrect";
 
-            foreach (var s in Tirage.Solutions)
-                Solutions.Add(s.Detail);
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
             Solution = Tirage.Solution.ToString();

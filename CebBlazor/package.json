@@ -16,11 +16,3 @@
   "main": "index.js",
   "license": "MIT",
   "-vs-binding": {
-    "BeforeBuild": [
-      "sass"
-    ],
-    "ProjectOpened": [
-      "upgrade"
-    ]
-  }
-}

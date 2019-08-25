@@ -14,18 +14,18 @@ namespace CompteEstBon {
         }
 
         private void SolutionsData_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
-            Tirage.ShowNotify(SolutionsData.SelectedIndex);
+            vwTirage.ShowNotify(SolutionsData.SelectedIndex);
         }
 
         private void TbPlus_Click(object sender, RoutedEventArgs e) {
-            if (Tirage.Search < 999) {
-                Tirage.Search++;
+            if (vwTirage.Search < 999) {
+                vwTirage.Search++;
             }
         }
 
         private void TbMoins_Click(object sender, RoutedEventArgs e) {
-            if (Tirage.Search > 100) {
-                Tirage.Search--;
+            if (vwTirage.Search > 100) {
+                vwTirage.Search--;
             }
         }
 

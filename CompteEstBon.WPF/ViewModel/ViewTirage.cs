@@ -68,7 +68,7 @@ namespace CompteEstBon.ViewModel {
                 Tirage.Plaques[i].Text = Plaques[i];
                 ClearData();
             };
-     
+            
             _isUpdating = false;
             UpdateData();
             UpdateColors();
@@ -76,9 +76,7 @@ namespace CompteEstBon.ViewModel {
             dateDispatcher.Start();
         }
 
-        private void Tirage_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-            throw new NotImplementedException();
-        }
+       
 
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
 
@@ -86,8 +84,6 @@ namespace CompteEstBon.ViewModel {
 
         public ObservableCollection<string> Plaques { get; } =
             new ObservableCollection<string> { "", "", "", "", "", "" };
-
-        public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
 
         public string Duree {
             get => _duree;
@@ -272,7 +268,6 @@ namespace CompteEstBon.ViewModel {
             NotifiedChanged("Status");
             stopwatch.Reset();
             Duree = stopwatch.Elapsed.ToString();
-            Solutions.Clear();
             Solution = "";
             Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
             HidePopup();
@@ -285,7 +280,6 @@ namespace CompteEstBon.ViewModel {
 
             for (var i = 0; i < Tirage.Plaques.Length; i++)
                 Plaques[i] = Tirage.Plaques[i].Text;
-
             _isUpdating = false;
             ClearData();
 
@@ -294,8 +288,8 @@ namespace CompteEstBon.ViewModel {
         }
 
         public void ShowNotify(int index = 0) {
-            if (index >= 0 && Solutions.Count != 0 && index < Solutions.Count) {
-                Solution = Tirage.Solutions.ElementAt(index).ToString();
+            if (index >= 0 && Tirage.Solutions.Count != 0 && index < Tirage.Solutions.Count) {
+                Solution = Tirage.SolutionIndex(index);
                 Popup = true;
             }
         }
@@ -330,8 +324,6 @@ namespace CompteEstBon.ViewModel {
                     ? $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}"
                     : "Tirage incorrect";
 
-            foreach (var s in Tirage.Solutions)
-                Solutions.Add(s.Detail);
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
             Solution = Tirage.Solution.ToString();

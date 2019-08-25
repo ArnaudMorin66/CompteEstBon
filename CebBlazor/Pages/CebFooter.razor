@@ -1,9 +1,21 @@
 ﻿@using Microsoft.AspNetCore.Components
 @using System.Runtime.InteropServices
-<div class="alert bg-primary d-flex justify-content-between align-items-center p-1 border border-dark text-white">
-    <h5 class="text-center font-weight-bold w-100">&nbsp;&copy;Arnaud Morin - @RuntimeInformation.FrameworkDescription</h5>    
+@using System.Threading
+<div class="alert d-flex bg-primary justify-content-between align-items-center border border-secondary">
+    <span class="badge badge-pill badge-info">
+        &copy;Arnaud Morin,&nbsp;
+        @RuntimeInformation.FrameworkDescription
+    </span>
+
+    <span class="badge badge-pill badge-info">@($"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}")</span>
 </div>
 
 @code {
-    
+    Timer timer;
+    protected override void OnInitialized() {
+        timer = new Timer(new TimerCallback(_ => {
+           InvokeAsync( StateHasChanged);
+        }), null, 1000, 1000);
+    }
+
 }

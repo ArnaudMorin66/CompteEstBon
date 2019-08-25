@@ -1,19 +1,22 @@
 @using CompteEstBon
 @using System.Threading
+@using System.ComponentModel
 @inject CebTirage tirage
 
 
-<div class="a-toast" style="display:@Display">
+<div class="a-toast @Display">
     <div class="text-white">
         @switch (tirage.Status) {
             case CebStatus.CompteEstBon:
                 <div class=" bg-success text-center text-uppercase w-100">
                     <i class="fas fa-thumbs-up fa-2x"></i>&nbsp;Compte est bon
                 </div>
-                <div class="font-weight-bold text-center w-100">
-                    <div>Trouvé:&nbsp;@tirage.Found</div>
+                <div class="font-weight-bold text-center  w-100">
+                    <div >&nbsp;</div>
+                    <div class="e-animate">Trouvé:&nbsp;@tirage.Found</div>
                     <div>Nombre de solutions:&nbsp;@tirage.Solutions.Count,&nbsp;Durée:&nbsp;@($"{Duree:N3}")&nbsp;s</div>
-                    <div style="font-weight: 400;">@Solution</div>
+                    <div class="badge badge-info" style="font-weight: 400;">@Solution</div>
+                     <div >&nbsp;</div>
                 </div>
                 break;
             case CebStatus.CompteApproche:
@@ -22,10 +25,12 @@
                     approché
                 </div>
                 <div class="text-center font-weight-bold w-100">
+                     <div >&nbsp;</div>
                     <div>Trouvé(s):&nbsp;@tirage.Found</div>
                     <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
                     <div>Nombre de solutions:&nbsp;@tirage.Solutions.Count,&nbsp;Durée:&nbsp;@($"{Duree:N3}")&nbsp;s </div>
-                    <div style="font-weight: 400;">@Solution</div>
+                    <div class="badge badge-info" style="font-weight: 400;">@Solution</div>
+                     <div >&nbsp;</div>
                 </div>
                 break;
             case CebStatus.Erreur:
@@ -45,7 +50,7 @@
         }
     </div>
 </div>
-<div class="row">&nbsp;</div>
+<div>&nbsp;</div>
 
 @code {
     protected Timer timer;
@@ -54,8 +59,12 @@
     public string Solution { get; set;}
 
     public double Duree { get; set;}
+    [Parameter]
+    public int DueTime { get; set;  }
+
     protected override void OnInitialized() {
-        Display = "none";
+        Display = "invisible";
+        DueTime = 10000;
 
     }
 
@@ -63,19 +72,19 @@
         timer?.Dispose();
         Solution = tirage.SolutionIndex(no);
         Duree = duree ;
-        Display = "block";
+        Display = "";
         InvokeAsync(StateHasChanged);
 
 
         timer = new Timer(new TimerCallback(_ => {
-            Display = "none";
+            Display = "invisible";
             InvokeAsync(StateHasChanged);
             timer.Dispose();
-        }), null, 5000, 0);
+        }), null, DueTime, 0);
     }
     public void Hide() {
         timer?.Dispose();
-        Display = "none";
+        Display = "invisible";
         InvokeAsync(StateHasChanged);
     }
 

@@ -31,7 +31,7 @@ namespace CompteEstBon {
 
         private void IsUpdated(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
             Clear();
-            
+
         }
 
         // private void IsUpdated(object sender, int e) => Clear();
@@ -63,7 +63,7 @@ namespace CompteEstBon {
                 if (value == _search) return;
                 _search = value;
                 Clear();
-                NotifiedChanged("Search");
+                // NotifiedChanged(nameof(Search));
             }
         }
 
@@ -148,9 +148,13 @@ namespace CompteEstBon {
         public async Task RandomAsync() => await Task.Run(Random);
 
         public void Clear() {
-            if (Details.Count != 0) {
-                Details.Clear();
-                NotifiedChanged("Details");
+            //if (Details?.Count != 0) {
+            //    Details.Clear();
+            //    NotifiedChanged(nameof(Details));
+            //}
+            if (Details != null) {
+                Details = null;
+                NotifiedChanged(nameof(Details));
             }
             Solutions.Clear();
             Diff = int.MaxValue;
@@ -224,10 +228,12 @@ namespace CompteEstBon {
             Status = CebStatus.EnCours;
             Resolve(Plaques.Cast<CebBase>().ToList());
             Solutions.Sort((p, q) => p.Rank.CompareTo(q.Rank));
-
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
-            Details.AddRange(Solutions.Select(s => s.Detail));
-            NotifiedChanged("Details");
+
+            //Details.AddRange(Solutions.Select(s => s.Detail));
+            Details = new List<CebDetail>(Solutions.Select(s => s.Detail));
+            // Details = new ReadOnlyObservableCollection<CebDetail> (new ObservableCollection<CebDetail>(Solutions.Select(s => s.Detail)));
+            NotifiedChanged(nameof(Details));
             return Status;
         }
 
@@ -254,8 +260,8 @@ namespace CompteEstBon {
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-         public List<CebDetail> Details { get; set; } = new List<CebDetail>();
-                public CebResult GetCebResult() {
+        public List<CebDetail> Details { get; set; } //  = new List<CebDetail>();
+        public CebResult GetCebResult() {
             return new CebResult {
                 Search = this.Search,
                 Plaques = Plaques.Select(p => p.Value),

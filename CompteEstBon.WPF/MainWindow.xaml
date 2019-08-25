@@ -69,7 +69,7 @@
         </TaskbarItemInfo>
     </Window.TaskbarItemInfo>
     <Window.DataContext>
-        <viewModel:ViewTirage x:Name="Tirage" />
+        <viewModel:ViewTirage x:Name="vwTirage" />
     </Window.DataContext>
     <Window.InputBindings>
         <KeyBinding
@@ -233,7 +233,7 @@
             FontSize="14"
             HeadersVisibility="Column"
             IsTabStop="True"
-            ItemsSource="{Binding Solutions}"
+            ItemsSource="{Binding Tirage.Details}"
             RowStyle="{StaticResource DataGridRowStyle}"
             SelectionChanged="SolutionsData_SelectionChanged"
             TabIndex="7">
