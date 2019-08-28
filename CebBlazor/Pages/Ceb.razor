@@ -12,7 +12,7 @@
 <div class="row ">
     <div class="col text-center">
         <div class="card text-center border border-secondary">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-gradient-dark text-white">
                 <i class="fas fa-bars"></i>
                 &nbsp;Plaques
             </div>
@@ -21,7 +21,6 @@
                     @foreach (var plq in tirage.Plaques) {
                         <div class="col-md-2">
                             <EjsComboBox @bind-Value="@plq.Value"
-                                         @key="plq"
                                          DataSource="@listeplaques"
                                          TValue="int"
                                          ShowClearButton="false"
@@ -30,12 +29,13 @@
                         </div>
                     }
                 </div>
+
             </div>
         </div>
     </div>
     <div class="col-md-2">
         <div class="card text-center border border-secondary">
-            <div class="card-header bg-primary text-white">
+            <div class="card-header bg-gradient-dark text-white">
                 <i class="fas fa-search"></i>
                 &nbsp;Trouver
             </div>
@@ -181,13 +181,16 @@
     </GridColumns>
 </EjsGrid>
 <div class="separator">&nbsp;</div>
-<CebToast @ref="toast" @ref:suppressField></CebToast>
+
+<CebToast @ref="toast" @ref:suppressField DueTime="5000"></CebToast>
 <CebFooter></CebFooter>
 
 @code {
 
     double duree { get; set; } = 0;
+
     CebToast toast;
+
 
 
     EjsGrid<CebDetail> solutions { get; set; }

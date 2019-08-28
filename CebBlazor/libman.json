@@ -13,21 +13,21 @@
     },
     {
       "library": "node_modules/@syncfusion/ej2/dist",
-      "destination": "wwwroot/lib/ej2/js/",
+      "destination": "wwwroot/lib/ej2/",
       "files": [
         "ej2.min.js"
       ]
     },
     {
       "library": "C:/Apps/ej2/js",
-      "destination": "wwwroot/lib/ej2/js/",
+      "destination": "wwwroot/lib/ej2/",
       "files": [
         "ejs.interop.min.js"
       ]
     },
     {
       "library": "node_modules/@fortawesome/fontawesome-free/js",
-      "destination": "wwwroot/lib/fontawesome/js/",
+      "destination": "wwwroot/lib/fontawesome/",
       "files": [
         "all.min.js"
       ]

@@ -24,7 +24,8 @@ namespace CompteEstBon {
 
         public CebTirage() {
             for (var i = 0; i < 6; i++) {
-                Plaques[i] = new CebPlaque(0, IsUpdated);
+                //Plaques[i] = new CebPlaque(0, IsUpdated);
+                Plaques.Add(new CebPlaque(0, IsUpdated));
             }
             Random();
         }
@@ -76,7 +77,8 @@ namespace CompteEstBon {
         /// Ecart
         /// </summary>
         public int Diff { get; private set; } = int.MaxValue;
-        public CebPlaque[] Plaques { get; } = new CebPlaque[6];
+        public ObservableCollection<CebPlaque> Plaques = new ObservableCollection<CebPlaque>();
+        // public CebPlaque[] Plaques { get; } = new CebPlaque[6];
 
         public void SetPlaques(params int[] plaq) {
             foreach (var (p, i) in plaq.WithIndex().Where((p, i) => i < 6)) {
@@ -223,6 +225,7 @@ namespace CompteEstBon {
         /// <returns>
         /// </returns>
         public CebStatus Resolve() {
+            
             Clear();
             if (Status != CebStatus.Valid) return Status;
             Status = CebStatus.EnCours;

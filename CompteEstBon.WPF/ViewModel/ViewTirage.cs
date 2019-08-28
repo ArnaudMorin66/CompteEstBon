@@ -278,7 +278,7 @@ namespace CompteEstBon.ViewModel {
             if (_isUpdating) return;
             _isUpdating = true;
 
-            for (var i = 0; i < Tirage.Plaques.Length; i++)
+            for (var i = 0; i < Tirage.Plaques.Count; i++)
                 Plaques[i] = Tirage.Plaques[i].Text;
             _isUpdating = false;
             ClearData();

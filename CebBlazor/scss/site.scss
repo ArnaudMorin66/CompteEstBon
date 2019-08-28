@@ -143,13 +143,13 @@ body {
     }
 }
 .a-toast {
+    @extend .bg-gradient-primary;
     position:absolute;
     top:50%;
     left:50%;
     transform: translate(-50%, -50%);
     min-width:400px;
     z-index: 10;
-    background-color: $primary;
     color:white;
     border-style:solid;
     border-spacing: 0;
@@ -172,4 +172,40 @@ body {
   animation-name: slidein;
   animation-direction: alternate;
   animation-iteration-count:infinite;
+}
+.table-fixed {
+    width: 100%;
+
+    tbody {
+        overflow-y: auto;
+        width: 100%;
+        
+    }
+
+    thead,
+    tbody,
+    tr,
+    td,
+    th {
+        display: block;
+    }
+
+    tbody {
+        td {
+            float: left;
+        }
+        
+    }
+
+    thead {
+        tr {
+            th {
+                float: left;
+            }
+        }
+    }
+}
+.gradient {
+    background: radial-gradient($primary, $bg-body);
+    background-image: radial-gradient( #505050, $primary);// (rgb(48, 48, 48), rgb(73, 80, 87));
 }

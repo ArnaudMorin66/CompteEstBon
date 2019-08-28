@@ -6,11 +6,15 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.76" />
-    <PackageReference Include="Syncfusion.EJ2.Blazor" Version="17.2.0.46-beta" />
+    <PackageReference Include="Syncfusion.EJ2.Blazor" Version="17.2.0.47-beta" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\fontawesome\" />
   </ItemGroup>
 
 </Project>

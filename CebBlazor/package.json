@@ -14,5 +14,6 @@
   "name": "cebblazor",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT",
-  "-vs-binding": {
+  "license": "MIT"
+, "-vs-binding":{"BeforeBuild":["sass"]}
+}
