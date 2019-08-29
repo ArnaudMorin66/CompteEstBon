@@ -22,6 +22,7 @@
                         <div class="col-md-2">
                             <EjsComboBox @bind-Value="@plq.Value"
                                          DataSource="@listeplaques"
+                                         CssClass="e-ceb"
                                          TValue="int"
                                          ShowClearButton="false"
                                          Enabled="tirage.Status != CebStatus.EnCours">
@@ -43,6 +44,7 @@
                 <EjsNumericTextBox @bind-Value="@tirage.Search"
                                    Max="999"
                                    Min="100"
+                                   CssClass="e-ceb"
                                    Format="N0"
                                    Step="1"
                                    TValue="int"
@@ -52,76 +54,83 @@
         </div>
     </div>
     <div class="col-md-2">
-        <div class="d-flex flex-column">
-            @switch (tirage.Status) {
-                case CebStatus.EnCours:
-                    <button class="btn btn-info">
-                        <i class="fas fa-sync fa-spin"></i>
-                        &nbsp;
-                    </button>
-                    break;
-                case CebStatus.CompteEstBon:
-                    <button class="btn btn-success"
-                            @onclick="tirage.ClearAsync"
-                            title="Initialisation des résultats (ALT-R)"
+        <div class="card text-center border border-secondary">
+            <div class=" card-body">
+                <div class="row">
+                @switch (tirage.Status) {
+                    case CebStatus.EnCours:
+                        <button class="btn btn-info btn-block col-12">
+                            <i class="fas fa-sync fa-spin"></i>
+                            &nbsp;
+                        </button>
+                        break;
+                    case CebStatus.CompteEstBon:
+                        <button class="btn btn-success btn-block col-12"
+                                @onclick="tirage.ClearAsync"
+                                title="Initialisation des résultats (ALT-R)"
+                                role="button"
+                                type="button"
+                                accesskey="r">
+                            <i class="fas fa-thumbs-up fa-xs"></i>
+                        </button>
+                        break;
+                    case CebStatus.CompteApproche:
+                        <button class="btn btn-warning btn-block col-12"
+                                role="button"
+                                type="button"
+                                title="Initialisation des résultats (ALT-R)"
+                                @onclick="tirage.ClearAsync"
+                                accesskey="r">
+                            <i class="text-danger fas fa-thumbs-down faxs"></i>
+                        </button>
+                        break;
+                    case CebStatus.Erreur:
+                        <button class="btn btn-danger btn-block col-12"
+                                role="button"
+                                type="button"
+                                title="Initialisation du tirage (ALT-R)"
+                                @onclick="tirage.RandomAsync"
+                                accesskey="r">
+                            <i class="fas fa-exclamation-triangle fa-xs"></i>
+                        </button>
+                        break;
+                    default:
+                        <button id="resoudre"
+                                title="Résolution du tirage (ALT-R)"
+                                class="btn btn-primary btn-block col-12"
+                                role="button"
+                                @onclick="ResolveAsync"
+                                type="button"
+                                accesskey="r">
+                            <i class="fas fa-bolt fa-xs"></i>
+                        </button>
+
+                        break;
+                }
+                    @*</div>
+                <div class="row">*@
+                    <button id="hasard"
+                            class="btn btn-primary h-100  w-100 col"
+                            accesskey="h"
+                            title="tirage aléatoire (ALT-H)"
                             role="button"
                             type="button"
-                            accesskey="r">
-                        <i class="fas fa-thumbs-up fa-xs"></i>
+                            Enabled="@(tirage.Status != CebStatus.EnCours)"
+                            @onclick="tirage.RandomAsync">
+                        <i class="fas fa-random"></i>
                     </button>
-                    break;
-                case CebStatus.CompteApproche:
-                    <button class="btn btn-warning"
-                            role="button"
+                    <button id="excel"
+                            @onclick="@ExcelExport"
+                            title="Exportation vers Excel (ALT-X)"
+                            accesskey="x"
+                            class="btn btn-primary w-100 h-100 col"
                             type="button"
-                            title="Initialisation des résultats (ALT-R)"
-                            @onclick="tirage.ClearAsync"
-                            accesskey="r">
-                        <i class="text-danger fas fa-thumbs-down faxs"></i>
+                            Enabled="@(tirage.Status == CebStatus.CompteEstBon || tirage.Status == CebStatus.CompteApproche)"
+                            role="button">
+                        <i class="fas fa-file-excel"></i>
                     </button>
-                    break;
-                case CebStatus.Erreur:
-                    <button class="btn btn-danger"
-                            role="button"
-                            type="button"
-                            title="Initialisation du tirage (ALT-R)"
-                            @onclick="tirage.RandomAsync"
-                            accesskey="r">
-                        <i class="fas fa-exclamation-triangle fa-xs"></i>
-                    </button>
-                    break;
-                default:
-                    <button id="resoudre"
-                            title="Résolution du tirage (ALT-R)"
-                            class="btn btn-primary"
-                            role="button"
-                            @onclick="ResolveAsync"
-                            type="button"
-                            accesskey="r">
-                        <i class="fas fa-bolt fa-xs"></i>
-                    </button>
-                    break;
-            }
-            <button id="hasard"
-                    class="btn btn-primary"
-                    accesskey="h"
-                    title="tirage aléatoire (ALT-H)"
-                    role="button"
-                    type="button"
-                    Enabled="@(tirage.Status != CebStatus.EnCours)"
-                    @onclick="tirage.RandomAsync">
-                <i class="fas fa-random"></i>
-            </button>
-            <button id="excel"
-                    @onclick="@ExcelExport"
-                    title="Exportation vers Excel (ALT-X)"
-                    accesskey="x"
-                    class="btn btn-primary "
-                    type="button"
-                    Enabled="@(tirage.Status == CebStatus.CompteEstBon || tirage.Status == CebStatus.CompteApproche)"
-                    role="button">
-                <i class="fas fa-file-excel"></i>
-            </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -186,13 +195,8 @@
 <CebFooter></CebFooter>
 
 @code {
-
     double duree { get; set; } = 0;
-
     CebToast toast;
-
-
-
     EjsGrid<CebDetail> solutions { get; set; }
 
     IEnumerable<int> listeplaques { get; set; } = CompteEstBon.CebPlaque.ListePlaques.Distinct();
@@ -209,8 +213,8 @@
     async Task ResolveAsync() {
         var heure = DateTime.Now;
         await tirage.ResolveAsync();
+        
         duree = (DateTime.Now - heure).TotalSeconds;
-        // StateHasChanged();
         toast.Show(0, duree);
     }
 

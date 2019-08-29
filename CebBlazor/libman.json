@@ -26,6 +26,20 @@
       ]
     },
     {
+      "library": "C:/Apps/ej2/themes/material-dark",
+      "destination": "scss/",
+      "files": [
+        "material-dark.css"
+      ]
+    },
+    {
+      "library": "C:/Apps/ej2/themes/bootstrap-dark/",
+      "destination": "scss/",
+      "files": [
+        "bootstrap-dark.css"
+      ]
+    },
+    {
       "library": "node_modules/@fortawesome/fontawesome-free/js",
       "destination": "wwwroot/lib/fontawesome/",
       "files": [
@@ -39,5 +53,5 @@
         "jquery.min.js"
       ]
     }
-]
+  ]
 }
