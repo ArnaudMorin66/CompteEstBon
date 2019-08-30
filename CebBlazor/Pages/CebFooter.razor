@@ -6,7 +6,6 @@
         &copy;Arnaud Morin,&nbsp;
         @RuntimeInformation.FrameworkDescription
     </span>
-
     <span class="badge badge-pill badge-info">@($"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}")</span>
 </div>
 
@@ -14,7 +13,7 @@
     Timer timer;
     protected override void OnInitialized() {
         timer = new Timer(new TimerCallback(_ => {
-           InvokeAsync( StateHasChanged);
+            InvokeAsync(StateHasChanged);
         }), null, 1000, 1000);
     }
 

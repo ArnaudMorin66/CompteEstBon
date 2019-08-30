@@ -312,7 +312,7 @@ namespace CompteEstBon {
         }
         private void UpdateData() {
             lock (Plaques) {
-                for (var i = 0; i < Tirage.Plaques.Length; i++)
+                for (var i = 0; i < Tirage.Plaques.Count; i++)
                     Plaques[i] = Tirage.Plaques[i];
             }
             ClearData();

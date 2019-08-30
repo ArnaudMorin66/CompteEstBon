@@ -31,7 +31,7 @@ namespace CompteEstBon {
         }
 
         private void IsUpdated(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
-            Clear();
+            Clear("plaque");
 
         }
 
@@ -63,8 +63,7 @@ namespace CompteEstBon {
             set {
                 if (value == _search) return;
                 _search = value;
-                Clear();
-                // NotifiedChanged(nameof(Search));
+                Clear("Search");
             }
         }
 
@@ -84,7 +83,7 @@ namespace CompteEstBon {
             foreach (var (p, i) in plaq.WithIndex().Where((p, i) => i < 6)) {
                 Plaques[i].Value2 = p;
             }
-            Clear();
+            Clear("Plaques");
         }
 
         public List<CebBase> Solutions { get; } = new List<CebBase>();
@@ -135,7 +134,6 @@ namespace CompteEstBon {
         /// Select the value and the plaque's list
         /// </summary>
         public void Random() {
-            //  var rnd = new Random();
             Status = CebStatus.EnCours;
             _search = Rnd.Next(100, 1000);
             var liste = new List<int>(CebPlaque.ListePlaques); // .ToList();
@@ -144,19 +142,15 @@ namespace CompteEstBon {
                 plaque.Value2 = liste[n];
                 liste.RemoveAt(n);
             }
-            Clear();
+            Clear("Randm");
         }
 
         public async Task RandomAsync() => await Task.Run(Random);
 
-        public void Clear() {
-            //if (Details?.Count != 0) {
-            //    Details.Clear();
-            //    NotifiedChanged(nameof(Details));
-            //}
-            if (Details != null) {
-                Details = null;
-                NotifiedChanged(nameof(Details));
+        public void Clear(string evt = "") {
+            if (Details.Count != 0) {
+                Details.Clear();
+                NotifiedChanged(evt);
             }
             Solutions.Clear();
             Diff = int.MaxValue;
@@ -164,7 +158,8 @@ namespace CompteEstBon {
             Valid();
         }
 
-        public async Task ClearAsync() => await Task.Run(Clear);
+ 
+        public async Task ClearAsync() => await Task.Run(()=> { Clear("Clear"); });
 
         /// <summary>
         /// resolution du compte
@@ -233,9 +228,7 @@ namespace CompteEstBon {
             Solutions.Sort((p, q) => p.Rank.CompareTo(q.Rank));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
 
-            //Details.AddRange(Solutions.Select(s => s.Detail));
-            Details = new List<CebDetail>(Solutions.Select(s => s.Detail));
-            // Details = new ReadOnlyObservableCollection<CebDetail> (new ObservableCollection<CebDetail>(Solutions.Select(s => s.Detail)));
+            Details.AddRange(Solutions.Select(s => s.Detail));
             NotifiedChanged(nameof(Details));
             return Status;
         }
@@ -263,7 +256,7 @@ namespace CompteEstBon {
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public List<CebDetail> Details { get; set; } //  = new List<CebDetail>();
+        public List<CebDetail> Details { get; set; }  = new List<CebDetail>();
         public CebResult GetCebResult() {
             return new CebResult {
                 Search = this.Search,
