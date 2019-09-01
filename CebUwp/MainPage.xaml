@@ -322,7 +322,6 @@
             HeadersVisibility="Row"
             IsReadOnly="True"
             IsTabStop="False"
-            ItemsSource="{Binding Solutions}"
             SelectionChanged="SolutionsData_SelectionChanged"
             VerticalGridLinesBrush="Gray">
             <tlk:DataGrid.Columns>

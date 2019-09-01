@@ -74,6 +74,7 @@ namespace CompteEstBon.ViewModel {
             UpdateColors();
             Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             dateDispatcher.Start();
+           
         }
 
        
@@ -84,7 +85,6 @@ namespace CompteEstBon.ViewModel {
 
         public ObservableCollection<string> Plaques { get; } =
             new ObservableCollection<string> { "", "", "", "", "", "" };
-
         public string Duree {
             get => _duree;
             set {
@@ -269,6 +269,8 @@ namespace CompteEstBon.ViewModel {
             stopwatch.Reset();
             Duree = stopwatch.Elapsed.ToString();
             Solution = "";
+            if ((Application.Current.MainWindow as MainWindow).SolutionsData != null)
+                (Application.Current.MainWindow as MainWindow).SolutionsData.ItemsSource = null;
             Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
             HidePopup();
             UpdateColors();
@@ -326,10 +328,11 @@ namespace CompteEstBon.ViewModel {
 
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
-            Solution = Tirage.Solution.ToString();
+            Solution = Tirage.SolutionIndex(0);
             UpdateColors();
             IsBusy = false;
             Solution = Tirage.Solution.ToString();
+            (Application.Current.MainWindow as MainWindow).SolutionsData.ItemsSource = Tirage.Details;
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");
             ShowNotify();

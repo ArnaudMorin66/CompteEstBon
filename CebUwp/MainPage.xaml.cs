@@ -9,7 +9,8 @@ namespace CompteEstBon {
     public sealed partial class MainPage : Page {
         public MainPage() {
             InitializeComponent();
-            Tirage.InAppNotification = cebNotification;
+           
+            Tirage.CurrentPage = this;
             Tirage.StoryBoard = TextBlockBoard;
             TextBlockBoard.Begin();
             TextBlockBoard.Pause();

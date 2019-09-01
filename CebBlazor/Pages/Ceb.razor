@@ -5,10 +5,10 @@
 @using CompteEstBon
 @inject CebTirage tirage
 
-<div class="row">
+<div class="row sticky-top">
     <div class="col-2">
         <div class="d-flex justify-content-between border align-items-center border-secondary bg-gradient-dark p-2 h-100" style="color:red">
-          <img src="favicon.ico" style="display: inline-block; height:1rem">
+            <img src="favicon.ico" style="display: inline-block; height:1rem">
             <cite class="font-weight-bold text-wrap text-truncate ">Compte&nbsp;est&nbsp;bon</cite>
         </div>
     </div>
@@ -23,12 +23,12 @@
                         type="button"
                         Enabled="@(tirage.Status != CebStatus.EnCours)"
                         @onclick="tirage.RandomAsync">
-                    Tirage&nbsp;<i class="fas fa-random"></i>
+                    <i class="fas fa-random"></i>&nbsp;Tirage
                 </button>
                 @switch (tirage.Status) {
                     case CebStatus.EnCours:
                         <button class="btn btn-info btn-block">
-                            Patience...&nbsp;<i class="fas fa-sync fa-spin"></i>
+                            <i class="fas fa-spinner fa-spin"></i>&nbsp;Patientez, calcul en cours&hellip;
                         </button>
                         break;
                     case CebStatus.CompteEstBon:
@@ -38,7 +38,8 @@
                                 role="button"
                                 type="button"
                                 accesskey="i">
-                            Initialisation&nbsp;<i class="fas fa-thumbs-up fa-xs"></i>
+                            <i class="text-dark fas fa-thumbs-up"></i>&nbsp;Compte&nbsp;est&nbsp;bon
+
                         </button>
                         break;
                     case CebStatus.CompteApproche:
@@ -48,7 +49,7 @@
                                 title="Initialisation des résultats (ALT-I)"
                                 @onclick="tirage.ClearAsync"
                                 accesskey="i">
-                            Initialisation&nbsp;<i class="text-danger fas fa-thumbs-down faxs"></i>
+                            <i class="text-danger fas fa-thumbs-down"></i>&nbsp;Compte&nbsp;approch&eacute;
                         </button>
                         break;
                     case CebStatus.Erreur:
@@ -58,7 +59,7 @@
                                 title="Tirage aléatoire (ALT-T)"
                                 @onclick="tirage.RandomAsync"
                                 accesskey="T">
-                            Tirage&nbsp;<i class="fas fa-exclamation-triangle fa-xs"></i>
+                            <i class="fas fa-exclamation-triangle"></i>&nbsp;Tirage&nbsp;invalide
                         </button>
                         break;
                     default:
@@ -69,26 +70,27 @@
                                 @onclick="ResolveAsync"
                                 type="button"
                                 accesskey="r">
-                            R&eacute;soudre&nbsp;<i class="fas fa-bolt fa-xs"></i>
+                            <i class="fas fa-bolt"></i>&nbsp;R&eacute;soudre
                         </button>
 
                         break;
                 }
-                <button id="excel"
-                        @onclick="@(()=> this.solutions.ExcelExport(new ExcelExportProperties { ExportType = ExportType.AllPages }))"
-                        title="Exportation vers Excel (ALT-X)"
-                        accesskey="x"
-                        class="btn btn-primary w-25"
-                        type="button"
-                        Enabled="@(tirage.Status == CebStatus.CompteEstBon || tirage.Status == CebStatus.CompteApproche)"
-                        role="button">
-                    eXcel&nbsp;<i class="fas fa-file-excel"></i>
-                </button>
+                @if (tirage.Status == CebStatus.CompteEstBon || tirage.Status == CebStatus.CompteApproche) {
+                    <button id="excel"
+                            @onclick="ExportExcel"
+                            title="Exportation vers Excel (ALT-X)"
+                            accesskey="x"
+                            class="btn btn-primary w-25"
+                            type="button"
+                            role="button">
+                        <i class="fas fa-file-excel"></i>&nbsp;Excel
+                    </button>
+                }
+
             </div>
         </div>
     </div>
 </div>
-<div style="height: 0.5rem;">&nbsp;</div>
 <div class="row ">
     <div class="col text-center">
         <div class="card text-center border border-secondary">
@@ -138,7 +140,7 @@
 <EjsGrid @ref="solutions" @ref:suppressField
          DataSource="@tirage.Details"
          TValue="CebDetail"
-         Height="320"
+         Height="360"
          EnablePersistence="true"
          AllowSelection="true"
          AllowExcelExport="true"
@@ -156,38 +158,45 @@
     </GridColumns>
 </EjsGrid>
 <div class="text-white text-center" style="height: 1.8rem; font-weight: bold; align-self: center; flex-wrap: wrap">
-    @switch (tirage.Status) {
-        case CebStatus.EnCours:
-            <div class="bg-info h-100 border border-dark animation">
-                <i class="fas fa-spinner fa-spin"></i>&nbsp;Patientez, calcul en cours...
-            </div>
-            break;
-        case CebStatus.Erreur:
-            <div class="bg-danger h-100 border border-dark animation" style="cursor: pointer;" @onclick="tirage.RandomAsync">
-                <i class="fas fa-exclamation-triangle fa-spin"></i>&nbsp;Tirage invalide
-            </div>
-            break;
-        case CebStatus.CompteApproche:
-            <div class="bg-warning h-100 border border-dark animation" style="cursor: pointer;" @onclick="tirage.ClearAsync">
-                <i class="text-danger fas fa-thumbs-down"></i>&nbsp;
-                <span style="color: black;">
-                    &nbsp;Compte
-                    approch&eacute;:&nbsp;@tirage.Found,&nbsp;&eacute;cart:@tirage.Diff,&nbsp;Nb de solutions:&nbsp;@tirage.Solutions.Count
-                    &nbsp;solutions,&nbsp;durée:&nbsp;@($"{duree:N3}")&nbsp;s
-                </span>
-            </div>
-            break;
-        case CebStatus.CompteEstBon:
-            <div class="bg-success h-100 border border-dark animation" style="cursor: pointer;" @onclick="tirage.ClearAsync">
-                <i class="fas fa-thumbs-up"></i>
-                &nbsp;Compte est bon,&nbsp;Nb de solutions:&nbsp;@tirage.Solutions.Count&nbsp;
-                solutions,&nbsp;durée:&nbsp;@($"{duree:N3}")&nbsp;s
-            </div>
-            break;
-        default:
-            <div class="h-100">&nbsp;</div>
-            break;
-    }
+    <div class="animation">
+        @switch (tirage.Status) {
+            case CebStatus.EnCours:
+                <div class="bg-info h-100 border border-dark">
+                    <i class="fas fa-spinner fa-spin"></i>&nbsp;Patientez, calcul en cours&hellip;
+                </div>
+                break;
+            case CebStatus.Erreur:
+                <div class="bg-danger h-100 border border-dark animation" style="cursor: pointer;" @onclick="tirage.RandomAsync">
+                    <i class="fas fa-exclamation-triangle fa-spin"></i>&nbsp;Tirage invalide
+                </div>
+                break;
+            case CebStatus.CompteApproche:
+                <div class="bg-warning h-100 border border-dark" style="cursor: pointer;" @onclick="tirage.ClearAsync">
+                    <div class="text-dark d-flex justify-content-center">
+                        <div class="m-1"><i class="text-danger fas fa-thumbs-down"></i></div>
+                        <div class="m-1">Compte&nbsp;approch&eacute;</div>
+                        <div class="m-1">Trouvé:&nbsp;@tirage.Found</div>
+                        <div class="m-1">@tirage.Solutions.Count&nbsp;solutions</div>
+                        <div class="m-1">durée:&nbsp;@($"{duree:N3}")s</div>
+                    </div>
+                </div>
+                break;
+            case CebStatus.CompteEstBon:
+                <div class="bg-success h-100 border border-dark" style="cursor: pointer;" @onclick="tirage.ClearAsync">
+                    <div class="d-flex justify-content-center text-white">
+                        <div class="m-1"><i class="text-dark fas fa-thumbs-up"></i></div>
+                        <div class="m-1">Compte&nbsp;est&nbsp;bon</div>
+                        <div class="m-1">@tirage.Solutions.Count&nbsp;solutions</div>
+                        <div class="m-1">durée:&nbsp;@($"{duree:N3}")s</div>
+
+                    </div>
+                </div>
+                break;
+            default:
+                <div class="h-100">&nbsp;</div>
+                break;
+        }
+    </div>
 </div>
 <CebToast @ref="toast" @ref:suppressField DueTime="5000"></CebToast>
 
@@ -218,5 +227,9 @@
         toast.Show(0, duree);
     }
 
+    void ExportExcel() {
+        if (tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon) return;
+        solutions.ExcelExport(new ExcelExportProperties { ExportType = ExportType.AllPages });
+    }
 }
 

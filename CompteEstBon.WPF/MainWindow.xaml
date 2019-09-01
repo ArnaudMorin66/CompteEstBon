@@ -231,9 +231,9 @@
             CanUserSortColumns="False"
             ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
             FontSize="14"
-            HeadersVisibility="Column"
+            HeadersVisibility="None"
             IsTabStop="True"
-            ItemsSource="{Binding Tirage.Details}"
+            
             RowStyle="{StaticResource DataGridRowStyle}"
             SelectionChanged="SolutionsData_SelectionChanged"
             TabIndex="7">

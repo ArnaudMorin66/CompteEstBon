@@ -30,7 +30,8 @@ namespace CompteEstBon.ViewModel {
 
         private bool _isBusy;
 
-        public InAppNotification InAppNotification { get; set; }
+        // public InAppNotification InAppNotification { get; set; }
+        public MainPage CurrentPage { get; set; }
 
         // private bool _isCalculed;
         private DateTimeOffset _time;
@@ -48,7 +49,7 @@ namespace CompteEstBon.ViewModel {
 
         public IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
 
-        public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
+        // public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
         public string _date;
 
         public string Date {
@@ -216,9 +217,12 @@ namespace CompteEstBon.ViewModel {
         private void ClearData() {
             Duree = 0;
             StoryBoard?.Pause();
-
-            InAppNotification?.Dismiss();
-            Solutions.Clear();
+            if (CurrentPage != null) {
+                CurrentPage.cebNotification?.Dismiss();
+                if (CurrentPage.SolutionsData != null)
+                    CurrentPage.SolutionsData.ItemsSource = null;
+            }
+            
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");
 
@@ -266,8 +270,7 @@ namespace CompteEstBon.ViewModel {
                 $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}" : "Tirage incorrect");
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");
-            foreach (var s in Tirage.Solutions)
-                Solutions.Add(s.Detail);
+            CurrentPage.SolutionsData.ItemsSource = Tirage.Details;
             heureDispatcher.Stop();
             Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             UpdateColors();
@@ -292,14 +295,14 @@ namespace CompteEstBon.ViewModel {
             }
         }
         public void ShowNotify(int no) {
-            InAppNotification?.Dismiss();
+            CurrentPage.cebNotification?.Dismiss();
             if (no < 0) {
 
                 return;
             }
 
             CurrentSolution = Tirage.Solutions[no].ToString();
-            InAppNotification?.Show(10000);
+            CurrentPage.cebNotification?.Show(10000);
 
         }
         public Dictionary<CebStatus, string> ListeSymbols { get; } = new Dictionary<CebStatus, string>() {

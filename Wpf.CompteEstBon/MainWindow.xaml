@@ -329,7 +329,6 @@
             FontSize="14"
             HeaderStyle="{StaticResource SfDataGridHeaderStyle}"
             IsTabStop="True"
-            ItemsSource="{Binding Tirage.Details}"
             NavigationMode="Row"
             RowStyle="{StaticResource sfDataGridRowStyle}"
             SelectionChanged="SolutionsData_SelectionChanged"

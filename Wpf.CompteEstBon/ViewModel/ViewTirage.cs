@@ -48,6 +48,7 @@ namespace CompteEstBon {
         /// <returns>
         /// </returns>
         public ViewTirage() {
+            
             stopwatch = new Stopwatch();
 
             dateDispatcher = new DispatcherTimer {
@@ -82,6 +83,7 @@ namespace CompteEstBon {
 
         public ObservableCollection<string> Plaques { get; } =
             new ObservableCollection<string> { "", "", "", "", "", "" };
+
 
         public string Duree {
             get => _duree;
@@ -256,6 +258,10 @@ namespace CompteEstBon {
             Duree = stopwatch.Elapsed.ToString();
             IsComputed = false;
             Solution = "";
+            if ((Application.Current.MainWindow as MainWindow).SolutionsData != null)
+                (Application.Current.MainWindow as MainWindow).SolutionsData.ItemsSource = null;
+            
+            
             Result = Tirage.Status != CebStatus.Erreur ? "(...)" : "Tirage incorrect";
             HidePopup();
             UpdateColors();
@@ -265,7 +271,7 @@ namespace CompteEstBon {
             if (_isUpdating) return;
             _isUpdating = true;
 
-            for (var i = 0; i < Tirage.Plaques.Length; i++)
+            for (var i = 0; i < Tirage.Plaques.Count; i++)
                 Plaques[i] = Tirage.Plaques[i].Text;
 
             _isUpdating = false;
@@ -313,6 +319,9 @@ namespace CompteEstBon {
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
             Solution = Tirage.Solution.ToString();
+            (Application.Current.MainWindow as MainWindow).SolutionsData.ItemsSource = Tirage.Details; 
+           
+            // Solutions = new ObservableCollection<CebDetail>(Tirage.Details);
             UpdateColors();
             IsBusy = false;
             Solution = Tirage.Solution.ToString();

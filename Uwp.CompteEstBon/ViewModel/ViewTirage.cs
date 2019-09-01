@@ -18,6 +18,7 @@ using Windows.Storage.Provider;
 using Windows.System;
 using Windows.UI;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
 #endregion
@@ -51,8 +52,16 @@ namespace CompteEstBon {
         public ObservableCollection<int> Plaques { get; } = new ObservableCollection<int> { -1, -1, -1, -1, -1, -1 };
 
         public IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
+        private int _nsolutions;
+        public int NSolutions {
+            get => _nsolutions;
+            set {
+                _nsolutions = value;
+                NotifiedChanged();
+            }
+        }
 
-        public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
+        // public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
         public string _date;
 
         public string Date {
@@ -160,7 +169,7 @@ namespace CompteEstBon {
             HasardCommand = new DelegateCommand(Hasardcmd);
             ResolveCommand = new DelegateCommand(Resolvecmd);
             ExportCommand = new DelegateCommand(Exportcmd);
-            
+
             NotifyTimer = new DispatcherTimer {
                 Interval = TimeSpan.FromSeconds(5)
             };
@@ -181,8 +190,8 @@ namespace CompteEstBon {
             dateDispatcher.Tick += (sender, e) => {
                 Date = Date = $"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
-           
-            
+
+
             Plaques.CollectionChanged += (sender, e) => {
                 if (e.Action != NotifyCollectionChangedAction.Replace) return;
                 var i = e.NewStartingIndex;
@@ -191,7 +200,7 @@ namespace CompteEstBon {
                     ClearData();
                 }
             };
-            
+
             UpdateData();
             UpdateColors();
             Date = $"{DateTime.Now:dddd MM yyyy, HH:mm:ss}";
@@ -201,7 +210,7 @@ namespace CompteEstBon {
 
         private async void Hasardcmd(object obj) {
             await RandomAsync();
-            
+
         }
         private async void Resolvecmd(object obj) {
             switch (Tirage.Status) {
@@ -260,13 +269,13 @@ namespace CompteEstBon {
         }
 
         private void UpdateColors() {
-           
+
             (Background, Foreground) = Tirage.Status switch
             {
                 CebStatus.Valid => (Colors.DarkSlateGray, Colors.Yellow),
                 CebStatus.Erreur => (Colors.Red, Colors.White),
                 CebStatus.CompteEstBon => (Colors.DarkGreen, Colors.Yellow),
-                CebStatus.CompteApproche => (Colors.Salmon, Colors.White),
+                CebStatus.CompteApproche => (Colors.Chocolate, Colors.White),
                 CebStatus.EnCours => (Colors.Green, Colors.White),
                 _ => (Colors.DarkSlateGray, Colors.Yellow)
 
@@ -277,13 +286,19 @@ namespace CompteEstBon {
         private void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private void ClearData() {
-            if (NotifyTimer.IsEnabled) {
-                NotifyTimer.Stop();
-                PopupIsOpen = false;
-            }
+            PopupIsOpen = false;
+            NotifyTimer.Stop();
+            
             Duree = 0;
+            NSolutions = 0;
             FirstSolutionString = "";
-            Solutions.Clear();
+            var frame = Window.Current.Content as Frame;
+
+            if (frame.Content is MainPage page) {
+                page.SolutionsData.ItemsSource = null;
+            }
+
+
             IsCalculed = false;
 
             Result = Tirage.Status != CebStatus.Erreur ? "Résoudre" : "Tirage incorrect";
@@ -305,8 +320,8 @@ namespace CompteEstBon {
                 NotifyTimer.Stop();
                 PopupIsOpen = false;
             }
-
-            CurrentSolution = Tirage.Solutions.ElementAt(no).ToString();
+            if (no < 0) no = 0;
+            CurrentSolution = Tirage.SolutionIndex(no);
             PopupIsOpen = true; // Visibility.Visible;
             NotifyTimer.Start();
         }
@@ -327,6 +342,7 @@ namespace CompteEstBon {
         }
 
         public async Task RandomAsync() {
+            PopupIsOpen = false;
             await Tirage.RandomAsync();
             
             FirstSolutionString = "";
@@ -334,6 +350,7 @@ namespace CompteEstBon {
         }
 
         public async Task<CebStatus> ResolveAsync() {
+
             IsBusy = true;
 
             Result = "...Calcul...";
@@ -347,9 +364,14 @@ namespace CompteEstBon {
                 : (Tirage.Status == CebStatus.CompteApproche ?
                 $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}" : "Tirage incorrect");
             IsCalculed = (Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche);
-            FirstSolutionString = Tirage.Solutions.ElementAt(0).ToString();
-            foreach (var s in Tirage.Solutions)
-                Solutions.Add(s.Detail);
+            FirstSolutionString = Tirage.SolutionIndex(0);
+
+            var frame = Window.Current.Content as Frame;
+            var page = frame.Content as MainPage;
+            page.SolutionsData.ItemsSource = Tirage.Details;
+            NSolutions = Tirage.Details.Count;
+
+
             Dispatcher.Stop();
             Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             UpdateColors();
@@ -371,6 +393,6 @@ namespace CompteEstBon {
                 NotifiedChanged();
             }
         }
-        
+
     }
 }

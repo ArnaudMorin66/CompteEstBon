@@ -9,12 +9,13 @@
         @switch (tirage.Status) {
             case CebStatus.CompteEstBon:
                 <div class=" bg-gradient-success text-center text-uppercase w-100 font-weight-bold">
-                    <i class="fas fa-thumbs-up fa-2x"></i>&nbsp;Compte est bon
+                    <i class="text-dark fas fa-thumbs-up fa-2x"></i>&nbsp;Compte est bon
                 </div>
                 <div class="font-weight-bold text-center  w-100">
                     <div>&nbsp;</div>
                     <div>Trouvé:&nbsp;@tirage.Found</div>
-                    <div>Nombre de solutions:&nbsp;@tirage.Solutions.Count,&nbsp;Durée:&nbsp;@($"{Duree:N3}")&nbsp;s</div>
+                    <div>@tirage.Solutions.Count&nbsp;solutions</div>
+                    <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
                     <div class="separator"></div>
                     <div class="badge badge-success" style="font-weight: 400;">@Solution</div>
                     <div>&nbsp;</div>
@@ -22,14 +23,14 @@
                 break;
             case CebStatus.CompteApproche:
                 <div class="bg-gradient-warning text-center text-uppercase text-dark font-weight-bold">
-                    <i class="text-danger fas fa-thumbs-down fa-2x"></i>&nbsp;Compte
-                    approché
+                    <i class="text-danger fas fa-thumbs-down fa-2x"></i>&nbsp;Compte&nbsp;approché
                 </div>
                 <div class="text-center font-weight-bold w-100">
                     <div>&nbsp;</div>
                     <div>Trouvé(s):&nbsp;@tirage.Found</div>
                     <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
-                    <div>Nombre de solutions:&nbsp;@tirage.Solutions.Count,&nbsp;Durée:&nbsp;@($"{Duree:N3}")&nbsp;s </div>
+                    <div>@tirage.Solutions.Count&nbsp;solutions</div>
+                    <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
                     <div class="separator"></div>
                     <div class="badge badge-warning" style="font-weight: 400;">@Solution</div>
                     <div>&nbsp;</div>

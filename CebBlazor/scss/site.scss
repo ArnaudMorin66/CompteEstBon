@@ -19,14 +19,16 @@ body {
 }
 
 #solutions {
-    
+    .e-gridheader {
+        visibility:collapse;
+    }
+
     &.e-grid, .e-table {
         border-spacing: 0px;
         border-collapse: separate;
         border-color: $secondary;
         border-radius: 0;
         border-width: 1pt;
-        
     }
 
     .e-content {
@@ -44,12 +46,12 @@ body {
         padding: 0;
     }
 
-    .e-headertext {
+    /*.e-headertext {
         text-align: center;
         font-size: $font-size;
-    }
+    }*/
 
-    .e-headercell {
+    /*.e-headercell {
         background: radial-gradient($primary, $gray-700);
         color: white;
         font-weight: bold;
@@ -58,16 +60,16 @@ body {
         > div {
             text-align: center;
         }
-    }
+    }*/
 
     .e-lastrowcell {
         border-bottom-color: $primary;
         border-style: none;
     }
 
-    .e-gridheader {
+    /*.e-gridheader {
         border-color: $primary;
-    }
+    }*/
 
     .e-row {
         td.e-rowcell {
@@ -128,6 +130,9 @@ body {
     &:not(.e-success):not(.e-warning):not(.e-error),
     &.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error) {
         border-color: $secondary;
+        & .e-disabled{
+            background-color: $gray-700;
+        } 
     }
 
     &.e-control-wrapper input.e-input {
@@ -135,14 +140,14 @@ body {
         text-align: center;
         color: white;
         font-size: $font-size;
-        &.e-disabled {
+
+        & .e-disabled {
             background-color: $gray-700;
             color: white;
         }
-       
     }
 
-    
+
     &.e-control-wrapper {
         background-color: transparent; //  $primary; // $bg-body;
         &.e-disabled {
@@ -155,43 +160,49 @@ body {
         background-color: $secondary;
         color: white;
         border: thin;
+
         &.e-disabled {
             background-color: $gray-700;
-            color:white;
+            color: white;
         }
     }
-   
 }
 
 
-
-.e-dropdownbase .e-list-item {
+.e-dropdownbase {
+    padding: 0;
+    margin: 0;
     background-color: $bg-body;
-    color: white;
+    border-color: $secondary;
 
-    &:active {
+    .e-list-item {
         background-color: $bg-body;
-        color: yellow;
-    }
-
-    &.e-item-focus {
-        background-color: $primary;
         color: white;
-    }
 
-    &:hover {
-        background-color: $primary;
-        color: yellow;
-    }
+        &:active {
+            background-color: $bg-body;
+            color: yellow;
+        }
 
-    &:focus {
-        background-color: $black;
-        color: yellow;
-    }
+        &.e-item-focus {
+            background-color: $primary;
+            color: white;
+        }
 
-    &.e-item-focus:hover {
-        background-color: green;
-        color: white;
+        &.e-item-focus:hover {
+            background-color: darkslategrey;
+            color: red;
+        }
+
+        &:hover {
+            background-color: $primary;
+            color: yellow;
+        }
+
+        &:focus {
+            background-color: $black;
+            color: greenyellow;
+        }
     }
 }
 
@@ -204,21 +215,37 @@ body {
     min-width: 400px;
     z-index: 10;
     color: white;
-    border-style: solid;
+    border-style: ridge;
     border-spacing: 0;
     border-width: thin;
     border-color: white;
 }
 
+@keyframes resultat {
+    from {
+        transform: translateX(50%);
+        width: 50%;
+    }
+
+    to {
+        transform: translateX(0);
+        width: 100%;
+    }
+}
+
 .animation {
     animation-duration: 10s;
-    //animation-name: slidein;
-    animation-name: FadeZoomIn;
-    animation-direction:  alternate;
+    animation-name: resultat;
+    animation-direction: alternate-reverse;
     animation-iteration-count: infinite;
 }
 
 .gradient {
     background: radial-gradient($primary, $bg-body);
     background-image: radial-gradient( #505050, $primary); // (rgb(48, 48, 48), rgb(73, 80, 87));
+}
+
+.footer {
+    @extend .fixed-bottom;
+    height: 2rem;
 }
