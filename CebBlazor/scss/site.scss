@@ -8,8 +8,8 @@ $enable-shadows: true;
 $enable-responsive-font-sizes: true;
 $grid-header-border-color: $bg-body;
 
-@import "../node_modules/@syncfusion/ej2/bootstrap4.scss";
-@import "../node_modules/bootstrap/scss/bootstrap";
+@import "@syncfusion/ej2/bootstrap4.scss";
+@import "bootstrap/scss/bootstrap";
 
 
 html,
@@ -46,30 +46,10 @@ body {
         padding: 0;
     }
 
-    /*.e-headertext {
-        text-align: center;
-        font-size: $font-size;
-    }*/
-
-    /*.e-headercell {
-        background: radial-gradient($primary, $gray-700);
-        color: white;
-        font-weight: bold;
-        font-size: $font-size;
-
-        > div {
-            text-align: center;
-        }
-    }*/
-
     .e-lastrowcell {
         border-bottom-color: $primary;
         border-style: none;
     }
-
-    /*.e-gridheader {
-        border-color: $primary;
-    }*/
 
     .e-row {
         td.e-rowcell {
@@ -109,14 +89,6 @@ body {
 .card-text {
     background-color: $bg-body; //  lightslategray;
     color: black; // white;
-}
-
-
-
-
-
-.content {
-    padding-top: 1.1rem;
 }
 
 .separator {
@@ -226,7 +198,6 @@ body {
         transform: translateX(50%);
         width: 50%;
     }
-
     to {
         transform: translateX(0);
         width: 100%;

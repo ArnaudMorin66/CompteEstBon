@@ -76,7 +76,7 @@ namespace CompteEstBon {
         /// Ecart
         /// </summary>
         public int Diff { get; private set; } = int.MaxValue;
-        public ObservableCollection<CebPlaque> Plaques = new ObservableCollection<CebPlaque>();
+        public List<CebPlaque> Plaques = new List<CebPlaque>();
         // public CebPlaque[] Plaques { get; } = new CebPlaque[6];
 
         public void SetPlaques(params int[] plaq) {
@@ -97,6 +97,9 @@ namespace CompteEstBon {
         /// The status.
         /// </value>
         public CebStatus Status { get; private set; } = CebStatus.Indefini;
+        public void SetEncours() {
+            Status = CebStatus.EnCours;
+        }
 
         /// <summary>
         /// Return the find values
@@ -128,7 +131,7 @@ namespace CompteEstBon {
 
         public bool PlaquesValid => Plaques.All(p => p.IsValid
                                                      && Plaques.Count(q => q.Value == p.Value) <=
-                                                     CebPlaque.ListePlaques.Count(n => n == p.Value));
+                                                     (p <= 25 ? 2 : 1));
 
         /// <summary>
         /// Select the value and the plaque's list
@@ -137,6 +140,7 @@ namespace CompteEstBon {
             Status = CebStatus.EnCours;
             _search = Rnd.Next(100, 1000);
             var liste = new List<int>(CebPlaque.ListePlaques); // .ToList();
+            liste.AddRange(CebPlaque.ListePlaques.TakeWhile(i => i <= 25));
             foreach (var plaque in Plaques) {
                 var n = Rnd.Next(0, liste.Count());
                 plaque.Value2 = liste[n];

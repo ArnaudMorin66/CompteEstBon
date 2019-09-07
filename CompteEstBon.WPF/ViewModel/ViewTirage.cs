@@ -248,11 +248,11 @@ namespace CompteEstBon.ViewModel {
             (Background, Foreground) = Tirage.Status switch
 #pragma warning restore CS8509 // L'expression switch ne prend pas en charge toutes les entrées possibles (elle n'est pas exhaustive).
             {
-                CebStatus.Valid => (Colors.DarkOliveGreen, Colors.White),
+                CebStatus.Valid => (Color.FromRgb(48,48,48), Colors.White),
                 CebStatus.Erreur => (Colors.Red, Colors.White),
-                CebStatus.CompteEstBon => (Colors.LightGreen, Colors.Yellow),
-                CebStatus.CompteApproche => (Colors.Salmon, Colors.White),
-                CebStatus.EnCours => (Colors.Yellow, Colors.White)
+                CebStatus.CompteEstBon => (Colors.LightGreen, Colors.Black),
+                CebStatus.CompteApproche => (Color.FromRgb(0xe0, 0xa8, 0), Colors.Black),
+                CebStatus.EnCours => (Color.FromRgb(64,64,64), Colors.White)
 
             };
         }
@@ -269,8 +269,8 @@ namespace CompteEstBon.ViewModel {
             stopwatch.Reset();
             Duree = stopwatch.Elapsed.ToString();
             Solution = "";
-            if ((Application.Current.MainWindow as MainWindow).SolutionsData != null)
-                (Application.Current.MainWindow as MainWindow).SolutionsData.ItemsSource = null;
+            if (ActiveWindow.SolutionsData != null)
+                ActiveWindow.SolutionsData.ItemsSource = null;
             Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
             HidePopup();
             UpdateColors();
@@ -312,7 +312,7 @@ namespace CompteEstBon.ViewModel {
             UpdateData();
         }
 
-
+        public static MainWindow ActiveWindow => Application.Current.MainWindow as MainWindow;
 
         public async Task ResolveAsync() {
             IsBusy = true;
@@ -332,7 +332,7 @@ namespace CompteEstBon.ViewModel {
             UpdateColors();
             IsBusy = false;
             Solution = Tirage.Solution.ToString();
-            (Application.Current.MainWindow as MainWindow).SolutionsData.ItemsSource = Tirage.Details;
+            ActiveWindow.SolutionsData.ItemsSource = Tirage.Details;
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");
             ShowNotify();

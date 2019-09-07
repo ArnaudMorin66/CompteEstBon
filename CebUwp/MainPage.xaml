@@ -219,7 +219,7 @@
                     Foreground="White"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     IsTabStop="False" />
-                <TextBox
+                <TextBox 
                     x:Name="search"
                     Grid.Column="1"
                     GotFocus="Search_GotFocus"

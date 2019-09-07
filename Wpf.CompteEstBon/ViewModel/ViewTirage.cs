@@ -258,8 +258,8 @@ namespace CompteEstBon {
             Duree = stopwatch.Elapsed.ToString();
             IsComputed = false;
             Solution = "";
-            if ((Application.Current.MainWindow as MainWindow).SolutionsData != null)
-                (Application.Current.MainWindow as MainWindow).SolutionsData.ItemsSource = null;
+            if (Window.SolutionsData != null)
+                Window.SolutionsData.ItemsSource = null;
             
             
             Result = Tirage.Status != CebStatus.Erreur ? "(...)" : "Tirage incorrect";
@@ -302,7 +302,7 @@ namespace CompteEstBon {
             await Tirage.RandomAsync();
             UpdateData();
         }
-
+        public static MainWindow Window => Application.Current.MainWindow as MainWindow;
         public async Task<CebStatus> ResolveAsync() {
             IsBusy = true;
             Animation?.Begin();
@@ -319,7 +319,7 @@ namespace CompteEstBon {
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
             Solution = Tirage.Solution.ToString();
-            (Application.Current.MainWindow as MainWindow).SolutionsData.ItemsSource = Tirage.Details; 
+            Window.SolutionsData.ItemsSource = Tirage.Details; 
            
             // Solutions = new ObservableCollection<CebDetail>(Tirage.Details);
             UpdateColors();

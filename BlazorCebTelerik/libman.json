@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "defaultProvider": "filesystem",
+  "libraries": [
+    {
+      "library": "node_modules/@fortawesome/fontawesome-free/js",
+      "destination": "wwwroot/lib/fontawesome/",
+      "files": [
+        "all.min.js"
+      ]
+    }
+  ]
+}

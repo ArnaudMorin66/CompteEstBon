@@ -1,93 +1,101 @@
 @using CompteEstBon
-@using System.Threading
+@using System.Timers
 @using System.ComponentModel
 @inject CebTirage tirage
-
-
-<div class="a-toast @Display">
-    <div class="text-white">
-        @switch (tirage.Status) {
-            case CebStatus.CompteEstBon:
-                <div class=" bg-gradient-success text-center text-uppercase w-100 font-weight-bold">
-                    <i class="text-dark fas fa-thumbs-up fa-2x"></i>&nbsp;Compte est bon
-                </div>
-                <div class="font-weight-bold text-center  w-100">
-                    <div>&nbsp;</div>
-                    <div>Trouvé:&nbsp;@tirage.Found</div>
-                    <div>@tirage.Solutions.Count&nbsp;solutions</div>
-                    <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
-                    <div class="separator"></div>
-                    <div class="badge badge-success" style="font-weight: 400;">@Solution</div>
-                    <div>&nbsp;</div>
-                </div>
-                break;
-            case CebStatus.CompteApproche:
-                <div class="bg-gradient-warning text-center text-uppercase text-dark font-weight-bold">
-                    <i class="text-danger fas fa-thumbs-down fa-2x"></i>&nbsp;Compte&nbsp;approché
-                </div>
-                <div class="text-center font-weight-bold w-100">
-                    <div>&nbsp;</div>
-                    <div>Trouvé(s):&nbsp;@tirage.Found</div>
-                    <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
-                    <div>@tirage.Solutions.Count&nbsp;solutions</div>
-                    <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
-                    <div class="separator"></div>
-                    <div class="badge badge-warning" style="font-weight: 400;">@Solution</div>
-                    <div>&nbsp;</div>
-                </div>
-                break;
-            case CebStatus.Erreur:
-                <div class="bg-gradient-danger text-center text-uppercase text-white w-100">
-                    <i class="fas fa-exclamation-triangle fa-2x"></i>&nbsp;tirage invalide
-                </div>
-                break;
-            case CebStatus.EnCours:
-                <div class=" bg-gradient-info text-center w-100 p-2">
-                    <i class="align-middle fas fa-compass fa-spin fa-2x"></i>En
-                    attente
-                </div>
-                break;
-            default:
-                <div></div>
-                break;
-        }
+@if (timer.Enabled) {
+    <div class="a-toast">
+        <div class="text-white">
+            @switch (tirage.Status) {
+                case CebStatus.CompteEstBon:
+                    <div class=" bg-gradient-success text-center text-uppercase font-weight-bold">
+                        <div class="animation">
+                            <i class="text-dark far fa-thumbs-up"></i>&nbsp;Compte est bon
+                        </div>
+                    </div>
+                    <div class="font-weight-bold text-center">
+                        <div>&nbsp;</div>
+                        <div>Trouvé:&nbsp;@tirage.Found</div>
+                        <div>@tirage.Solutions.Count&nbsp;solutions</div>
+                        <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
+                        <div class="separator"></div>
+                        <div class="badge badge-success" style="font-weight: 400;">@Solution</div>
+                        <div>&nbsp;</div>
+                    </div>
+                    break;
+                case CebStatus.CompteApproche:
+                    <div class="bg-gradient-warning text-center text-uppercase text-dark font-weight-bold">
+                        <div class="animation">
+                            <i class="text-danger far fa-thumbs-down"></i>&nbsp;Compte&nbsp;approché
+                        </div>
+                    </div>
+                    <div class="text-center font-weight-bold">
+                        <div>&nbsp;</div>
+                        <div>Trouvé(s):&nbsp;@tirage.Found</div>
+                        <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
+                        <div>@tirage.Solutions.Count&nbsp;solutions</div>
+                        <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
+                        <div class="separator"></div>
+                        <div class="badge badge-warning" style="font-weight: 400;">@Solution</div>
+                        <div>&nbsp;</div>
+                    </div>
+                    break;
+                case CebStatus.Erreur:
+                    <div class="bg-gradient-danger text-center text-uppercase text-white">
+                        <div class="animation">
+                            <i class="fas fa-exclamation-triangle"></i>&nbsp;tirage invalide
+                        </div>
+                    </div>
+                    break;
+                case CebStatus.EnCours:
+                    <div class=" bg-gradient-info text-center">
+                        <div class="animation">
+                            <i class="align-middle fas fa-compass fa-spin"></i>Patientez,&nbsp;calcul&nbsp;en&nbsp;cours
+                        </div>
+                    </div>
+                    break;
+                default:
+                    <div></div>
+                    break;
+            }
+        </div>
     </div>
-</div>
-<div>&nbsp;</div>
-
+}
 @code {
     protected Timer timer;
-    protected string Display { get; set; }
 
-    public string Solution { get; set; }
+    public CebDetail Solution { get; set; }
 
     public double Duree { get; set; }
     [Parameter]
     public int DueTime { get; set; }
 
     protected override void OnInitialized() {
-        Display = "invisible";
+
         DueTime = 10000;
+        timer = new Timer();
+        timer.AutoReset = false;
+        timer.Interval = DueTime;
+        timer.Elapsed += (source, e) => {
+            InvokeAsync(StateHasChanged);
+
+        };
 
     }
 
-    public void Show(int no = 0, double duree = 0) {
-        timer?.Dispose();
-        Solution = tirage.SolutionIndex(no);
+    public void Show(dynamic detail, double duree = 0) {
+        timer?.Stop();
+        if (detail is CebDetail d)
+            Solution = d;
+        else
+            Solution = tirage.Details[(int) detail];
         Duree = duree;
-        Display = "";
+        timer.Start();
         InvokeAsync(StateHasChanged);
+        timer.Interval = DueTime;
 
-
-        timer = new Timer(new TimerCallback(_ => {
-            Display = "invisible";
-            InvokeAsync(StateHasChanged);
-            timer.Dispose();
-        }), null, DueTime, 0);
     }
     public void Hide() {
-        timer?.Dispose();
-        Display = "invisible";
+        timer.Stop();
         InvokeAsync(StateHasChanged);
     }
 

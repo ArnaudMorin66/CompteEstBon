@@ -326,8 +326,8 @@
             Background="{StaticResource CebLinearGradientBrush2}"
             CellStyle="{StaticResource SfDataGridCellStyle}"
             ColumnSizer="Star"
-            FontSize="14"
-            HeaderStyle="{StaticResource SfDataGridHeaderStyle}"
+            FontSize="12"
+            HeaderRowHeight="0"
             IsTabStop="True"
             NavigationMode="Row"
             RowStyle="{StaticResource sfDataGridRowStyle}"
@@ -335,27 +335,22 @@
             TabIndex="10">
             <s:SfDataGrid.Columns>
                 <s:GridTextColumn
-                    HeaderText="Opération 1"
                     MappingName="Op1"
                     TextAlignment="Center"
                     UseBindingValue="True" />
                 <s:GridTextColumn
-                    HeaderText="Opération 2"
                     MappingName="Op2"
                     TextAlignment="Center"
                     UseBindingValue="True" />
                 <s:GridTextColumn
-                    HeaderText="Opération 3"
                     MappingName="Op3"
                     TextAlignment="Center"
                     UseBindingValue="True" />
                 <s:GridTextColumn
-                    HeaderText="Opération 4"
                     MappingName="Op4"
                     TextAlignment="Center"
                     UseBindingValue="True" />
                 <s:GridTextColumn
-                    HeaderText="Opération 5"
                     MappingName="Op5"
                     TextAlignment="Center"
                     UseBindingValue="True" />

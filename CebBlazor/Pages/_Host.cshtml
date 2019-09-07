@@ -11,12 +11,14 @@
     <title>Compte est bon</title>
     <base href="~/" />
     <link href="css/site.css" rel="stylesheet" />  
-    <script src="~/lib/fontawesome/all.min.js" data-auto-replace-svg="nest"></script>
+    <script defer src="~/lib/fontawesome/all.min.js" data-auto-replace-svg="nest"></script>
+    <script src="~/lib/ej2.min.js"></script> 
     <script src="~/lib/ejs.interop.min.js"></script>
-    <script src="~/lib/ej2.min.js"></script>    
 </head>
 <body>
-    <app>@(await Html.RenderComponentAsync<App>())</app>
+     <app>
+        @(await Html.RenderComponentAsync<App>(RenderMode.ServerPrerendered))
+    </app>
     <script src="_framework/blazor.server.js"></script>
 </body>
 </html>

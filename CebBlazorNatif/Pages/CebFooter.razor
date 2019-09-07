@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Components
+@using System.Runtime.InteropServices
+@using System.Timers
+<div class="footer d-flex bg-gradient-dark justify-content-between align-items-center border border-secondary">
+    <span class="badge badge-pill badge-info">
+        &copy;Arnaud Morin,&nbsp;
+        @RuntimeInformation.FrameworkDescription
+    </span>
+    <span class="badge badge-pill badge-info">@($"{heure:dddd dd MMMM yyyy à HH:mm:ss}")</span>
+</div>
+
+@code {
+    Timer timer;
+    DateTime heure;
+    protected override void OnInitialized() {
+        heure = DateTime.Now;
+        timer = new Timer();
+        timer.Interval = 1000;
+        timer.AutoReset = true;
+
+        timer.Elapsed += (source, e) => {
+            heure = e.SignalTime;
+            InvokeAsync(StateHasChanged);
+        };
+        timer.Start();
+    }
+
+}

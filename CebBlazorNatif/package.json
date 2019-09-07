@@ -1,0 +1,17 @@
+{
+  "name": "cebblazor",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "sass-debug": "node-sass scss/site.scss -o wwwroot/css/ --include-path node_modules/ --include-path node_modules/@syncfusion/ --source-map true",
+    "sass-release": "node-sass scss/site.scss -o wwwroot/css/ --include-path node_modules/ --include-path node_modules/@syncfusion/ --output-style compressed"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.10.1",
+    "bootstrap": "^4.3.1"
+  },
+  "devDependencies": {
+    "node-sass": "^4.12.0"
+  }
+}

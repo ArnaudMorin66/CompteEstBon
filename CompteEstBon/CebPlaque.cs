@@ -13,7 +13,7 @@ namespace CompteEstBon {
 
         public static readonly int[] ListePlaques = {
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-            25, 50, 75, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,25
+            25, 50, 75, 100
         };
 
         public event PropertyChangedEventHandler PropertyChanged;

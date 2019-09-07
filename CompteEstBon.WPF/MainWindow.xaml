@@ -99,10 +99,10 @@
     </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -117,271 +117,8 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Label
+         <Grid
             Grid.Row="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="8"
-            Content="Plaques"
-            Style="{StaticResource LabelTitreStyle}" />
-        <Border
-            Grid.Row="1"
-            Grid.Column="0"
-            Grid.ColumnSpan="8"
-            Margin="0"
-            Padding="0"
-            BorderBrush="Black"
-            BorderThickness="1">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <ComboBox
-                    x:Name="Plaque1"
-                    Grid.Column="0"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    TabIndex="0"
-                    Text="{Binding Plaques[0], Mode=TwoWay}" />
-                <ComboBox
-                    x:Name="Plaque2"
-                    Grid.Column="1"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    TabIndex="1"
-                    Text="{Binding Plaques[1], Mode=TwoWay}" />
-                <ComboBox
-                    x:Name="Plaque3"
-                    Grid.Column="2"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    TabIndex="2"
-                    Text="{Binding Plaques[2], Mode=TwoWay}" />
-                <ComboBox
-                    x:Name="Plaque4"
-                    Grid.Column="3"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    TabIndex="3"
-                    Text="{Binding Plaques[3], Mode=TwoWay}" />
-                <ComboBox
-                    x:Name="Plaque5"
-                    Grid.Column="4"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    TabIndex="4"
-                    Text="{Binding Plaques[4], Mode=TwoWay}" />
-                <ComboBox
-                    x:Name="Plaque6"
-                    Grid.Column="5"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    Text="{Binding Plaques[5], Mode=TwoWay}" />
-            </Grid>
-        </Border>
-        <Label
-            Grid.Row="0"
-            Grid.Column="8"
-            Grid.ColumnSpan="2"
-            Content="Chercher"
-            Style="{StaticResource LabelTitreStyle}" />
-        <Border
-            Grid.Row="1"
-            Grid.Column="8"
-            Grid.ColumnSpan="2"
-            Style="{StaticResource BorderTitreStyle}">
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="16" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="16" />
-                </Grid.ColumnDefinitions>
-                <RepeatButton
-                    x:Name="tbMoins"
-                    Grid.Column="0"
-                    Click="TbMoins_Click"
-                    Content="-"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    Style="{StaticResource CebRepeatButtonStyle}" />
-                <TextBox
-                    Grid.Column="1"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    Style="{StaticResource SearchControlStyle}"
-                    Text="{Binding Search, Mode=TwoWay}" />
-                <RepeatButton
-                    x:Name="tbPlus"
-                    Grid.Column="2"
-                    Click="TbPlus_Click"
-                    Content="+"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    Style="{StaticResource CebRepeatButtonStyle}" />
-            </Grid>
-        </Border>
-        <DataGrid
-            x:Name="SolutionsData"
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="10"
-            x:FieldModifier="public"
-            AutoGenerateColumns="False"
-            Background="{DynamicResource CebLinearGradientBrush2}"
-            CanUserAddRows="False"
-            CanUserDeleteRows="False"
-            CanUserReorderColumns="False"
-            CanUserResizeColumns="False"
-            CanUserResizeRows="False"
-            CanUserSortColumns="False"
-            ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-            FontSize="14"
-            HeadersVisibility="None"
-            IsTabStop="True"
-            
-            RowStyle="{StaticResource DataGridRowStyle}"
-            SelectionChanged="SolutionsData_SelectionChanged"
-            TabIndex="7">
-            <DataGrid.Columns>
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding Op1}"
-                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
-                    Header="Opération 1" />
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding Op2}"
-                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
-                    Header="Opération 2" />
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding Op3}"
-                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
-                    Header="Opération 3" />
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding Op4}"
-                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
-                    Header="Opération 4" />
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding Op5}"
-                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
-                    Header="Opération 5" />
-            </DataGrid.Columns>
-        </DataGrid>
-        <Popup
-            Width="400"
-            Height="120"
-            IsOpen="{Binding Popup}"
-            Placement="Center"
-            PlacementTarget="{Binding ElementName=SolutionsData}">
-            <StackPanel
-                HorizontalAlignment="Stretch"
-                Background="Black"
-                Orientation="Vertical">
-                <Label
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    HorizontalContentAlignment="Center"
-                    Background="{DynamicResource ButtonBackgroundBrush}"
-                    Content="{Binding Result}"
-                    FontSize="12"
-                    FontWeight="ExtraBlack"
-                    Foreground="{DynamicResource ButtonForegroundBrush}" />
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontSize="12"
-                    FontWeight="ExtraBlack"
-                    Foreground="Yellow"
-                    Text="{Binding Solution}" />
-                <Separator Background="Transparent" />
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontSize="12"
-                    FontWeight="Medium"
-                    Foreground="White"
-                    TextAlignment="Center"><Run Text="Nombre de solutions: " /><Run Text="{Binding Solutions.Count, Mode=OneWay}" /></TextBlock>
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontSize="12"
-                    FontWeight="Medium"
-                    Foreground="White"
-                    TextAlignment="Center"><Run Text="Durée: " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
-            </StackPanel>
-        </Popup>
-        <TextBlock
-            Name="Wait"
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="10"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Panel.ZIndex="10"
-            FontFamily="Wingdings 3"
-            FontSize="50"
-            FontWeight="Bold"
-            Foreground="Yellow"
-            RenderTransformOrigin="0.5, 0.5"
-            Text="&#x50;"
-            Visibility="{Binding IsBusy, Converter={StaticResource BusyVisibilityConverter}}">
-            <TextBlock.RenderTransform>
-                <RotateTransform Angle="0" />
-            </TextBlock.RenderTransform>
-        </TextBlock>
-        <Grid
-            Grid.Row="4"
-            Grid.Column="0"
-            Grid.ColumnSpan="10"
-            Margin="0,0,0,0"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Center"
-            Background="{DynamicResource ButtonBackgroundBrush}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                x:Name="textBlock1"
-                Grid.Column="0"
-                Height="35"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontWeight="Bold"
-                Foreground="{DynamicResource ButtonForegroundBrush}"
-                TextAlignment="Center"
-                Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
-                <TextBlock.RenderTransform>
-                    <ScaleTransform x:Name="AnimatedScaleResult" ScaleX="1" ScaleY="1" />
-                </TextBlock.RenderTransform><Run Text="{Binding Result}" /></TextBlock>
-            <TextBlock
-                x:Name="textBlock2"
-                Grid.Column="1"
-                Height="35"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontWeight="Bold"
-                Foreground="{DynamicResource ButtonForegroundBrush}"
-                TextAlignment="Center"
-                Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
-                <TextBlock.RenderTransform>
-                    <ScaleTransform x:Name="AnimatedScaleSolutions" ScaleX="0.5" ScaleY="1" />
-                </TextBlock.RenderTransform><Run Text="Nombre de solutions: " /><Run Text=" " /><Run Text="{Binding Solutions.Count, Mode=OneWay}" /></TextBlock>
-            <TextBlock
-                x:Name="textBlock3"
-                Grid.Column="2"
-                Height="35"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontWeight="Bold"
-                Foreground="{DynamicResource ButtonForegroundBrush}"
-                TextAlignment="Center"
-                Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
-                <TextBlock.RenderTransform>
-                    <ScaleTransform x:Name="AnimatedScaleDuree" ScaleX="1" ScaleY="1" />
-                </TextBlock.RenderTransform><Run Text="Durée: " /><Run Text=" " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
-        </Grid>
-        <Grid
-            Grid.Row="4"
             Grid.Column="0"
             Grid.ColumnSpan="10"
             Background="{StaticResource ButtonBackgroundBrush}">
@@ -585,6 +322,270 @@
                 FontWeight="Bold"
                 Foreground="White"
                 ToolTipService.ToolTip="Fermer" />
+        </Grid>
+        <Label
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="8"
+            Content="Plaques"
+            Style="{StaticResource LabelTitreStyle}" />
+        <Border
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="8"
+            Margin="0"
+            Padding="0"
+            BorderBrush="Black"
+            BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <ComboBox
+                    x:Name="Plaque1"
+                    Grid.Column="0"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    TabIndex="0"
+                    Text="{Binding Plaques[0], Mode=TwoWay}" />
+                <ComboBox
+                    x:Name="Plaque2"
+                    Grid.Column="1"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    TabIndex="1"
+                    Text="{Binding Plaques[1], Mode=TwoWay}" />
+                <ComboBox
+                    x:Name="Plaque3"
+                    Grid.Column="2"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    TabIndex="2"
+                    Text="{Binding Plaques[2], Mode=TwoWay}" />
+                <ComboBox
+                    x:Name="Plaque4"
+                    Grid.Column="3"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    TabIndex="3"
+                    Text="{Binding Plaques[3], Mode=TwoWay}" />
+                <ComboBox
+                    x:Name="Plaque5"
+                    Grid.Column="4"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    TabIndex="4"
+                    Text="{Binding Plaques[4], Mode=TwoWay}" />
+                <ComboBox
+                    x:Name="Plaque6"
+                    Grid.Column="5"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    Text="{Binding Plaques[5], Mode=TwoWay}" />
+            </Grid>
+        </Border>
+        <Label
+            Grid.Row="1"
+            Grid.Column="8"
+            Grid.ColumnSpan="2"
+            Content="Chercher"
+            Style="{StaticResource LabelTitreStyle}" />
+        <Border
+            Grid.Row="2"
+            Grid.Column="8"
+            Grid.ColumnSpan="2"
+            Style="{StaticResource BorderTitreStyle}">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="16" />
+                </Grid.ColumnDefinitions>
+                <RepeatButton
+                    x:Name="tbMoins"
+                    Grid.Column="0"
+                    Click="TbMoins_Click"
+                    Content="-"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    Style="{StaticResource CebRepeatButtonStyle}" />
+                <TextBox
+                    Grid.Column="1"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    Style="{StaticResource SearchControlStyle}"
+                    Text="{Binding Search, Mode=TwoWay}" />
+                <RepeatButton
+                    x:Name="tbPlus"
+                    Grid.Column="2"
+                    Click="TbPlus_Click"
+                    Content="+"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    Style="{StaticResource CebRepeatButtonStyle}" />
+            </Grid>
+        </Border>
+        <DataGrid
+            x:Name="SolutionsData"
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="10"
+            x:FieldModifier="public"
+            AutoGenerateColumns="False"
+            Background="{DynamicResource CebLinearGradientBrush2}"
+            CanUserAddRows="False"
+            CanUserDeleteRows="False"
+            CanUserReorderColumns="False"
+            CanUserResizeColumns="False"
+            CanUserResizeRows="False"
+            CanUserSortColumns="False"
+            ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+            FontSize="14"
+            GridLinesVisibility="Horizontal"
+            HeadersVisibility="None"
+            HorizontalGridLinesBrush="#FF303030"
+            IsTabStop="True"
+            RowStyle="{StaticResource DataGridRowStyle}"
+            SelectionChanged="SolutionsData_SelectionChanged"
+            TabIndex="7">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Op1}"
+                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
+                    Header="Opération 1" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Op2}"
+                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
+                    Header="Opération 2" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Op3}"
+                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
+                    Header="Opération 3" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Op4}"
+                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
+                    Header="Opération 4" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Op5}"
+                    ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
+                    Header="Opération 5" />
+            </DataGrid.Columns>
+        </DataGrid>
+        <Popup
+            Width="400"
+            Height="120"
+            IsOpen="{Binding Popup}"
+            Placement="Center"
+            PlacementTarget="{Binding ElementName=SolutionsData}">
+            <StackPanel
+                HorizontalAlignment="Stretch"
+                Background="Black"
+                Orientation="Vertical">
+                <Label
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Content="{Binding Result}"
+                    FontSize="12"
+                    FontWeight="ExtraBlack"
+                    Foreground="{DynamicResource ButtonForegroundBrush}" />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    FontWeight="ExtraBlack"
+                    Foreground="Yellow"
+                    Text="{Binding Solution}" />
+                <Separator Background="Transparent" />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    TextAlignment="Center"><Run Text="Nombre de solutions: " /><Run Text="{Binding Solutions.Count, Mode=OneWay}" /></TextBlock>
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    FontWeight="Medium"
+                    Foreground="White"
+                    TextAlignment="Center"><Run Text="Durée: " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
+            </StackPanel>
+        </Popup>
+        <TextBlock
+            Name="Wait"
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="10"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Panel.ZIndex="10"
+            FontFamily="Wingdings 3"
+            FontSize="50"
+            FontWeight="Bold"
+            Foreground="Yellow"
+            RenderTransformOrigin="0.5, 0.5"
+            Text="&#x50;"
+            Visibility="{Binding IsBusy, Converter={StaticResource BusyVisibilityConverter}}">
+            <TextBlock.RenderTransform>
+                <RotateTransform Angle="0" />
+            </TextBlock.RenderTransform>
+        </TextBlock>
+        <Grid
+            Grid.Row="5"
+            Grid.Column="0"
+            Grid.ColumnSpan="10"
+            Margin="0,0,0,0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
+            Background="{DynamicResource ButtonBackgroundBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                x:Name="textBlock1"
+                Grid.Column="0"
+                Height="35"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontWeight="Bold"
+                Foreground="{DynamicResource ButtonForegroundBrush}"
+                TextAlignment="Center"
+                Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
+                <TextBlock.RenderTransform>
+                    <ScaleTransform x:Name="AnimatedScaleResult" ScaleX="1" ScaleY="1" />
+                </TextBlock.RenderTransform><Run Text="{Binding Result}" /></TextBlock>
+            <TextBlock
+                x:Name="textBlock2"
+                Grid.Column="1"
+                Height="35"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontWeight="Bold"
+                Foreground="{DynamicResource ButtonForegroundBrush}"
+                TextAlignment="Center"
+                Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
+                <TextBlock.RenderTransform>
+                    <ScaleTransform x:Name="AnimatedScaleSolutions" ScaleX="0.5" ScaleY="1" />
+                </TextBlock.RenderTransform><Run Text="Nombre de solutions: " /><Run Text=" " /><Run Text="{Binding Solutions.Count, Mode=OneWay}" /></TextBlock>
+            <TextBlock
+                x:Name="textBlock3"
+                Grid.Column="2"
+                Height="35"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontWeight="Bold"
+                Foreground="{DynamicResource ButtonForegroundBrush}"
+                TextAlignment="Center"
+                Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
+                <TextBlock.RenderTransform>
+                    <ScaleTransform x:Name="AnimatedScaleDuree" ScaleX="1" ScaleY="1" />
+                </TextBlock.RenderTransform><Run Text="Durée: " /><Run Text=" " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
         </Grid>
     </Grid>
 </Window>

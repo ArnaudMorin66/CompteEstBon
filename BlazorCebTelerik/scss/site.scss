@@ -1,0 +1,157 @@
+// $primary: darkslategray;
+$primary: #303030;
+$bg-body: #404040;
+
+$font-size: 0.8rem;
+$enable-gradients: true;
+$enable-shadows: true;
+$enable-responsive-font-sizes: true;
+$grid-header-border-color: $bg-body;
+@import "bootstrap/scss/bootstrap";
+
+@import "@progress/kendo-theme-bootstrap/scss/all";
+
+
+html,
+body {
+    background-color: $bg-body;
+    font-size: $font-size;
+}
+
+.solutions {
+    div.k-grid-header {
+        visibility: collapse;
+       height:0;
+       border-style:none;
+       margin:0;
+       padding:0;
+    }
+
+    
+
+    .k-grid-content {
+        background-color: $bg-body;
+        border: 1pt solid black;
+        
+
+        tr {
+            text-align: center;
+            border-color: $secondary;
+        }
+
+        tr:not(.k-alt):not(.k-grid-norecords) {
+            background-color: $bg-body;
+            color: White;
+            font-weight: bolder;
+        }
+
+        tr.k-alt {
+            color: yellow;
+            background-color: $primary;
+            font-weight: bolder;
+        }
+
+        td.k-state-selected, tr.k-state-selected > td {
+            color: white;
+            background-color: $black;
+            font-weight: bolder;
+        }
+    }
+}
+
+.card-body,
+.card-text {
+    background-color: $bg-body; //  lightslategray;
+    color: black; // white;
+}
+
+
+
+.content {
+    padding-top: 1.1rem;
+}
+
+.separator {
+    margin: 0%;
+    padding: 0%;
+    height: 0.1rem;
+}
+
+.k-dropdown-wrap , .k-numeric-wrap  {
+    & > .k-input {
+        background-color: $bg-body;
+        color: white;
+        text-align:center;
+    }
+    & > input {
+        text-align:center;
+    }
+    .k-input {
+        text-align: center;
+    }
+}
+ span.k-input {
+        text-align: center;
+    }
+
+ span.k-icon {
+     color: black;
+ }
+ .k-searchbar > .k-input, .k-numeric-wrap > .k-input {
+    
+    color:  white;
+    text-align: center;
+}
+.k-popup {
+    background-color: $bg-body;
+    color: white;
+    border-color: black;
+    width: 200px;
+    text-align:center;
+}
+
+
+
+.a-toast {
+    @extend .bg-gradient-primary;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 400px;
+    z-index: 10;
+    color: white;
+    border-style: ridge;
+    border-spacing: 0;
+    border-width: thin;
+    border-color: white;
+}
+
+@keyframes resultat {
+    from {
+        transform: translateX(50%);
+        width: 50%;
+    }
+
+    to {
+        transform: translateX(0);
+        width: 100%;
+    }
+}
+
+.animation {
+    animation-duration: 10s;
+    animation-name: resultat;
+    animation-direction: alternate-reverse;
+    animation-iteration-count: infinite;
+}
+
+.gradient {
+    background: radial-gradient($primary, $bg-body);
+    background-image: radial-gradient( #505050, $primary); // (rgb(48, 48, 48), rgb(73, 80, 87));
+}
+
+.footer {
+    @extend .fixed-bottom;
+    height: 2rem;
+}

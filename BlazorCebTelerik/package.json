@@ -1,0 +1,20 @@
+{
+  "name": "cebblazor",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "sass-debug": "node-sass scss/site.scss -o wwwroot/css/ --include-path node_modules/ --source-map true",
+    "sass-release": "node-sass scss/site.scss -o wwwroot/css/ --include-path node_modules/ --output-style compressed"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.10.1",
+    "bootstrap": "^4.3.1",
+    "@progress/kendo-theme-bootstrap": "^4.1.0",
+    "@progress/kendo-theme-default": "^4.1.0",
+    "@progress/kendo-theme-material": "^3.1.0"
+  },
+  "devDependencies": {
+    "node-sass": "^4.12.0"
+  }
+}
