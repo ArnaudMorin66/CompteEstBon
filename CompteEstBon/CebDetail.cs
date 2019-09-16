@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace CompteEstBon {
     public class CebDetail {
@@ -7,8 +8,25 @@ namespace CompteEstBon {
         public string Op3 { get; set; }
         public string Op4 { get; set; }
         public string Op5 { get; set; }
+        public CebDetail() {
+
+        }
+        public CebDetail(CebBase ceb): this(ceb.Operations) {
+
+        }
+        public CebDetail(IEnumerable<string> op) {
+            var type = typeof(CebDetail);
+            foreach (var (o, i) in op.WithIndex()) {
+                type.GetProperty($"Op{i + 1}").SetValue(this, o);
+            }
+        }
         public override string ToString() => string.Join(", ", GetType().GetProperties()
-                .Where(item => item.Name.StartsWith("Op"))
-                    .Select(o => o.GetValue(this) as string).Where(v => !string.IsNullOrEmpty(v)));//foreach (var item in GetType().GetProperties()//    .Where(item => item.Name.StartsWith("Op"))) {//    var value = item.GetValue(this) as string;//    if (string.IsNullOrEmpty(value)) break;//    result += $"{(string.IsNullOrEmpty(result) ? "" : ", ")}{ value }";//}//return result;
+            .Where(item => item.Name.StartsWith("Op"))
+            .Select(o => o.GetValue(this) as string)
+            .Where(v => !string.IsNullOrEmpty(v)));
+
+        public static implicit operator CebDetail(List<string> lt) => new CebDetail(lt); 
+        public static implicit operator CebDetail(CebBase bs) => new CebDetail(bs); 
+
     }
 }

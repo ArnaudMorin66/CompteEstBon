@@ -2,25 +2,25 @@
 # yarn lockfile v1
 
 
-"@fortawesome/fontawesome-free@^5.10.1":
+"@fortawesome/fontawesome-free@^5.10.2":
   version "5.10.2"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.10.2.tgz#27e02da1e34b50c9869179d364fb46627b521130"
   integrity sha512-9pw+Nsnunl9unstGEHQ+u41wBEQue6XPBsILXtJF/4fNN1L3avJcMF/gGF86rIjeTAgfLjTY9ndm68/X4f4idQ==
 
-"@progress/kendo-theme-bootstrap@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-bootstrap/-/kendo-theme-bootstrap-4.1.0.tgz#469fc0d1f2d8b3b026f26a6ec1ef7e4775c58115"
-  integrity sha512-hRhjHlkNAEWFSoDsudyNl3Q6jOGonASFGD1XHkQkg19C5vfVI2GeENgalUTaGdcujJ/iLkWYceIUIk9JsSj02A==
+"@progress/kendo-theme-bootstrap@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-bootstrap/-/kendo-theme-bootstrap-4.2.0.tgz#d5648b5c5abb1a9fb87f5f58ebc36d3d9220f510"
+  integrity sha512-Smve99u02Og4Qk8ktlYkfiaRnvhzNAD/VGMvaIYimr4Myin32vEM2ER42fKgh51aUlnXMoeaCa6OQlMqYnvrIw==
 
-"@progress/kendo-theme-default@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-default/-/kendo-theme-default-4.1.0.tgz#8ccf226a80300c34a43e0bc08d3b3cb950d7550f"
-  integrity sha512-89n58PriQODXrmwjPXP7PerA82kf/CDiL/EkXVZq4NkCJfC6KBQwo30H1T+LVxwp9/TxT5z9Gr9MEWtgrfhvJg==
+"@progress/kendo-theme-default@^4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-default/-/kendo-theme-default-4.2.0.tgz#9c1eee9681303212324532f3c3c6830ab2c0a9a7"
+  integrity sha512-921wwgFTIFNHWWRaD1XHfBlyC3ZPugUckeeFn4NGCDfNQd9P7NWjb3t7SLvVAPdKqHO7e9/6ZZh8d+JH1x8lPg==
 
-"@progress/kendo-theme-material@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-material/-/kendo-theme-material-3.1.0.tgz#7a8e579b4156ba0e6562c05f51ac4971c86fb7f6"
-  integrity sha512-gJrKKtRuK2H51QlaalORZrXQ5bxyR9bJDF00T61zzg+tqTgCBENDDGUDHDTiTsuKs10W1bgRHMuAANZ4pxOfXA==
+"@progress/kendo-theme-material@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-material/-/kendo-theme-material-3.2.0.tgz#0a0a3a419694ded65383ed354f3ea2a29efcbd90"
+  integrity sha512-frrvxlI3nLcGX62zjg12aW0B7AhUe6w3akecS7reVPsljfMI3cm2HSleNfgqQaADtlxk0t2XgSZ+sQzaY6CSmA==
 
 abbrev@1:
   version "1.1.1"

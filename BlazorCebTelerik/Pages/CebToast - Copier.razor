@@ -2,7 +2,6 @@
 @using System.Timers
 @using System.ComponentModel
 @inject CebTirage tirage
-
 @if (timer.Enabled) {
     <div class="a-toast">
         <div class="text-white">
@@ -63,38 +62,38 @@
 }
 @code {
     protected Timer timer;
+    
+    public string Solution { get; set; }
 
-    public CebDetail Solution { get; set; }
-    [Parameter]
     public double Duree { get; set; }
     [Parameter]
     public int DueTime { get; set; }
 
     protected override void OnInitialized() {
-
+        
         DueTime = 10000;
         timer = new Timer();
         timer.AutoReset = false;
         timer.Interval = DueTime;
-        timer.Elapsed +=async  (source, e) => {
-            await InvokeAsync(StateHasChanged);
+        timer.Elapsed += (source, e) => {
+            InvokeAsync(StateHasChanged);
 
         };
 
     }
 
-    public async Task  ShowAsync(int index) {
-        timer?.Stop();
-        Solution = tirage.Details[index];
+    public void Show(CebDetail detail,  double duree = 0) {
+        timer?.Stop(); 
+        Solution = detail.ToString();
+        Duree = duree;
         timer.Start();
-        
+        InvokeAsync(StateHasChanged);
         timer.Interval = DueTime;
-        await InvokeAsync( StateHasChanged);
 
     }
-    public async Task HideAsync() {
-        timer.Stop();
-        await InvokeAsync(StateHasChanged);
+    public void Hide() {
+        timer.Stop();  
+        InvokeAsync(StateHasChanged);
     }
 
 }

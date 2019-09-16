@@ -88,7 +88,7 @@ namespace CompteEstBon {
 
         public override int GetHashCode() => 391 + Value.GetHashCode();
 
-        public override CebDetail Detail => new CebDetail { Op1 = ToString() };
+        // public override CebDetail Detail => new CebDetail(this);
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

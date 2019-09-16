@@ -20,23 +20,21 @@ body {
 
 .solutions {
     div.k-grid-header {
-        visibility: collapse;
+       visibility: collapse;
        height:0;
-       border-style:none;
        margin:0;
        padding:0;
+       border: none;
     }
 
-    
 
     .k-grid-content {
         background-color: $bg-body;
-        border: 1pt solid black;
+        border-collapse: separate;
         
 
         tr {
-            text-align: center;
-            border-color: $secondary;
+            text-align: center;         
         }
 
         tr:not(.k-alt):not(.k-grid-norecords) {
@@ -55,6 +53,9 @@ body {
             color: white;
             background-color: $black;
             font-weight: bolder;
+        }
+        td {
+            border-width: 0px;
         }
     }
 }

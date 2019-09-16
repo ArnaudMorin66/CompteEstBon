@@ -15,7 +15,7 @@ namespace CompteEstBon {
 
         public abstract bool IsValid { get; }
 
-        public abstract CebDetail Detail { get; }
+        // public abstract CebDetail Detail { get; }
 
         public static implicit operator int(CebBase b) => b.Value;
     }

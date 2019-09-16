@@ -13,6 +13,11 @@
     <ProjectReference Include="..\..\CompteEstBon\CompteEstBon\CompteEstBon.csproj" />
   </ItemGroup>
 
-  
+  <Target Name="PreBuildRelease" BeforeTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release' ">
+    <Exec Command="yarn run sass-release" />
+  </Target>
+  <Target Name="PreBuildDebug" BeforeTargets="PreBuildEvent" Condition=" '$(Configuration)' == 'Debug' ">
+    <Exec Command="yarn run sass-debug" />
+  </Target>
 
 </Project>

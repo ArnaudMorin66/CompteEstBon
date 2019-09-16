@@ -48,19 +48,11 @@ namespace CompteEstBon {
 
         public override bool IsValid => Value > 0;
 
-        public override CebDetail Detail {
-            get {
-                var elt = new CebDetail();
-                
-                var type = typeof(CebDetail);
-                
-                foreach (var (op, i) in Operations.WithIndex()) {
-                    type.GetProperty($"Op{i+1}")?.SetValue(elt, op);
-                }
-
-                return elt;
-            }
-        }
+        //public override CebDetail Detail {
+        //    get {
+        //        return new CebDetail(this);
+        //    }
+        //}
 
 
         public override int GetHashCode() {
@@ -74,15 +66,11 @@ namespace CompteEstBon {
         /// </summary>
         /// <returns>
         /// </returns>
-        public override string ToString() => string.Join(",", Operations);
+        public override string ToString() => string.Join(", ", Operations);
 
         /// <summary> Test égalité
-        public override bool Equals(object obj)
-        {
-            if (!(obj is CebOperation op) || op.Value != Value || op.Operations.Count() != Operations.Count())
-                return false;
-            return Operations.WithIndex().All(elt => op.Operations[elt.Item2] == elt.Item1);
-
-        }
+        public override bool Equals(object obj) => !(obj is CebOperation op) || op.Value != Value || op.Operations.Count() != Operations.Count()
+                ? false
+                : Operations.WithIndex().All(elt => op.Operations[elt.Item2] == elt.Item1);
     }
 }

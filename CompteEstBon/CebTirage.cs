@@ -231,8 +231,10 @@ namespace CompteEstBon {
             Resolve(Plaques.Cast<CebBase>().ToList());
             Solutions.Sort((p, q) => p.Rank.CompareTo(q.Rank));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
-
-            Details.AddRange(Solutions.Select(s => s.Detail));
+            
+            Solutions.ForEach(s => Details.Add(new CebDetail(s)));
+            
+            // Details.AddRange(Solutions.Select(s => new CebDetail(s)));
             NotifiedChanged(nameof(Details));
             return Status;
         }
@@ -261,6 +263,7 @@ namespace CompteEstBon {
         public void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public List<CebDetail> Details { get; set; }  = new List<CebDetail>();
+        
         public CebResult GetCebResult() {
             return new CebResult {
                 Search = this.Search,

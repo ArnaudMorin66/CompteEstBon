@@ -118,22 +118,22 @@
       <Version>6.2.9</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.DocIO.UWP">
-      <Version>17.2.0.47</Version>
+      <Version>17.2.0.51</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfBusyIndicator.UWP">
-      <Version>17.2.0.47</Version>
+      <Version>17.2.0.51</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfGrid.UWP">
-      <Version>17.2.0.47</Version>
+      <Version>17.2.0.51</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfGridConverter.UWP">
       <Version>16.2.0.46</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfInput.UWP">
-      <Version>17.2.0.47</Version>
+      <Version>17.2.0.51</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.XlsIO.UWP">
-      <Version>17.2.0.47</Version>
+      <Version>17.2.0.51</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

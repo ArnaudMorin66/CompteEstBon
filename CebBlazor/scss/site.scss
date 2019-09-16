@@ -18,9 +18,10 @@ body {
     font-size: $font-size;
 }
 
-#solutions {
+#solutions, #listsol {
     .e-gridheader {
         visibility:collapse;
+        border:none;
     }
 
     &.e-grid, .e-table {
@@ -36,6 +37,7 @@ body {
         text-align: center;
         color: white;
         font-size: $font-size;
+
     }
 
 
@@ -187,9 +189,9 @@ body {
     min-width: 400px;
     z-index: 10;
     color: white;
-    border-style: ridge;
+    border-style: none;
     border-spacing: 0;
-    border-width: thin;
+    border-width: 0;
     border-color: white;
 }
 
@@ -219,4 +221,14 @@ body {
 .footer {
     @extend .fixed-bottom;
     height: 2rem;
+}
+.e-blazor-template {
+    @extend .bg-gradient-primary;
+    border: 1px white solid;
+    color: white;
+    > td {
+width:100%;
+    }
+    
+    
 }
