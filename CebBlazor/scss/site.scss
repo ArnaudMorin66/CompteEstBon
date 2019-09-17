@@ -18,7 +18,7 @@ body {
     font-size: $font-size;
 }
 
-#solutions, #listsol {
+#solutions, #lsolutions {
     .e-gridheader {
         visibility:collapse;
         border:none;
@@ -84,9 +84,18 @@ body {
             background-color: $primary;
             color: white;
         }
+        & td > .e-blazor-template {
+            color : yellow;
+            border: none;
+            background-color: transparent;
+        }
     }
 }
-
+ #lsolutions{
+     td:nth-child(even){
+         @extend .e-altrow
+     }
+ }
 .card-body,
 .card-text {
     background-color: $bg-body; //  lightslategray;

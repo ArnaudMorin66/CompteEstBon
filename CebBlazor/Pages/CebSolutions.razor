@@ -2,48 +2,92 @@
 @using System.Text
 @using Syncfusion.EJ2.Blazor.Grids
 @inject CebTirage tirage
+@*
 
+    @if (TypeGrille == CebTypeGrille.Liste) {
 
-@if (IsListe) {
-    <div id="listsol" class="e-control e-grid e-lib e-gridhover e-responsive e-default e-hidelines e-tooltip e-keyboard" role="grid" tabindex="0" style="width: auto;">
-        <div class="e-gridcontent e-lib e-droppable">
-            <div class="e-content" aria-busy="false" style="height: 400px; overflow-y: scroll;">
-                <div class="e-virtualtable" style="min-height: 400px; position: absolute; transform: translate(0px, 0px);">
-                    <table class="e-table" cellspacing="0.25px" role="grid" id="solutions_content_table" aria-multiselectable="false" aria-colcount="5">
-                        <colgroup id="content-solutionscolGroup">
-                            <col>
-
-                        </colgroup>
-                        <tbody>
-                            @for (var i = 0; i < tirage.Details.Count; i++) {
-                                var ix = i;
-                                <tr role="row" class="@ClassCell(ix)" aria-rowindex="@ix" @onclick="@(async ()=> { await Toast.ShowAsync(ix); })">
-                                    <td class="e-rowcell" role="gridcell">
-                                        @{
-                                            var detail = tirage.Details[i];
-                                            <div>@detail.Op1</div>
-                                            if (!string.IsNullOrEmpty(detail.Op2)) {
-                                                <div>@detail.Op2</div>
-                                                if (!string.IsNullOrEmpty(detail.Op3)) {
-                                                    <div>@detail.Op3</div>
-                                                    if (!string.IsNullOrEmpty(detail.Op4)) {
-                                                        <div>@detail.Op4</div>
-                                                        if (!string.IsNullOrEmpty(detail.Op5)) {
-                                                            <div>@detail.Op5</div>
+        <div id="listsol" class="e-control e-grid e-lib e-default e-hidelines" role="grid" tabindex="0" style="width: auto;">
+            <div class="e-gridcontent e-lib">
+                <div class="e-content" aria-busy="false" style="height: 400px; overflow-y: scroll;">
+                    <div>
+                        <table class="e-table" role="grid" aria-multiselectable="false" aria-colcount="1">
+                            <colgroup>
+                                <col>
+                            </colgroup>
+                            <tbody>
+                                @for (var i = 0; i < tirage.Details.Count; i++) {
+                                    var ix = i;
+                                    <tr role="row" class="e-row" aria-rowindex="@ix" @onclick="@(async ()=> { await Toast.ShowAsync(ix); })">
+                                        <td class="e-rowcell" role="gridcell">
+                                            @{
+                                                var detail = tirage.Details[i];
+                                                <div>@detail.Op1</div>
+                                                if (!string.IsNullOrEmpty(detail.Op2)) {
+                                                    <div>@detail.Op2</div>
+                                                    if (!string.IsNullOrEmpty(detail.Op3)) {
+                                                        <div>@detail.Op3</div>
+                                                        if (!string.IsNullOrEmpty(detail.Op4)) {
+                                                            <div>@detail.Op4</div>
+                                                            if (!string.IsNullOrEmpty(detail.Op5)) {
+                                                                <div>@detail.Op5</div>
+                                                            }
                                                         }
                                                     }
                                                 }
                                             }
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    } else {
+*@
+@if (TypeGrille == CebTypeGrille.Liste) {
+    <EjsGrid @ref="lsolutions"
+             DataSource="@tirage.Details"
+             GridLines="GridLine.None"
+             TValue="CebDetail"
+             Height="400"
+             ModelType="@ModelDetail"
+             AllowSelection="true"
+             AllowExcelExport="true"
+             EnableAltRow="true"
+             id="lsolutions">
+        <GridSelectionSettings Type="SelectionType.Single"></GridSelectionSettings>
+        <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
+        <GridEvents RowSelected="@(async (args) => { await Toast.ShowAsync((int)args.RowIndex); })" TValue="CebDetail"></GridEvents>
+        <GridColumns>
+            <GridColumn>
+                <Template>
+                    @{
+                        if (context is CebDetail detail) {
+
+                            <div>@detail.Op1</div>
+                            @if (!string.IsNullOrEmpty(detail.Op2)) {
+                                <div>@detail.Op2</div>
+                                @if (!string.IsNullOrEmpty(detail.Op3)) {
+                                    <div>@detail.Op3</div>
+                                    @if (!string.IsNullOrEmpty(detail.Op4)) {
+                                        <div>@detail.Op4</div>
+                                        @if (!string.IsNullOrEmpty(detail.Op5)) {
+                                            <div>@detail.Op5</div>
+                                        }
+                                    }
+                                }
+                            }
+
+                        } else {
+                            <td>??</td>
+                        }
+                    }
+                </Template>
+            </GridColumn>
+        </GridColumns>
+    </EjsGrid>
 } else {
     <EjsGrid @ref="solutions"
              DataSource="@tirage.Details"
@@ -62,36 +106,26 @@
 }
 
 @code {
-    [Parameter] public bool IsListe { get; set; }
+
+    [Parameter]
+    public CebTypeGrille TypeGrille { get; set; }
+
+
+
     [Parameter] public CebToast Toast { get; set; }
+    CebDetail ModelDetail = new CebDetail();
+
     EjsGrid<CebDetail> solutions { get; set; }
+    EjsGrid<CebDetail> lsolutions { get; set; }
 
-    protected string ClassCell(int i) {
-        return (i % 2 == 0) ? "e-row" : "e-row e-altrow";
-    }
-
-    MarkupString DetailToMarkup(CebDetail detail) {
-        if (detail == null) return new MarkupString("");
-        var buffer = new StringBuilder();
-        buffer.Append($"<div>{detail.Op1}</div>");
-
-        if (!string.IsNullOrEmpty(detail.Op2)) {
-            buffer.Append($"<div>{detail.Op2}</div>");
-            if (!string.IsNullOrEmpty(detail.Op3)) {
-                buffer.Append($"<div>{detail.Op3}</div>");
-                if (!string.IsNullOrEmpty(detail.Op4)) {
-                    buffer.Append($"<div>{detail.Op4}</div>");
-                    if (!string.IsNullOrEmpty(detail.Op5)) {
-                        buffer.Append($"<div>{detail.Op5}</div>");
-                    }
-                }
-            }
+    public async Task Refresh() {
+        if (TypeGrille == CebTypeGrille.Grille) {
+            await InvokeAsync(solutions.Refresh);
+        } else {
+            await InvokeAsync(lsolutions.Refresh);
         }
 
-        return new MarkupString(buffer.ToString());
-    }
-    public async Task Refresh() {
-        await InvokeAsync(solutions.Refresh);
+
     }
     public void ExportExcel() {
         if (tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon) return;

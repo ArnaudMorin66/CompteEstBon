@@ -91,11 +91,11 @@
 
                         break;
                 }
-                <button class="btn @(isListe ? "btn-info": "btn-primary")"
-                        @onclick="()=> isListe =!isListe  "
+                <button class="btn @(TypeGrille == CebTypeGrille.Liste ? "btn-info": "btn-primary")"
+                        @onclick="()=> TypeGrille = TypeGrille==CebTypeGrille.Grille ? CebTypeGrille.Liste : CebTypeGrille.Grille"
                         role="button"
                         type="button">
-                    @(isListe ? "Liste" : "Grille")
+                    @(TypeGrille)
                 </button>
 
             } else {
@@ -155,11 +155,11 @@
              Height="360px"
              SelectionMode="Telerik.Blazor.GridSelectionMode.Single"
              Class="solutions border border-secondary"
-             SelectedItemsChanged="@((IEnumerable<CebDetail> liste) => { toast.Show(liste.FirstOrDefault(), duree); })"
+             SelectedItemsChanged="@(async (IEnumerable<CebDetail> liste) => { await toast.Show(liste.FirstOrDefault(), duree); })"
              TItem="CebDetail">
 
     <TelerikGridColumns>
-        @if (isListe) {
+        @if (TypeGrille == CebTypeGrille.Liste) {
             <TelerikGridColumn>
                 <Template>
                     @{
@@ -233,7 +233,7 @@
 <CebToast @ref="toast" DueTime="5000"></CebToast>
 @code {
 
-    bool isListe { get; set; }
+    CebTypeGrille TypeGrille { get; set; } = CebTypeGrille.Grille;
     double duree { get; set; } = 0;
     ObservableCollection<CebDetail> details;
     CebToast toast;
@@ -244,12 +244,12 @@
 
 
     protected override void OnInitialized() {
-        tirage.PropertyChanged += (_, _e) => {
-            toast.Hide();
+        tirage.PropertyChanged += async (_, _e) => {
+            await toast.Hide();
             details = new ObservableCollection<CebDetail>();
             //solutions.Data = tirage.Details;
             // solutions.Refresh();
-            InvokeAsync(StateHasChanged);
+            await InvokeAsync(StateHasChanged);
         };
         stopwatch = new Stopwatch();
         details = new ObservableCollection<CebDetail>();
