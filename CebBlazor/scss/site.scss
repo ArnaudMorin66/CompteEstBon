@@ -231,13 +231,11 @@ body {
     @extend .fixed-bottom;
     height: 2rem;
 }
-.e-blazor-template {
+
+
+.DlgToast {
+  >.e-dlg-content {
     @extend .bg-gradient-primary;
-    border: 1px white solid;
-    color: white;
-    > td {
-width:100%;
-    }
-    
-    
+    padding: 0px; 
+}
 }

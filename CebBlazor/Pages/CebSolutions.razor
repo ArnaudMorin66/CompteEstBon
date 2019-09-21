@@ -1,137 +1,84 @@
 ﻿@using CompteEstBon
 @using System.Text
 @using Syncfusion.EJ2.Blazor.Grids
+@using System.Collections.ObjectModel
+
 @inject CebTirage tirage
-@*
 
-    @if (TypeGrille == CebTypeGrille.Liste) {
 
-        <div id="listsol" class="e-control e-grid e-lib e-default e-hidelines" role="grid" tabindex="0" style="width: auto;">
-            <div class="e-gridcontent e-lib">
-                <div class="e-content" aria-busy="false" style="height: 400px; overflow-y: scroll;">
-                    <div>
-                        <table class="e-table" role="grid" aria-multiselectable="false" aria-colcount="1">
-                            <colgroup>
-                                <col>
-                            </colgroup>
-                            <tbody>
-                                @for (var i = 0; i < tirage.Details.Count; i++) {
-                                    var ix = i;
-                                    <tr role="row" class="e-row" aria-rowindex="@ix" @onclick="@(async ()=> { await Toast.ShowAsync(ix); })">
-                                        <td class="e-rowcell" role="gridcell">
-                                            @{
-                                                var detail = tirage.Details[i];
-                                                <div>@detail.Op1</div>
-                                                if (!string.IsNullOrEmpty(detail.Op2)) {
-                                                    <div>@detail.Op2</div>
-                                                    if (!string.IsNullOrEmpty(detail.Op3)) {
-                                                        <div>@detail.Op3</div>
-                                                        if (!string.IsNullOrEmpty(detail.Op4)) {
-                                                            <div>@detail.Op4</div>
-                                                            if (!string.IsNullOrEmpty(detail.Op5)) {
-                                                                <div>@detail.Op5</div>
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    } else {
-*@
-@if (TypeGrille == CebTypeGrille.Liste) {
-    <EjsGrid @ref="lsolutions"
-             DataSource="@tirage.Details"
-             GridLines="GridLine.None"
-             TValue="CebDetail"
-             Height="400"
-             ModelType="@ModelDetail"
-             AllowSelection="true"
-             AllowExcelExport="true"
-             EnableAltRow="true"
-             id="lsolutions">
-        <GridSelectionSettings Type="SelectionType.Single"></GridSelectionSettings>
-        <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
-        <GridEvents RowSelected="@(async (args) => { await Toast.ShowAsync((int)args.RowIndex); })" TValue="CebDetail"></GridEvents>
-        <GridColumns>
-            <GridColumn>
-                <Template>
-                    @{
-                        if (context is CebDetail detail) {
+<EjsGrid @ref="solutions"
+         DataSource="@Details"
+         GridLines="GridLine.None"
+         TValue="CebDetail"
+         Height="400"
+         AllowSelection="true"
+         AllowExcelExport="true"
+         EnableAltRow="true"
+         id="solutions">
+    <GridSelectionSettings Type="SelectionType.Single"></GridSelectionSettings>
+    <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
+    <GridEvents RowSelected="@(async (args) => { await Toast.ShowAsync((int)args.RowIndex); })" TValue="CebDetail"></GridEvents>
+    <GridColumns>
+        @if (TypeGrille == CebTypeGrille.Liste) {
+            <GridColumn Field="Op3" ></GridColumn>
+        } else {
+            for (var i = 1; i < 6; i++) {
+                <GridColumn Field="@($"Op{i}" )"></GridColumn>
+            }
+        }
+    </GridColumns>
+</EjsGrid>
 
-                            <div>@detail.Op1</div>
-                            @if (!string.IsNullOrEmpty(detail.Op2)) {
-                                <div>@detail.Op2</div>
-                                @if (!string.IsNullOrEmpty(detail.Op3)) {
-                                    <div>@detail.Op3</div>
-                                    @if (!string.IsNullOrEmpty(detail.Op4)) {
-                                        <div>@detail.Op4</div>
-                                        @if (!string.IsNullOrEmpty(detail.Op5)) {
-                                            <div>@detail.Op5</div>
-                                        }
-                                    }
-                                }
-                            }
-
-                        } else {
-                            <td>??</td>
-                        }
-                    }
-                </Template>
-            </GridColumn>
-        </GridColumns>
-    </EjsGrid>
-} else {
-    <EjsGrid @ref="solutions"
-             DataSource="@tirage.Details"
-             GridLines="GridLine.None"
-             TValue="CebDetail"
-             Height="400"
-             EnableVirtualization="true"
-             AllowSelection="true"
-             AllowExcelExport="true"
-             EnableAltRow="true"
-             id="solutions">
-        <GridSelectionSettings Type="SelectionType.Single"></GridSelectionSettings>
-        <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
-        <GridEvents RowSelected="@(async (args) => { await Toast.ShowAsync((int)args.RowIndex); })" TValue="CebDetail"></GridEvents>
-    </EjsGrid>
-}
 
 @code {
-
+    private CebTypeGrille _typegrille;
     [Parameter]
-    public CebTypeGrille TypeGrille { get; set; }
+    public CebTypeGrille TypeGrille {
+        get => _typegrille;
+        set {
+            _typegrille = value;
+#pragma warning disable CS4014
+            Refresh();
+#pragma warning restore CS4014
+        }
+    }
 
 
 
     [Parameter] public CebToast Toast { get; set; }
-    CebDetail ModelDetail = new CebDetail();
 
     EjsGrid<CebDetail> solutions { get; set; }
-    EjsGrid<CebDetail> lsolutions { get; set; }
+    public ObservableCollection<CebDetail> Details { get; set; }
+
 
     public async Task Refresh() {
-        if (TypeGrille == CebTypeGrille.Grille) {
-            await InvokeAsync(solutions.Refresh);
-        } else {
-            await InvokeAsync(lsolutions.Refresh);
-        }
-
+        await InvokeAsync(() => {
+            Details = new ObservableCollection<CebDetail>(
+                tirage.Details.Select(detail => {
+                    CebDetail res;
+                    if (_typegrille == CebTypeGrille.Grille) {
+                        res = detail;
+                    } else {
+                        res = new CebDetail();
+                        res.Op3 = string.Join("<br>", detail.GetType().GetProperties()
+                                    .Where(item => item.Name.StartsWith("Op"))
+                                    .Select(o => o.GetValue(detail) as string)
+                                    .Where(v => !string.IsNullOrEmpty(v)));
+                    }
+                    return res;
+                }));
+        });
 
     }
+    protected override void OnInitialized() {
+
+        Details = new ObservableCollection<CebDetail>();
+    }
+
     public void ExportExcel() {
         if (tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon) return;
         solutions.ExcelExport(new ExcelExportProperties { ExportType = ExportType.AllPages });
 
     }
-
 
 }

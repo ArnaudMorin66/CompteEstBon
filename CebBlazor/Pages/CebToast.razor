@@ -1,68 +1,65 @@
 @using CompteEstBon
-@using System.Timers
+@using System.Threading;
+@using Syncfusion.EJ2.Blazor
+@using Syncfusion.EJ2.Blazor.Popups
 @using System.ComponentModel
 @inject CebTirage tirage
 
-@if (timer.Enabled) {
-    <div class="a-toast">
-        <div class="text-white">
-            @switch (tirage.Status) {
-                case CebStatus.CompteEstBon:
-                    <div class=" bg-gradient-success text-center text-uppercase font-weight-bold">
-                        <div class="animation">
-                            <i class="text-dark far fa-thumbs-up"></i>&nbsp;Compte est bon
-                        </div>
+<EjsDialog Width="480" @bind-Visible="@Visible" CssClass="DlgToast" ShowCloseIcon="false" ID="DlgToast">
+    <DialogAnimationSettings Effect="@DialogEffect.SlideBottom" Duration=400></DialogAnimationSettings>
+    
+    <DialogTeboomplates>
+        @if (tirage.Status == CebStatus.CompteEstBon || tirage.Status == CebStatus.CompteApproche) {
+        <Header>
+            @if (tirage.Status == CebStatus.CompteEstBon) {
+                <div class="  bg-gradient-success text-center text-uppercase font-weight-bold text-white">
+                    <div class="animation">
+                        <i class="text-white far fa-thumbs-up"></i>&nbsp;Compte est bon
                     </div>
-                    <div class="font-weight-bold text-center">
-                        <div>&nbsp;</div>
-                        <div>Trouvé:&nbsp;@tirage.Found</div>
-                        <div>@tirage.Solutions.Count&nbsp;solutions</div>
-                        <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
-                        <div class="separator"></div>
-                        <div class="badge badge-success" style="font-weight: 400;">@Solution</div>
-                        <div>&nbsp;</div>
+                </div>
+            } else {
+                <div class="bg-gradient-warning text-center text-uppercase text-dark font-weight-bold text-white">
+                    <div class="animation">
+                        <i class="text-danger far fa-thumbs-down"></i>&nbsp;Compte&nbsp;approché
                     </div>
-                    break;
-                case CebStatus.CompteApproche:
-                    <div class="bg-gradient-warning text-center text-uppercase text-dark font-weight-bold">
-                        <div class="animation">
-                            <i class="text-danger far fa-thumbs-down"></i>&nbsp;Compte&nbsp;approché
-                        </div>
-                    </div>
-                    <div class="text-center font-weight-bold">
-                        <div>&nbsp;</div>
-                        <div>Trouvé(s):&nbsp;@tirage.Found</div>
-                        <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
-                        <div>@tirage.Solutions.Count&nbsp;solutions</div>
-                        <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
-                        <div class="separator"></div>
-                        <div class="badge badge-warning" style="font-weight: 400;">@Solution</div>
-                        <div>&nbsp;</div>
-                    </div>
-                    break;
-                case CebStatus.Erreur:
-                    <div class="bg-gradient-danger text-center text-uppercase text-white">
-                        <div class="animation">
-                            <i class="fas fa-exclamation-triangle"></i>&nbsp;tirage invalide
-                        </div>
-                    </div>
-                    break;
-                case CebStatus.EnCours:
-                    <div class=" bg-gradient-info text-center">
-                        <div class="animation">
-                            <i class="align-middle fas fa-compass fa-spin"></i>Patientez,&nbsp;calcul&nbsp;en&nbsp;cours
-                        </div>
-                    </div>
-                    break;
-                default:
-                    <div></div>
-                    break;
+                </div>
             }
-        </div>
-    </div>
-}
+            <div>&nbsp;</div>
+        </Header>
+
+        <Content>
+                <div class="text-center text-white">
+                    <div>Trouvé(s):&nbsp;@tirage.Found</div>
+                    @if (tirage.Status == CebStatus.CompteApproche) {
+                        <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
+                    }
+                    <div>@tirage.Solutions.Count&nbsp;solutions</div>
+                    <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
+                </div>
+        </Content>
+        <FooterTemplate>
+            <div>&nbsp;</div>
+            <div class="w-100 text-center  @(tirage.Status == CebStatus.CompteApproche ? "bg-warning text-dark" : "bg-success text-white") ">@Solution</div>
+        </FooterTemplate>
+        }
+    </DialogTeboomplates>
+</EjsDialog>
+
 @code {
     protected Timer timer;
+    private bool _visible = false;
+    public bool Visible {
+        get => _visible;
+        set {
+            if (value != _visible) {
+                _visible = value;
+                if (_visible) {
+                    timer.Change(DueTime, 0);
+                }
+                InvokeAsync(StateHasChanged);
+            }
+        }
+    }
 
     public CebDetail Solution { get; set; }
     [Parameter]
@@ -72,28 +69,19 @@
 
     protected override void OnInitialized() {
 
-        DueTime = 10000;
-        timer = new Timer();
-        timer.AutoReset = false;
-        timer.Interval = DueTime;
-        timer.Elapsed +=async  (source, e) => {
-            await InvokeAsync(StateHasChanged);
-
-        };
-
+        DueTime = 5000;
+        timer = new System.Threading.Timer(new TimerCallback((state) => {
+            Visible = false;
+        }));
     }
 
-    public async Task  ShowAsync(int index) {
-        timer?.Stop();
+    public async Task ShowAsync(int index) {
         Solution = tirage.Details[index];
-        timer.Start();
-        
-        timer.Interval = DueTime;
-        await InvokeAsync( StateHasChanged);
-
+        Visible = true;
+        await InvokeAsync(StateHasChanged);
     }
     public async Task HideAsync() {
-        timer.Stop();
+        Visible = false;
         await InvokeAsync(StateHasChanged);
     }
 

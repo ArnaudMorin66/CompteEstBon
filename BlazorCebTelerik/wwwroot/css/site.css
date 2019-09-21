@@ -23107,7 +23107,8 @@ body {
     background-color: #000;
     font-weight: bolder; }
   .solutions .k-grid-content td {
-    border-width: 0px; }
+    border-width: 0px;
+    cursor: pointer; }
 
 .card-body,
 .card-text {

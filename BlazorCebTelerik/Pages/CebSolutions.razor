@@ -1,0 +1,81 @@
+﻿@using CompteEstBon
+@using System.Collections.ObjectModel
+@inject CebTirage tirage
+
+
+<TelerikGrid @ref="solutions"
+             Data="Details"
+             Height="360px"
+             SelectionMode="Telerik.Blazor.GridSelectionMode.Single"
+             Class="solutions border border-secondary"
+             SelectedItemsChanged="@(async (IEnumerable<CebDetail> liste) => { await Toast.ShowAsync(liste.FirstOrDefault()); })"
+             TItem="CebDetail">
+
+    <GridColumns>
+        <GridColumn Field="Op1"></GridColumn>
+        <GridColumn Field="Op2"></GridColumn>
+        <GridColumn Field="Op3">
+            <Template>
+                @(new MarkupString((context as CebDetail).Op3))
+            </Template>
+        </GridColumn>
+        <GridColumn Field="Op4"></GridColumn>
+        <GridColumn Field="Op5"></GridColumn>
+
+    </GridColumns>
+</TelerikGrid>
+
+
+@code {
+    private CebTypeGrille _typegrille;
+    [Parameter]
+    public CebTypeGrille TypeGrille {
+        get=> _typegrille;
+        set {
+            _typegrille = value;
+#pragma warning disable CS4014
+            RefreshAsync();
+            #pragma warning disable CS4014
+        }}
+
+
+    [Parameter] public CebToast Toast { get; set; }
+
+    public TelerikGrid<CebDetail> solutions { get; set; }
+
+    public ObservableCollection<CebDetail> Details { get; set; }
+
+    public async Task RefreshAsync() {
+
+        await InvokeAsync(()=> {
+            Details = new ObservableCollection<CebDetail>(
+                tirage.Details.Select(detail => {
+                    CebDetail res;
+                    if (TypeGrille == CebTypeGrille.Grille) {
+                        res = detail;
+
+                    } else {
+                        res = new CebDetail();
+
+                        res.Op3 = string.Join("<br>", detail.GetType().GetProperties()
+                                    .Where(item => item.Name.StartsWith("Op"))
+                                    .Select(o => o.GetValue(detail) as string)
+                                    .Where(v => !string.IsNullOrEmpty(v)));
+                    }
+                    return res;
+                }));
+        });
+
+
+    }
+
+    protected override void OnInitialized() {
+
+        Details = new ObservableCollection<CebDetail>();
+    }
+
+
+    public string GetFieldName(int i) => (TypeGrille == CebTypeGrille.Grille) ? $"Op{i}" : "";
+
+
+}

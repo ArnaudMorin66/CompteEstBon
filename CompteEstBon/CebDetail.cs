@@ -2,12 +2,13 @@
 using System.Linq;
 
 namespace CompteEstBon {
-    public class CebDetail {
+    public partial class CebDetail {
         public string Op1 { get; set; }
         public string Op2 { get; set; }
         public string Op3 { get; set; }
         public string Op4 { get; set; }
         public string Op5 { get; set; }
+        
         public CebDetail() {
 
         }
@@ -26,7 +27,8 @@ namespace CompteEstBon {
             .Where(v => !string.IsNullOrEmpty(v)));
 
         public static implicit operator CebDetail(List<string> lt) => new CebDetail(lt); 
-        public static implicit operator CebDetail(CebBase bs) => new CebDetail(bs); 
+        public static implicit operator CebDetail(CebBase bs) => new CebDetail(bs);
+    
 
     }
 }

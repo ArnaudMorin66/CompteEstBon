@@ -1,27 +1,18 @@
 ﻿@using Microsoft.AspNetCore.Components
 @using System.Runtime.InteropServices
-@using System.Timers
+@using System.Threading
 <div class="footer d-flex bg-gradient-dark justify-content-between align-items-center border border-secondary">
     <span class="badge badge-pill badge-info">
         &copy;Arnaud Morin,&nbsp;Syncfusion,&nbsp;
         @RuntimeInformation.FrameworkDescription
     </span>
-    <span class="badge badge-pill badge-info">@($"{heure:dddd dd MMMM yyyy à HH:mm:ss}")</span>
+    <span class="badge badge-pill badge-info">@($"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}")</span>
 </div>
 
-@code {
-    Timer timer;
-    DateTime heure;
+@code {  
     protected override void OnInitialized() {
-        heure = DateTime.Now;
-        timer = new Timer(1000);
-        timer.AutoReset = true;
-
-        timer.Elapsed += (source, e) => {
-            heure = e.SignalTime;
-            InvokeAsync(StateHasChanged);
-        };
-        timer.Start();
-    }
+        
+       (new Timer(new TimerCallback((state) => InvokeAsync(StateHasChanged)))).Change(0, 1000);
+     }
 
 }
