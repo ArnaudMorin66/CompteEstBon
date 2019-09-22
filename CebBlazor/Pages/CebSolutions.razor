@@ -38,7 +38,7 @@
         set {
             _typegrille = value;
 #pragma warning disable CS4014
-            Refresh();
+            RefreshAsync();
 #pragma warning restore CS4014
         }
     }
@@ -51,28 +51,18 @@
     public ObservableCollection<CebDetail> Details { get; set; }
 
 
-    public async Task Refresh() {
+    public async Task RefreshAsync() {
         await InvokeAsync(() => {
-            Details = new ObservableCollection<CebDetail>(
-                tirage.Details.Select(detail => {
-                    CebDetail res;
-                    if (_typegrille == CebTypeGrille.Grille) {
-                        res = detail;
-                    } else {
-                        res = new CebDetail();
-                        res.Op3 = string.Join("<br>", detail.GetType().GetProperties()
-                                    .Where(item => item.Name.StartsWith("Op"))
-                                    .Select(o => o.GetValue(detail) as string)
-                                    .Where(v => !string.IsNullOrEmpty(v)));
-                    }
-                    return res;
-                }));
+            Details = (tirage.Status == CebStatus.CompteApproche || tirage.Status == CebStatus.CompteEstBon) ? new ObservableCollection<CebDetail>(
+                tirage.Solutions.Select((solution) => (TypeGrille == CebTypeGrille.Grille) ? new CebDetail(solution)
+                                                    : new CebDetail { Op3 = string.Join("<br>", solution.Operations) })) : new ObservableCollection<CebDetail>();
         });
-
     }
+
+
     protected override void OnInitialized() {
 
-        Details = new ObservableCollection<CebDetail>();
+        // Details = new ObservableCollection<CebDetail>();
     }
 
     public void ExportExcel() {

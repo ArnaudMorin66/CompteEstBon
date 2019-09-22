@@ -20,8 +20,8 @@ body {
 
 #solutions, #lsolutions {
     .e-gridheader {
-        visibility:collapse;
-        border:none;
+        visibility: collapse;
+        border: none;
     }
 
     &.e-grid, .e-table {
@@ -37,7 +37,6 @@ body {
         text-align: center;
         color: white;
         font-size: $font-size;
-
     }
 
 
@@ -84,18 +83,21 @@ body {
             background-color: $primary;
             color: white;
         }
+
         & td > .e-blazor-template {
-            color : yellow;
+            color: yellow;
             border: none;
             background-color: transparent;
         }
     }
 }
- #lsolutions{
-     td:nth-child(even){
-         @extend .e-altrow
-     }
- }
+
+#lsolutions {
+    td:nth-child(even) {
+        @extend .e-altrow
+    }
+}
+
 .card-body,
 .card-text {
     background-color: $bg-body; //  lightslategray;
@@ -113,9 +115,10 @@ body {
     &:not(.e-success):not(.e-warning):not(.e-error),
     &.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error) {
         border-color: $secondary;
-        & .e-disabled{
+
+        & .e-disabled {
             background-color: $gray-700;
-        } 
+        }
     }
 
     &.e-control-wrapper input.e-input {
@@ -163,7 +166,6 @@ body {
         color: white;
 
         &:active {
-            background-color: $bg-body;
             color: yellow;
         }
 
@@ -189,26 +191,14 @@ body {
     }
 }
 
-.a-toast {
-    @extend .bg-gradient-primary;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    min-width: 400px;
-    z-index: 10;
-    color: white;
-    border-style: none;
-    border-spacing: 0;
-    border-width: 0;
-    border-color: white;
-}
+
 
 @keyframes resultat {
     from {
         transform: translateX(50%);
         width: 50%;
     }
+
     to {
         transform: translateX(0);
         width: 100%;
@@ -234,8 +224,10 @@ body {
 
 
 .DlgToast {
-  >.e-dlg-content {
-    @extend .bg-gradient-primary;
-    padding: 0px; 
-}
+    > .e-dlg-content, > .e-dlg-header-content, > .e-footer-content {
+        @extend .bg-gradient-primary;
+        padding: 0px;
+        margin: 0;
+        border: none;
+    }
 }

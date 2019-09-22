@@ -2,15 +2,12 @@
 @using System.Collections.ObjectModel
 @inject CebTirage tirage
 
-
-<TelerikGrid @ref="solutions"
-             Data="Details"
-             Height="360px"
-             SelectionMode="Telerik.Blazor.GridSelectionMode.Single"
-             Class="solutions border border-secondary"
-             SelectedItemsChanged="@(async (IEnumerable<CebDetail> liste) => { await Toast.ShowAsync(liste.FirstOrDefault()); })"
-             TItem="CebDetail">
-
+<TelerikGrid Data="Details"
+              Height="360px"
+              SelectionMode="Telerik.Blazor.GridSelectionMode.Single"
+              Class="solutions border border-secondary"
+              SelectedItemsChanged="@(async (IEnumerable<CebDetail> liste) => { await Toast.ShowAsync(liste.FirstOrDefault()); })"
+              TItem="CebDetail">
     <GridColumns>
         <GridColumn Field="Op1"></GridColumn>
         <GridColumn Field="Op2"></GridColumn>
@@ -33,49 +30,26 @@
         get=> _typegrille;
         set {
             _typegrille = value;
-#pragma warning disable CS4014
-            RefreshAsync();
-            #pragma warning disable CS4014
+            InvokeAsync(RefreshAsync);
         }}
 
 
     [Parameter] public CebToast Toast { get; set; }
 
-    public TelerikGrid<CebDetail> solutions { get; set; }
-
-    public ObservableCollection<CebDetail> Details { get; set; }
-
+    public List<CebDetail> Details { get; set; }
     public async Task RefreshAsync() {
-
-        await InvokeAsync(()=> {
-            Details = new ObservableCollection<CebDetail>(
-                tirage.Details.Select(detail => {
-                    CebDetail res;
-                    if (TypeGrille == CebTypeGrille.Grille) {
-                        res = detail;
-
-                    } else {
-                        res = new CebDetail();
-
-                        res.Op3 = string.Join("<br>", detail.GetType().GetProperties()
-                                    .Where(item => item.Name.StartsWith("Op"))
-                                    .Select(o => o.GetValue(detail) as string)
-                                    .Where(v => !string.IsNullOrEmpty(v)));
-                    }
-                    return res;
-                }));
+        await InvokeAsync(() => {
+            
+                Details = (tirage.Status == CebStatus.CompteApproche || tirage.Status == CebStatus.CompteEstBon) ? new List<CebDetail>(
+                    tirage.Solutions.Select((solution) => (TypeGrille == CebTypeGrille.Grille) ? new CebDetail(solution)
+                                                        : new CebDetail { Op3 = string.Join("<br>", solution.Operations) })) : new List<CebDetail>();
         });
-
-
     }
+
 
     protected override void OnInitialized() {
 
-        Details = new ObservableCollection<CebDetail>();
+        Details = new List<CebDetail>();
     }
-
-
-    public string GetFieldName(int i) => (TypeGrille == CebTypeGrille.Grille) ? $"Op{i}" : "";
-
 
 }

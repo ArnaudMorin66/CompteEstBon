@@ -78,40 +78,29 @@ body {
     padding: 0%;
     height: 0.1rem;
 }
-
-.k-dropdown-wrap , .k-numeric-wrap  {
+.k-dropdown-wrap, .k-numeric-wrap  {
     & > .k-input {
         background-color: $bg-body;
         color: white;
         text-align:center;
     }
-    & > input {
-        text-align:center;
-    }
-    .k-input {
-        text-align: center;
-    }
+    
+    
 }
- span.k-input {
-        text-align: center;
-    }
-
  span.k-icon {
      color: black;
  }
- .k-searchbar > .k-input, .k-numeric-wrap > .k-input {
-    
-    color:  white;
-    text-align: center;
-}
+
+
 .k-popup {
     background-color: $bg-body;
     color: white;
-    border-color: black;
-    width: 200px;
-    text-align:center;
+    border-color: $secondary;
+    max-width: 120px;
+    width: 15rem;
+    height:15rem;
+ 
 }
-
 
 
 .a-toast {

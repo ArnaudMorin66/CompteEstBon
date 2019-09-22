@@ -23,6 +23,7 @@ namespace CompteEstBon {
         }
         public override string ToString() => string.Join(", ", GetType().GetProperties()
             .Where(item => item.Name.StartsWith("Op"))
+            .OrderBy(item => item.Name) 
             .Select(o => o.GetValue(this) as string)
             .Where(v => !string.IsNullOrEmpty(v)));
 

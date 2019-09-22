@@ -49839,7 +49839,7 @@ button.bg-dark:hover,
 button.bg-dark:focus {
   background-color: #1d2124 !important; }
 
-.bg-gradient-primary, .a-toast, .DlgToast > .e-dlg-content {
+.bg-gradient-primary, .DlgToast > .e-dlg-content, .DlgToast > .e-dlg-header-content, .DlgToast > .e-footer-content {
   background: #303030 linear-gradient(180deg, #4f4f4f, #303030) repeat-x !important; }
 
 .bg-gradient-secondary {
@@ -52377,7 +52377,6 @@ body {
     background-color: #404040;
     color: white; }
     .e-dropdownbase .e-list-item:active {
-      background-color: #404040;
       color: yellow; }
     .e-dropdownbase .e-list-item.e-item-focus {
       background-color: #303030;
@@ -52391,19 +52390,6 @@ body {
     .e-dropdownbase .e-list-item:focus {
       background-color: #000;
       color: greenyellow; }
-
-.a-toast {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  min-width: 400px;
-  z-index: 10;
-  color: white;
-  border-style: none;
-  border-spacing: 0;
-  border-width: 0;
-  border-color: white; }
 
 @keyframes resultat {
   from {
@@ -52426,7 +52412,9 @@ body {
 .footer {
   height: 2rem; }
 
-.DlgToast > .e-dlg-content {
-  padding: 0px; }
+.DlgToast > .e-dlg-content, .DlgToast > .e-dlg-header-content, .DlgToast > .e-footer-content {
+  padding: 0px;
+  margin: 0;
+  border: none; }
 
 /*# sourceMappingURL=site.css.map */

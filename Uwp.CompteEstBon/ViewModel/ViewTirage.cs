@@ -369,7 +369,7 @@ namespace CompteEstBon {
             var frame = Window.Current.Content as Frame;
             var page = frame.Content as MainPage;
             page.SolutionsData.ItemsSource = Tirage.Details;
-            NSolutions = Tirage.Details.Count;
+            NSolutions = Tirage.Solutions.Count;
 
 
             Dispatcher.Stop();

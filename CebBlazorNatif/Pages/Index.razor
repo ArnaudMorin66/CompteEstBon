@@ -120,15 +120,7 @@
                     <div class="row">
                         @foreach (var plq in tirage.Plaques) {
                             <div class="col-md-2">
-                                @*<EjsComboBox @bind-Value="@plq.Value"
-
-                                                 TValue="int"
-                                                 AllowCustom=true
-                                                 ShowClearButton="false"
-                                                 Enabled="tirage.Status != CebStatus.EnCours">
-                                        <EjsDataManager Json="@listeplaques"></EjsDataManager>
-
-                                    </EjsComboBox>*@
+                                
                                 <select @bind="plq.Value" class="w-100">
                                     @foreach (var p in listeplaques) {
                                         <option value="@p">@p</option>
@@ -148,15 +140,7 @@
                     &nbsp;Trouver
                 </div>
                 <div class="card-body">
-                    @*<EjsNumericTextBox @bind-Value="@tirage.Search"
-                                           Max="999"
-                                           Min="100"
-                                           CssClass="e-ceb"
-                                           Format="N0"
-                                           Step="1"
-                                           TValue="int"
-                                           Enabled="tirage.Status != CebStatus.EnCours">
-                        </EjsNumericTextBox>*@
+                    
                     <input @bind="@tirage.Search" max="999" min="100" type="number" />
                 </div>
             </div>
@@ -165,8 +149,8 @@
     <div class="separator">&nbsp;</div>
     <table class="table table-dark table-fixed border border-secondary">
          <tbody>
-            @foreach (var rw  in tirage.Details) {
-                <tr>
+            @foreach (var rw  in Details) {
+                <tr @onclick="@(()=> toast.Show(rw, duree))">
                     <td>@rw.Op1&nbsp;</td>
                     <td>@rw.Op2&nbsp;</td>
                     <td>@rw.Op3&nbsp;</td>
@@ -229,12 +213,13 @@
     // EjsGrid<CebDetail> solutions { get; set; }
 
     Object[] listeplaques { get; set; }
+    public IEnumerable<CebDetail> Details = new List<CebDetail>();
 
 
     protected override void OnInitialized() {
         tirage.PropertyChanged += (_, _e) => {
             toast.Hide();
-            // solutions.Refresh();
+            Details = tirage.Details;
             InvokeAsync(StateHasChanged);
         };
         stopwatch = new Stopwatch();
@@ -264,7 +249,7 @@
     }
     void showtoast() {
 
-        toast.Show(tirage.Details[0], duree);
+        toast.Show(new CebDetail(tirage.Solution), duree);
     }
 }
 

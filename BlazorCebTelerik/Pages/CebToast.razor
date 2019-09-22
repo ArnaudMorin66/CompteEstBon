@@ -8,6 +8,7 @@
                            AnimationType="@AnimationType.SlideUp"
                            ParentInlineStyle="transform: translate(-50%, -50%)"
                            Top="50%" Left="50%"
+                          
                            Height="auto"
                            Width="400px">
     <div class="bg-gradient-primary text-white w-100" style="cursor:pointer">
@@ -22,7 +23,7 @@
             } else {
                 <div class="bg-gradient-warning text-center text-uppercase text-dark font-weight-bold">
                     <div class="animation">
-                        <i class="text-danger far fa-thumbs-down"></i>&nbsp;Compte&nbsp;approché
+                        <i class="text-danger far fa-thumbs-down"></i>&nbsp;Compte&nbsp;approch&eacute;
                     </div>
                 </div>
 
@@ -34,7 +35,7 @@
                     <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
                 }
                 <div>@tirage.Solutions.Count&nbsp;solutions</div>
-                <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
+                <div>Dur&eacute;e:&nbsp;@($"{Duree:N3}")s</div>
             </div>
             <div>&nbsp;</div>
             <div class="text-center @(tirage.Status == CebStatus.CompteEstBon ? "bg-success text-white" : "bg-warning text-dark")">@Solution</div>
@@ -42,7 +43,6 @@
         }
     </div>
 </TelerikAnimationContainer>;
-
 @code {
     protected Timer timer;
     public TelerikAnimationContainer AnimationContainer { get; set; }
@@ -62,7 +62,7 @@
     }
 
     public async Task ShowAsync(CebDetail detail = null) {
-        if (detail == null) detail = tirage.Details[0];
+        if (detail == null) detail = new CebDetail(tirage.Solution);
         Solution = detail.ToString();
         await AnimationContainer.ShowAsync();
         timer.Change(DueTime, 0);

@@ -48,7 +48,7 @@ namespace CompteEstBon {
             if (plaques.Length < 6 || search == -1)
                 Random();
             else {
-                foreach (var (p, i) in plaques.Select((p, i) => (p, i))) {
+                foreach (var (p, i) in plaques.WithIndex().Where((q, i) => i < 6)) {
                     Plaques[i].Value2 = p;
                 }
                 Search = search;
@@ -152,18 +152,19 @@ namespace CompteEstBon {
         public async Task RandomAsync() => await Task.Run(Random);
 
         public void Clear(string evt = "") {
-            if (Details.Count != 0) {
-                Details.Clear();
+            
+            if (Solutions.Count != 0) {
+                Solutions.Clear();
                 NotifiedChanged(evt);
             }
-            Solutions.Clear();
+           
             Diff = int.MaxValue;
             Found.Reset();
             Valid();
         }
 
- 
-        public async Task ClearAsync() => await Task.Run(()=> { Clear("Clear"); });
+
+        public async Task ClearAsync() => await Task.Run(() => { Clear("Clear"); });
 
         /// <summary>
         /// resolution du compte
@@ -224,18 +225,18 @@ namespace CompteEstBon {
         /// <returns>
         /// </returns>
         public CebStatus Resolve() {
-            
+
             Clear();
             if (Status != CebStatus.Valid) return Status;
             Status = CebStatus.EnCours;
             Resolve(Plaques.Cast<CebBase>().ToList());
             Solutions.Sort((p, q) => p.Rank.CompareTo(q.Rank));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
-            
-            Solutions.ForEach(s => Details.Add(new CebDetail(s)));
-            
+
+            // Solutions.ForEach(s => Details.Add(new CebDetail(s)));
+
             // Details.AddRange(Solutions.Select(s => new CebDetail(s)));
-            NotifiedChanged(nameof(Details));
+            NotifiedChanged("Details");
             return Status;
         }
 
@@ -262,8 +263,7 @@ namespace CompteEstBon {
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public List<CebDetail> Details { get; set; }  = new List<CebDetail>();
-        
+        public IEnumerable<CebDetail> Details => Solutions.Select(s => new CebDetail(s));
         public CebResult GetCebResult() {
             return new CebResult {
                 Search = this.Search,

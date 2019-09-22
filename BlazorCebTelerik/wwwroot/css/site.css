@@ -23128,28 +23128,16 @@ body {
   color: white;
   text-align: center; }
 
-.k-dropdown-wrap > input, .k-numeric-wrap > input {
-  text-align: center; }
-
-.k-dropdown-wrap .k-input, .k-numeric-wrap .k-input {
-  text-align: center; }
-
-span.k-input {
-  text-align: center; }
-
 span.k-icon {
   color: black; }
-
-.k-searchbar > .k-input, .k-numeric-wrap > .k-input {
-  color: white;
-  text-align: center; }
 
 .k-popup {
   background-color: #404040;
   color: white;
-  border-color: black;
-  width: 200px;
-  text-align: center; }
+  border-color: #6c757d;
+  max-width: 120px;
+  width: 15rem;
+  height: 15rem; }
 
 .a-toast {
   position: absolute;

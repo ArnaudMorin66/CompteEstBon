@@ -4,30 +4,26 @@
 @using Syncfusion.EJ2.Blazor.Popups
 @using System.ComponentModel
 @inject CebTirage tirage
-
-<EjsDialog Width="480" @bind-Visible="@Visible" CssClass="DlgToast" ShowCloseIcon="false" ID="DlgToast">
-    <DialogAnimationSettings Effect="@DialogEffect.SlideBottom" Duration=400></DialogAnimationSettings>
-    
-    <DialogTeboomplates>
-        @if (tirage.Status == CebStatus.CompteEstBon || tirage.Status == CebStatus.CompteApproche) {
-        <Header>
-            @if (tirage.Status == CebStatus.CompteEstBon) {
-                <div class="  bg-gradient-success text-center text-uppercase font-weight-bold text-white">
-                    <div class="animation">
-                        <i class="text-white far fa-thumbs-up"></i>&nbsp;Compte est bon
+    <EjsDialog Width="480" @bind-Visible="@Visible" CssClass="DlgToast" ShowCloseIcon="false"
+               ID="DlgToast">
+        <DialogAnimationSettings Effect="@DialogEffect.SlideBottom" Duration=400></DialogAnimationSettings>
+        <DialogEvents OnOverlayClick="@(() => { Visible = false; })"></DialogEvents>
+        <DialogTemplates>
+            <Content>
+                @if (tirage.Status == CebStatus.CompteEstBon) {
+                    <div class="  bg-gradient-success text-center text-uppercase font-weight-bold text-white">
+                        <div class="animation">
+                            <i class="text-white far fa-thumbs-up"></i>&nbsp;Compte est bon
+                        </div>
                     </div>
-                </div>
-            } else {
-                <div class="bg-gradient-warning text-center text-uppercase text-dark font-weight-bold text-white">
-                    <div class="animation">
-                        <i class="text-danger far fa-thumbs-down"></i>&nbsp;Compte&nbsp;approché
+                } else if (tirage.Status == CebStatus.CompteApproche){
+                    <div class="bg-gradient-warning text-center text-uppercase text-dark font-weight-bold text-white">
+                        <div class="animation">
+                            <i class="text-danger far fa-thumbs-down"></i>&nbsp;Compte&nbsp;approché
+                        </div>
                     </div>
-                </div>
-            }
-            <div>&nbsp;</div>
-        </Header>
-
-        <Content>
+                } else { return; }
+                <div>&nbsp;</div>
                 <div class="text-center text-white">
                     <div>Trouvé(s):&nbsp;@tirage.Found</div>
                     @if (tirage.Status == CebStatus.CompteApproche) {
@@ -36,14 +32,11 @@
                     <div>@tirage.Solutions.Count&nbsp;solutions</div>
                     <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
                 </div>
-        </Content>
-        <FooterTemplate>
-            <div>&nbsp;</div>
-            <div class="w-100 text-center  @(tirage.Status == CebStatus.CompteApproche ? "bg-warning text-dark" : "bg-success text-white") ">@Solution</div>
-        </FooterTemplate>
-        }
-    </DialogTeboomplates>
-</EjsDialog>
+                <div>&nbsp;</div>
+                <div class="w-100 text-center  @(tirage.Status == CebStatus.CompteApproche ? "bg-warning text-dark" : "bg-success text-white") ">@Solution</div>
+            </Content>
+        </DialogTemplates>
+    </EjsDialog>
 
 @code {
     protected Timer timer;
@@ -61,7 +54,7 @@
         }
     }
 
-    public CebDetail Solution { get; set; }
+    public String Solution { get; set; }
     [Parameter]
     public double Duree { get; set; }
     [Parameter]
@@ -76,7 +69,7 @@
     }
 
     public async Task ShowAsync(int index) {
-        Solution = tirage.Details[index];
+        Solution =  tirage.SolutionIndex(index);
         Visible = true;
         await InvokeAsync(StateHasChanged);
     }

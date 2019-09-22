@@ -10,7 +10,7 @@
         <div class="w-25 btn-group" role="group" aria-label="First group">
             <div class="btn btn-primary h-100 text-danger disabled">
                 <img src="favicon.ico" style="display: inline-block; height:1rem"><br />
-                <cite class="font-weight-bold text-wrap text-truncate ">Compte&nbsp;est&nbsp;bon</cite>
+                <cite class="font-weight-bold text-wrap text-truncate ">Telerik&nbsp;-&nbsp;Compte&nbsp;est&nbsp;bon</cite>
 
             </div>
         </div>
@@ -24,9 +24,7 @@
                         type="button"
                         Enabled="@(tirage.Status != CebStatus.EnCours)"
                         @onclick="tirage.RandomAsync">
-
                     <i class="fa fa-random"></i>
-
                     <div>Tirage</div>
                 </button>
                 @switch (tirage.Status) {
@@ -44,7 +42,7 @@
                                 title="Initialisation des résultats (ALT-I)"
                                 role="button"
                                 type="button"
-                                accesskey="i">
+                                accesskey="i"> 
                             <div><i class="text-dark far fa-thumbs-up"></i></div>
                             <div class="animation">Compte&nbsp;est&nbsp;bon</div>
                         </button>
@@ -88,11 +86,11 @@
 
                         break;
                 }
-                <button class="btn @(TypeGrille == CebTypeGrille.Liste ? "btn-info" : "btn-primary")"
-                        @onclick="async () => { TypeGrille = TypeGrille == CebTypeGrille.Grille ? CebTypeGrille.Liste : CebTypeGrille.Grille; }"
+                <button class="btn @(TypeGrille==CebTypeGrille.Liste ? "btn-dark": "btn-primary")" style="width:3rem;"
+                        @onclick="()=> TypeGrille = TypeGrille == CebTypeGrille.Grille ? CebTypeGrille.Liste: CebTypeGrille.Grille"
                         role="button"
                         type="button">
-                    @(TypeGrille)
+                    <i class="fas @(TypeGrille == CebTypeGrille.Liste ? "fa-ellipsis-v":"fa-bars") fa-2x" ></i>
                 </button>
 
             } else {
@@ -146,7 +144,6 @@
         </div>
     </div>
 </div>
-<div class="separator">&nbsp;</div>
 <CebSolutions @ref="solutions"  TypeGrille="@TypeGrille" Toast="toast"></CebSolutions>
 <div class="text-white text-center" style="height: 1.8rem; font-weight: bold; align-self: center; flex-wrap: wrap">
     <div class="animation">
@@ -164,21 +161,21 @@
             case CebStatus.CompteApproche:
                 <div class="badge badge-warning w-100" style="cursor: pointer;" @onclick="tirage.ClearAsync">
                     <div class="text-dark d-flex justify-content-center">
-                        <div class="m-1"><i class="text-danger far fa-thumbs-down"></i></div>
-                        <div class="m-1">Compte&nbsp;approch&eacute;</div>
-                        <div class="m-1">Trouvé:&nbsp;@tirage.Found</div>
-                        <div class="m-1">@tirage.Solutions.Count&nbsp;solutions</div>
-                        <div class="m-1">durée:&nbsp;@($"{duree:N3}")s</div>
+                        <div class="m-0"><i class="text-danger far fa-thumbs-down"></i></div>
+                        <div class="m-0">Compte&nbsp;approch&eacute;</div>
+                        <div class="m-0">Trouvé:&nbsp;@tirage.Found</div>
+                        <div class="m-0">@tirage.Solutions.Count&nbsp;solutions</div>
+                        <div class="m-0">durée:&nbsp;@($"{duree:N3}")s</div>
                     </div>
                 </div>
                 break;
             case CebStatus.CompteEstBon:
                 <div class="badge badge-success w-100" style="cursor: pointer;" @onclick="tirage.ClearAsync">
                     <div class="d-flex justify-content-center text-white">
-                        <div class="m-1"><i class="text-dark far fa-thumbs-up"></i></div>
-                        <div class="m-1">Compte&nbsp;est&nbsp;bon</div>
-                        <div class="m-1">@tirage.Solutions.Count&nbsp;solutions</div>
-                        <div class="m-1">durée:&nbsp;@($"{duree:N3}")s</div>
+                        <div class="m-0"><i class="text-dark far fa-thumbs-up"></i></div>
+                        <div class="m-0">Compte&nbsp;est&nbsp;bon</div>
+                        <div class="m-0">@tirage.Solutions.Count&nbsp;solutions</div>
+                        <div class="m-0">durée:&nbsp;@($"{duree:N3}")s</div>
 
                     </div>
                 </div>

@@ -12,7 +12,7 @@
             <div class="btn btn-primary h-100 text-danger">
                 <div><img src="favicon.ico" style="height:1rem"></div>
                 <duv>
-                    <cite class="font-weight-bold text-wrap text-truncate ">Compte&nbsp;est&nbsp;bon</cite>
+                    <cite class="font-weight-bold text-wrap text-truncate ">Syncfusion&nbsp;-&nbsp;Compte&nbsp;est&nbsp;bon</cite>
                 </duv>
             </div>
         </div>
@@ -92,11 +92,11 @@
                         <div>Excel</div>
                     </button>
                 }
-                <button class="btn @(TypeGrille==CebTypeGrille.Liste ? "btn-info": "btn-primary")"
+                <button class="btn @(TypeGrille==CebTypeGrille.Liste ? "btn-dark": "btn-primary")" style="width:3rem;"
                         @onclick="()=> TypeGrille = TypeGrille == CebTypeGrille.Grille ? CebTypeGrille.Liste: CebTypeGrille.Grille"
                         role="button"
                         type="button">
-                    @TypeGrille
+                    <i class="fas @(TypeGrille == CebTypeGrille.Liste ? "fa-ellipsis-v":"fa-bars") fa-2x" ></i>
                 </button>
             } else {
                 <button class="btn btn-info btn-block">
@@ -175,21 +175,21 @@
             case CebStatus.CompteApproche:
                 <div class="badge badge-warning w-100" style="cursor: pointer;" @onclick="tirage.ClearAsync">
                     <div class="text-dark d-flex justify-content-center">
-                        <div class="m-1"><i class="text-danger far fa-thumbs-down"></i></div>
-                        <div class="m-1">Compte&nbsp;approch&eacute;</div>
-                        <div class="m-1">Trouvé:&nbsp;@tirage.Found</div>
-                        <div class="m-1">@tirage.Solutions.Count&nbsp;solutions</div>
-                        <div class="m-1">durée:&nbsp;@($"{duree:N3}")s</div>
+                        <div class="m-0"><i class="text-danger far fa-thumbs-down"></i></div>
+                        <div class="m-0">Compte&nbsp;approch&eacute;</div>
+                        <div class="m-0">Trouvé:&nbsp;@tirage.Found</div>
+                        <div class="m-0">@tirage.Solutions.Count&nbsp;solutions</div>
+                        <div class="m-0">durée:&nbsp;@($"{duree:N3}")s</div>
                     </div>
                 </div>
                 break;
             case CebStatus.CompteEstBon:
                 <div class="badge badge-success w-100" style="cursor: pointer;" @onclick="tirage.ClearAsync">
                     <div class="d-flex justify-content-center text-white">
-                        <div class="m-1"><i class="text-dark far fa-thumbs-up"></i></div>
-                        <div class="m-1">Compte&nbsp;est&nbsp;bon</div>
-                        <div class="m-1">@tirage.Solutions.Count&nbsp;solutions</div>
-                        <div class="m-1">durée:&nbsp;@($"{duree:N3}")s</div>
+                        <div class="m-0"><i class="text-dark far fa-thumbs-up"></i></div>
+                        <div class="m-0">Compte&nbsp;est&nbsp;bon</div>
+                        <div class="m-0">@tirage.Solutions.Count&nbsp;solutions</div>
+                        <div class="m-0">durée:&nbsp;@($"{duree:N3}")s</div>
 
                     </div>
                 </div>
@@ -200,7 +200,7 @@
         }
     </div>
 </div>
-<CebToast @ref="toast" DueTime="5000" Duree="duree"></CebToast>
+<CebToast @ref="toast" DueTime="10000" Duree="duree"></CebToast>
 @code {
         CebTypeGrille TypeGrille { get; set; }
         double duree { get; set; } = 0;
@@ -210,7 +210,7 @@
     protected override void OnInitialized() {
         tirage.PropertyChanged += async (_, _e) => {
             await toast.HideAsync();
-            await Solutions?.Refresh();
+            await Solutions?.RefreshAsync();
             await InvokeAsync(StateHasChanged);
         };
         TypeGrille = CebTypeGrille.Grille;
@@ -219,16 +219,13 @@
 
     }
 
-
     async Task ResolveAsync() {
         tirage.SetEncours();
         await InvokeAsync(StateHasChanged);
-
         stopwatch.Reset();
         stopwatch.Start();
         await tirage.ResolveAsync();
         stopwatch.Stop();
-
         duree = stopwatch.Elapsed.TotalSeconds;
         await toast.ShowAsync(0);
         await InvokeAsync(StateHasChanged);
