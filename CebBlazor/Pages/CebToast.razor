@@ -1,42 +1,40 @@
 @using CompteEstBon
 @using System.Threading;
-@using Syncfusion.EJ2.Blazor
-@using Syncfusion.EJ2.Blazor.Popups
 @using System.ComponentModel
 @inject CebTirage tirage
-    <EjsDialog Width="480" @bind-Visible="@Visible" CssClass="DlgToast" ShowCloseIcon="false"
-               ID="DlgToast">
-        <DialogAnimationSettings Effect="@DialogEffect.SlideBottom" Duration=400></DialogAnimationSettings>
-        <DialogEvents OnOverlayClick="@(() => { Visible = false; })"></DialogEvents>
-        <DialogTemplates>
-            <Content>
-                @if (tirage.Status == CebStatus.CompteEstBon) {
-                    <div class="  bg-gradient-success text-center text-uppercase font-weight-bold text-white">
-                        <div class="animation">
-                            <i class="text-white far fa-thumbs-up"></i>&nbsp;Compte est bon
-                        </div>
+<EjsDialog Width="480" @bind-Visible="@Visible" CssClass="a-toast" ShowCloseIcon="false"
+           ID="DlgToast">
+    <DialogAnimationSettings Effect="@DialogEffect.SlideBottom" Duration=400></DialogAnimationSettings>
+    <DialogEvents OnOverlayClick="@(() => { Visible = false; })"></DialogEvents>
+    <DialogTemplates>
+        <Content>
+            @if (tirage.Status == CebStatus.CompteEstBon) {
+                <div class="  bg-gradient-success text-center text-uppercase font-weight-bold text-white">
+                    <div class="animation">
+                        <i class="text-white far fa-thumbs-up"></i>&nbsp;Compte est bon
                     </div>
-                } else if (tirage.Status == CebStatus.CompteApproche){
-                    <div class="bg-gradient-warning text-center text-uppercase text-dark font-weight-bold text-white">
-                        <div class="animation">
-                            <i class="text-danger far fa-thumbs-down"></i>&nbsp;Compte&nbsp;approché
-                        </div>
-                    </div>
-                } else { return; }
-                <div>&nbsp;</div>
-                <div class="text-center text-white">
-                    <div>Trouvé(s):&nbsp;@tirage.Found</div>
-                    @if (tirage.Status == CebStatus.CompteApproche) {
-                        <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
-                    }
-                    <div>@tirage.Solutions.Count&nbsp;solutions</div>
-                    <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
                 </div>
-                <div>&nbsp;</div>
-                <div class="w-100 text-center  @(tirage.Status == CebStatus.CompteApproche ? "bg-warning text-dark" : "bg-success text-white") ">@Solution</div>
-            </Content>
-        </DialogTemplates>
-    </EjsDialog>
+            } else if (tirage.Status == CebStatus.CompteApproche) {
+                <div class="bg-gradient-warning text-center text-uppercase text-dark font-weight-bold text-white">
+                    <div class="animation">
+                        <i class="text-danger far fa-thumbs-down"></i>&nbsp;Compte&nbsp;approché
+                    </div>
+                </div>
+            } else { return; }
+            <div>&nbsp;</div>
+            <div class="text-center text-white">
+                <div>Trouvé(s):&nbsp;@tirage.Found</div>
+                @if (tirage.Status == CebStatus.CompteApproche) {
+                    <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
+                }
+                <div>@tirage.Solutions.Count&nbsp;solutions</div>
+                <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
+            </div>
+            <div>&nbsp;</div>
+            <div class="w-100 text-center  @(tirage.Status == CebStatus.CompteApproche ? "bg-warning text-dark" : "bg-success text-white") ">@Solution</div>
+        </Content>
+    </DialogTemplates>
+</EjsDialog>
 
 @code {
     protected Timer timer;
@@ -69,7 +67,7 @@
     }
 
     public async Task ShowAsync(int index) {
-        Solution =  tirage.SolutionIndex(index);
+        Solution = tirage.SolutionIndex(index);
         Visible = true;
         await InvokeAsync(StateHasChanged);
     }

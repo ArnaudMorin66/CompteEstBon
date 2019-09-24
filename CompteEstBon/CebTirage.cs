@@ -24,18 +24,15 @@ namespace CompteEstBon {
 
         public CebTirage() {
             for (var i = 0; i < 6; i++) {
-                //Plaques[i] = new CebPlaque(0, IsUpdated);
                 Plaques.Add(new CebPlaque(0, IsUpdated));
             }
             Random();
         }
 
-        private void IsUpdated(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
+        private void IsUpdated(object sender, PropertyChangedEventArgs e) {
             Clear("plaque");
 
         }
-
-        // private void IsUpdated(object sender, int e) => Clear();
 
         /// <summary>
         /// Constructeur Tirage du Compte est bon
@@ -140,7 +137,7 @@ namespace CompteEstBon {
             Status = CebStatus.EnCours;
             _search = Rnd.Next(100, 1000);
             var liste = new List<int>(CebPlaque.ListePlaques); // .ToList();
-            liste.AddRange(CebPlaque.ListePlaques.TakeWhile(i => i <= 25));
+            liste.AddRange(CebPlaque.ListePlaques.TakeWhile(v => v <= 25));
             foreach (var plaque in Plaques) {
                 var n = Rnd.Next(0, liste.Count());
                 plaque.Value2 = liste[n];
@@ -255,24 +252,19 @@ namespace CompteEstBon {
 
         public IEnumerable<string> ToArray() => Solutions.Select(p => p.ToString());
 
-        // public IEnumerable<IEnumerable<string>> OperationsSolutions => Solutions.Select(p => p.Operations);
-        public string[][] ArrayOfSolutions => Solutions.Select(p => p.Operations.ToArray()).ToArray();
-
         private static readonly Random Rnd = new Random();
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public IEnumerable<CebDetail> Details => Solutions.Select(s => new CebDetail(s));
-        public CebResult GetCebResult() {
-            return new CebResult {
-                Search = this.Search,
-                Plaques = Plaques.Select(p => p.Value),
-                Status = this.Status,
-                Diff = this.Diff,
-                Solutions = Details,
-                Found = this.Found.ToString()
-            };
-        }
+        public CebResult GetCebResult() => new CebResult {
+            Search = this.Search,
+            Plaques = Plaques.Select(p => p.Value),
+            Status = this.Status,
+            Diff = this.Diff,
+            Solutions = Details,
+            Found = this.Found.ToString()
+        };
     }
 }

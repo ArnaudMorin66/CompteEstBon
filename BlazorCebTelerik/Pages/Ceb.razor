@@ -7,13 +7,19 @@
 
 <div class="sticky-top">
     <div class="btn-toolbar  justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-        <div class="w-25 btn-group" role="group" aria-label="First group">
-            <div class="btn btn-primary h-100 text-danger disabled">
-                <img src="favicon.ico" style="display: inline-block; height:1rem"><br />
-                <cite class="font-weight-bold text-wrap text-truncate ">Telerik&nbsp;-&nbsp;Compte&nbsp;est&nbsp;bon</cite>
-
-            </div>
-        </div>
+        <button class="btn btn-primary h-100 @((tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon) ? "enabled": "")"
+                    @onclick="()=> TypeGrille = TypeGrille == CebTypeGrille.Grille ? CebTypeGrille.Liste: CebTypeGrille.Grille"
+                    aria-disabled="true"
+                    title="@(TypeGrille==CebTypeGrille.Liste ? "Mode Liste": "Mode Grille")"
+                    accesskey="m"
+                    role="button"
+                    type="button">
+                <img src="favicon.ico" class="d-inline-block h-75">
+                &nbsp;
+                <cite class="text-uppercase text-danger font-weight-bold text-wrap text-truncate ">Telerik&nbsp;-&nbsp;Compte&nbsp;est&nbsp;bon</cite>
+                &nbsp;
+                <i class="text-white fas @(TypeGrille == CebTypeGrille.Liste ? "fa-ellipsis-v":"fa-border-none")"></i>
+            </button>
         <div class="w-75 btn-group" role="group" aria-label="First group">
             @if (tirage.Status != CebStatus.EnCours) {
                 <button id="hasard"
@@ -86,12 +92,6 @@
 
                         break;
                 }
-                <button class="btn @(TypeGrille==CebTypeGrille.Liste ? "btn-dark": "btn-primary")" style="width:3rem;"
-                        @onclick="()=> TypeGrille = TypeGrille == CebTypeGrille.Grille ? CebTypeGrille.Liste: CebTypeGrille.Grille"
-                        role="button"
-                        type="button">
-                    <i class="fas @(TypeGrille == CebTypeGrille.Liste ? "fa-ellipsis-v":"fa-bars") fa-2x" ></i>
-                </button>
 
             } else {
                 <button class="btn btn-info btn-block">

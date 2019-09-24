@@ -52,9 +52,9 @@ namespace CompteEstBon.ViewModel {
                 tb.ApplyStyleRowBands = true;
                 for (var c = 1; c < 6; c++) tb.Rows[1].Cells[c].Range.Text = $"Opération {c}";
 
-                foreach (var s in tirage.ArrayOfSolutions) {
+                foreach (var s in tirage.Solutions) {
                     var row = tb.Rows.Add();
-                    for (var j = 0; j < s.Length; j++) row.Cells[j + 1].Range.Text = s[j];
+                    for (var j = 0; j < s.Operations.Count; j++) row.Cells[j + 1].Range.Text = s.Operations[j];
                 }
 
                 tb.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
@@ -107,9 +107,12 @@ namespace CompteEstBon.ViewModel {
 
             for (var c = 1; c < 6; c++) ws.Cells[6, c + 2].Value = $"Opération {c}";
             var lg = 7;
-            foreach (var s in tirage.ArrayOfSolutions) {
+            foreach (var s in tirage.Solutions) {
                 Excel.Range rw = ws.Rows[lg++];
-                ws.Range[rw.Cells[3], rw.Cells[s.Length + 2]].Value = s;
+                var ix = 3;
+                foreach (var o in s.Operations) {
+                    rw.Columns[ix++].Value = o;
+                }
             }
 
             ls = ws.ListObjects.Add(Excel.XlListObjectSourceType.xlSrcRange, ws.Range["C6"].CurrentRegion, null,
@@ -124,8 +127,7 @@ namespace CompteEstBon.ViewModel {
                 rg.Interior.ThemeColor = Excel.XlThemeColor.xlThemeColorAccent6;
                 rg.Font.ThemeColor = Excel.XlThemeColor.xlThemeColorDark1;
                 rg.Font.Bold = true;
-            }
-            else {
+            } else {
                 rg.Value = $"Compte approché: {tirage.Found}, écart: {tirage.Diff}";
                 rg.Interior.ThemeColor = Excel.XlThemeColor.xlThemeColorAccent4;
                 rg.Font.ThemeColor = Excel.XlThemeColor.xlThemeColorLight1;

@@ -51,7 +51,7 @@ namespace CompteEstBon {
 
         public ObservableCollection<int> Plaques { get; } = new ObservableCollection<int> { -1, -1, -1, -1, -1, -1 };
 
-        public IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
+        public IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques;
         private int _nsolutions;
         public int NSolutions {
             get => _nsolutions;

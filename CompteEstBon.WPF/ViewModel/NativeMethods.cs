@@ -45,22 +45,22 @@ namespace CompteEstBon.ViewModel {
 
         public static bool GetApplication(out Microsoft.Office.Interop.Excel.Application excel) {
             var isNew = false;
+
             try {
                 excel = (Microsoft.Office.Interop.Excel.Application)Marshal.GetActiveObject("Excel.Application");
-            }
-            catch (Exception) {
+            } catch (Exception) {
                 excel = new Microsoft.Office.Interop.Excel.Application();
                 isNew = true;
             }
-            excel.Visible = true;
+
             return isNew;
         }
         public static bool GetApplication(out Microsoft.Office.Interop.Word.Application word) {
             bool isNew = false;
+
             try {
                 word = (Microsoft.Office.Interop.Word.Application)Marshal.GetActiveObject("Excel.Application");
-            }
-            catch (Exception) {
+            } catch (Exception) {
                 word = new Microsoft.Office.Interop.Word.Application();
                 isNew = true;
             }

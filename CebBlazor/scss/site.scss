@@ -223,7 +223,7 @@ body {
 }
 
 
-.DlgToast {
+.a-toast  {   
     > .e-dlg-content, > .e-dlg-header-content, > .e-footer-content {
         @extend .bg-gradient-primary;
         padding: 0px;

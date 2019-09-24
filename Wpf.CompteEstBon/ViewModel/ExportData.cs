@@ -59,10 +59,10 @@ namespace CompteEstBon {
                 tb.ApplyStyleRowBands = true;
                 for (var c = 1; c < 6; c++) tb.Rows[1].Cells[c].Range.Text = $"Opération {c}";
 
-                foreach (var s in tirage.ArrayOfSolutions) {
+                foreach (var s in tirage.Solutions) {
                     var row = tb.Rows.Add();
-                    Task.Delay(100);
-                    for (var j = 0; j < s.Length; j++) row.Cells[j + 1].Range.Text = s[j];
+                    // Task.Delay(100);
+                    for (var j = 0; j < s.Operations.Count; j++) row.Cells[j + 1].Range.Text = s.Operations[j];
                 }
                 Task.Delay(100);
                 tb.Range.Paragraphs.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
@@ -115,9 +115,9 @@ namespace CompteEstBon {
 
             for (var c = 1; c < 6; c++) ws.Cells[6, c + 2].Value = $"Opération {c}";
             var lg = 7;
-            foreach (var s in tirage.ArrayOfSolutions) {
+            foreach (var s in tirage.Solutions) {
                 Excel.Range rw = ws.Rows[lg++];
-                ws.Range[rw.Cells[3], rw.Cells[s.Length + 2]].Value = s;
+                ws.Range[rw.Cells[3], rw.Cells[s.Operations.Count + 2]].Value = s.Operations;
             }
 
             ls = ws.ListObjects.Add(Excel.XlListObjectSourceType.xlSrcRange, ws.Range["C6"].CurrentRegion, null,

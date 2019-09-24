@@ -1,10 +1,8 @@
 ﻿@using CompteEstBon
 @using System.Text
-@using Syncfusion.EJ2.Blazor.Grids
 @using System.Collections.ObjectModel
 
 @inject CebTirage tirage
-
 
 <EjsGrid @ref="solutions"
          DataSource="@Details"
@@ -15,18 +13,9 @@
          AllowExcelExport="true"
          EnableAltRow="true"
          id="solutions">
-    <GridSelectionSettings Type="SelectionType.Single"></GridSelectionSettings>
+    <GridSelectionSettings Mode="Syncfusion.EJ2.Blazor.Grids.SelectionMode.Both" Type="SelectionType.Single"></GridSelectionSettings>
     <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
-    <GridEvents RowSelected="@(async (args) => { await Toast.ShowAsync((int)args.RowIndex); })" TValue="CebDetail"></GridEvents>
-    <GridColumns>
-        @if (TypeGrille == CebTypeGrille.Liste) {
-            <GridColumn Field="Op3" ></GridColumn>
-        } else {
-            for (var i = 1; i < 6; i++) {
-                <GridColumn Field="@($"Op{i}" )"></GridColumn>
-            }
-        }
-    </GridColumns>
+    <GridEvents RowSelecting="@(async (args) => { await Toast.ShowAsync((int)args.RowIndex); })" TValue="CebDetail" ></GridEvents>   
 </EjsGrid>
 
 
@@ -37,9 +26,7 @@
         get => _typegrille;
         set {
             _typegrille = value;
-#pragma warning disable CS4014
-            RefreshAsync();
-#pragma warning restore CS4014
+            InvokeAsync(RefreshAsync);
         }
     }
 
@@ -54,8 +41,9 @@
     public async Task RefreshAsync() {
         await InvokeAsync(() => {
             Details = (tirage.Status == CebStatus.CompteApproche || tirage.Status == CebStatus.CompteEstBon) ? new ObservableCollection<CebDetail>(
-                tirage.Solutions.Select((solution) => (TypeGrille == CebTypeGrille.Grille) ? new CebDetail(solution)
-                                                    : new CebDetail { Op3 = string.Join("<br>", solution.Operations) })) : new ObservableCollection<CebDetail>();
+                 tirage.Solutions.Select((solution) => (TypeGrille == CebTypeGrille.Grille) ? new CebDetail(solution)
+                                                     : new CebDetail { Op3 = string.Join("<br>", solution.Operations) })) : new ObservableCollection<CebDetail>();
+           
         });
     }
 

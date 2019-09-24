@@ -49839,7 +49839,7 @@ button.bg-dark:hover,
 button.bg-dark:focus {
   background-color: #1d2124 !important; }
 
-.bg-gradient-primary, .DlgToast > .e-dlg-content, .DlgToast > .e-dlg-header-content, .DlgToast > .e-footer-content {
+.bg-gradient-primary, .a-toast > .e-dlg-content, .a-toast > .e-dlg-header-content, .a-toast > .e-footer-content {
   background: #303030 linear-gradient(180deg, #4f4f4f, #303030) repeat-x !important; }
 
 .bg-gradient-secondary {
@@ -52412,7 +52412,7 @@ body {
 .footer {
   height: 2rem; }
 
-.DlgToast > .e-dlg-content, .DlgToast > .e-dlg-header-content, .DlgToast > .e-footer-content {
+.a-toast > .e-dlg-content, .a-toast > .e-dlg-header-content, .a-toast > .e-footer-content {
   padding: 0px;
   margin: 0;
   border: none; }

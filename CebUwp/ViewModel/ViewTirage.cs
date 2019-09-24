@@ -47,7 +47,7 @@ namespace CompteEstBon.ViewModel {
 
         public ObservableCollection<int> Plaques { get; } = new ObservableCollection<int> { -1, -1, -1, -1, -1, -1 };
 
-        public IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
+        public IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques;
 
         // public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
         public string _date;
