@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -19,7 +18,6 @@ using Windows.System;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 
 #endregion
 
@@ -60,6 +58,7 @@ namespace CompteEstBon {
                 NotifiedChanged();
             }
         }
+
 
         // public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
         public string _date;
@@ -288,7 +287,7 @@ namespace CompteEstBon {
         private void ClearData() {
             PopupIsOpen = false;
             NotifyTimer.Stop();
-            
+
             Duree = 0;
             NSolutions = 0;
             FirstSolutionString = "";
@@ -344,7 +343,7 @@ namespace CompteEstBon {
         public async Task RandomAsync() {
             PopupIsOpen = false;
             await Tirage.RandomAsync();
-            
+
             FirstSolutionString = "";
             UpdateData();
         }

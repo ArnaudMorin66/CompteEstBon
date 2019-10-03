@@ -36,8 +36,7 @@ namespace CompteEstBon {
         private void BtnSize_Click(object sender, RoutedEventArgs e) {
             if (WindowState == WindowState.Normal) {
                 WindowState = WindowState.Maximized;
-            }
-            else {
+            } else {
                 WindowState = WindowState.Normal;
             }
         }

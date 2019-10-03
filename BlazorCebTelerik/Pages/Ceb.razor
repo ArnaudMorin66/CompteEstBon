@@ -4,22 +4,23 @@
 @using System.Text
 @using CompteEstBon
 @inject CebTirage tirage
-
 <div class="sticky-top">
     <div class="btn-toolbar  justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-        <button class="btn btn-primary h-100 @((tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon) ? "enabled": "")"
-                    @onclick="()=> TypeGrille = TypeGrille == CebTypeGrille.Grille ? CebTypeGrille.Liste: CebTypeGrille.Grille"
+        <div class="btn-group w-25" role="group" aria-label="First group">
+            <button class="btn btn-primary h-100 @((tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon) ? "enabled" : "")"
+                    @onclick="() => TypeGrille = TypeGrille == CebTypeGrille.Grille ? CebTypeGrille.Liste : CebTypeGrille.Grille"
                     aria-disabled="true"
-                    title="@(TypeGrille==CebTypeGrille.Liste ? "Mode Liste": "Mode Grille")"
+                    title="@(TypeGrille == CebTypeGrille.Liste ? "Mode Liste" : "Mode Grille")"
                     accesskey="m"
                     role="button"
                     type="button">
-                <img src="favicon.ico" class="d-inline-block h-75">
-                &nbsp;
-                <cite class="text-uppercase text-danger font-weight-bold text-wrap text-truncate ">Telerik&nbsp;-&nbsp;Compte&nbsp;est&nbsp;bon</cite>
-                &nbsp;
-                <i class="text-white fas @(TypeGrille == CebTypeGrille.Liste ? "fa-ellipsis-v":"fa-border-none")"></i>
+                <div class="d-flex justify-content-between">
+                    <img src="favicon.ico" style="height:1.5rem;" >
+                    <cite class="text-uppercase text-danger font-weight-bold text-wrap text-truncate ">Telerik - Compte&nbsp;est&nbsp;bon</cite>
+                    <i class="text-white fas @(TypeGrille == CebTypeGrille.Liste ? "fa-ellipsis-v" : "fa-ellipsis-h") fa-2x"></i>
+                </div>
             </button>
+        </div>
         <div class="w-75 btn-group" role="group" aria-label="First group">
             @if (tirage.Status != CebStatus.EnCours) {
                 <button id="hasard"
@@ -44,11 +45,11 @@
                         break;
                     case CebStatus.CompteEstBon:
                         <button class="btn btn-success btn-block"
-                                @onclick="tirage.ClearAsync"
+                                @onclick="@tirage.ClearAsync"
                                 title="Initialisation des résultats (ALT-I)"
                                 role="button"
                                 type="button"
-                                accesskey="i"> 
+                                accesskey="i">
                             <div><i class="text-dark far fa-thumbs-up"></i></div>
                             <div class="animation">Compte&nbsp;est&nbsp;bon</div>
                         </button>
@@ -58,7 +59,7 @@
                                 role="button"
                                 type="button"
                                 title="Initialisation des résultats (ALT-I)"
-                                @onclick="tirage.ClearAsync"
+                                @onclick="@tirage.ClearAsync"
                                 accesskey="i">
                             <div><i class="text-danger far fa-thumbs-down"></i></div>
                             <div class="animation">Compte&nbsp;approch&eacute;</div>
@@ -69,7 +70,7 @@
                                 role="button"
                                 type="button"
                                 title="Tirage aléatoire (ALT-T)"
-                                @onclick="tirage.RandomAsync"
+                                @onclick="@tirage.RandomAsync"
                                 accesskey="T">
                             <div class="animation">
                                 <div><i class="far fa-exclamation-triangle"></i></div>
@@ -83,7 +84,7 @@
                                 title="Résolution du tirage (ALT-R)"
                                 class="btn btn-primary btn-block"
                                 role="button"
-                                @onclick="ResolveAsync"
+                                @onclick="@ResolveAsync"
                                 type="button"
                                 accesskey="r">
                             <div><i class="fas fa-bolt"></i></div>
@@ -116,7 +117,8 @@
                 <div class="row">
                     @foreach (var plq in tirage.Plaques) {
                         <div class="col-md-2">
-                            <TelerikDropDownList Data="@listeplaques" @bind-Value="plq.Value"
+                            <TelerikDropDownList Data="@CebPlaque.ListePlaques"
+                                                 @bind-Value="plq.Value"
                                                  Class="text-center"
                                                  TValue="int"
                                                  TItem="int"
@@ -138,14 +140,14 @@
             </div>
             <div class="card-body">
                 <TelerikNumericTextBox @bind-Value="tirage.Search" Step="1" Min="100" Max="999" Format="N0"
-                                 T="int"      Class="border-secondary"></TelerikNumericTextBox>
+                                       T="int" Class="border-secondary"></TelerikNumericTextBox>
 
             </div>
         </div>
     </div>
 </div>
-<CebSolutions @ref="solutions"  TypeGrille="@TypeGrille" Toast="toast"></CebSolutions>
-<div class="text-white text-center" style="height: 1.8rem; font-weight: bold; align-self: center; flex-wrap: wrap">
+<CebSolutions @ref="@solutions" TypeGrille="@TypeGrille" Toast="toast"></CebSolutions>
+<div class="text-white text-center font-weight-bolder text-wrap">
     <div class="animation">
         @switch (tirage.Status) {
             case CebStatus.EnCours:
@@ -154,7 +156,7 @@
                 </div>
                 break;
             case CebStatus.Erreur:
-                <div class="badge badge-danger w-100" style="cursor: pointer;" @onclick="tirage.RandomAsync">
+                <div class="badge badge-danger w-100" style="cursor: pointer;" @onclick="@tirage.RandomAsync">
                     <i class="fas fa-exclamation-triangle fa-spin"></i>&nbsp;Tirage invalide
                 </div>
                 break;
@@ -170,7 +172,7 @@
                 </div>
                 break;
             case CebStatus.CompteEstBon:
-                <div class="badge badge-success w-100" style="cursor: pointer;" @onclick="tirage.ClearAsync">
+                <div class="badge badge-success w-100" style="cursor: pointer;" @onclick="@tirage.ClearAsync">
                     <div class="d-flex justify-content-center text-white">
                         <div class="m-0"><i class="text-dark far fa-thumbs-up"></i></div>
                         <div class="m-0">Compte&nbsp;est&nbsp;bon</div>
@@ -188,23 +190,17 @@
 </div>
 <CebToast @ref="toast" DueTime="5000" Duree="@duree"></CebToast>
 @code {
-    int search { get; set;}
+    int search { get; set; }
     CebTypeGrille TypeGrille { get; set; }
     double duree { get; set; } = 0;
-    CebToast toast;
+    public CebToast toast;
     Stopwatch stopwatch;
     CebSolutions solutions { get; set; }
-
-    IEnumerable<int> listeplaques { get; set; } = CompteEstBon.CebPlaque.ListePlaques; // .Distinct();
-
 
     protected override void OnInitialized() {
         tirage.PropertyChanged += async (_, _e) => {
             await toast.HideAsync();
-
             await solutions.RefreshAsync();
-
-            await InvokeAsync(StateHasChanged);
         };
         stopwatch = new Stopwatch();
         base.OnInitialized();
@@ -217,12 +213,10 @@
         await InvokeAsync(StateHasChanged);
         stopwatch.Reset();
         stopwatch.Start();
-        // var heure = DateTime.Now;
         await tirage.ResolveAsync();
         stopwatch.Stop();
         duree = stopwatch.Elapsed.TotalSeconds;
         await solutions.RefreshAsync();
-        await InvokeAsync(StateHasChanged);
         await toast.ShowAsync();
     }
 }

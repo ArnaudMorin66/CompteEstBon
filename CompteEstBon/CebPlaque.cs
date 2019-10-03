@@ -1,7 +1,6 @@
 // Plage Compte est bon
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -9,7 +8,7 @@ using System.Runtime.CompilerServices;
 namespace CompteEstBon {
 
     [System.Runtime.InteropServices.Guid("A21F3DEC-8531-4F59-AF11-863BEF5ED340")]
-    public sealed class CebPlaque : CebBase, INotifyPropertyChanged   {
+    public sealed class CebPlaque : CebBase, INotifyPropertyChanged {
 
         public static readonly int[] ListePlaques = {
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10,

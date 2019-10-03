@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNetCore.Components
-@using System.Runtime.InteropServices
+﻿@using System.Runtime.InteropServices
 @using System.Threading
 <div class="footer d-flex bg-gradient-dark justify-content-between align-items-center border border-secondary">
     <span class="badge badge-pill badge-info">
@@ -12,7 +11,7 @@
 @code {  
     protected override void OnInitialized() {
         
-       (new Timer(new TimerCallback((state) => InvokeAsync(StateHasChanged)))).Change(0, 1000);
+       (new Timer((state) => InvokeAsync(StateHasChanged))).Change(0, 1000);
      }
 
 }

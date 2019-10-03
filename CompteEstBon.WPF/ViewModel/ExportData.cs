@@ -7,6 +7,7 @@ using Word = Microsoft.Office.Interop.Word;
 namespace CompteEstBon.ViewModel {
     public static class ExportData {
         public static void ToWord(this CebTirage tirage) {
+#if !DOTNET
             try {
                 NativeMethods.GetApplication(out Word.Application word);
                 var nomstyle = tirage.Status == CebStatus.CompteEstBon
@@ -69,8 +70,7 @@ namespace CompteEstBon.ViewModel {
                     para.Range.Text = "Le Compte est bon";
                     para.Range.Font.Color = Word.WdColor.wdColorWhite;
                     para.Shading.BackgroundPatternColor = Word.WdColor.wdColorGreen;
-                }
-                else {
+                } else {
                     para.Range.Text = $"Compte approché: {tirage.Found}, écart: {tirage.Diff}";
                     para.Range.Font.Color = Word.WdColor.wdColorWhite;
                     para.Shading.BackgroundPatternColor = Word.WdColor.wdColorOrange;
@@ -79,17 +79,18 @@ namespace CompteEstBon.ViewModel {
                 para.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                 doc.Bookmarks.Add("Résultat", para.Range);
                 NativeMethods.SetFocusWindow(doc.Windows[1].Hwnd);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 MessageBox.Show(e.Message, e.Source);
             }
+#endif
         }
 
         public static void ToExcel(this CebTirage tirage) {
+#if !DOTNET
             NativeMethods.GetApplication(out Excel.Application excel);
             excel.Visible = true;
             var workBook = excel.Workbooks.Add();
-            Excel.Worksheet ws = workBook.Worksheets[1];
+            var ws = workBook.Worksheets[1] as Excel.Worksheet;
             workBook.Windows[1].DisplayGridlines = false;
             for (var i = 1; i <= 6; i++) {
                 ws.Cells[1, i + 1].Value = $"Plaque {i}";
@@ -137,6 +138,11 @@ namespace CompteEstBon.ViewModel {
             ws.Range["C4:G4"].MergeCells = true;
             workBook.Activate();
             NativeMethods.SetFocusWindow(excel.Hwnd);
+#else
+            var xl = new Excel.ApplicationClass();
+            xl.Visible = true;
+
+#endif
         }
     }
 }

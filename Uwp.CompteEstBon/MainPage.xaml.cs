@@ -17,14 +17,12 @@ namespace CompteEstBon {
             ApplicationView view = ApplicationView.GetForCurrentView();
             if (view.IsFullScreenMode) {
                 view.ExitFullScreenMode();
-            }
-            else {
+            } else {
                 view.TryEnterFullScreenMode();
             }
         }
 
-        private void SolutionsData_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e)
-        {
+        private void SolutionsData_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e) {
             bindTirage.ShowNotify(SolutionsData.SelectedIndex);
         }
     }

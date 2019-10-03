@@ -12,35 +12,44 @@
                            Height="auto"
                            Width="400px">
     <div class="bg-gradient-primary text-white w-100" style="cursor:pointer">
-        @if (tirage.Status == CebStatus.CompteApproche || tirage.Status == CebStatus.CompteEstBon) {
-
-            @if (tirage.Status == CebStatus.CompteEstBon) {
-                <div class=" bg-gradient-success text-center text-uppercase font-weight-bold">
-                    <div class="animation">
-                        <i class="far fa-thumbs-up"></i>&nbsp;Compte est bon
-                    </div>
-                </div>
-            } else {
-                <div class="bg-gradient-warning text-center text-uppercase text-dark font-weight-bold">
-                    <div class="animation">
-                        <i class="text-danger far fa-thumbs-down"></i>&nbsp;Compte&nbsp;approch&eacute;
-                    </div>
-                </div>
-
-            }
-            <div>&nbsp;</div>
-            <div class="text-center">
-                <div>Trouvé:&nbsp;@tirage.Found</div>
-                @if (tirage.Status == CebStatus.CompteApproche) {
-                    <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
+         @{
+                string cls = "";
+                string title = "";
+                string icn = "";
+                string rsl = "";
+                switch (tirage.Status) {
+                    case CebStatus.CompteEstBon:
+                        title = "bg-gradient-success text-white";
+                        cls = "bg-success text-white";
+                        icn = "fa-thumbs-up text-white";
+                        rsl = "Compte est bon";
+                        break;
+                    case CebStatus.CompteApproche:
+                        title = "bg-gradient-warning text-dark";
+                        icn = "fa-thumbs-down text-danger";
+                        cls = "bg-warning text-dark";
+                        rsl = "Compte approché";
+                        break;
+                    default:
+                        return;
                 }
-                <div>@tirage.Solutions.Count&nbsp;solutions</div>
-                <div>Dur&eacute;e:&nbsp;@($"{Duree:N3}")s</div>
-            </div>
-            <div>&nbsp;</div>
-            <div class="text-center @(tirage.Status == CebStatus.CompteEstBon ? "bg-success text-white" : "bg-warning text-dark")">@Solution</div>
-
-        }
+                <div class="text-center text-uppercase font-weight-bold @title">
+                            <div class="animation">
+                                <i class="far @icn"></i>&nbsp;@rsl
+                            </div>
+                        </div>
+                <div>&nbsp;</div>
+                <div class="text-center text-white">
+                    <div>Trouvé(s):&nbsp;@tirage.Found</div>
+                    @if(tirage.Diff != 0) {
+                        <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
+                    }
+                    <div>@tirage.Solutions.Count&nbsp;solutions</div>
+                    <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
+                </div>
+                <div>&nbsp;</div>
+                <div class="w-100 text-center  @cls">@Solution</div>
+            }
     </div>
 </TelerikAnimationContainer>;
 @code {

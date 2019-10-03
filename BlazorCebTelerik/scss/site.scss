@@ -87,6 +87,18 @@ body {
     
     
 }
+.k-searchbar > .k-input, .k-numeric-wrap > .k-input {
+    background-color: $bg-body;
+    color:  white;
+    text-align: center;
+}
+
+.k-input {
+        background-color: $bg-body;
+        color: white;
+        text-align:center;
+    }
+
  span.k-icon {
      color: black;
  }

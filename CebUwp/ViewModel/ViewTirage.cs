@@ -15,8 +15,6 @@ using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Animation;
-using Microsoft.Toolkit.Uwp.UI.Controls;
-using Windows.UI.Xaml.Controls;
 
 namespace CompteEstBon.ViewModel {
 
@@ -136,9 +134,9 @@ namespace CompteEstBon.ViewModel {
 
 
         public event PropertyChangedEventHandler PropertyChanged;
-        #pragma warning disable CS0067
+#pragma warning disable CS0067
         public event EventHandler CanExecuteChanged;
-        #pragma warning restore CS0067
+#pragma warning restore CS0067
 
         /// <summary>
         /// Initialisation 
@@ -146,9 +144,9 @@ namespace CompteEstBon.ViewModel {
         /// <returns>
         /// </returns>
         public ViewTirage() {
-            
+
             App.AppServiceConnected += ViewTirage_AppServiceConnected;
-            
+
             Symbol = ListeSymbols[CebStatus.Valid];
             _background = Colors.DarkSlateGray;
             _foreground = Colors.White;
@@ -198,7 +196,7 @@ namespace CompteEstBon.ViewModel {
 
         private void UpdateColors() {
             Symbol = ListeSymbols[Tirage.Status];
-            
+
             (Background, Foreground) = Tirage.Status switch
             {
                 CebStatus.Valid => (Colors.DarkSlateGray, Colors.Yellow),
@@ -222,7 +220,7 @@ namespace CompteEstBon.ViewModel {
                 if (CurrentPage.SolutionsData != null)
                     CurrentPage.SolutionsData.ItemsSource = null;
             }
-            
+
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");
 
@@ -301,7 +299,7 @@ namespace CompteEstBon.ViewModel {
                 return;
             }
 
-            CurrentSolution = Tirage.Solutions[no].ToString();
+            CurrentSolution = Tirage.SolutionIndex(no);
             CurrentPage.cebNotification?.Show(10000);
 
         }

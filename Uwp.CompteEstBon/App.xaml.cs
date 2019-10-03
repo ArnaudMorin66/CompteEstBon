@@ -30,8 +30,7 @@ namespace CompteEstBon {
         /// seront utilisés par exemple au moment du lancement de l'application pour l'ouverture d'un fichier spécifique.
         /// </summary>
         /// <param name="e">Détails concernant la requête et le processus de lancement.</param>
-        protected override async void OnLaunched(LaunchActivatedEventArgs e)
-        {
+        protected override async void OnLaunched(LaunchActivatedEventArgs e) {
             await RegisterLicenseAsync();
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
             coreTitleBar.ExtendViewIntoTitleBar = true;
@@ -82,18 +81,14 @@ namespace CompteEstBon {
             }
         }
 
-        async Task RegisterLicenseAsync()
-        {
-            try
-            {
+        async Task RegisterLicenseAsync() {
+            try {
                 var storageFolder =
                     ApplicationData.Current.LocalFolder;
                 var licenseFile =
                     await storageFolder.GetFileAsync("syncfusion_uwp.lic");
                 SyncfusionLicenseProvider.RegisterLicense(await FileIO.ReadTextAsync(licenseFile));
-            }
-            catch (Exception)
-            {
+            } catch (Exception) {
                 // ignored
             }
         }

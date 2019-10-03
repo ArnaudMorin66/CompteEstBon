@@ -23128,6 +23128,16 @@ body {
   color: white;
   text-align: center; }
 
+.k-searchbar > .k-input, .k-numeric-wrap > .k-input {
+  background-color: #404040;
+  color: white;
+  text-align: center; }
+
+.k-input {
+  background-color: #404040;
+  color: white;
+  text-align: center; }
+
 span.k-icon {
   color: black; }
 

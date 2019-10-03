@@ -54,8 +54,7 @@ namespace ExportCeb {
                     ws.Range["C4"].Interior.ThemeColor = Excel.XlThemeColor.xlThemeColorAccent6;
                     ws.Range["C4"].Font.ThemeColor = Excel.XlThemeColor.xlThemeColorDark1;
                     ws.Range["C4"].Font.Bold = true;
-                }
-                else {
+                } else {
                     ws.Range["C4"].Interior.ThemeColor = Excel.XlThemeColor.xlThemeColorAccent4;
                     ws.Range["C4"].Font.ThemeColor = Excel.XlThemeColor.xlThemeColorLight1;
                     ws.Range["C4"].Font.Bold = true;
@@ -64,8 +63,7 @@ namespace ExportCeb {
                 ws.Range["C4:G4"].HorizontalAlignment = Excel.Constants.xlCenter;
                 wb.Activate();
                 result = "SUCCESS";
-            }
-            catch (Exception exc) {
+            } catch (Exception exc) {
                 result = exc.Message;
             }
             return result;
@@ -137,8 +135,7 @@ namespace ExportCeb {
                     para.Range.Text = "Le Compte est bon";
                     para.Range.Font.Color = Word.WdColor.wdColorWhite;
                     para.Shading.BackgroundPatternColor = Word.WdColor.wdColorGreen;
-                }
-                else {
+                } else {
                     para.Range.Text = ResultCeb;
                     para.Range.Font.Color = Word.WdColor.wdColorWhite;
                     para.Shading.BackgroundPatternColor = Word.WdColor.wdColorOrange;
@@ -147,8 +144,7 @@ namespace ExportCeb {
                 para.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                 InteropClass.SetFocusWindow(doc.Windows[1].Hwnd);
                 result = "SUCCESS";
-            }
-            catch (Exception exc) {
+            } catch (Exception exc) {
                 result = exc.Message;
             }
             return result;

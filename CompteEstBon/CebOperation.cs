@@ -10,11 +10,11 @@ namespace CompteEstBon {
     /// </summary>
     [Guid("59276C20-8670-47FB-BA13-44A1450CB9BF")]
     public sealed class CebOperation : CebBase {
-        public static readonly char[] ListeOperations = {'x', '+', '-', '/'};
+        public static readonly char[] ListeOperations = { 'x', '+', '-', '/' };
         // private List<string> _operations;
 
         /// <summary>
-        ///     Constructor opération <=> g op d
+        ///     Constructor opération (g op d)
         /// </summary>
         /// <param name="g"> </param>
         /// <param
@@ -27,7 +27,8 @@ namespace CompteEstBon {
                 return;
             }
 
-            Value = op switch {
+            Value = op switch
+            {
                 '+' => g.Value + d.Value,
                 '-' => Math.Max(0, g.Value - d.Value),
                 'x' => g.Value <= 1 || d.Value <= 1 ? 0 : g.Value * d.Value,
@@ -69,8 +70,6 @@ namespace CompteEstBon {
         public override string ToString() => string.Join(", ", Operations);
 
         /// <summary> Test égalité
-        public override bool Equals(object obj) => !(obj is CebOperation op) || op.Value != Value || op.Operations.Count() != Operations.Count()
-                ? false
-                : Operations.WithIndex().All(elt => op.Operations[elt.Item2] == elt.Item1);
+        public override bool Equals(object obj) => obj is CebOperation op && op.Value == Value && op.Operations.Count() == Operations.Count() && Operations.WithIndex().All(elt => op.Operations[elt.Item2] == elt.Item1);
     }
 }

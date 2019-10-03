@@ -1,23 +1,23 @@
 ﻿@page "/"
-
 @using System.Diagnostics
 @using CompteEstBon
 @inject CebTirage tirage
 <div class="sticky-top">
     <div class="btn-toolbar  justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group w-25" role="group" aria-label="First group">
-            <button class="btn btn-primary h-100 @((tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon) ? "enabled": "")"
-                    @onclick="()=> TypeGrille = TypeGrille == CebTypeGrille.Grille ? CebTypeGrille.Liste: CebTypeGrille.Grille"
+            @* ReSharper disable once CoercedEqualsUsing *@
+            <button class="btn btn-primary h-100 @(tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon ? "enabled" : "")"
+                    @onclick="() => TypeGrille = TypeGrille == CebTypeGrille.Grille ? CebTypeGrille.Liste : CebTypeGrille.Grille"
                     aria-disabled="true"
-                    title="@(TypeGrille==CebTypeGrille.Liste ? "Mode Liste": "Mode Grille")"
+                    title="@(TypeGrille == CebTypeGrille.Liste ? "Mode Liste" : "Mode Grille")"
                     accesskey="m"
                     role="button"
                     type="button">
-                <img src="favicon.ico" class="d-inline-block h-75">
-                &nbsp;
-                <cite class="text-uppercase text-danger font-weight-bold text-wrap text-truncate ">Syncfusion&nbsp;-&nbsp;Compte&nbsp;est&nbsp;bon</cite>
-                &nbsp;
-                <i class="text-white fas @(TypeGrille == CebTypeGrille.Liste ? "fa-ellipsis-v":"fa-border-none")"></i>
+                <div class="d-flex justify-content-between">
+                    <img src="favicon.ico" style="height: 1.5rem;">
+                    <cite class="text-uppercase text-danger font-weight-bold text-wrap text-truncate ">Syncfusion - Compte&nbsp;est&nbsp;bon</cite>
+                    <i class="text-white fas @(TypeGrille == CebTypeGrille.Liste ? "fa-ellipsis-v" : "fa-ellipsis-h") fa-2x"></i>
+                </div>
             </button>
         </div>
         <div class="btn-group w-75" role="group" aria-label="second group">
@@ -30,6 +30,7 @@
                         type="button"
                         Enabled="@(tirage.Status != CebStatus.EnCours)"
                         @onclick="tirage.RandomAsync">
+                    @* ReSharper disable UnknownCssClass *@
                     <i class="fa fa-random"></i>
                     <div>Tirage</div>
                 </button>
@@ -75,7 +76,7 @@
                                 title="Résolution du tirage (ALT-R)"
                                 class="btn btn-primary btn-block"
                                 role="button"
-                                @onclick="ResolveAsync"
+                                @onclick="@ResolveAsync"
                                 type="button"
                                 accesskey="r">
                             <i class="fas fa-bolt"></i>
@@ -85,13 +86,15 @@
                 }
                 @if (tirage.Status == CebStatus.CompteEstBon || tirage.Status == CebStatus.CompteApproche) {
                     <button id="excel"
-                            @onclick="@(()=> {Solutions.ExportExcel();})"
+                            @onclick="@(() => { Solutions.ExportExcel(); })"
                             title="Exportation vers Excel (ALT-X)"
                             accesskey="x"
                             class="btn btn-primary w-25"
                             type="button"
                             role="button">
-                        <div><i class="fas fa-file-excel"></i></div>
+                        <div>
+                            <i class="fas fa-file-excel"></i>
+                        </div>
                         <div>Excel</div>
                     </button>
                 }
@@ -107,7 +110,6 @@
 
     </div>
 </div>
-
 <div class="row ">
     <div class="col text-center">
         <div class="card text-center border-secondary">
@@ -121,11 +123,9 @@
                         <div class="col-md-2">
                             <EjsComboBox @bind-Value="@plq.Value"
                                          DataSource="@CebPlaque.ListePlaques"
-                                         TValue="int"
                                          AllowCustom="true"
                                          ShowClearButton="false"
                                          Enabled="tirage.Status != CebStatus.EnCours">
-
                             </EjsComboBox>
                         </div>
                     }
@@ -155,7 +155,7 @@
     </div>
 </div>
 <CebSolutions @ref="Solutions" TypeGrille="TypeGrille" Toast="toast"></CebSolutions>
-<div class="text-white text-center" style="height: 1.8rem; font-weight: bold; align-self: center; flex-wrap: wrap">
+<div class="text-white text-center font-weight-bold" style="height: 1.8rem;">
     <div class="animation">
         @switch (tirage.Status) {
             case CebStatus.EnCours:
@@ -171,21 +171,25 @@
             case CebStatus.CompteApproche:
                 <div class="badge badge-warning w-100" style="cursor: pointer;" @onclick="tirage.ClearAsync">
                     <div class="text-dark d-flex justify-content-center">
-                        <div><i class="text-danger far fa-thumbs-down"></i></div>
+                        <div>
+                            <i class="text-danger far fa-thumbs-down"></i>
+                        </div>
                         <div>Compte&nbsp;approch&eacute;</div>
                         <div>Trouvé:&nbsp;@tirage.Found</div>
                         <div>@tirage.Solutions.Count&nbsp;solutions</div>
-                        <div>durée:&nbsp;@($"{duree:N3}")s</div>
+                        <div>durée:&nbsp;@($"{stopwatch.Elapsed.TotalSeconds:N3}")s</div>
                     </div>
                 </div>
                 break;
             case CebStatus.CompteEstBon:
                 <div class="badge badge-success w-100" style="cursor: pointer;" @onclick="tirage.ClearAsync">
                     <div class="d-flex justify-content-center text-white">
-                        <div><i class="text-dark far fa-thumbs-up"></i></div>
+                        <div>
+                            <i class="text-dark far fa-thumbs-up"></i>
+                        </div>
                         <div>Compte&nbsp;est&nbsp;bon</div>
                         <div>@tirage.Solutions.Count&nbsp;solutions</div>
-                        <div>durée:&nbsp;@($"{duree:N3}")s</div>
+                        <div>durée:&nbsp;@($"{stopwatch.Elapsed.TotalSeconds:N3}")s</div>
 
                     </div>
                 </div>
@@ -196,23 +200,23 @@
         }
     </div>
 </div>
-<CebToast @ref="toast" DueTime="10000" Duree="duree"></CebToast>
+<CebToast @ref="toast" DueTime="10000" Duree="stopwatch.Elapsed.TotalSeconds"></CebToast>
+
 @code {
     CebTypeGrille TypeGrille { get; set; }
-    double duree { get; set; } = 0;
     Stopwatch stopwatch;
-    CebToast toast;
-    CebSolutions Solutions { get; set; }
+    public CebToast toast;
+    public CebSolutions Solutions;
+
     protected override void OnInitialized() {
         tirage.PropertyChanged += async (_, _e) => {
             await toast.HideAsync();
+            // ReSharper disable once PossibleNullReferenceException
             await Solutions?.RefreshAsync();
-            await InvokeAsync(StateHasChanged);
         };
         TypeGrille = CebTypeGrille.Grille;
         stopwatch = new Stopwatch();
         base.OnInitialized();
-
     }
 
     async Task ResolveAsync() {
@@ -222,10 +226,7 @@
         stopwatch.Start();
         await tirage.ResolveAsync();
         stopwatch.Stop();
-        duree = stopwatch.Elapsed.TotalSeconds;
         await toast.ShowAsync(0);
-        await InvokeAsync(StateHasChanged);
     }
 
 }
-

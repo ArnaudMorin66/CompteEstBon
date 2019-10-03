@@ -9,7 +9,7 @@ namespace CompteEstBon {
     public sealed partial class MainPage : Page {
         public MainPage() {
             InitializeComponent();
-           
+
             Tirage.CurrentPage = this;
             Tirage.StoryBoard = TextBlockBoard;
             TextBlockBoard.Begin();
@@ -20,8 +20,7 @@ namespace CompteEstBon {
             ApplicationView view = ApplicationView.GetForCurrentView();
             if (view.IsFullScreenMode) {
                 view.ExitFullScreenMode();
-            }
-            else {
+            } else {
                 view.TryEnterFullScreenMode();
             }
         }
@@ -56,10 +55,9 @@ namespace CompteEstBon {
 
         }
 
-        
 
-        private void Search_GotFocus(object sender, RoutedEventArgs e)
-        {
+
+        private void Search_GotFocus(object sender, RoutedEventArgs e) {
             search.SelectAll();
         }
     }

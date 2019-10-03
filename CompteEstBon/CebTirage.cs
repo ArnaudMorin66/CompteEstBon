@@ -7,8 +7,15 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+
+/* Modification non fusionnée à partir du projet 'CompteEstBon_2.1'
+Avant :
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+Après :
+using System.Text;
+using System.Threading.Tasks;
+*/
 using static System.Math;
 
 #endregion using
@@ -26,6 +33,7 @@ namespace CompteEstBon {
             for (var i = 0; i < 6; i++) {
                 Plaques.Add(new CebPlaque(0, IsUpdated));
             }
+
             Random();
         }
 
@@ -45,9 +53,10 @@ namespace CompteEstBon {
             if (plaques.Length < 6 || search == -1)
                 Random();
             else {
-                foreach (var (p, i) in plaques.WithIndex().Where((q, i) => i < 6)) {
+                foreach (var (p, i) in plaques.WithIndex().Where(elt => elt.Item2  < 6)) {
                     Plaques[i].Value2 = p;
                 }
+
                 Search = search;
             }
         }
@@ -73,13 +82,14 @@ namespace CompteEstBon {
         /// Ecart
         /// </summary>
         public int Diff { get; private set; } = int.MaxValue;
+
         public List<CebPlaque> Plaques = new List<CebPlaque>();
-        // public CebPlaque[] Plaques { get; } = new CebPlaque[6];
 
         public void SetPlaques(params int[] plaq) {
-            foreach (var (p, i) in plaq.WithIndex().Where((p, i) => i < 6)) {
+            foreach (var (p, i) in plaq.WithIndex().Where(elt => elt.Item2 < 6)) {
                 Plaques[i].Value2 = p;
             }
+
             Clear("Plaques");
         }
 
@@ -94,6 +104,7 @@ namespace CompteEstBon {
         /// The status.
         /// </value>
         public CebStatus Status { get; private set; } = CebStatus.Indefini;
+
         public void SetEncours() {
             Status = CebStatus.EnCours;
         }
@@ -112,7 +123,8 @@ namespace CompteEstBon {
         }
 
         public CebBase Solution => Solutions.Count == 0 ? null : Solutions[0];
-        public string SolutionIndex(int no) {
+
+    public string SolutionIndex(int no) {
 
             if (Solutions.Count == 0 || no >= Solutions.Count) return "";
             if (no < 0) no = 0;
@@ -127,8 +139,7 @@ namespace CompteEstBon {
         public bool SearchValid => _search > 99 && _search < 1000;
 
         public bool PlaquesValid => Plaques.All(p => p.IsValid
-                                                     && Plaques.Count(q => q.Value == p.Value) <=
-                                                     (p <= 25 ? 2 : 1));
+                                                     && Plaques.Count(q => q.Value == p.Value) <= (p <= 25 ? 2 : 1));
 
         /// <summary>
         /// Select the value and the plaque's list
@@ -143,18 +154,17 @@ namespace CompteEstBon {
                 plaque.Value2 = liste[n];
                 liste.RemoveAt(n);
             }
-            Clear("Randm");
+            Clear("Random");
         }
 
         public async Task RandomAsync() => await Task.Run(Random);
 
         public void Clear(string evt = "") {
-            
             if (Solutions.Count != 0) {
                 Solutions.Clear();
                 NotifiedChanged(evt);
             }
-           
+
             Diff = int.MaxValue;
             Found.Reset();
             Valid();
@@ -178,7 +188,7 @@ namespace CompteEstBon {
             if (plq.Length != 6)
                 throw new ArgumentException("Nombre de plaques incorrecte");
             _search = search;
-            foreach (var (p, i) in plq.WithIndex().Where((p, i) => i < 6))
+            foreach (var (p, i) in plq.WithIndex().Where(elt => elt.Item2 < 6))
                 Plaques[i].Value2 = p;
 
             return Resolve();
@@ -203,7 +213,7 @@ namespace CompteEstBon {
             liste.Sort((p, q) => q.Value.CompareTo(p.Value));
             foreach (var (p, i) in liste.WithIndex()) {
                 UpdateSolutions(p);
-                foreach (var (q, j) in liste.WithIndex().Where((_, j) => j > i)) {
+                foreach (var (q, j) in liste.WithIndex().Where(elt  => elt.Item2 > i)) {
                     foreach (var oper in
                         CebOperation.ListeOperations.Select(operation =>
                             new CebOperation(p, operation, q))
@@ -227,13 +237,10 @@ namespace CompteEstBon {
             if (Status != CebStatus.Valid) return Status;
             Status = CebStatus.EnCours;
             Resolve(Plaques.Cast<CebBase>().ToList());
-            Solutions.Sort((p, q) => p.Rank.CompareTo(q.Rank));
+            Solutions.Sort((p, q) => (p.Rank == q.Rank) ? p.Value.CompareTo(q.Value) : p.Rank.CompareTo(q.Rank));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
 
-            // Solutions.ForEach(s => Details.Add(new CebDetail(s)));
-
-            // Details.AddRange(Solutions.Select(s => new CebDetail(s)));
-            NotifiedChanged("Details");
+            NotifiedChanged($"Details");
             return Status;
         }
 
@@ -267,4 +274,5 @@ namespace CompteEstBon {
             Found = this.Found.ToString()
         };
     }
+    
 }

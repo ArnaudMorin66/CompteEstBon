@@ -11,6 +11,7 @@
     s:SkinManager.ActiveColorScheme="Black"
     s:SkinStorage.VisualStyle="Blend"
     BorderThickness="0"
+    FontSize="10"
     Icon="favicon.ico"
     TitleBarBackground="{DynamicResource ButtonBackgroundBrush}"
     TitleBarHeight="40"
@@ -283,7 +284,7 @@
                 Grid.Column="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="12"
+                FontSize="10"
                 Foreground="{DynamicResource ButtonForegroundBrush}"
                 TextAlignment="Center">
                 <TextBlock.RenderTransform>
@@ -294,18 +295,18 @@
                 Grid.Column="1"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="12"
+                FontSize="10"
                 Foreground="{DynamicResource ButtonForegroundBrush}"
                 TextAlignment="Center">
                 <TextBlock.RenderTransform>
                     <ScaleTransform x:Name="AnimatedScaleSolutions" ScaleX="0.5" ScaleY="1" />
-                </TextBlock.RenderTransform><Run Text="Nombre de solutions: " /><Run Text=" " /><Run Text="{Binding Solutions.Count, Mode=OneWay}" /></TextBlock>
+                </TextBlock.RenderTransform> <Run Text="{Binding Count, Mode=OneWay}" /><Run Text=" solutions" /></TextBlock>
             <TextBlock
                 x:Name="textBlock3"
                 Grid.Column="2"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="12"
+                FontSize="10"
                 Foreground="{DynamicResource ButtonForegroundBrush}"
                 TextAlignment="Center">
                 <TextBlock.RenderTransform>
@@ -326,7 +327,7 @@
             Background="{StaticResource CebLinearGradientBrush2}"
             CellStyle="{StaticResource SfDataGridCellStyle}"
             ColumnSizer="Star"
-            FontSize="12"
+            FontSize="10"
             HeaderRowHeight="0"
             IsTabStop="True"
             NavigationMode="Row"
@@ -385,13 +386,13 @@
                     HorizontalContentAlignment="Center"
                     Background="{DynamicResource ButtonBackgroundBrush}"
                     Content="{Binding Result}"
-                    FontSize="12"
+                    FontSize="10"
                     FontWeight="ExtraBlack"
                     Foreground="{DynamicResource ButtonForegroundBrush}" />
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="12"
+                    FontSize="10"
                     FontWeight="ExtraBlack"
                     Foreground="Yellow"
                     Text="{Binding Solution}" />
@@ -399,14 +400,14 @@
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="12"
+                    FontSize="10"
                     FontWeight="Medium"
                     Foreground="White"
-                    TextAlignment="Center"><Run Text="Nombre de solutions: " /><Run Text="{Binding Solutions.Count, Mode=OneWay}" /></TextBlock>
+                    TextAlignment="Center"><Run Text="{Binding Count, Mode=OneWay}" /><Run Text=" solutions" /></TextBlock>
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="12"
+                    FontSize="10"
                     FontWeight="Medium"
                     Foreground="White"
                     TextAlignment="Center"><Run Text="Durée: " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>

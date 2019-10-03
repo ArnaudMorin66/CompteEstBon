@@ -6,6 +6,10 @@
     <UseWPF>true</UseWPF>
  </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DOTNET</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -26,6 +30,7 @@
       <WrapperTool>tlbimp</WrapperTool>
       <Lcid>0</Lcid>
       <Isolated>false</Isolated>
+      <Private>true</Private>
     </COMReference>
     <COMReference Include="Microsoft.Office.Word.dll">
       <Guid>00020905-0000-0000-c000-000000000046</Guid>
@@ -34,6 +39,7 @@
       <WrapperTool>tlbimp</WrapperTool>
       <Lcid>0</Lcid>
       <Isolated>false</Isolated>
+      <Private>true</Private>
     </COMReference>
   </ItemGroup>
 

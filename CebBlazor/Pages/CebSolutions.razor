@@ -1,9 +1,8 @@
 ﻿@using CompteEstBon
-@using System.Text
 @using System.Collections.ObjectModel
+@using Microsoft.AspNetCore.Components
 
 @inject CebTirage tirage
-
 <EjsGrid @ref="solutions"
          DataSource="@Details"
          GridLines="GridLine.None"
@@ -12,51 +11,46 @@
          AllowSelection="true"
          AllowExcelExport="true"
          EnableAltRow="true"
-         id="solutions">
+         ID="solutions">
     <GridSelectionSettings Mode="Syncfusion.EJ2.Blazor.Grids.SelectionMode.Both" Type="SelectionType.Single"></GridSelectionSettings>
     <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
-    <GridEvents RowSelecting="@(async (args) => { await Toast.ShowAsync((int)args.RowIndex); })" TValue="CebDetail" ></GridEvents>   
+    <GridEvents RowSelecting="@(async (args) => await Toast.ShowAsync((int)args.RowIndex) )" TValue="CebDetail"></GridEvents>
 </EjsGrid>
-
-
 @code {
     private CebTypeGrille _typegrille;
     [Parameter]
     public CebTypeGrille TypeGrille {
         get => _typegrille;
         set {
-            _typegrille = value;
-            InvokeAsync(RefreshAsync);
+            if (_typegrille != value) {
+                _typegrille = value;
+                InvokeAsync(RefreshAsync);
+            }
         }
     }
 
-
-
     [Parameter] public CebToast Toast { get; set; }
 
+    // ReSharper disable once UnusedAutoPropertyAccessor.Local
     EjsGrid<CebDetail> solutions { get; set; }
     public ObservableCollection<CebDetail> Details { get; set; }
 
 
-    public async Task RefreshAsync() {
-        await InvokeAsync(() => {
-            Details = (tirage.Status == CebStatus.CompteApproche || tirage.Status == CebStatus.CompteEstBon) ? new ObservableCollection<CebDetail>(
-                 tirage.Solutions.Select((solution) => (TypeGrille == CebTypeGrille.Grille) ? new CebDetail(solution)
-                                                     : new CebDetail { Op3 = string.Join("<br>", solution.Operations) })) : new ObservableCollection<CebDetail>();
-           
-        });
-    }
+    public async Task RefreshAsync() => await InvokeAsync(() => {
+        Details = (tirage.Status == CebStatus.CompteApproche || tirage.Status == CebStatus.CompteEstBon) ?
+                new ObservableCollection<CebDetail>(
+                    tirage.Solutions.Select((solution) => (TypeGrille == CebTypeGrille.Grille) ?
+                        new CebDetail(solution) :
+                        new CebDetail { Op3 = string.Join("<br>", solution.Operations) })) :
+                new ObservableCollection<CebDetail>();
 
+    });
 
     protected override void OnInitialized() {
-
-        // Details = new ObservableCollection<CebDetail>();
     }
 
     public void ExportExcel() {
         if (tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon) return;
         solutions.ExcelExport(new ExcelExportProperties { ExportType = ExportType.AllPages });
-
     }
-
 }

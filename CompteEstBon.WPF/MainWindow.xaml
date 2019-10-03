@@ -9,6 +9,7 @@
     Height="480"
     Background="Transparent"
     BorderThickness="0"
+    FontSize="10"
     Icon="favicon.ico"
     MouseLeftButtonDown="Window_MouseLeftButtonDown"
     ResizeMode="CanResize"
@@ -117,7 +118,7 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-         <Grid
+        <Grid
             Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="10"
@@ -277,7 +278,7 @@
                 Content="&#xAC;"
                 Cursor="Hand"
                 FontFamily="Wingdings 3"
-                FontSize="16"
+                FontSize="10"
                 FontWeight="Bold"
                 Foreground="White"
                 ToolTipService.ToolTip="Réduire" />
@@ -297,7 +298,7 @@
                 Content="&#x6F;"
                 Cursor="Hand"
                 FontFamily="Wingdings"
-                FontSize="16"
+                FontSize="10"
                 FontWeight="Bold"
                 Foreground="White"
                 ToolTipService.ToolTip="Rétablir précédent" />
@@ -318,7 +319,7 @@
                 Content="&#x78;"
                 Cursor="Hand"
                 FontFamily="Wingdings"
-                FontSize="16"
+                FontSize="10"
                 FontWeight="Bold"
                 Foreground="White"
                 ToolTipService.ToolTip="Fermer" />
@@ -436,7 +437,7 @@
             CanUserResizeRows="False"
             CanUserSortColumns="False"
             ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-            FontSize="14"
+            FontSize="10"
             GridLinesVisibility="Horizontal"
             HeadersVisibility="None"
             HorizontalGridLinesBrush="#FF303030"
@@ -488,13 +489,13 @@
                     HorizontalContentAlignment="Center"
                     Background="{DynamicResource ButtonBackgroundBrush}"
                     Content="{Binding Result}"
-                    FontSize="12"
+                    FontSize="10"
                     FontWeight="ExtraBlack"
                     Foreground="{DynamicResource ButtonForegroundBrush}" />
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="12"
+                    FontSize="10"
                     FontWeight="ExtraBlack"
                     Foreground="Yellow"
                     Text="{Binding Solution}" />
@@ -502,14 +503,14 @@
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="12"
+                    FontSize="10"
                     FontWeight="Medium"
                     Foreground="White"
-                    TextAlignment="Center"><Run Text="Nombre de solutions: " /><Run Text="{Binding Solutions.Count, Mode=OneWay}" /></TextBlock>
+                    TextAlignment="Center"><Run Text="Nombre de solutions: " /><Run Text="{Binding Count, Mode=OneWay}" /></TextBlock>
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="12"
+                    FontSize="10"
                     FontWeight="Medium"
                     Foreground="White"
                     TextAlignment="Center"><Run Text="Durée: " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
@@ -572,7 +573,7 @@
                 Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
                 <TextBlock.RenderTransform>
                     <ScaleTransform x:Name="AnimatedScaleSolutions" ScaleX="0.5" ScaleY="1" />
-                </TextBlock.RenderTransform><Run Text="Nombre de solutions: " /><Run Text=" " /><Run Text="{Binding Solutions.Count, Mode=OneWay}" /></TextBlock>
+                </TextBlock.RenderTransform><Run Text="Nombre de solutions: " /><Run Text=" " /><Run Text="{Binding Count, Mode=OneWay}" /></TextBlock>
             <TextBlock
                 x:Name="textBlock3"
                 Grid.Column="2"

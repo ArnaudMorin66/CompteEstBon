@@ -77,8 +77,7 @@ namespace CompteEstBon {
                     para.Range.Text = "Le Compte est bon";
                     para.Range.Font.Color = Word.WdColor.wdColorWhite;
                     para.Shading.BackgroundPatternColor = Word.WdColor.wdColorGreen;
-                }
-                else {
+                } else {
                     para.Range.Text = $"Compte approché: {tirage.Found}, écart: {tirage.Diff}";
                     para.Range.Font.Color = Word.WdColor.wdColorWhite;
                     para.Shading.BackgroundPatternColor = Word.WdColor.wdColorOrange;
@@ -87,8 +86,7 @@ namespace CompteEstBon {
                 para.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
                 doc.Bookmarks.Add("Résultat", para.Range);
                 InteropClass.SetFocusWindow(doc.Windows[1].Hwnd);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 MessageBox.Show(e.Message, e.Source);
             }
         }
@@ -132,8 +130,7 @@ namespace CompteEstBon {
                 rg.Interior.ThemeColor = Excel.XlThemeColor.xlThemeColorAccent6;
                 rg.Font.ThemeColor = Excel.XlThemeColor.xlThemeColorDark1;
                 rg.Font.Bold = true;
-            }
-            else {
+            } else {
                 rg.Value = $"Compte approché: {tirage.Found}, écart: {tirage.Diff}";
                 rg.Interior.ThemeColor = Excel.XlThemeColor.xlThemeColorAccent4;
                 rg.Font.ThemeColor = Excel.XlThemeColor.xlThemeColorLight1;

@@ -221,12 +221,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj">
-      <Project>{e870da70-15e2-4113-8c79-2ca7610688bc}</Project>
-      <Name>CompteEstBon</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="favicon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -291,6 +285,12 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj">
+      <Project>{e870da70-15e2-4113-8c79-2ca7610688bc}</Project>
+      <Name>CompteEstBon</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

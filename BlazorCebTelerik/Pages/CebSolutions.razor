@@ -3,12 +3,13 @@
 @inject CebTirage tirage
 
 <TelerikGrid Data="Details"
-              Height="360px"
-              SelectionMode="Telerik.Blazor.GridSelectionMode.Single"
-              Class="solutions border border-secondary"
-              SelectedItemsChanged="@(async (IEnumerable<CebDetail> liste) => { await Toast.ShowAsync(liste.FirstOrDefault()); })"
-              TItem="CebDetail">
+             Height="360px"
+             SelectionMode="Telerik.Blazor.GridSelectionMode.Single"
+             Class="solutions border border-secondary"
+             SelectedItemsChanged="@(async (IEnumerable<CebDetail> liste) => { await Toast.ShowAsync(liste.FirstOrDefault()); })"
+             TItem="CebDetail">
     <GridColumns>
+       
         <GridColumn Field="Op1"></GridColumn>
         <GridColumn Field="Op2"></GridColumn>
         <GridColumn Field="Op3">
@@ -18,7 +19,7 @@
         </GridColumn>
         <GridColumn Field="Op4"></GridColumn>
         <GridColumn Field="Op5"></GridColumn>
-
+        
     </GridColumns>
 </TelerikGrid>
 
@@ -27,24 +28,25 @@
     private CebTypeGrille _typegrille;
     [Parameter]
     public CebTypeGrille TypeGrille {
-        get=> _typegrille;
+        get => _typegrille;
         set {
-            _typegrille = value;
-            InvokeAsync(RefreshAsync);
-        }}
+            if (_typegrille != value) {
+                _typegrille = value;
+                InvokeAsync(RefreshAsync);
+            }
+        }
+    }
 
 
     [Parameter] public CebToast Toast { get; set; }
 
     public List<CebDetail> Details { get; set; }
-    public async Task RefreshAsync() {
+    public async Task RefreshAsync() =>
         await InvokeAsync(() => {
-            
-                Details = (tirage.Status == CebStatus.CompteApproche || tirage.Status == CebStatus.CompteEstBon) ? new List<CebDetail>(
-                    tirage.Solutions.Select((solution) => (TypeGrille == CebTypeGrille.Grille) ? new CebDetail(solution)
-                                                        : new CebDetail { Op3 = string.Join("<br>", solution.Operations) })) : new List<CebDetail>();
+            Details = (tirage.Status == CebStatus.CompteApproche || tirage.Status == CebStatus.CompteEstBon) ? new List<CebDetail>(
+            tirage.Solutions.Select((solution) => (TypeGrille == CebTypeGrille.Grille) ? new CebDetail(solution)
+                                                : new CebDetail { Op3 = string.Join("<br>", solution.Operations) })) : new List<CebDetail>();
         });
-    }
 
 
     protected override void OnInitialized() {
