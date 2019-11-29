@@ -1,6 +1,5 @@
 ﻿#region
 
-using CompteEstBon.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,7 +23,7 @@ namespace CompteEstBon.ViewModel {
             Application.Current.MainWindow?.FindResource("AnimationResult") as Storyboard;
 
         private readonly Stopwatch NotifyWatch = new Stopwatch();
-        private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(Settings.Default.SolutionTimer);
+        private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(10);
 
         private readonly Storyboard WaitStory =
             Application.Current.MainWindow?.FindResource("WaitStoryboard") as Storyboard;

@@ -13,8 +13,8 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
-            },
-            "dependsOn":["sass"]
+            }
+            
         },
         {
             "label": "publish",

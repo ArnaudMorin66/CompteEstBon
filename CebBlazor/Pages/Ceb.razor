@@ -97,6 +97,18 @@
                         </div>
                         <div>Excel</div>
                     </button>
+                    <button id="word"
+                            @onclick="@(() => { Solutions.ExportWord(); })"
+                            title="Exportation vers Word (ALT-W)"
+                            accesskey="w"
+                            class="btn btn-primary w-25"
+                            type="button"
+                            role="button">
+                        <div>
+                            <i class="fas fa-file-word"></i>
+                        </div>
+                        <div>Word</div>
+                    </button>
                 }
             } else {
                 <button class="btn btn-info btn-block">
@@ -107,7 +119,6 @@
                 </button>
             }
         </div>
-
     </div>
 </div>
 <div class="row ">
@@ -212,7 +223,7 @@
         tirage.PropertyChanged += async (_, _e) => {
             await toast.HideAsync();
             // ReSharper disable once PossibleNullReferenceException
-            await Solutions?.RefreshAsync();
+            Solutions?.Refresh();
         };
         TypeGrille = CebTypeGrille.Grille;
         stopwatch = new Stopwatch();

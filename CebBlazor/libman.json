@@ -3,7 +3,7 @@
   "defaultProvider": "filesystem",
   "libraries": [
     {
-      "library": "C:/Apps/ej2/js",
+      "library": "src",
       "destination": "wwwroot/lib/",
       "files": [
         "ejs.interop.min.js",
