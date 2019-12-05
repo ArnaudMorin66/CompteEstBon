@@ -11,7 +11,7 @@ namespace CompteEstBon {
         public int Bottom;      // position of lower-bottom corner
     }
 
-    static class InteropClass {
+    public static class InteropClass {
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
         [DllImport("user32.dll")]

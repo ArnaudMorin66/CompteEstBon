@@ -14,7 +14,7 @@ namespace CompteEstBon {
         public int Bottom;      // position of lower-bottom corner
     }
 
-    static class NativeMethods {
+    public static class NativeMethods {
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
         [DllImport("user32.dll")]

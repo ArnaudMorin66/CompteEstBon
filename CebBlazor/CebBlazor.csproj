@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CebOffice\CebOffice.csproj" />
+    <ProjectReference Include="..\CebOfficeCore\CebOfficeCore.csproj" />
     <ProjectReference Include="..\CompteEstBon_2.1\CompteEstBon_2.1.csproj" />
   </ItemGroup>
 

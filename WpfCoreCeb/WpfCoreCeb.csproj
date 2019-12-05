@@ -17,6 +17,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewModel\NativeMethods.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="favicon.ico" />
     <None Remove="Images\excel.png" />
     <None Remove="Images\random.png" />
@@ -25,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CebOffice\CebOffice.csproj" />
+    <ProjectReference Include="..\CebOfficeCore\CebOfficeCore.csproj" />
     <ProjectReference Include="..\CompteEstBon_2.1\CompteEstBon_2.1.csproj" />
   </ItemGroup>
 

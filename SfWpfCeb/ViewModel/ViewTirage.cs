@@ -14,32 +14,28 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
-
 #endregion
 
-namespace CompteEstBon.ViewModel {
+namespace CompteEstBon {
     public class ViewTirage : INotifyPropertyChanged, ICommand {
-        private readonly Storyboard AnimationStory =
-            Application.Current.MainWindow?.FindResource("AnimationResult") as Storyboard;
-
         private readonly Stopwatch NotifyWatch = new Stopwatch();
-        private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(10);
-
-        private readonly Storyboard WaitStory =
-            Application.Current.MainWindow?.FindResource("WaitStoryboard") as Storyboard;
-
-        private Color _background = Colors.Navy;
-
+        private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(CompteEstBon.Properties.Settings.Default.SolutionTimer);
+        private Storyboard _animation;
+        private Color _background = Colors.DarkSlateGray;
         private string _duree;
+
         private Color _foreground = Colors.White;
-        private bool _isBusy;
         private bool _isUpdating;
+        private bool _isBusy;
+        private bool _isComputed;
         private bool _popup;
 
         private string _result = "Résoudre";
 
         public string _solution;
         private string _titre = "Le compte est bon";
+
+        // private Visibility _computing = Visibility.Collapsed;
 
         public DispatcherTimer dateDispatcher;
         public Stopwatch stopwatch;
@@ -50,39 +46,44 @@ namespace CompteEstBon.ViewModel {
         /// <returns>
         /// </returns>
         public ViewTirage() {
+
             stopwatch = new Stopwatch();
 
             dateDispatcher = new DispatcherTimer {
-                Interval = TimeSpan.FromMilliseconds(10)
+                Interval = TimeSpan.FromMilliseconds(Properties.Settings.Default.SolutionTimer)
             };
             dateDispatcher.Tick += (sender, e) => {
                 if (stopwatch.IsRunning) Duree = stopwatch.Elapsed.ToString();
-                Popup = !(Popup && NotifyWatch.Elapsed > SolutionTimer);
+
+                if (Popup && NotifyWatch.Elapsed > SolutionTimer) Popup = false;
                 Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
+
             Plaques.CollectionChanged += (sender, e) => {
                 if (e.Action != NotifyCollectionChangedAction.Replace) return;
                 var i = e.NewStartingIndex;
-                Tirage.Plaques[i].Text = Plaques[i];
+                Tirage.Plaques[i].Value = Plaques[i];
                 ClearData();
             };
-
             _isUpdating = false;
             UpdateData();
             UpdateColors();
             Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             dateDispatcher.Start();
-
         }
-
-
 
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
 
+        public Storyboard Animation =>
+            _animation ??
+            (_animation = Application.Current.MainWindow.Resources["AnimationResult"] as Storyboard);
+
         public CebTirage Tirage { get; } = new CebTirage();
 
-        public ObservableCollection<string> Plaques { get; } =
-            new ObservableCollection<string> { "", "", "", "", "", "" };
+        public ObservableCollection<int> Plaques { get; } =
+            new ObservableCollection<int> { 0, 0, 0, 0, 0, 0 };
+
+
         public string Duree {
             get => _duree;
             set {
@@ -107,8 +108,6 @@ namespace CompteEstBon.ViewModel {
                 ClearData();
             }
         }
-
-        public CebStatus Status => Tirage.Status;
 
         public string Result {
             get => _result;
@@ -139,17 +138,39 @@ namespace CompteEstBon.ViewModel {
             get => _isBusy;
             set {
                 _isBusy = value;
-                if (_isBusy) {
-                    WaitStory.Begin();
-                    AnimationStory.Begin();
-                } else {
-                    WaitStory.Pause();
-                }
-
+                // Computing = _isBusy ? Visibility.Visible : Visibility.Collapsed;
                 NotifiedChanged();
             }
         }
 
+        public bool IsComputed {
+            get => _isComputed;
+            set {
+                if (value == _isComputed) return;
+                _isComputed = value;
+                NotifiedChanged();
+            }
+        }
+
+        //public Visibility Computing {
+        //    get => _computing;
+        //    set {
+        //        _computing = value;
+        //        NotifiedChanged();
+        //    }
+        //}
+
+        private int _count;
+
+        public int Count {
+            get => _count;
+            set {
+                if (_count != value) {
+                    _count = value;
+                    NotifiedChanged();
+                }
+            }
+        }
         public bool Popup {
             get => _popup;
             set {
@@ -175,52 +196,37 @@ namespace CompteEstBon.ViewModel {
             remove => CommandManager.RequerySuggested -= value;
         }
 
-        public bool CanExecute(object parameter) {
-            return true;
-        }
+        public bool CanExecute(object parameter) => true;
 
         public async void Execute(object parameter) {
-            try {
-                switch ((parameter as string)?.ToLower()) {
-                    case "random":
-                        await RandomAsync();
-                        break;
-                    case "resolve": {
-                        switch (Tirage.Status) {
-                            case CebStatus.Valid:
-                                if (IsBusy) return;
-                                await ResolveAsync();
-                                break;
+            switch ((parameter as string).ToLower()) {
+                case "random":
+                    await RandomAsync();
+                    break;
+                case "resolve":
+                    switch (Tirage.Status) {
+                        case CebStatus.Valid:
+                            await ResolveAsync();
+                            break;
 
-                            case CebStatus.CompteEstBon:
-                            case CebStatus.CompteApproche:
-                                await ClearAsync();
-                                break;
+                        case CebStatus.CompteEstBon:
+                        case CebStatus.CompteApproche:
+                            await ClearAsync();
+                            break;
 
-                            case CebStatus.Erreur:
-                                await RandomAsync();
-                                break;
-                            case CebStatus.Indefini:
-                                break;
-                            case CebStatus.EnCours:
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                        }
-                        break;
+                        case CebStatus.Erreur:
+                            await RandomAsync();
+                            break;
                     }
-                    case "excel":
-                    case "word":
-                        await ExportAsync((string)parameter);
-                        break;
-                }
-            } catch (Exception) {
-                // ignored
+                    break;
+                case "excel":
+                case "word":
+                    await ExportAsync((string)parameter);
+                    break;
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
         private async Task ExportAsync(string fmt) {
             IsBusy = true;
             await Task.Run(() => {
@@ -236,16 +242,17 @@ namespace CompteEstBon.ViewModel {
             IsBusy = false;
         }
 
+
+
         private void UpdateColors() {
-#pragma warning disable CS8509 // L'expression switch ne prend pas en charge toutes les entrées possibles (elle n'est pas exhaustive).
             (Background, Foreground) = Tirage.Status switch
-#pragma warning restore CS8509 // L'expression switch ne prend pas en charge toutes les entrées possibles (elle n'est pas exhaustive).
             {
-                CebStatus.Valid => (Color.FromRgb(48, 48, 48), Colors.White),
+                CebStatus.Valid => (Colors.DarkOliveGreen, Colors.White),
                 CebStatus.Erreur => (Colors.Red, Colors.White),
-                CebStatus.CompteEstBon => (Colors.LightGreen, Colors.Black),
-                CebStatus.CompteApproche => (Color.FromRgb(0xe0, 0xa8, 0), Colors.Black),
-                CebStatus.EnCours => (Color.FromRgb(64, 64, 64), Colors.White)
+                CebStatus.CompteEstBon => (Colors.LightGreen, Colors.Yellow),
+                CebStatus.CompteApproche => (Colors.Salmon, Colors.White),
+                CebStatus.EnCours => (Colors.Yellow, Colors.White),
+                _ => (Colors.Red, Colors.White)
 
             };
         }
@@ -256,17 +263,18 @@ namespace CompteEstBon.ViewModel {
 
         private void ClearData() {
             if (_isUpdating) return;
-            AnimationStory.Stop();
-            // ReSharper disable once ExplicitCallerInfoArgument
-            NotifiedChanged("Status");
             stopwatch.Reset();
+            Animation?.Stop();
             Duree = stopwatch.Elapsed.ToString();
+            IsComputed = false;
             Solution = "";
+            if (Window.SolutionsData != null)
+                Window.SolutionsData.ItemsSource = null;
+
             Count = 0;
-            if (ActiveWindow.SolutionsData != null)
-                ActiveWindow.SolutionsData.ItemsSource = null;
             Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
             Popup = false;
+            
             UpdateColors();
         }
 
@@ -275,20 +283,25 @@ namespace CompteEstBon.ViewModel {
             _isUpdating = true;
 
             for (var i = 0; i < Tirage.Plaques.Count; i++)
-                Plaques[i] = Tirage.Plaques[i].Text;
+                Plaques[i] = Tirage.Plaques[i].Value;
+
             _isUpdating = false;
             ClearData();
 
-            // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Search");
         }
 
-        public void ShowNotify(int index = 0) {
-            if (index >= 0 && Tirage.Solutions.Count != 0 && index < Tirage.Solutions.Count) {
+        public void ShowPopup(int index = 0) {
+            if (index >= 0 && index < Tirage.Solutions.Count) {
                 Solution = Tirage.SolutionIndex(index);
                 Popup = true;
             }
         }
+        /*
+        private void HidePopup() {
+            Popup = false;
+        }
+        */
 
         #region Action
 
@@ -301,22 +314,10 @@ namespace CompteEstBon.ViewModel {
             await Tirage.RandomAsync();
             UpdateData();
         }
-
-        public static MainWindow ActiveWindow => Application.Current.MainWindow as MainWindow;
-        private int _count;
-
-        public int Count {
-            get => _count;
-            set {
-                if (_count != value) {
-                    _count = value;
-                    NotifiedChanged();
-                }
-            }
-        }
-
-        public async Task ResolveAsync() {
+        public static MainWindow Window => Application.Current.MainWindow as MainWindow;
+        public async Task<CebStatus> ResolveAsync() {
             IsBusy = true;
+            Animation?.Begin();
             Result = "...Calcul...";
             (Background, Foreground) = (Colors.Green, Colors.White);
             stopwatch.Start();
@@ -330,14 +331,14 @@ namespace CompteEstBon.ViewModel {
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
             Solution = Tirage.SolutionIndex(0);
+            Window.SolutionsData.ItemsSource = Tirage.Details;
+            Count = Tirage.Count;
+
             UpdateColors();
             IsBusy = false;
-            Solution = Tirage.Solution.ToString();
-            ActiveWindow.SolutionsData.ItemsSource = Tirage.Details;
-            Count = Tirage.Count;
-            // ReSharper disable once ExplicitCallerInfoArgument
-            NotifiedChanged("Status");
-            ShowNotify();
+            IsComputed = Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche;
+            ShowPopup();
+            return Tirage.Status;
         }
 
         #endregion Action

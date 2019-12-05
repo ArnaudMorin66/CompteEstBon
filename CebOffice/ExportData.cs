@@ -8,8 +8,6 @@ namespace CompteEstBon {
     public static class ExportData {
         public static Excel.Range _r(object rg) => rg as Excel.Range;
         public static void ToWord(this CebTirage tirage) {
-
-
             NativeMethods.GetApplication(out Word.Application word);
             var nomstyle = tirage.Status == CebStatus.CompteEstBon
                 ? "Tableau Grille 4 - Accentuation 6"
