@@ -1,5 +1,6 @@
 ﻿using Syncfusion.SfSkinManager;
 using Syncfusion.Windows.Shared;
+using Syncfusion.Windows.Tools.Controls;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,5 +26,6 @@ namespace CompteEstBon {
         private void SolutionsData_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e) {
             Tirage.ShowPopup(SolutionsData.SelectedIndex);
         }
+
     }
 }

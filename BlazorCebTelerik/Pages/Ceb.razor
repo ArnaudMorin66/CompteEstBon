@@ -115,18 +115,19 @@
             </div>
             <div class="card-body">
                 <div class="row">
+                    
                     @foreach (var plq in tirage.Plaques) {
-                        <div class="col-md-2">
-                            <TelerikDropDownList Data="@CebPlaque.ListePlaques"
-                                                 @bind-Value="plq.Value"
-                                                 Class="text-center"
-                                                 TValue="int"
-                                                 TItem="int"
-                                                 Width="100%">
-                            </TelerikDropDownList>
 
-                        </div>
-                    }
+                        <TelerikDropDownList Data="@CebPlaque.ListePlaques"
+                                             @bind-Value="plq.Value"
+                                             Class="text-center col-2"
+                                             TValue="int"
+                                             TItem="int">
+
+                        </TelerikDropDownList>
+
+
+                    } 
                 </div>
 
             </div>

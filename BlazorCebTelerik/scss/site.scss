@@ -158,3 +158,6 @@ body {
     @extend .fixed-bottom;
     height: 2rem;
 }
+input .k-input .k-formatted-value {
+    background-color: $bg-body;
+}

@@ -16,9 +16,6 @@
     <WarningLevel>3</WarningLevel>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="ViewModel\NativeMethods.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Remove="favicon.ico" />

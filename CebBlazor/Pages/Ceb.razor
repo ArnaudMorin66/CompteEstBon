@@ -224,6 +224,7 @@
             await toast.HideAsync();
             // ReSharper disable once PossibleNullReferenceException
             Solutions?.Refresh();
+            await InvokeAsync(StateHasChanged);
         };
         TypeGrille = CebTypeGrille.Grille;
         stopwatch = new Stopwatch();

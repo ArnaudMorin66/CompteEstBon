@@ -17,8 +17,14 @@
     <GridEvents RowSelecting="@(async (args) => await Toast.ShowAsync((int)args.RowIndex) )" TValue="CebDetail"></GridEvents> 
     <GridColumns>
         <GridColumn Field="Op1"></GridColumn>
-        <GridColumn Field="Op2"></GridColumn>
-        <GridColumn Field="Op3"></GridColumn>
+        <GridColumn Field="Op2">        </GridColumn>
+        <GridColumn Field="Op3">
+            <Template>
+                @if (context is CebDetail detail) {
+                    @(new MarkupString(detail.Op3))
+                }
+            </Template>
+        </GridColumn>
         <GridColumn Field="Op4"></GridColumn>
         <GridColumn Field="Op5"></GridColumn>
     </GridColumns>
@@ -50,6 +56,8 @@
                         new CebDetail(solution) :
                         new CebDetail { Op3 = string.Join("<br>", solution.Operations) })) :
                 new ObservableCollection<CebDetail>();
+        solutions.Refresh();
+        InvokeAsync(()=> StateHasChanged());
     }
 
     protected override void OnInitialized() {

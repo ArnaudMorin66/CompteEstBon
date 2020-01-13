@@ -37,7 +37,7 @@ namespace CompteEstBon.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("MTc3MDczQDMxMzcyZTMzMmUzMEt4VzBPV0xucG4zYTcrRmt1dzdMdGhHNWxOWVhGMW93TGsvSi9Ma0lWS" +
+        [global::System.Configuration.DefaultSettingValueAttribute("MTkzMzAwQDMxMzcyZTM0MmUzMEREMUwxTGQ3OGRSTnJRdEcyYjA5SG0ycHI5WEM4ekdLK2VJVFk5YWJpVHM9" +
             "3M9")]
         public string SfLicense {
             get {

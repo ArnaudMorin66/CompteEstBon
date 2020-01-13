@@ -2,25 +2,25 @@
 # yarn lockfile v1
 
 
-"@fortawesome/fontawesome-free@^5.11.2":
-  version "5.11.2"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.11.2.tgz#8644bc25b19475779a7b7c1fc104bc0a794f4465"
-  integrity sha512-XiUPoS79r1G7PcpnNtq85TJ7inJWe0v+b5oZJZKb0pGHNIV6+UiNeQWiFGmuQ0aj7GEhnD/v9iqxIsjuRKtEnQ==
+"@fortawesome/fontawesome-free@^5.12.0-1":
+  version "5.12.0-1"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.12.0-1.tgz#17a5e78e970ecb95b78d793db6e9b5afe600714d"
+  integrity sha512-8L4exfdEl82IhsxNFyMORG4v7Vao4VXZ1S47K5YXWl0i2THdV0CxmrHCYc87AewdJxKXAZcFB5a2QINxKuYBRA==
 
-"@progress/kendo-theme-bootstrap@^4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-bootstrap/-/kendo-theme-bootstrap-4.4.0.tgz#173658c097d67de27cc7d219dc72bebc65277fae"
-  integrity sha512-gAHjJGHFTS5bEyARzSweqlk70+gNbeCddTgBg0yQDo4JmK/a+pE526Rt8eyjjzLTcg3jYVSEiTiFMV+suJLQvQ==
+"@progress/kendo-theme-bootstrap@^4.7.0":
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-bootstrap/-/kendo-theme-bootstrap-4.7.0.tgz#27c16b0f5f1d3fda9ea2be9615a85cdf3f4e8fe9"
+  integrity sha512-8uuX4cAOcHJWOpCwCZkSmOjph/DaXpB8MH3oUyJM7rWiobVZZG5psfPU3zpX2Bnpe+bJqnSgBjeUqqZrxujQCg==
 
-"@progress/kendo-theme-default@^4.6.0":
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-default/-/kendo-theme-default-4.6.0.tgz#791ca144495eff98ce447f7f1ce2c0595ee21137"
-  integrity sha512-XfYPudB4tbEntevbnvNAXk4NRLbAI+CxSJj9qkC66KjivMmClnioyRPhJVWk97fWBYII0OL+95cFy0EjVBx7eQ==
+"@progress/kendo-theme-default@^4.9.0":
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-default/-/kendo-theme-default-4.9.0.tgz#ef7c903746ac1565bfd04a795ae19821e6227a98"
+  integrity sha512-OodOJUTYOQk7LsXQ3PPCvryKNnLAVX5Iu/mDM27P3FFQPGlcaVKkvUQ3ahg2tcKmHYo5pVIqhGXWT7JzGrRcjw==
 
-"@progress/kendo-theme-material@^3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-material/-/kendo-theme-material-3.4.0.tgz#83ab96c225de923a8c29c55959ce2381fd9d72cd"
-  integrity sha512-x6KcJ0d8fjbUq1nf61UE2UXrhxcSM+XQsRwrp5JGukGdzgDEh4OOXl5jAXIqF8598K3kJmCjbep6E6mR4ylXBw==
+"@progress/kendo-theme-material@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-material/-/kendo-theme-material-3.7.0.tgz#7a90c23fed1e60801f8c3716c517b2d88adc5bec"
+  integrity sha512-MOsL9kpEACaIBbi1187UMjRpr7igGcUyRgcqxwSUqVgs5zQMm7bI/PnWw3AIAH7SlEP1YMclZAW71RFMHM+lEg==
 
 abbrev@1:
   version "1.1.1"
@@ -126,10 +126,10 @@ block-stream@*:
   dependencies:
     inherits "~2.0.0"
 
-bootstrap@^4.3.1:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.3.1.tgz#280ca8f610504d99d7b6b4bfc4b68cec601704ac"
-  integrity sha512-rXqOmH1VilAt2DyPzluTi2blhk17bO7ef+zLLPlWvG494pDxcM234pJ8wTc/6R40UWizAIIMgxjvxZg5kmsbag==
+bootstrap@^4.4.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.4.1.tgz#8582960eea0c5cd2bede84d8b0baf3789c3e8b01"
+  integrity sha512-tbx5cHubwE6e2ZG7nqM3g/FZ5PQEDMWmMGNrCUBVRPHXTJaH7CBDdsLeu3eCh3B1tzAxTnAbtmrzvWEvT2NNEA==
 
 brace-expansion@^1.1.7:
   version "1.1.11"

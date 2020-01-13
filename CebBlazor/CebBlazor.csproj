@@ -7,8 +7,14 @@
     <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="syncfusion.ini">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.96" />
-    <PackageReference Include="Syncfusion.EJ2.Blazor" Version="17.3.0.29-beta" />
+    <PackageReference Include="Syncfusion.EJ2.Blazor" Version="17.4.0.42" />
+    <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="17.4.0.41" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,8 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CebOfficeCore\CebOfficeCore.csproj" />
     <ProjectReference Include="..\CompteEstBon_2.1\CompteEstBon_2.1.csproj" />
+    <ProjectReference Include="..\SFCebOffice\SFCebOffice.csproj" />
   </ItemGroup>
 
   <ProjectExtensions>

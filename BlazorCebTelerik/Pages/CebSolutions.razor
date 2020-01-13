@@ -42,10 +42,11 @@
 
     public List<CebDetail> Details { get; set; }
     public async Task RefreshAsync() =>
-        await InvokeAsync(() => {
+        await InvokeAsync(async() => {
             Details = (tirage.Status == CebStatus.CompteApproche || tirage.Status == CebStatus.CompteEstBon) ? new List<CebDetail>(
             tirage.Solutions.Select((solution) => (TypeGrille == CebTypeGrille.Grille) ? new CebDetail(solution)
                                                 : new CebDetail { Op3 = string.Join("<br>", solution.Operations) })) : new List<CebDetail>();
+            await InvokeAsync(StateHasChanged);
         });
 
 

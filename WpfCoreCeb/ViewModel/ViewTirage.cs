@@ -57,7 +57,8 @@ namespace CompteEstBon.ViewModel {
             };
             dateDispatcher.Tick += (sender, e) => {
                 if (stopwatch.IsRunning) Duree = stopwatch.Elapsed.ToString();
-                Popup = !(Popup && NotifyWatch.Elapsed > SolutionTimer);
+                if (Popup && NotifyWatch.Elapsed > SolutionTimer)
+                    Popup = false;
                 Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
             Plaques.CollectionChanged += (sender, e) => {
