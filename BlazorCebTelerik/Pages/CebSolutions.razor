@@ -8,18 +8,29 @@
              Class="solutions border border-secondary"
              SelectedItemsChanged="@(async (IEnumerable<CebDetail> liste) => { await Toast.ShowAsync(liste.FirstOrDefault()); })"
              TItem="CebDetail">
+
     <GridColumns>
-       
-        <GridColumn Field="Op1"></GridColumn>
-        <GridColumn Field="Op2"></GridColumn>
-        <GridColumn Field="Op3">
-            <Template>
-                @(new MarkupString((context as CebDetail).Op3))
-            </Template>
-        </GridColumn>
-        <GridColumn Field="Op4"></GridColumn>
-        <GridColumn Field="Op5"></GridColumn>
-        
+        @if (TypeGrille == CebTypeGrille.Grille) {
+            <GridColumn Field="Op1"></GridColumn>
+            <GridColumn Field="Op2"></GridColumn>
+            <GridColumn Field="Op3"></GridColumn>
+            <GridColumn Field="Op4"></GridColumn>
+            <GridColumn Field="Op5"></GridColumn>
+        } else {
+            <GridColumn Field="Op3">
+                <Template>
+                    @{
+                        var row = context as CebDetail;
+                        <div>@row.Op1</div>
+                        <div>@row.Op2</div>
+                        <div>@row.Op3</div>
+                        <div>@row.Op4</div>
+                        <div>@row.Op5</div>
+                    }
+                </Template>
+            </GridColumn>
+        }
+
     </GridColumns>
 </TelerikGrid>
 
@@ -32,7 +43,7 @@
         set {
             if (_typegrille != value) {
                 _typegrille = value;
-                InvokeAsync(RefreshAsync);
+                InvokeAsync(StateHasChanged);
             }
         }
     }
@@ -42,10 +53,8 @@
 
     public List<CebDetail> Details { get; set; }
     public async Task RefreshAsync() =>
-        await InvokeAsync(async() => {
-            Details = (tirage.Status == CebStatus.CompteApproche || tirage.Status == CebStatus.CompteEstBon) ? new List<CebDetail>(
-            tirage.Solutions.Select((solution) => (TypeGrille == CebTypeGrille.Grille) ? new CebDetail(solution)
-                                                : new CebDetail { Op3 = string.Join("<br>", solution.Operations) })) : new List<CebDetail>();
+        await InvokeAsync(async () => {
+            Details = tirage.Details.ToList();
             await InvokeAsync(StateHasChanged);
         });
 

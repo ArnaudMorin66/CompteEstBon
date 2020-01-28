@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -38,8 +39,9 @@ namespace CompteEstBon {
         }
 
         private void IsUpdated(object sender, PropertyChangedEventArgs e) {
-            Clear("plaque");
-
+            if (Status != CebStatus.EnCours) {
+                Clear("plaque");
+            }
         }
 
         /// <summary>
@@ -53,8 +55,9 @@ namespace CompteEstBon {
             if (plaques.Length < 6 || search == -1)
                 Random();
             else {
+                Status = CebStatus.EnCours;
                 foreach (var (p, i) in plaques.WithIndex().Where(elt => elt.Item2  < 6)) {
-                    Plaques[i].Value2 = p;
+                    Plaques[i].Value = p;
                 }
 
                 Search = search;
@@ -86,8 +89,9 @@ namespace CompteEstBon {
         public List<CebPlaque> Plaques = new List<CebPlaque>();
 
         public void SetPlaques(params int[] plaq) {
+            Status = CebStatus.EnCours;
             foreach (var (p, i) in plaq.WithIndex().Where(elt => elt.Item2 < 6)) {
-                Plaques[i].Value2 = p;
+                Plaques[i].Value = p;
             }
 
             Clear("Plaques");
@@ -151,7 +155,7 @@ namespace CompteEstBon {
             liste.AddRange(CebPlaque.ListePlaques.TakeWhile(v => v <= 25));
             foreach (var plaque in Plaques) {
                 var n = Rnd.Next(0, liste.Count());
-                plaque.Value2 = liste[n];
+                plaque.Value = liste[n];
                 liste.RemoveAt(n);
             }
             Clear("Random");
@@ -187,9 +191,10 @@ namespace CompteEstBon {
         public CebStatus ResolveWithParam(int search, params int[] plq) {
             if (plq.Length != 6)
                 throw new ArgumentException("Nombre de plaques incorrecte");
+            this.Status = CebStatus.EnCours;
             _search = search;
             foreach (var (p, i) in plq.WithIndex().Where(elt => elt.Item2 < 6))
-                Plaques[i].Value2 = p;
+                Plaques[i].Value = p;
 
             return Resolve();
         }
@@ -239,7 +244,6 @@ namespace CompteEstBon {
             Resolve(Plaques.Cast<CebBase>().ToList());
             Solutions.Sort((p, q) => (p.Rank == q.Rank) ? p.Value.CompareTo(q.Value) : p.Rank.CompareTo(q.Rank));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
-
             NotifiedChanged($"Details");
             return Status;
         }
@@ -249,8 +253,9 @@ namespace CompteEstBon {
         public async Task<CebStatus> ResolveAsync(int search, params int[] plq) => await Task.Run(() => ResolveWithParam(search, plq));
 
         public override string ToString() {
+           
             var buffer = new StringBuilder();
-            buffer.AppendLine("## Tirage du compte est bon ###");
+            buffer.AppendLine("##ceb##");
             buffer.AppendLine($"Search : {Search}, plaques : [{string.Join(",", Plaques.Select(p => p.ToString()))}]");
             buffer.AppendLine($"Found:  {Found}, Status: {Status}, Nb de solutions: {Count}");
             buffer.AppendLine(string.Join(";", Solutions.Select(p => p.ToString())));

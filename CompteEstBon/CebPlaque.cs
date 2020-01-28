@@ -46,14 +46,6 @@ namespace CompteEstBon {
             }
         }
 
-        public int Value2 {
-            get => Value;
-            set {
-                if (Value == value) return;
-                base.Value = value;
-            }
-
-        }
 
         /// <summary>
         /// Rang
