@@ -138,7 +138,6 @@ namespace CompteEstBon {
             get => _isBusy;
             set {
                 _isBusy = value;
-                // Computing = _isBusy ? Visibility.Visible : Visibility.Collapsed;
                 NotifiedChanged();
             }
         }
@@ -151,14 +150,6 @@ namespace CompteEstBon {
                 NotifiedChanged();
             }
         }
-
-        //public Visibility Computing {
-        //    get => _computing;
-        //    set {
-        //        _computing = value;
-        //        NotifiedChanged();
-        //    }
-        //}
 
         private int _count;
 
@@ -297,11 +288,6 @@ namespace CompteEstBon {
                 Popup = true;
             }
         }
-        /*
-        private void HidePopup() {
-            Popup = false;
-        }
-        */
 
         #region Action
 

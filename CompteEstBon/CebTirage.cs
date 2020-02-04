@@ -152,7 +152,7 @@ namespace CompteEstBon {
             Status = CebStatus.EnCours;
             _search = Rnd.Next(100, 1000);
             var liste = new List<int>(CebPlaque.ListePlaques); // .ToList();
-            liste.AddRange(CebPlaque.ListePlaques.TakeWhile(v => v <= 25));
+            // liste.AddRange(CebPlaque.ListePlaques.TakeWhile(v => v <= 25));
             foreach (var plaque in Plaques) {
                 var n = Rnd.Next(0, liste.Count());
                 plaque.Value = liste[n];
@@ -198,7 +198,7 @@ namespace CompteEstBon {
 
             return Resolve();
         }
-        private void UpdateSolutions(CebBase sol) {
+        private void AddSolution(CebBase sol) {
             var diff = Abs(_search - sol.Value);
             if (diff > Diff)
                 return;
@@ -217,7 +217,7 @@ namespace CompteEstBon {
         private void Resolve(List<CebBase> liste) {
             liste.Sort((p, q) => q.Value.CompareTo(p.Value));
             foreach (var (p, i) in liste.WithIndex()) {
-                UpdateSolutions(p);
+                AddSolution(p);
                 foreach (var (q, j) in liste.WithIndex().Where(elt  => elt.Item2 > i)) {
                     foreach (var oper in
                         CebOperation.ListeOperations.Select(operation =>

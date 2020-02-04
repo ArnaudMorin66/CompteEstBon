@@ -67,22 +67,24 @@
 
     // ReSharper disable once UnusedAutoPropertyAccessor.Local
     EjsGrid<CebDetail> solutions { get; set; }
-    public IEnumerable<CebDetail> Details { get; set; }
+    public List<CebDetail> Details { get; set; }
 
 
     public void Refresh() {
-        Details = tirage.Details;
-        solutions.Refresh();
+        Details.Clear();
+        Details.AddRange(tirage.Details);
+       solutions.Refresh();
         InvokeAsync(StateHasChanged);
     }
 
     protected override void OnInitialized() {
+        Details = new List<CebDetail>();
     }
 
     public void ExportExcel() {
         if (tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon) return;
-        // solutions.ExcelExport(new ExcelExportProperties { ExportType = ExportType.AllPages });
-        CompteEstBon.ExportData.ToExcel(tirage);
+        solutions.ExcelExport(new ExcelExportProperties { ExportType = ExportType.AllPages });
+        // CompteEstBon.ExportData.ToExcel(tirage);
     }
     public void ExportWord() {
         if (tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon) return;
