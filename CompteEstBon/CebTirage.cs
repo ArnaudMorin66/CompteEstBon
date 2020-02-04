@@ -242,7 +242,7 @@ namespace CompteEstBon {
             if (Status != CebStatus.Valid) return Status;
             Status = CebStatus.EnCours;
             Resolve(Plaques.Cast<CebBase>().ToList());
-            Solutions.Sort((p, q) => (p.Rank == q.Rank) ? p.Value.CompareTo(q.Value) : p.Rank.CompareTo(q.Rank));
+            Solutions.Sort((p, q) => (p.Rank == q.Rank) ? p.GetHashCode().CompareTo(q.GetHashCode()) : p.Rank.CompareTo(q.Rank));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
             NotifiedChanged($"Details");
             return Status;

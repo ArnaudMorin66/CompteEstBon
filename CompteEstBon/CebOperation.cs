@@ -6,15 +6,16 @@ namespace CompteEstBon {
     /// <inheritdoc />
     /// /// /// ///
     /// <summary>
-    ///     Classe opération
+    ///     Classe opï¿½ration
     /// </summary>
     [Guid("59276C20-8670-47FB-BA13-44A1450CB9BF")]
     public sealed class CebOperation : CebBase {
         public static readonly char[] ListeOperations = { 'x', '+', '-', '/' };
+        private int _hashcode = 0;
         // private List<string> _operations;
 
         /// <summary>
-        ///     Constructor opération (g op d)
+        ///     Constructor opï¿½ration (g op d)
         /// </summary>
         /// <param name="g"> </param>
         /// <param
@@ -39,6 +40,9 @@ namespace CompteEstBon {
             if (g is CebOperation) Operations.AddRange(g.Operations);
             if (d is CebOperation) Operations.AddRange(d.Operations);
             Operations.Add($"{g.Value} {op} {d.Value} = {Value}");
+            unchecked {
+                _hashcode = g.Value * d.Value * this.Value;
+            }
             Rank = Operations.Count;
         }
 
@@ -57,19 +61,20 @@ namespace CompteEstBon {
 
 
         public override int GetHashCode() {
-            unchecked {
-                return Operations.Sum(o => (391 + o.GetHashCode()) * 23);
-            }
+            return _hashcode;
+            // unchecked {
+            //     return Operations.Sum(o => (391 + o.GetHashCode()) * 23);
+            // }
         }
 
         /// <summary>
-        ///     Convertion en chaine de l(opération
+        ///     Convertion en chaine de l(opï¿½ration
         /// </summary>
         /// <returns>
         /// </returns>
         public override string ToString() => string.Join(", ", Operations);
 
-        /// <summary> Test égalité
+        /// <summary> Test ï¿½galitï¿½
         public override bool Equals(object obj) => obj is CebOperation op && op.Value == Value && op.Operations.Count() == Operations.Count() && Operations.WithIndex().All(elt => op.Operations[elt.Item2] == elt.Item1);
     }
 }

@@ -78,7 +78,7 @@ namespace CompteEstBon {
         /// </filterpriority>
         public override bool Equals(object obj) => obj is CebPlaque p && p.Value == Value;
 
-        public override int GetHashCode() => 391 + Value.GetHashCode();
+        public override int GetHashCode() => Value;
 
         // public override CebDetail Detail => new CebDetail(this);
 
