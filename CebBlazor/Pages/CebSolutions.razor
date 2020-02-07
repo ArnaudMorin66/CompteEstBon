@@ -15,37 +15,26 @@
          ID="solutions">
     <GridSelectionSettings Mode="Syncfusion.EJ2.Blazor.Grids.SelectionMode.Both" Type="SelectionType.Single"></GridSelectionSettings>
     <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
-    <GridEvents RowSelecting="@(async (args) => await Toast.ShowAsync((int)args.RowIndex) )" TValue="CebDetail"></GridEvents>
-    @if (TypeGrille == CebTypeGrille.Grille) {
+    <GridEvents RowSelecting="@(async (args) => await Toast.ShowAsync((int)args.RowIndex) )" TValue="CebDetail"></GridEvents> 
         <GridColumns>
-            <GridColumn Field="Op1" TextAlign="TextAlign.Center" ></GridColumn>
-            <GridColumn Field="Op2" TextAlign="TextAlign.Center"></GridColumn>
-            <GridColumn Field="Op3" TextAlign="TextAlign.Center"></GridColumn>
-            <GridColumn Field="Op4" TextAlign="TextAlign.Center"></GridColumn>
-            <GridColumn Field="Op5" TextAlign="TextAlign.Center"></GridColumn>
-            }
+            <GridColumn Visible="TypeGrille == CebTypeGrille.Grille" Field="Op1" TextAlign="TextAlign.Center"></GridColumn>
+            <GridColumn Visible="TypeGrille == CebTypeGrille.Grille" Field="Op2" TextAlign="TextAlign.Center"></GridColumn>
+            <GridColumn Visible="TypeGrille == CebTypeGrille.Grille" Field="Op3" TextAlign="TextAlign.Center"></GridColumn>
+            <GridColumn Visible="TypeGrille == CebTypeGrille.Grille" Field="Op4" TextAlign="TextAlign.Center"></GridColumn>
+            <GridColumn Visible="TypeGrille == CebTypeGrille.Grille" Field="Op5" TextAlign="TextAlign.Center"></GridColumn>
+            <GridColumn Visible="TypeGrille == CebTypeGrille.Liste" TextAlign="TextAlign.Center">
+                <Template>
+                    @{
+                        var row = context as CebDetail;
+                        <div>@row.Op1</div>
+                        <div>@row.Op2</div>
+                        <div>@row.Op3</div>
+                        <div>@row.Op4</div>
+                        <div>@row.Op5</div>
+                    }
+                </Template>
+            </GridColumn>
         </GridColumns>
-    } else {
-<GridColumns>
-    <GridColumn></GridColumn>
-    <GridColumn></GridColumn>
-    <GridColumn TextAlign="TextAlign.Center">
-        <Template>
-            @{
-                var row = context as CebDetail;
-                <div>@row.Op1</div>
-                <div>@row.Op2</div>
-                <div>@row.Op3</div>
-                <div>@row.Op4</div>
-                <div>@row.Op5</div>
-            }
-        </Template>
-    </GridColumn>
-    <GridColumn></GridColumn>
-    <GridColumn></GridColumn>
-    }
-</GridColumns>
-    }
 </EjsGrid>
 @code {
     private CebTypeGrille _typegrille;
@@ -55,7 +44,7 @@
         set {
             if (_typegrille != value) {
                 _typegrille = value;
-                
+
                 StateHasChanged();
                 solutions.RefreshColumns();
                 solutions.Refresh();
@@ -73,7 +62,7 @@
     public void Refresh() {
         Details.Clear();
         Details.AddRange(tirage.Details);
-       solutions.Refresh();
+        solutions.Refresh();
         InvokeAsync(StateHasChanged);
     }
 

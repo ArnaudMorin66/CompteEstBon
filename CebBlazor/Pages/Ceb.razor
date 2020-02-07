@@ -133,7 +133,7 @@
                     @foreach (var plq in tirage.Plaques) {
                         <div class="col-md-2">
                             <EjsComboBox @bind-Value="@plq.Value"
-                                         DataSource="@CebPlaque.ListePlaques"
+                                         DataSource="@CebPlaque.ListePlaquesUniques"
                                          AllowCustom="true"
                                          ShowClearButton="false"
                                          Enabled="tirage.Status != CebStatus.EnCours">

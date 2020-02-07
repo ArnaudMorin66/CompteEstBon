@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace CompteEstBon {
+
     public class CebDetail {
         public string Op1 { get; set; }
         public string Op2 { get; set; }
@@ -9,12 +12,8 @@ namespace CompteEstBon {
         public string Op4 { get; set; }
         public string Op5 { get; set; }
 
-        public CebDetail() {
-
-        }
-        public CebDetail(CebBase ceb) : this(ceb.Operations) {
-
-        }
+        public CebDetail() { }
+        public CebDetail(CebBase ceb) : this(ceb.Operations) { }
         public CebDetail(IEnumerable<string> op) {
             var type = typeof(CebDetail);
             foreach (var (o, i) in op.WithIndex()) {
@@ -29,7 +28,5 @@ namespace CompteEstBon {
 
         public static implicit operator CebDetail(List<string> lt) => new CebDetail(lt);
         public static implicit operator CebDetail(CebBase bs) => new CebDetail(bs);
-
-
     }
 }

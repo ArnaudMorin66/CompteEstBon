@@ -1,6 +1,7 @@
 // Plage Compte est bon
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -15,6 +16,7 @@ namespace CompteEstBon {
             25, 50, 75, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
             25
         };
+        public static IEnumerable<int> ListePlaquesUniques = new SortedSet<int>(CebPlaque.ListePlaques);
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -80,7 +82,7 @@ namespace CompteEstBon {
 
         public override int GetHashCode() => Value;
 
-        // public override CebDetail Detail => new CebDetail(this);
+        
 
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

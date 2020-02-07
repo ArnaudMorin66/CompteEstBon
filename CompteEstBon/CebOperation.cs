@@ -12,7 +12,6 @@ namespace CompteEstBon {
     public sealed class CebOperation : CebBase {
         public static readonly char[] ListeOperations = { 'x', '+', '-', '/' };
         private int _hashcode = 0;
-        // private List<string> _operations;
 
         /// <summary>
         ///     Constructor op�ration (g op d)
