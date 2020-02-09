@@ -269,7 +269,7 @@ namespace CompteEstBon {
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public IEnumerable<CebDetail> Details => Solutions.Select(s => new CebDetail(s));
+        public IEnumerable<CebDetail> Details => Solutions.Select(s => (CebDetail)s);
         public CebResult GetCebResult() => new CebResult {
             Search = this.Search,
             Plaques = Plaques.Select(p => p.Value),

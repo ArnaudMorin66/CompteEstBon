@@ -13,11 +13,9 @@ namespace CompteEstBon {
         public string Op5 { get; set; }
 
         public CebDetail() { }
-        public CebDetail(CebBase ceb) : this(ceb.Operations) { }
         public CebDetail(IEnumerable<string> op) {
-            var type = typeof(CebDetail);
-            foreach (var (o, i) in op.WithIndex()) {
-                type.GetProperty($"Op{i + 1}")?.SetValue(this, o);
+            for (var i = 0; i < op.Count(); i++) {
+                this[i] = op.ElementAt(i);
             }
         }
         public override string ToString() => string.Join(", ", GetType().GetProperties()
@@ -26,7 +24,17 @@ namespace CompteEstBon {
             .Select(o => o.GetValue(this) as string)
             .Where(v => !string.IsNullOrEmpty(v)));
 
-        public static implicit operator CebDetail(List<string> lt) => new CebDetail(lt);
-        public static implicit operator CebDetail(CebBase bs) => new CebDetail(bs);
+        public static implicit operator CebDetail(CebBase bs) => new CebDetail(bs.Operations);
+
+        public string this[int i] {
+            get {
+                if (i > 4) throw new ArgumentException();
+                return GetType().GetProperty($"Op{i + 1}").GetValue(this) as string;
+            }
+            set {
+                if (i > 4) throw new ArgumentException();
+                GetType().GetProperty($"Op{i + 1}").SetValue(this, value);
+            }
+        }
     }
 }

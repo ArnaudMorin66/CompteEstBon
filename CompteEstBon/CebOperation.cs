@@ -52,18 +52,8 @@ namespace CompteEstBon {
 
         public override bool IsValid => Value > 0;
 
-        //public override CebDetail Detail {
-        //    get {
-        //        return new CebDetail(this);
-        //    }
-        //}
-
-
         public override int GetHashCode() {
             return _hashcode;
-            // unchecked {
-            //     return Operations.Sum(o => (391 + o.GetHashCode()) * 23);
-            // }
         }
 
         /// <summary>

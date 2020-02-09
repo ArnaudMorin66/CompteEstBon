@@ -4,7 +4,7 @@
 
 @inject CebTirage tirage
 <EjsGrid @ref="solutions"
-         DataSource="@Details"
+         DataSource="@tirage.Details"
          GridLines="GridLine.None"
          TValue="CebDetail"
          Height="400"
@@ -56,18 +56,15 @@
 
     // ReSharper disable once UnusedAutoPropertyAccessor.Local
     EjsGrid<CebDetail> solutions { get; set; }
-    public List<CebDetail> Details { get; set; }
+//    public List<CebDetail> Details { get; set; }
 
 
     public void Refresh() {
-        Details.Clear();
-        Details.AddRange(tirage.Details);
-        solutions.Refresh();
-        InvokeAsync(StateHasChanged);
+          solutions.Refresh();
+     // InvokeAsync(StateHasChanged);
     }
 
     protected override void OnInitialized() {
-        Details = new List<CebDetail>();
     }
 
     public void ExportExcel() {
