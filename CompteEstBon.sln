@@ -30,7 +30,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CebBlazorNatif", "CebBlazor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorCebTelerik", "BlazorCebTelerik\BlazorCebTelerik.csproj", "{9520CB51-3E00-4303-9C3F-1960F10BAF6D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon_2.1", "CompteEstBon_2.1\CompteEstBon_2.1.csproj", "{55B45BF6-4070-4269-8BFD-B473273A434C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon.core", "CompteEstBon_2.1\CompteEstBon.core.csproj", "{55B45BF6-4070-4269-8BFD-B473273A434C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfCoreCeb", "WpfCoreCeb\WpfCoreCeb.csproj", "{0B738A8B-60A9-4391-AD26-8DE29D35E54A}"
 EndProject
@@ -40,7 +40,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CebOfficeCore", "CebOfficeC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SfWpfCeb", "SfWpfCeb\SfWpfCeb.csproj", "{6C856112-DABD-46A1-AB5A-991E3B36684F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFCebOffice", "SFCebOffice\SFCebOffice.csproj", "{33341D4F-2A48-45E0-AF6E-1E4A2F4CF82F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFCebOffice", "SFCebOffice\SFCebOffice.csproj", "{33341D4F-2A48-45E0-AF6E-1E4A2F4CF82F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -149,7 +149,7 @@
 </div>
 <CebSolutions @ref="@solutions" TypeGrille="@TypeGrille" Toast="toast"></CebSolutions>
 <div class="text-white text-center font-weight-bolder text-wrap">
-    <div class="animation">
+    <div class="anima">
         @switch (tirage.Status) {
             case CebStatus.EnCours:
                 <div class="badge badge-info w-100">
@@ -166,9 +166,9 @@
                     <div class="text-dark d-flex justify-content-center">
                         <div class="m-0"><i class="text-danger far fa-thumbs-down"></i></div>
                         <div class="m-0">Compte&nbsp;approch&eacute;</div>
-                        <div class="m-0">Trouvé:&nbsp;@tirage.Found</div>
-                        <div class="m-0">@tirage.Solutions.Count&nbsp;solutions</div>
-                        <div class="m-0">durée:&nbsp;@($"{duree:N3}")s</div>
+                        <div class="m-0">,&nbsp;Trouvé:&nbsp;@tirage.Found</div>
+                        <div class="m-0">,&nbsp;@tirage.Solutions.Count()&nbsp;solutions</div>
+                        <div class="m-0">,&nbsp;durée:&nbsp;@($"{duree:N3}")s</div>
                     </div>
                 </div>
                 break;
@@ -177,8 +177,8 @@
                     <div class="d-flex justify-content-center text-white">
                         <div class="m-0"><i class="text-dark far fa-thumbs-up"></i></div>
                         <div class="m-0">Compte&nbsp;est&nbsp;bon</div>
-                        <div class="m-0">@tirage.Solutions.Count&nbsp;solutions</div>
-                        <div class="m-0">durée:&nbsp;@($"{duree:N3}")s</div>
+                        <div class="m-0">, &nbsp;@tirage.Solutions.Count()&nbsp;solutions</div>
+                        <div class="m-0">, &nbsp;durée:&nbsp;@($"{duree:N3}")s</div>
 
                     </div>
                 </div>

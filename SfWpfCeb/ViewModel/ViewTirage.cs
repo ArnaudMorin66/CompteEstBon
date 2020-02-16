@@ -283,8 +283,8 @@ namespace CompteEstBon {
         }
 
         public void ShowPopup(int index = 0) {
-            if (index >= 0 && index < Tirage.Solutions.Count) {
-                Solution = Tirage.SolutionIndex(index);
+            if (index >= 0 && index < Tirage.Solutions.Count()) {
+                Solution = Tirage.SolutionAt(index);
                 Popup = true;
             }
         }
@@ -316,7 +316,7 @@ namespace CompteEstBon {
 
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
-            Solution = Tirage.SolutionIndex(0);
+            Solution = Tirage.SolutionAt(0);
             Window.SolutionsData.ItemsSource = Tirage.Details;
             Count = Tirage.Count;
 

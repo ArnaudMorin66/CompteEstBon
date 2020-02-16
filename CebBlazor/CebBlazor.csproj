@@ -13,8 +13,8 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.0.96" />
     
-    <PackageReference Include="Syncfusion.EJ2.Blazor" Version="17.4.0.47" />
-    <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="17.4.0.47" />
+    <PackageReference Include="Syncfusion.EJ2.Blazor" Version="17.4.0.49" />
+    <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="17.4.0.49" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CompteEstBon_2.1\CompteEstBon_2.1.csproj" />
+    <ProjectReference Include="..\CompteEstBon_2.1\CompteEstBon.core.csproj" />
     <ProjectReference Include="..\SFCebOffice\SFCebOffice.csproj" />
   </ItemGroup>
 

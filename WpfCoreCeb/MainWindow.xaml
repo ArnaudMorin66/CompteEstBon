@@ -9,7 +9,7 @@
     Height="480"
     Background="Transparent"
     BorderThickness="0"
-    FontSize="10"
+    FontSize="11"
     Icon="favicon.ico"
     MouseLeftButtonDown="Window_MouseLeftButtonDown"
     ResizeMode="CanResize"
@@ -25,6 +25,7 @@
             <viewModel:CebStatusConverter x:Key="StatusConverter" />
             <viewModel:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <viewModel:BusyVisibilityConverter x:Key="BusyVisibilityConverter" />
+            <SolidColorBrush x:Key="{x:Static DataGrid.FocusBorderBrushKey}" Color="#FF000000" />
         </ResourceDictionary>
     </Window.Resources>
     <Window.TaskbarItemInfo>
@@ -278,7 +279,7 @@
                 Content="&#xAC;"
                 Cursor="Hand"
                 FontFamily="Wingdings 3"
-                FontSize="10"
+                FontSize="11"
                 FontWeight="Bold"
                 Foreground="White"
                 ToolTipService.ToolTip="Réduire" />
@@ -298,7 +299,7 @@
                 Content="&#x6F;"
                 Cursor="Hand"
                 FontFamily="Wingdings"
-                FontSize="10"
+                FontSize="11"
                 FontWeight="Bold"
                 Foreground="White"
                 ToolTipService.ToolTip="Rétablir précédent" />
@@ -319,7 +320,7 @@
                 Content="&#x78;"
                 Cursor="Hand"
                 FontFamily="Wingdings"
-                FontSize="10"
+                FontSize="11"
                 FontWeight="Bold"
                 Foreground="White"
                 ToolTipService.ToolTip="Fermer" />
@@ -438,11 +439,13 @@
             CanUserResizeColumns="False"
             CanUserResizeRows="False"
             CanUserSortColumns="False"
+            CellStyle="{DynamicResource SolutionsCellStyle}"
             ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-            FontSize="10"
-            GridLinesVisibility="Horizontal"
+            FontSize="11"
+            GridLinesVisibility="None"
             HeadersVisibility="None"
-            HorizontalGridLinesBrush="#FF303030"
+            HorizontalGridLinesBrush="Transparent"
+            IsReadOnly="True"
             IsTabStop="True"
             RowStyle="{StaticResource DataGridRowStyle}"
             SelectionChanged="SolutionsData_SelectionChanged"
@@ -491,13 +494,13 @@
                     HorizontalContentAlignment="Center"
                     Background="{DynamicResource ButtonBackgroundBrush}"
                     Content="{Binding Result}"
-                    FontSize="10"
+                    FontSize="11"
                     FontWeight="ExtraBlack"
                     Foreground="{DynamicResource ButtonForegroundBrush}" />
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="10"
+                    FontSize="11"
                     FontWeight="ExtraBlack"
                     Foreground="Yellow"
                     Text="{Binding Solution}" />
@@ -505,14 +508,17 @@
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="10"
+                    FontSize="11"
                     FontWeight="Medium"
                     Foreground="White"
-                    TextAlignment="Center"><Run Text="Nombre de solutions: " /><Run Text="{Binding Count, Mode=OneWay}" /></TextBlock>
+                    TextAlignment="Center">
+                    <Run Text="Nombre de solutions: " />
+                    <Run Text="{Binding Count, Mode=OneWay}" />
+                </TextBlock>
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    FontSize="10"
+                    FontSize="11"
                     FontWeight="Medium"
                     Foreground="White"
                     TextAlignment="Center"><Run Text="Durée: " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
@@ -532,11 +538,7 @@
             Foreground="Yellow"
             RenderTransformOrigin="0.5, 0.5"
             Text="&#x50;"
-            Visibility="{Binding IsBusy, Converter={StaticResource BusyVisibilityConverter}}">
-            <TextBlock.RenderTransform>
-                <RotateTransform Angle="0" />
-            </TextBlock.RenderTransform>
-        </TextBlock>
+            Visibility="{Binding IsBusy, Converter={StaticResource BusyVisibilityConverter}}" />
         <Grid
             Grid.Row="5"
             Grid.Column="0"
@@ -553,42 +555,36 @@
             <TextBlock
                 x:Name="textBlock1"
                 Grid.Column="0"
-                Height="35"
-                HorizontalAlignment="Center"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                FontWeight="Bold"
-                Foreground="{DynamicResource ButtonForegroundBrush}"
+                FontSize="11"
+                Foreground="White"
+                Text="{Binding Result}"
                 TextAlignment="Center"
-                Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
-                <TextBlock.RenderTransform>
-                    <ScaleTransform x:Name="AnimatedScaleResult" ScaleX="1" ScaleY="1" />
-                </TextBlock.RenderTransform><Run Text="{Binding Result}" /></TextBlock>
+                Visibility="{Binding Status, Converter={StaticResource StatusConverter}}" />
             <TextBlock
                 x:Name="textBlock2"
                 Grid.Column="1"
-                Height="35"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontWeight="Bold"
-                Foreground="{DynamicResource ButtonForegroundBrush}"
+                Foreground="White"
                 TextAlignment="Center"
                 Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
-                <TextBlock.RenderTransform>
-                    <ScaleTransform x:Name="AnimatedScaleSolutions" ScaleX="0.5" ScaleY="1" />
-                </TextBlock.RenderTransform><Run Text="Nombre de solutions: " /><Run Text=" " /><Run Text="{Binding Count, Mode=OneWay}" /></TextBlock>
+                <Run Text="Nombre de solutions: " />
+                <Run Text=" " />
+                <Run Text="{Binding Count, Mode=OneWay}" />
+            </TextBlock>
             <TextBlock
                 x:Name="textBlock3"
                 Grid.Column="2"
-                Height="35"
-                HorizontalAlignment="Center"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                FontWeight="Bold"
-                Foreground="{DynamicResource ButtonForegroundBrush}"
+                Foreground="White"
                 TextAlignment="Center"
                 Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
-                <TextBlock.RenderTransform>
-                    <ScaleTransform x:Name="AnimatedScaleDuree" ScaleX="1" ScaleY="1" />
-                </TextBlock.RenderTransform><Run Text="Durée: " /><Run Text=" " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
+                <Run Text="Durée: " />
+                <Run Text=" " /><Run Text="{Binding Duree, Mode=OneWay}" />
+            </TextBlock>
         </Grid>
     </Grid>
 </Window>

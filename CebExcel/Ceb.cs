@@ -107,7 +107,7 @@ namespace CebExcel {
             }
 
             tbSolutions.DataSource = Tirage.Details.ToArray();
-            NbSolutions.Value = Tirage.Solutions.Count;
+            NbSolutions.Value = Tirage.Count;
             Durée.Value = (DateTime.Now - time).Milliseconds / 1000.0;
             Application.EnableEvents = true;
             Application.ScreenUpdating = true;

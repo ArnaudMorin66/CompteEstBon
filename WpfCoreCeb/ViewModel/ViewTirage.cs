@@ -19,9 +19,6 @@ using System.Windows.Threading;
 
 namespace CompteEstBon.ViewModel {
     public class ViewTirage : INotifyPropertyChanged, ICommand {
-        private readonly Storyboard AnimationStory =
-            Application.Current.MainWindow?.FindResource("AnimationResult") as Storyboard;
-
         private readonly Stopwatch NotifyWatch = new Stopwatch();
         private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(10);
 
@@ -67,7 +64,6 @@ namespace CompteEstBon.ViewModel {
                 Tirage.Plaques[i].Text = Plaques[i];
                 ClearData();
             };
-
             _isUpdating = false;
             UpdateData();
             UpdateColors();
@@ -77,10 +73,10 @@ namespace CompteEstBon.ViewModel {
         }
 
 
-
-        public static IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
-
         public CebTirage Tirage { get; } = new CebTirage();
+        public static IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaquesUniques;
+
+
 
         public ObservableCollection<string> Plaques { get; } =
             new ObservableCollection<string> { "", "", "", "", "", "" };
@@ -142,7 +138,7 @@ namespace CompteEstBon.ViewModel {
                 _isBusy = value;
                 if (_isBusy) {
                     WaitStory.Begin();
-                    AnimationStory.Begin();
+                    // AnimationStory.Begin();
                 } else {
                     WaitStory.Pause();
                 }
@@ -215,8 +211,8 @@ namespace CompteEstBon.ViewModel {
                         await ExportAsync((string)parameter);
                         break;
                 }
-            } catch (Exception) {
-                // ignored
+            } catch (Exception e) {
+                Console.WriteLine(e);
             }
         }
 
@@ -257,7 +253,7 @@ namespace CompteEstBon.ViewModel {
 
         private void ClearData() {
             if (_isUpdating) return;
-            AnimationStory.Stop();
+            // AnimationStory.Stop();
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");
             stopwatch.Reset();
@@ -285,8 +281,8 @@ namespace CompteEstBon.ViewModel {
         }
 
         public void ShowNotify(int index = 0) {
-            if (index >= 0 && Tirage.Solutions.Count != 0 && index < Tirage.Solutions.Count) {
-                Solution = Tirage.SolutionIndex(index);
+            if (index >= 0 && Tirage.Solutions.Count() != 0 && index < Tirage.Solutions.Count()) {
+                Solution = Tirage.SolutionAt(index);
                 Popup = true;
             }
         }
@@ -330,7 +326,7 @@ namespace CompteEstBon.ViewModel {
 
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
-            Solution = Tirage.SolutionIndex(0);
+            Solution = Tirage.SolutionAt(0);
             UpdateColors();
             IsBusy = false;
             Solution = Tirage.Solution.ToString();

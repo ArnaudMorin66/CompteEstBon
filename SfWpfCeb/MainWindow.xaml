@@ -25,6 +25,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="CebDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <local:BusyVisibilityConverter x:Key="BusyVisibilityConverter" />
         </ResourceDictionary>
     </s:ChromelessWindow.Resources>
     <s:ChromelessWindow.DataContext>
@@ -360,17 +361,21 @@
             </s:SfDataGrid.Columns>
 
         </s:SfDataGrid>
-        <s:SfBusyIndicator
+        <TextBlock
+            Name="Wait"
             Grid.Row="3"
             Grid.Column="0"
             Grid.ColumnSpan="10"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            HorizontalContentAlignment="Stretch"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Panel.ZIndex="10"
+            FontFamily="Wingdings 3"
+            FontSize="50"
+            FontWeight="Bold"
             Foreground="Yellow"
-            IsBusy="{Binding IsBusy}"
-            IsTabStop="False"
-            Visibility="{Binding Computing}" />
+            RenderTransformOrigin="0.5, 0.5"
+            Text="&#x50;"
+            Visibility="{Binding IsBusy, Converter={StaticResource BusyVisibilityConverter}}" />
         <Popup
             Width="480"
             Height="120"

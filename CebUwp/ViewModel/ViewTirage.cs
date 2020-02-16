@@ -299,7 +299,7 @@ namespace CompteEstBon.ViewModel {
                 return;
             }
 
-            CurrentSolution = Tirage.SolutionIndex(no);
+            CurrentSolution = Tirage.SolutionAt(no);
             CurrentPage.cebNotification?.Show(10000);
 
         }

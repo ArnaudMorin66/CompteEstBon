@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -22,7 +21,6 @@ using static System.Math;
 #endregion using
 
 namespace CompteEstBon {
-
     /// <summary>
     /// Gestion tirage Compte est bon
     /// </summary>
@@ -34,7 +32,6 @@ namespace CompteEstBon {
             for (var i = 0; i < 6; i++) {
                 Plaques.Add(new CebPlaque(0, IsUpdated));
             }
-
             Random();
         }
 
@@ -56,7 +53,7 @@ namespace CompteEstBon {
                 Random();
             else {
                 Status = CebStatus.EnCours;
-                foreach (var (p, i) in plaques.WithIndex().Where(elt => elt.Item2  < 6)) {
+                foreach (var (p, i) in plaques.WithIndex().Where(elt => elt.Item2 < 6)) {
                     Plaques[i].Value = p;
                 }
 
@@ -79,7 +76,7 @@ namespace CompteEstBon {
         /// <summary>
         /// Nombre de solutions
         /// </summary>
-        public int Count => Solutions.Count;
+        public int Count => CebSolutions.Count;
 
         /// <summary>
         /// Ecart
@@ -97,7 +94,7 @@ namespace CompteEstBon {
             Clear("Plaques");
         }
 
-        public List<CebBase> Solutions { get; } = new List<CebBase>();
+        private List<CebBase> CebSolutions { get; } = new List<CebBase>();
 
         /// <summary>
         /// Gets the status.
@@ -109,9 +106,7 @@ namespace CompteEstBon {
         /// </value>
         public CebStatus Status { get; private set; } = CebStatus.Indefini;
 
-        public void SetEncours() {
-            Status = CebStatus.EnCours;
-        }
+        public void SetEncours() => Status = CebStatus.EnCours;
 
         /// <summary>
         /// Return the find values
@@ -126,13 +121,12 @@ namespace CompteEstBon {
             return Status;
         }
 
-        public CebBase Solution => Solutions.Count == 0 ? null : Solutions[0];
+        public CebDetail Solution => CebSolutions.Count == 0 ? null : CebSolutions[0].Detail;
 
-    public string SolutionIndex(int no) {
-
-            if (Solutions.Count == 0 || no >= Solutions.Count) return "";
+        public string SolutionAt(int no) {
+            if (CebSolutions.Count == 0 || no >= CebSolutions.Count) return "";
             if (no < 0) no = 0;
-            return Solutions[no].ToString();
+            return CebSolutions[no].ToString();
         }
 
         /// <summary>
@@ -151,8 +145,7 @@ namespace CompteEstBon {
         public void Random() {
             Status = CebStatus.EnCours;
             _search = Rnd.Next(100, 1000);
-            var liste = new List<int>(CebPlaque.ListePlaques); // .ToList();
-            // liste.AddRange(CebPlaque.ListePlaques.TakeWhile(v => v <= 25));
+            var liste = new List<int>(CebPlaque.ListePlaques);
             foreach (var plaque in Plaques) {
                 var n = Rnd.Next(0, liste.Count());
                 plaque.Value = liste[n];
@@ -164,8 +157,8 @@ namespace CompteEstBon {
         public async Task RandomAsync() => await Task.Run(Random);
 
         public void Clear(string evt = "") {
-            if (Solutions.Count != 0) {
-                Solutions.Clear();
+            if (CebSolutions.Count != 0) {
+                CebSolutions.Clear();
                 NotifiedChanged(evt);
             }
 
@@ -173,8 +166,6 @@ namespace CompteEstBon {
             Found.Reset();
             Valid();
         }
-
-
         public async Task ClearAsync() => await Task.Run(() => { Clear("Clear"); });
 
         /// <summary>
@@ -191,7 +182,7 @@ namespace CompteEstBon {
         public CebStatus ResolveWithParam(int search, params int[] plq) {
             if (plq.Length != 6)
                 throw new ArgumentException("Nombre de plaques incorrecte");
-            this.Status = CebStatus.EnCours;
+            Status = CebStatus.EnCours;
             _search = search;
             foreach (var (p, i) in plq.WithIndex().Where(elt => elt.Item2 < 6))
                 Plaques[i].Value = p;
@@ -205,30 +196,28 @@ namespace CompteEstBon {
 
             if (diff < Diff) {
                 Diff = diff;
-                Solutions.Clear();
+                CebSolutions.Clear();
                 Found.Reset();
             }
-            if (Solutions.Contains(sol)) return;
+            if (CebSolutions.Contains(sol)) return;
 
             Found.Add(sol.Value);
-            Solutions.Add(sol);
+            CebSolutions.Add(sol);
         }
 
-        private void Resolve(List<CebBase> liste) {
-            liste.Sort((p, q) => q.Value.CompareTo(p.Value));
+        private void Resolve(IEnumerable<CebBase> liste) {
             foreach (var (p, i) in liste.WithIndex()) {
                 AddSolution(p);
-                foreach (var (q, j) in liste.WithIndex().Where(elt  => elt.Item2 > i)) {
+                foreach (var (q, j) in liste.WithIndex().Where((_, ix) => ix > i)) {
                     foreach (var oper in
                         CebOperation.ListeOperations.Select(operation =>
                             new CebOperation(p, operation, q))
                                 .Where(o => o.IsValid)) {
                         Resolve(
-                            liste.Where((_, k) => k != i && k != j).Concat(new[] { oper }).ToList()
+                            liste.Where((_, k) => k != i && k != j).Concat(new[] { oper })
                         );
                     }
                 }
-
             }
         }
         /// <summary>
@@ -237,14 +226,15 @@ namespace CompteEstBon {
         /// <returns>
         /// </returns>
         public CebStatus Resolve() {
-
             Clear();
             if (Status != CebStatus.Valid) return Status;
             Status = CebStatus.EnCours;
-            Resolve(Plaques.Cast<CebBase>().ToList());
-            Solutions.Sort((p, q) => (p.Rank == q.Rank) ? p.GetHashCode().CompareTo(q.GetHashCode()) : p.Rank.CompareTo(q.Rank));
+            Resolve(Plaques);
+            CebSolutions.Sort((p, q) => p.Compare(q));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
-            NotifiedChanged($"Details");
+#pragma warning disable CA1507 // Use nameof to express symbol names
+            NotifiedChanged("Details");
+#pragma warning restore CA1507 // Use nameof to express symbol names
             return Status;
         }
 
@@ -252,32 +242,24 @@ namespace CompteEstBon {
 
         public async Task<CebStatus> ResolveAsync(int search, params int[] plq) => await Task.Run(() => ResolveWithParam(search, plq));
 
-        public override string ToString() {
-           
-            var buffer = new StringBuilder();
-            buffer.AppendLine("##ceb##");
-            buffer.AppendLine($"Search : {Search}, plaques : [{string.Join(",", Plaques.Select(p => p.ToString()))}]");
-            buffer.AppendLine($"Found:  {Found}, Status: {Status}, Nb de solutions: {Count}");
-            buffer.AppendLine(string.Join(";", Solutions.Select(p => p.ToString())));
-            return buffer.ToString();
-        }
-
-        public IEnumerable<string> ToArray() => Solutions.Select(p => p.ToString());
+        public IEnumerable<string> ToArray() => CebSolutions.Select(p => p.ToString());
 
         private static readonly Random Rnd = new Random();
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public IEnumerable<CebDetail> Details => Solutions.Select(s => (CebDetail)s);
-        public CebResult GetCebResult() => new CebResult {
-            Search = this.Search,
+        public IEnumerable<CebDetail> Details => CebSolutions.Select(s => s.Detail);
+
+        public IEnumerable<string> Solutions => Details.Select(s => s.ToString());
+        public CebData GetCebData() => new CebData {
+            Search = Search,
             Plaques = Plaques.Select(p => p.Value),
-            Status = this.Status,
-            Diff = this.Diff,
+            Status = Status,
+            Diff = Diff,
             Solutions = Details,
-            Found = this.Found.ToString()
+            Found = Found.ToString()
         };
     }
-    
+
 }

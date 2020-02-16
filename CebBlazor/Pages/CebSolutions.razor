@@ -3,8 +3,20 @@
 @using Microsoft.AspNetCore.Components
 
 @inject CebTirage tirage
+<EjsGrid @ref="s2" DataSource="@Details" AllowPaging="true">
+    <GridPageSettings PageSize="5"></GridPageSettings>
+    <GridColumns>
+        <GridColumn Field=@nameof(CebDetail.Op1) HeaderText="Op1" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(CebDetail.Op2) HeaderText="Op2" Width="150"></GridColumn>
+        <GridColumn Field=@nameof(CebDetail.Op3) HeaderText="OP3" TextAlign="TextAlign.Right" Width="130"></GridColumn>
+        <GridColumn Field=@nameof(CebDetail.Op4) HeaderText="Op4" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(CebDetail.Op4) HeaderText="Op4" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+
+    </GridColumns>
+</EjsGrid>
+
 <EjsGrid @ref="solutions"
-         DataSource="@tirage.Details"
+         DataSource="@Details"
          GridLines="GridLine.None"
          TValue="CebDetail"
          Height="400"
@@ -15,26 +27,26 @@
          ID="solutions">
     <GridSelectionSettings Mode="Syncfusion.EJ2.Blazor.Grids.SelectionMode.Both" Type="SelectionType.Single"></GridSelectionSettings>
     <GridTextWrapSettings WrapMode="WrapMode.Content"></GridTextWrapSettings>
-    <GridEvents RowSelecting="@(async (args) => await Toast.ShowAsync((int)args.RowIndex) )" TValue="CebDetail"></GridEvents> 
-        <GridColumns>
-            <GridColumn Visible="TypeGrille == CebTypeGrille.Grille" Field="Op1" TextAlign="TextAlign.Center"></GridColumn>
-            <GridColumn Visible="TypeGrille == CebTypeGrille.Grille" Field="Op2" TextAlign="TextAlign.Center"></GridColumn>
-            <GridColumn Visible="TypeGrille == CebTypeGrille.Grille" Field="Op3" TextAlign="TextAlign.Center"></GridColumn>
-            <GridColumn Visible="TypeGrille == CebTypeGrille.Grille" Field="Op4" TextAlign="TextAlign.Center"></GridColumn>
-            <GridColumn Visible="TypeGrille == CebTypeGrille.Grille" Field="Op5" TextAlign="TextAlign.Center"></GridColumn>
-            <GridColumn Visible="TypeGrille == CebTypeGrille.Liste" TextAlign="TextAlign.Center">
-                <Template>
-                    @{
-                        var row = context as CebDetail;
-                        <div>@row.Op1</div>
-                        <div>@row.Op2</div>
-                        <div>@row.Op3</div>
-                        <div>@row.Op4</div>
-                        <div>@row.Op5</div>
-                    }
-                </Template>
-            </GridColumn>
-        </GridColumns>
+    <GridEvents RowSelecting="@(async (args) => await Toast.ShowAsync((int)args.RowIndex) )" TValue="CebDetail"></GridEvents>
+    <GridColumns>
+        <GridColumn Visible="TypeGrille == CebTypeGrille.Grille" Field="Op1" TextAlign="TextAlign.Center"></GridColumn>
+        <GridColumn Visible="TypeGrille == CebTypeGrille.Grille" Field="Op2" TextAlign="TextAlign.Center"></GridColumn>
+        <GridColumn Visible="TypeGrille == CebTypeGrille.Grille" Field="Op3" TextAlign="TextAlign.Center"></GridColumn>
+        <GridColumn Visible="TypeGrille == CebTypeGrille.Grille" Field="Op4" TextAlign="TextAlign.Center"></GridColumn>
+        <GridColumn Visible="TypeGrille == CebTypeGrille.Grille" Field="Op5" TextAlign="TextAlign.Center"></GridColumn>
+        <GridColumn Visible="TypeGrille == CebTypeGrille.Liste" TextAlign="TextAlign.Center">
+            <Template>
+                @{
+                    var row = context as CebDetail;
+                    <div>@row.Op1</div>
+                    <div>@row.Op2</div>
+                    <div>@row.Op3</div>
+                    <div>@row.Op4</div>
+                    <div>@row.Op5</div>
+                }
+            </Template>
+        </GridColumn>
+    </GridColumns>
 </EjsGrid>
 @code {
     private CebTypeGrille _typegrille;
@@ -56,16 +68,22 @@
 
     // ReSharper disable once UnusedAutoPropertyAccessor.Local
     EjsGrid<CebDetail> solutions { get; set; }
-//    public List<CebDetail> Details { get; set; }
+    EjsGrid<CebDetail> s2 { get; set; }
+    public ObservableCollection<CebDetail> Details { get; set; } = new ObservableCollection<CebDetail>();
 
 
     public void Refresh() {
-          solutions.Refresh();
-     // InvokeAsync(StateHasChanged);
+        Details.Clear();
+       
+        foreach(var s in tirage.Details) {
+            Details.Add(s);
+            s2.AddRecord(s);
+        }
+        solutions.Refresh();
+        s2.Refresh();
+        InvokeAsync(StateHasChanged);
     }
 
-    protected override void OnInitialized() {
-    }
 
     public void ExportExcel() {
         if (tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon) return;

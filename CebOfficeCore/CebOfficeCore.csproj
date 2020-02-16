@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CompteEstBon_2.1\CompteEstBon_2.1.csproj" />
+    <ProjectReference Include="..\CompteEstBon_2.1\CompteEstBon.core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -287,8 +287,8 @@ namespace CompteEstBon.ViewModel {
         }
 
         public void ShowNotify(int index = 0) {
-            if (index >= 0 && Tirage.Solutions.Count != 0 && index < Tirage.Solutions.Count) {
-                Solution = Tirage.SolutionIndex(index);
+            if (index >= 0 && Tirage.Solutions.Any()  && index < Tirage.Solutions.Count()) {
+                Solution = Tirage.SolutionAt(index);
                 Popup = true;
             }
         }
@@ -336,7 +336,7 @@ namespace CompteEstBon.ViewModel {
 
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
-            Solution = Tirage.SolutionIndex(0);
+            Solution = Tirage.SolutionAt(0);
             UpdateColors();
             IsBusy = false;
             Solution = Tirage.Solution.ToString();

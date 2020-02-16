@@ -44,7 +44,7 @@
                     @if(tirage.Diff != 0) {
                         <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
                     }
-                    <div>@tirage.Solutions.Count&nbsp;solutions</div>
+                    <div>@tirage.Solutions.Count()&nbsp;solutions</div>
                     <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
                 </div>
                 <div>&nbsp;</div>
@@ -71,8 +71,12 @@
     }
 
     public async Task ShowAsync(CebDetail detail = null) {
-        if (detail == null) detail = new CebDetail(tirage.Solution);
-        Solution = detail.ToString();
+        if (detail == null) {
+            Solution = tirage.Solution.ToString();
+        }
+        else { 
+            Solution = detail.ToString();
+        }
         await AnimationContainer.ShowAsync();
         timer.Change(DueTime, 0);
 

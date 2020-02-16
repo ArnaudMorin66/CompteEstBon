@@ -12,7 +12,7 @@
             </LinearGradientBrush>
             <LinearGradientBrush x:Key="CebLinearGradientBrush2" StartPoint="0.5,0" EndPoint="0.5,1">
                 <GradientStop Offset="0.0" Color="#303030" />
-                <GradientStop Offset="1.0" Color="#404040" />
+                <GradientStop Offset="1.0" Color="DarkSlateGray" />
             </LinearGradientBrush>
         </ResourceDictionary>
     </Application.Resources>

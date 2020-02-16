@@ -6,7 +6,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
+#pragma warning disable IDE1006 // Styles d'affectation de noms
 namespace CompteEstBon {
+#pragma warning restore IDE1006 // Styles d'affectation de noms
 
     [System.Runtime.InteropServices.Guid("A21F3DEC-8531-4F59-AF11-863BEF5ED340")]
     public sealed class CebPlaque : CebBase, INotifyPropertyChanged {
@@ -27,8 +29,9 @@ namespace CompteEstBon {
         /// </param>
         /// <param name="handler"></param>
         public CebPlaque(int value, PropertyChangedEventHandler /* EventHandler<int>*/ handler = null) {
+            Rank = 0;
             Value = value;
-            this.Operations.Add(value.ToString());
+            Detail.Op1 = value.ToString();
             if (handler != null)
                 PropertyChanged += handler;
         }
@@ -44,7 +47,7 @@ namespace CompteEstBon {
             set {
                 if (base.Value == value) return;
                 base.Value = value;
-                this.Operations[0] = value.ToString();
+                Detail.Op1 = value.ToString();
                 NotifyPropertyChanged();
             }
         }
@@ -64,26 +67,6 @@ namespace CompteEstBon {
         public override string ToString() => Value.ToString();
 
         public static implicit operator int(CebPlaque p) => p.Value;
-        /// <summary>
-        /// D�termine si le <see cref="T:System.Object" /> sp�cifi� est �gal au
-        /// <see cref="T:System.Object" /> actif.
-        /// </summary>
-        /// <returns>
-        /// true si le <see cref="T:System.Object" /> sp�cifi� est �gal au
-        /// <see cref="T:System.Object" /> actif�; sinon, false.
-        /// </returns>
-        /// <param name="obj">
-        /// <see cref="T:System.Object" /> � comparer au <see cref="T:System.Object" /> actif.
-        /// </param>
-        /// <filterpriority>
-        /// 2
-        /// </filterpriority>
-        public override bool Equals(object obj) => obj is CebPlaque p && p.Value == Value;
-
-        public override int GetHashCode() => Value;
-
-        
-
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }

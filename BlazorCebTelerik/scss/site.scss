@@ -8,7 +8,7 @@ $enable-shadows: true;
 $enable-responsive-font-sizes: true;
 $grid-header-border-color: $bg-body;
 @import "bootstrap/scss/bootstrap";
-
+$accent: $primary;
 @import "@progress/kendo-theme-bootstrap/scss/all";
 
 
@@ -78,6 +78,7 @@ body {
     padding: 0%;
     height: 0.1rem;
 }
+/*
 .k-dropdown-wrap, .k-numeric-wrap  {
     & > .k-input {
         background-color: $bg-body;
@@ -98,6 +99,16 @@ body {
         color: white;
         text-align:center;
     }
+*/
+ceb-entree, .k-combobox .k-dropdown-wrap, .k-searchbar > .k-input, .k-numeric-wrap > .k-input,
+    .k-numerictextbox .k-numeric-wrap .k-input {
+    background-color: $bg-body;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
 
  span.k-icon {
      color: black;

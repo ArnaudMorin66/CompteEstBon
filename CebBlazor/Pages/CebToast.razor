@@ -38,7 +38,7 @@
                                @if (tirage.Diff != 0) {
                                    <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
                                }
-                               <div>@tirage.Solutions.Count&nbsp;solutions</div>
+                               <div>@tirage.Count&nbsp;solutions</div>
                                <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
                            </div>
                            <div>&nbsp;</div>
@@ -79,7 +79,7 @@
                }
 
                public async Task ShowAsync(int index) {
-                   Solution = tirage.SolutionIndex(index);
+                   Solution = tirage.SolutionAt(index);
                    Visible = true;
                    await InvokeAsync(StateHasChanged);
                }

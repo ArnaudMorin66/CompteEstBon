@@ -20,11 +20,9 @@ namespace CebBlazor {
         public void ConfigureServices(IServiceCollection services) {
             services.AddRazorPages(); 
             services.AddScoped<CompteEstBon.CebTirage>();
+            services.AddServerSideBlazor();
             services.AddSyncfusionBlazor();
-            services.AddServerSideBlazor(options => {
-                options.DetailedErrors = true;
 
-            });
             // RegisterLicense();
         }
 
