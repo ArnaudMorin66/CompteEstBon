@@ -1,6 +1,7 @@
 ﻿using CompteEstBon;
-using Microsoft.Extensions.CommandLineUtils;
+using McMaster.Extensions.CommandLineUtils;
 using System;
+using System.Linq;
 using static System.Console;
 
 namespace CsCeb {
@@ -33,13 +34,13 @@ namespace CsCeb {
                 return 0;
             });
             parser.Execute(args);
-            var ts = EvalTime(tirage.Resolve);
+            var (ts, result) = EvalTime(tirage.Resolve);
             WriteLine("** Le Compte est bon **");
             Write("Tirage:\t");
-            WriteLine($"Recherche: {tirage.Search}");
+            WriteLine($"Recherche: {result.Search}");
             Write("Plaques: ");
-            foreach (var plaque in tirage.Plaques) {
-                Write($"{plaque.Value} ");
+            foreach (var plaque in result.Plaques) {
+                Write($"{plaque} ");
             }
             WriteLine();
             WriteLine();
@@ -49,14 +50,14 @@ namespace CsCeb {
                 WriteLine("Tirage invalide");
             }
             else {
-                Write(tirage.Status == CebStatus.CompteEstBon
+                Write(result.Status == CebStatus.CompteEstBon
                     ? "Compte est bon"
-                    : $"Compte approché: {tirage.Found} ");
+                    : $"Compte approché: {result.Found} ");
 
-                WriteLine($", nombre de solutions {tirage.Solutions.Count}");
+                WriteLine($", nombre de solutions {result.Solutions.Count()}");
                 WriteLine();
-                foreach (var solution in tirage.Solutions) {
-                    WriteLine(solution);
+                foreach (var solution in result.Solutions) {
+                    WriteLine(solution.ToString());
                 }
             }
             WriteLine();
@@ -65,10 +66,10 @@ namespace CsCeb {
                 ReadLine();
         }
 
-        private static TimeSpan EvalTime(Func<CebStatus> action) {
+        private static (TimeSpan t, T) EvalTime<T>(Func<T> func) {
             var dt = DateTime.Now;
-            action();
-            return DateTime.Now - dt;
+            var res = func();
+            return (DateTime.Now - dt, res);
         }
     }
 }

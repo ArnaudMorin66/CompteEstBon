@@ -52,7 +52,7 @@ namespace CompteEstBon {
             tb.ApplyStyleRowBands = true;
             for (var c = 1; c < 6; c++) tb.Rows[1].Cells[c].Range.Text = $"Opération {c}";
 
-            foreach (var s in tirage.Details) {
+            foreach (var s in tirage.Solutions) {
                 var row = tb.Rows.Add();
                 for (var j = 0; j < s.Operations.Count(); j++) row.Cells[j + 1].Range.Text = s[j];
             }
@@ -105,7 +105,7 @@ namespace CompteEstBon {
 
             for (var c = 1; c < 6; c++) _r(ws.Cells[6, c + 2]).Value = $"Opération {c}";
             var lg = 7;
-            foreach (var s in tirage.Details) {
+            foreach (var s in tirage.Solutions) {
                 var rw = _r(ws.Rows[lg++]);
                 var ix = 3;
                 foreach (var o in s.Operations) {

@@ -3,6 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:ma="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:CompteEstBon.ViewModel"
     Width="800"
@@ -99,7 +101,9 @@
             CommandTarget="{Binding ElementName=btnExcel}"
             Modifiers="Ctrl" />
     </Window.InputBindings>
+
     <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="30" />
@@ -398,33 +402,19 @@
             BorderBrush="Black"
             BorderThickness="1"
             Style="{StaticResource BorderTitreStyle}">
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="16" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="16" />
-                </Grid.ColumnDefinitions>
-                <RepeatButton
-                    x:Name="tbMoins"
-                    Grid.Column="0"
-                    Click="TbMoins_Click"
-                    Content="-"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    Style="{StaticResource CebRepeatButtonStyle}" />
-                <TextBox
-                    Grid.Column="1"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    Style="{StaticResource SearchControlStyle}"
-                    Text="{Binding Search, Mode=TwoWay}" />
-                <RepeatButton
-                    x:Name="tbPlus"
-                    Grid.Column="2"
-                    Click="TbPlus_Click"
-                    Content="+"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    Style="{StaticResource CebRepeatButtonStyle}" />
-            </Grid>
+            <ma:NumericUpDown
+                Foreground="White"
+                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                Maximum="999"
+                Minimum="100"
+                NumericInputMode="Numbers"
+                ParsingNumberStyle="Integer"
+                SwitchUpDownButtons="True"
+                TextAlignment="Center"
+                Value="{Binding Search, Mode=TwoWay}" />
+
         </Border>
+
         <DataGrid
             x:Name="SolutionsData"
             Grid.Row="3"
@@ -524,7 +514,7 @@
                     TextAlignment="Center"><Run Text="Durée: " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
             </StackPanel>
         </Popup>
-        <TextBlock
+        <ma:ProgressRing
             Name="Wait"
             Grid.Row="3"
             Grid.Column="0"
@@ -532,12 +522,6 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Panel.ZIndex="10"
-            FontFamily="Wingdings 3"
-            FontSize="50"
-            FontWeight="Bold"
-            Foreground="Yellow"
-            RenderTransformOrigin="0.5, 0.5"
-            Text="&#x50;"
             Visibility="{Binding IsBusy, Converter={StaticResource BusyVisibilityConverter}}" />
         <Grid
             Grid.Row="5"

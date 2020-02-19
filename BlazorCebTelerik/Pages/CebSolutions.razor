@@ -51,17 +51,17 @@
 
     [Parameter] public CebToast Toast { get; set; }
 
-    public List<CebDetail> Details { get; set; }
+    public List<CebBase> Details { get; set; }
     public async Task RefreshAsync() =>
         await InvokeAsync(async () => {
-            Details = tirage.Details.ToList();
+            Details = tirage.Solutions;
             await InvokeAsync(StateHasChanged);
         });
 
 
     protected override void OnInitialized() {
 
-        Details = new List<CebDetail>();
+        Details = new List<CebBase>();
     }
 
 }

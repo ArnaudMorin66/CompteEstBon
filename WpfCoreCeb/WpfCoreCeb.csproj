@@ -21,9 +21,21 @@
   <ItemGroup>
     <None Remove="favicon.ico" />
     <None Remove="Images\excel.png" />
+    <None Remove="Images\giphy.gif" />
     <None Remove="Images\random.png" />
     <None Remove="Images\resolve.png" />
     <None Remove="Images\word.png" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0660" />
+    <PackageReference Include="MahApps.Metro.IconPacks" Version="3.2.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Resource Include="Images\giphy.gif" />
   </ItemGroup>
 
   <ItemGroup>

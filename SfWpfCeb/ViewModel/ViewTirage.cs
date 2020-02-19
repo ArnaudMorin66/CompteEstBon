@@ -35,7 +35,7 @@ namespace CompteEstBon {
         public string _solution;
         private string _titre = "Le compte est bon";
 
-        // private Visibility _computing = Visibility.Collapsed;
+        private Visibility _computing = Visibility.Hidden;
 
         public DispatcherTimer dateDispatcher;
         public Stopwatch stopwatch;
@@ -72,7 +72,7 @@ namespace CompteEstBon {
             dateDispatcher.Start();
         }
 
-        public static IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques.Distinct();
+        public static IEnumerable<int> ListePlaques { get; } = CebPlaque.AnyPlaques;
 
         public Storyboard Animation =>
             _animation ??
@@ -138,6 +138,15 @@ namespace CompteEstBon {
             get => _isBusy;
             set {
                 _isBusy = value;
+                Computing = _isBusy ? Visibility.Visible : Visibility.Hidden;
+                
+               
+            }
+        }
+        public Visibility Computing {
+            get => _computing;
+            set {
+                _computing = value;
                 NotifiedChanged();
             }
         }
@@ -284,7 +293,7 @@ namespace CompteEstBon {
 
         public void ShowPopup(int index = 0) {
             if (index >= 0 && index < Tirage.Solutions.Count()) {
-                Solution = Tirage.SolutionAt(index);
+                Solution = Tirage.Solution(index);
                 Popup = true;
             }
         }
@@ -316,8 +325,8 @@ namespace CompteEstBon {
 
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
-            Solution = Tirage.SolutionAt(0);
-            Window.SolutionsData.ItemsSource = Tirage.Details;
+            Solution = Tirage.Solution();
+            Window.SolutionsData.ItemsSource = Tirage.Solutions;
             Count = Tirage.Count;
 
             UpdateColors();

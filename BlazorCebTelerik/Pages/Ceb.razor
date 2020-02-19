@@ -118,7 +118,7 @@
                     
                     @foreach (var plq in tirage.Plaques) {
 
-                        <TelerikDropDownList Data="@CebPlaque.ListePlaques"
+                        <TelerikDropDownList Data="@CebPlaque.AnyPlaques"
                                              @bind-Value="plq.Value"
                                              Class="text-center col-2"
                                              TValue="int"
@@ -210,7 +210,7 @@
 
 
     async Task ResolveAsync() {
-        tirage.SetEncours();
+        // tirage.SetEncours();
         await InvokeAsync(StateHasChanged);
         stopwatch.Reset();
         stopwatch.Start();

@@ -79,7 +79,7 @@
                }
 
                public async Task ShowAsync(int index) {
-                   Solution = tirage.SolutionAt(index);
+                   Solution = tirage.Solution(index);
                    Visible = true;
                    await InvokeAsync(StateHasChanged);
                }

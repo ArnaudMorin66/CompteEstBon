@@ -72,7 +72,7 @@
 
     public async Task ShowAsync(CebDetail detail = null) {
         if (detail == null) {
-            Solution = tirage.Solution.ToString();
+            Solution = tirage.Solution();
         }
         else { 
             Solution = detail.ToString();

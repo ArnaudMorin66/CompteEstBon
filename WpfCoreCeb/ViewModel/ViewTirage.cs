@@ -74,7 +74,7 @@ namespace CompteEstBon.ViewModel {
 
 
         public CebTirage Tirage { get; } = new CebTirage();
-        public static IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaquesUniques;
+        public static IEnumerable<int> ListePlaques { get; } = CebPlaque.AnyPlaques;
 
 
 
@@ -282,7 +282,7 @@ namespace CompteEstBon.ViewModel {
 
         public void ShowNotify(int index = 0) {
             if (index >= 0 && Tirage.Solutions.Count() != 0 && index < Tirage.Solutions.Count()) {
-                Solution = Tirage.SolutionAt(index);
+                Solution = Tirage.Solution(index);
                 Popup = true;
             }
         }
@@ -326,11 +326,11 @@ namespace CompteEstBon.ViewModel {
 
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
-            Solution = Tirage.SolutionAt(0);
+            Solution = Tirage.Solution(0);
             UpdateColors();
             IsBusy = false;
-            Solution = Tirage.Solution.ToString();
-            ActiveWindow.SolutionsData.ItemsSource = Tirage.Details;
+            Solution = Tirage.Solution();
+            ActiveWindow.SolutionsData.ItemsSource = Tirage.Solutions;
             Count = Tirage.Count;
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");

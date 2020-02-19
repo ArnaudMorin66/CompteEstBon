@@ -45,7 +45,7 @@ namespace CompteEstBon.ViewModel {
 
         public ObservableCollection<int> Plaques { get; } = new ObservableCollection<int> { -1, -1, -1, -1, -1, -1 };
 
-        public IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques;
+        public IEnumerable<int> ListePlaques { get; } = CebPlaque.AnyPlaques;
 
         // public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
         public string _date;
@@ -268,7 +268,7 @@ namespace CompteEstBon.ViewModel {
                 $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}" : "Tirage incorrect");
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");
-            CurrentPage.SolutionsData.ItemsSource = Tirage.Details;
+            CurrentPage.SolutionsData.ItemsSource = Tirage.Solutions;
             heureDispatcher.Stop();
             Duree = (DateTimeOffset.Now - _time).TotalSeconds;
             UpdateColors();
@@ -299,7 +299,7 @@ namespace CompteEstBon.ViewModel {
                 return;
             }
 
-            CurrentSolution = Tirage.SolutionAt(no);
+            CurrentSolution = Tirage.Solution(no);
             CurrentPage.cebNotification?.Show(10000);
 
         }

@@ -133,7 +133,7 @@
                     @foreach (var plq in tirage.Plaques) {
                         <div class="col-md-2">
                             <EjsComboBox @bind-Value="@plq.Value"
-                                         DataSource="@CebPlaque.ListePlaquesUniques"
+                                         DataSource="@CebPlaque.AnyPlaques"
                                          AllowCustom="true"
                                          ShowClearButton="false"
                                          Enabled="tirage.Status != CebStatus.EnCours">
@@ -232,7 +232,7 @@
     }
 
     async Task ResolveAsync() {
-        tirage.SetEncours();
+        // tirage.SetEncours();
         await InvokeAsync(StateHasChanged);
         stopwatch.Reset();
         stopwatch.Start();

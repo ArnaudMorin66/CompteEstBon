@@ -2,13 +2,9 @@ namespace CompteEstBon {
 
     [System.Runtime.InteropServices.Guid("9CA27D73-CD46-41CE-B666-3F589F98D328")]
     public class CebFind {
-
         public CebFind() => Reset();
-
         public int Found1 { get; private set; }
-
         public int Found2 { get; private set; }
-
         public void Add(int value) {
             if (value == Found1 || value == Found2) return;
             if (value == int.MaxValue)
@@ -20,11 +16,8 @@ namespace CompteEstBon {
                 Found1 = value;
             }
         }
-
         public override string ToString() => Found2 == int.MaxValue ? Found1.ToString() : $"{Found1} et {Found2}";
-
         public bool IsUnique => Found2 == int.MaxValue;
-
         public void Reset(int value = int.MaxValue) {
             Found1 = value;
             Found2 = int.MaxValue;
