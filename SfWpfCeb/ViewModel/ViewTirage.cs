@@ -20,8 +20,7 @@ namespace CompteEstBon {
     public class ViewTirage : INotifyPropertyChanged, ICommand {
         private readonly Stopwatch NotifyWatch = new Stopwatch();
         private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(CompteEstBon.Properties.Settings.Default.SolutionTimer);
-        private Storyboard _animation;
-        private Color _background = Colors.DarkSlateGray;
+        private Color _background = Colors.Black;
         private string _duree;
 
         private Color _foreground = Colors.White;
@@ -34,8 +33,6 @@ namespace CompteEstBon {
 
         public string _solution;
         private string _titre = "Le compte est bon";
-
-        private Visibility _computing = Visibility.Hidden;
 
         public DispatcherTimer dateDispatcher;
         public Stopwatch stopwatch;
@@ -74,16 +71,18 @@ namespace CompteEstBon {
 
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.AnyPlaques;
 
-        public Storyboard Animation =>
-            _animation ??
-            (_animation = Application.Current.MainWindow.Resources["AnimationResult"] as Storyboard);
-
         public CebTirage Tirage { get; } = new CebTirage();
 
         public ObservableCollection<int> Plaques { get; } =
             new ObservableCollection<int> { 0, 0, 0, 0, 0, 0 };
-
-
+        public HashSet<CebBase> _solutions = new HashSet<CebBase>();
+        public HashSet<CebBase> Solutions {
+            get => _solutions;
+            set {
+                _solutions = value;
+                NotifiedChanged();
+            }
+        }
         public string Duree {
             get => _duree;
             set {
@@ -138,18 +137,10 @@ namespace CompteEstBon {
             get => _isBusy;
             set {
                 _isBusy = value;
-                Computing = _isBusy ? Visibility.Visible : Visibility.Hidden;
-                
-               
-            }
-        }
-        public Visibility Computing {
-            get => _computing;
-            set {
-                _computing = value;
                 NotifiedChanged();
             }
         }
+      
 
         public bool IsComputed {
             get => _isComputed;
@@ -247,11 +238,11 @@ namespace CompteEstBon {
         private void UpdateColors() {
             (Background, Foreground) = Tirage.Status switch
             {
-                CebStatus.Valid => (Colors.DarkOliveGreen, Colors.White),
+                CebStatus.Valid => (Colors.DarkSlateGray, Colors.White),
                 CebStatus.Erreur => (Colors.Red, Colors.White),
-                CebStatus.CompteEstBon => (Colors.LightGreen, Colors.Yellow),
+                CebStatus.CompteEstBon => (Colors.ForestGreen, Colors.GhostWhite),
                 CebStatus.CompteApproche => (Colors.Salmon, Colors.White),
-                CebStatus.EnCours => (Colors.Yellow, Colors.White),
+                CebStatus.EnCours => (Colors.Gray, Colors.White),
                 _ => (Colors.Red, Colors.White)
 
             };
@@ -264,13 +255,10 @@ namespace CompteEstBon {
         private void ClearData() {
             if (_isUpdating) return;
             stopwatch.Reset();
-            Animation?.Stop();
             Duree = stopwatch.Elapsed.ToString();
             IsComputed = false;
             Solution = "";
-            if (Window.SolutionsData != null)
-                Window.SolutionsData.ItemsSource = null;
-
+            Solutions = null;
             Count = 0;
             Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
             Popup = false;
@@ -309,11 +297,10 @@ namespace CompteEstBon {
             await Tirage.RandomAsync();
             UpdateData();
         }
-        public static MainWindow Window => Application.Current.MainWindow as MainWindow;
+        // public static MainWindow Window => Application.Current.MainWindow as MainWindow;
         public async Task<CebStatus> ResolveAsync() {
             IsBusy = true;
-            Animation?.Begin();
-            Result = "...Calcul...";
+            Result = "";
             (Background, Foreground) = (Colors.Green, Colors.White);
             stopwatch.Start();
             await Tirage.ResolveAsync();
@@ -326,7 +313,7 @@ namespace CompteEstBon {
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
             Solution = Tirage.Solution();
-            Window.SolutionsData.ItemsSource = Tirage.Solutions;
+            Solutions = new HashSet<CebBase>( Tirage.Solutions);
             Count = Tirage.Count;
 
             UpdateColors();

@@ -3,10 +3,13 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace CompteEstBon.ViewModel {
+namespace CompteEstBon {
     [ValueConversion(typeof(bool), typeof(Visibility))]
-    class BusyVisibilityConverter : IValueConverter {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) => value is bool b ? b ? Visibility.Visible : Visibility.Hidden : (object)Visibility.Hidden;
+    class BoolToVisibilityConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+            if (value is bool v) return v ? Visibility.Visible : Visibility.Hidden;
+            return Visibility.Hidden;
+        }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
             throw new NotImplementedException();

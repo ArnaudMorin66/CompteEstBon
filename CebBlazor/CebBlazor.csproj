@@ -32,11 +32,4 @@
       <UserProperties libman_1json__JsonSchema="" package_1json__JsonSchema="" />
     </VisualStudio>
   </ProjectExtensions>
-  
-  <Target Name="PreBuildRelease" BeforeTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release' ">
-    <Exec Command="npm run sass-release" />
-  </Target>
-  <Target Name="PreBuildDebug" BeforeTargets="PreBuildEvent" Condition=" '$(Configuration)' == 'Debug' ">
-    <Exec Command="npm run sass-debug" />
-  </Target>
 </Project>

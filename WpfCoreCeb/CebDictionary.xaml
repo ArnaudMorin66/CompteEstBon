@@ -17,7 +17,7 @@
     <Style x:Key="BorderTitreStyle" TargetType="{x:Type Border}">
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="Background" Value="{StaticResource CebLinearGradientBrush2}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
     </Style>
     <Style x:Key="LabelTitreStyle" TargetType="{x:Type Label}">
         <Setter Property="Margin" Value="0" />
@@ -30,7 +30,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Background" Value="{StaticResource CebLinearGradientBrush2}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
     </Style>
     <ControlTemplate x:Key="CebButtonTemplate" TargetType="{x:Type Button}">
         <Border
@@ -63,50 +63,6 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    <Storyboard x:Key="AnimationResult">
-        <DoubleAnimation
-            AutoReverse="True"
-            RepeatBehavior="Forever"
-            Storyboard.TargetName="AnimatedScaleSolutions"
-            Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-            To="1.5"
-            Duration="0:0:5" />
-        <DoubleAnimation
-            AutoReverse="True"
-            RepeatBehavior="Forever"
-            Storyboard.TargetName="AnimatedScaleSolutions"
-            Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
-            To="0.9"
-            Duration="0:0:5" />
-        <DoubleAnimation
-            AutoReverse="True"
-            RepeatBehavior="Forever"
-            Storyboard.TargetName="AnimatedScaleDuree"
-            Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-            To="1.5"
-            Duration="0:0:5" />
-        <DoubleAnimation
-            AutoReverse="True"
-            RepeatBehavior="Forever"
-            Storyboard.TargetName="AnimatedScaleDuree"
-            Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
-            To="0.9"
-            Duration="0:0:5" />
-        <DoubleAnimation
-            AutoReverse="True"
-            RepeatBehavior="Forever"
-            Storyboard.TargetName="AnimatedScaleResult"
-            Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-            To="1.5"
-            Duration="0:0:5" />
-        <DoubleAnimation
-            AutoReverse="True"
-            RepeatBehavior="Forever"
-            Storyboard.TargetName="AnimatedScaleResult"
-            Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
-            To="0.9"
-            Duration="0:0:5" />
-    </Storyboard>
     <LinearGradientBrush x:Key="ButtonBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Offset="0.0" Color="{Binding Background}" />
         <GradientStop Offset="1.0" Color="Black" />
@@ -196,7 +152,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    <Storyboard x:Key="WaitStoryboard">
+    <Storyboard x:Key="WaitStoryboard" >
         <DoubleAnimation
             RepeatBehavior="Forever"
             Storyboard.TargetName="Wait"

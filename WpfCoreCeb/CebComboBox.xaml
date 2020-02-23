@@ -4,6 +4,10 @@
     xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
     xmlns:local="clr-namespace:CompteEstBon"
     xmlns:viewModel="clr-namespace:CompteEstBon.ViewModel">
+    <LinearGradientBrush x:Key="ButtonBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0.0" Color="{Binding Background}" />
+        <GradientStop Offset="1.0" Color="Black" />
+    </LinearGradientBrush>
     <Style x:Key="FocusVisual">
         <Setter Property="Control.Template">
             <Setter.Value>
@@ -19,11 +23,11 @@
         </Setter>
     </Style>
     <LinearGradientBrush x:Key="ComboBox.Static.Background" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Offset="0.0" Color="Blue" />
-        <GradientStop Offset="1.0" Color="#FFE5E5E5" />
+        <GradientStop Offset="0.0" Color="{Binding Background}" />
+        <GradientStop Offset="1.0" Color="Black" />
     </LinearGradientBrush>
     <SolidColorBrush x:Key="ComboBox.Static.Border" Color="#FFACACAC" />
-    <SolidColorBrush x:Key="ComboBox.Static.Editable.Background" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="ComboBox.Static.Editable.Background" Color="{Binding Background}" />
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Border" Color="#FFABADB3" />
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Background" Color="Transparent" />
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Border" Color="Black" />
@@ -56,7 +60,7 @@
     <SolidColorBrush x:Key="ComboBox.Disabled.Glyph" Color="#FFBFBFBF" />
     <SolidColorBrush x:Key="ComboBox.Disabled.Background" Color="#FFF0F0F0" />
     <SolidColorBrush x:Key="ComboBox.Disabled.Border" Color="#FFD9D9D9" />
-    <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Background" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Background" Color="{Binding Background}" />
     <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Border" Color="#FFBFBFBF" />
     <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Button.Background" Color="Transparent" />
     <SolidColorBrush x:Key="ComboBox.Disabled.Editable.Button.Border" Color="Transparent" />
@@ -71,7 +75,7 @@
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Border
                         x:Name="templateRoot"
-                        Background="{StaticResource ComboBox.Static.Background}"
+                        Background="{DynamicResource ButtonBackgroundBrush}"
                         BorderBrush="{StaticResource ComboBox.Static.Border}"
                         BorderThickness="0"
                         SnapsToDevicePixels="true">
@@ -194,7 +198,7 @@
                     Color="Transparent">
                     <Border
                         x:Name="dropDownBorder"
-                        Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                        Background="{DynamicResource ButtonBackgroundBrush}"
                         BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
                         BorderThickness="0">
                         <ScrollViewer x:Name="DropDownScrollViewer">
@@ -302,7 +306,7 @@
                     Color="Transparent">
                     <Border
                         x:Name="dropDownBorder"
-                        Background="{StaticResource CebLinearGradientBrush2}"
+                        Background="{DynamicResource ButtonBackgroundBrush}"
                         BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
                         BorderThickness="0">
                         <ScrollViewer x:Name="DropDownScrollViewer">
@@ -339,7 +343,7 @@
             <Border
                 x:Name="border"
                 Margin="0"
-                Background="{StaticResource CebLinearGradientBrush2}">
+                Background="{DynamicResource ButtonBackgroundBrush}">
                 <TextBox
                     x:Name="PART_EditableTextBox"
                     Margin="{TemplateBinding Padding}"

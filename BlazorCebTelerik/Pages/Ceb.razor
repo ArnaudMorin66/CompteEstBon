@@ -30,7 +30,7 @@
                         role="button"
                         type="button"
                         Enabled="@(tirage.Status != CebStatus.EnCours)"
-                        @onclick="tirage.RandomAsync">
+                        @onclick="RandomAsync">
                     <i class="fa fa-random"></i>
                     <div>Tirage</div>
                 </button>
@@ -70,7 +70,7 @@
                                 role="button"
                                 type="button"
                                 title="Tirage aléatoire (ALT-T)"
-                                @onclick="@tirage.RandomAsync"
+                                @onclick="@RandomAsync"
                                 accesskey="T">
                             <div class="animation">
                                 <div><i class="far fa-exclamation-triangle"></i></div>
@@ -120,10 +120,10 @@
 
                         <TelerikDropDownList Data="@CebPlaque.AnyPlaques"
                                              @bind-Value="plq.Value"
+                                             OnChange="@ClearAsync"
                                              Class="text-center col-2"
                                              TValue="int"
                                              TItem="int">
-
                         </TelerikDropDownList>
 
 
@@ -141,6 +141,7 @@
             </div>
             <div class="card-body">
                 <TelerikNumericTextBox @bind-Value="tirage.Search" Step="1" Min="100" Max="999" Format="N0"
+                                       OnChange="@ClearAsync"
                                        T="int" Class="border-secondary"></TelerikNumericTextBox>
 
             </div>
@@ -199,25 +200,32 @@
     CebSolutions solutions { get; set; }
 
     protected override void OnInitialized() {
-        tirage.PropertyChanged += async (_, _e) => {
-            await toast.HideAsync();
-            await solutions.RefreshAsync();
-        };
         stopwatch = new Stopwatch();
         base.OnInitialized();
 
     }
 
+    protected async Task ClearAsync() {
+        await solutions.ClearAsync();
+        await tirage.ClearAsync();
+    }
+    protected async Task RandomAsync() {
+        await solutions.ClearAsync();
+        await tirage.RandomAsync();
+    }
 
     async Task ResolveAsync() {
-        // tirage.SetEncours();
-        await InvokeAsync(StateHasChanged);
+
         stopwatch.Reset();
         stopwatch.Start();
+        await solutions.ClearAsync();
+
+        await solutions.SetDataAsync(await tirage.ResolveAsync());
         await tirage.ResolveAsync();
+        await InvokeAsync(StateHasChanged);
         stopwatch.Stop();
         duree = stopwatch.Elapsed.TotalSeconds;
-        await solutions.RefreshAsync();
+
         await toast.ShowAsync();
     }
 }

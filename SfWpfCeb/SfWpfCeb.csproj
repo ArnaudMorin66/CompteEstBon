@@ -7,7 +7,7 @@
     <RootNamespace>CompteEstBon</RootNamespace>
     <StartupObject>CompteEstBon.App</StartupObject>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
-    <AssemblyName>CompteEstBon.WpfCore</AssemblyName>
+    <AssemblyName>Ceb</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,8 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Syncfusion.Licensing" Version="17.4.0.50" />
-    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="17.4.0.50" />
     <PackageReference Include="Syncfusion.SfGrid.WPF" Version="17.4.0.50" />
     <PackageReference Include="Syncfusion.SfInput.WPF" Version="17.4.0.50" />
     <PackageReference Include="Syncfusion.Themes.Blend.WPF" Version="17.4.0.50" />
@@ -63,6 +61,9 @@
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="SyncfusionLicense.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

@@ -16,7 +16,7 @@ namespace CompteEstBon {
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25, 50, 75, 100,
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25
         };
-        public static IEnumerable<int> AnyPlaques = new SortedSet<int>(AllPlaques);
+        public static IEnumerable<int> AnyPlaques = new HashSet<int>(AllPlaques);
         public event PropertyChangedEventHandler PropertyChanged;
         public CebPlaque(int value, PropertyChangedEventHandler /* EventHandler<int>*/ handler = null) {
             Rank = 0;

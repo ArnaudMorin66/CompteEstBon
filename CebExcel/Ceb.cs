@@ -80,9 +80,7 @@ namespace CebExcel {
             Clear();
         }
 
-        private void btnHasard_Click(object sender, EventArgs e) {
-            Hasard();
-        }
+        private void btnHasard_Click(object sender, EventArgs e) => Hasard();
 
         public async void Resoudre() {
             if (Tirage.Status != CebStatus.Valid) {
@@ -114,8 +112,6 @@ namespace CebExcel {
             Protect(drawingObjects: true, contents: true, scenarios: true);
         }
 
-        private void btnResoudre_Click(object sender, EventArgs e) {
-            Resoudre();
-        }
+        private void btnResoudre_Click(object sender, EventArgs e) => Resoudre();
     }
 }

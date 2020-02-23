@@ -5,17 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
-
-/* Modification non fusionnée à partir du projet 'CompteEstBon_2.1'
-Avant :
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-Après :
-using System.Text;
-using System.Threading.Tasks;
-*/
 using static System.Math;
 
 #endregion using
@@ -25,7 +15,7 @@ namespace CompteEstBon {
     /// Gestion tirage Compte est bon
     /// </summary>
     [System.Runtime.InteropServices.Guid("EC9CF01C-34A0-414C-BF2A-D06C5A61503D")]
-    public sealed class CebTirage : INotifyPropertyChanged {
+    public sealed class CebTirage {
         private int _search;
 
         public CebTirage() {
@@ -37,7 +27,7 @@ namespace CompteEstBon {
 
         private void IsUpdated(object sender, PropertyChangedEventArgs e) {
             if (Status != CebStatus.EnCours) {
-                Clear("plaque");
+                Clear();
             }
         }
 
@@ -68,7 +58,7 @@ namespace CompteEstBon {
             set {
                 if (value == _search) return;
                 _search = value;
-                Clear("Search");
+                Clear();
             }
         }
 
@@ -86,7 +76,7 @@ namespace CompteEstBon {
             foreach (var (p, i) in plaq.WithIndex().Where(elt => elt.Item2 < 6)) {
                 Plaques[i].Value = p;
             }
-            Clear("Plaques");
+            Clear();
         }
         public List<CebBase> Solutions { get; } = new List<CebBase>();
         /// <summary>
@@ -131,15 +121,14 @@ namespace CompteEstBon {
                 plaque.Value = liste[n];
                 liste.RemoveAt(n);
             }
-            return Clear("Random");
+            return Clear();
             
         }
         public async Task<CebData> RandomAsync() => await Task.Run(Random);
 
-        public CebData Clear(string evt = "") {
+        public CebData Clear() {
             if (Solutions.Count != 0) {
                 Solutions.Clear();
-                NotifiedChanged(evt);
             }
 
             Diff = int.MaxValue;
@@ -147,7 +136,7 @@ namespace CompteEstBon {
             Valid();
             return Result;
         }
-        public async Task<CebData> ClearAsync() => await Task<CebData>.Run(() => Clear("Clear") );
+        public async Task<CebData> ClearAsync() => await Task<CebData>.Run(() => Clear() );
 
         /// <summary>
         /// resolution du compte
@@ -171,6 +160,7 @@ namespace CompteEstBon {
             return Resolve();
         }
         private void AddSolution(CebBase sol) {
+
             var diff = Abs(_search - sol.Value);
             if (diff > Diff)
                 return;
@@ -214,18 +204,12 @@ namespace CompteEstBon {
             Resolve(Plaques.ToList<CebBase>());
             Solutions.Sort((p, q) => p.Compare(q));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
-#pragma warning disable CA1507 // Use nameof to express symbol names
-            NotifiedChanged("Details");
-#pragma warning restore CA1507 // Use nameof to express symbol names
             return Result;
         }
         public async Task<CebData> ResolveAsync() => await Task.Run(Resolve);
         public async Task<CebData> ResolveAsync(int search, params int[] plq) => await Task.Run(() => ResolveWithParam(search, plq));
         private static readonly Random Rnd = new Random();
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        
+       
         public IEnumerable<string> SolutionsToString => Solutions.Select(s => s.ToString());
         
         public CebData Result => new CebData {

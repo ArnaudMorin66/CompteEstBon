@@ -1,6 +1,5 @@
 ﻿@using CompteEstBon
 @using System.Collections.ObjectModel
-@inject CebTirage tirage
 
 <TelerikGrid Data="Details"
              Height="360px"
@@ -29,7 +28,7 @@
                     }
                 </Template>
             </GridColumn>
-        }
+                        }
 
     </GridColumns>
 </TelerikGrid>
@@ -51,17 +50,23 @@
 
     [Parameter] public CebToast Toast { get; set; }
 
-    public List<CebBase> Details { get; set; }
-    public async Task RefreshAsync() =>
-        await InvokeAsync(async () => {
-            Details = tirage.Solutions;
-            await InvokeAsync(StateHasChanged);
+    public IEnumerable<CebDetail> Details { get; set; }
+
+    public async Task SetDataAsync(CebData data) {
+        await InvokeAsync(() => {
+            Details = data.Solutions;
+            StateHasChanged();
         });
-
-
+    }
+    public async Task ClearAsync() {
+        await InvokeAsync(() => {
+            Details = new List<CebDetail>();
+            StateHasChanged();
+        });
+    }
     protected override void OnInitialized() {
 
-        Details = new List<CebBase>();
+        Details = new List<CebDetail>();
     }
 
 }

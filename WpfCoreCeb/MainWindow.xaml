@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-    xmlns:ma="http://metro.mahapps.com/winfx/xaml/controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="clr-namespace:CompteEstBon.ViewModel"
     Width="800"
@@ -109,7 +108,7 @@
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="20" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -402,17 +401,36 @@
             BorderBrush="Black"
             BorderThickness="1"
             Style="{StaticResource BorderTitreStyle}">
-            <ma:NumericUpDown
-                Foreground="White"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                Maximum="999"
-                Minimum="100"
-                NumericInputMode="Numbers"
-                ParsingNumberStyle="Integer"
-                SwitchUpDownButtons="True"
-                TextAlignment="Center"
-                Value="{Binding Search, Mode=TwoWay}" />
-
+            <Grid
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="{DynamicResource ButtonBackgroundBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="16" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="16" />
+                </Grid.ColumnDefinitions>
+                <RepeatButton
+                    x:Name="tbMoins"
+                    Grid.Column="0"
+                    Click="TbMoins_Click"
+                    Content="-"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    Style="{StaticResource CebRepeatButtonStyle}" />
+                <TextBox
+                    Grid.Column="1"
+                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    Style="{StaticResource SearchControlStyle}"
+                    Text="{Binding Search, Mode=TwoWay}" />
+                <RepeatButton
+                    x:Name="tbPlus"
+                    Grid.Column="2"
+                    Click="TbPlus_Click"
+                    Content="+"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    Style="{StaticResource CebRepeatButtonStyle}" />
+            </Grid>
         </Border>
 
         <DataGrid
@@ -437,6 +455,7 @@
             HorizontalGridLinesBrush="Transparent"
             IsReadOnly="True"
             IsTabStop="True"
+            ItemsSource="{Binding Solutions}"
             RowStyle="{StaticResource DataGridRowStyle}"
             SelectionChanged="SolutionsData_SelectionChanged"
             TabIndex="7">
@@ -468,6 +487,25 @@
                     Header="Opération 5" />
             </DataGrid.Columns>
         </DataGrid>
+        <TextBlock
+            Name="Wait"
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="10"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Panel.ZIndex="10"
+            FontFamily="Wingdings 2"
+            FontSize="50"
+            FontWeight="Bold"
+            Foreground="Yellow"
+            RenderTransformOrigin="0.5, 0.5"
+            Text="&#xBC;"
+            Visibility="{Binding IsBusy, Converter={StaticResource BusyVisibilityConverter}}">
+            <TextBlock.RenderTransform>
+                <RotateTransform Angle="0" />
+            </TextBlock.RenderTransform>
+        </TextBlock>
         <Popup
             Width="400"
             Height="120"
@@ -514,22 +552,13 @@
                     TextAlignment="Center"><Run Text="Durée: " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
             </StackPanel>
         </Popup>
-        <ma:ProgressRing
-            Name="Wait"
-            Grid.Row="3"
-            Grid.Column="0"
-            Grid.ColumnSpan="10"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Panel.ZIndex="10"
-            Visibility="{Binding IsBusy, Converter={StaticResource BusyVisibilityConverter}}" />
         <Grid
             Grid.Row="5"
             Grid.Column="0"
             Grid.ColumnSpan="10"
-            Margin="0,0,0,0"
+            Margin="2"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Center"
+            VerticalAlignment="Stretch"
             Background="{DynamicResource ButtonBackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -554,9 +583,8 @@
                 Foreground="White"
                 TextAlignment="Center"
                 Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
-                <Run Text="Nombre de solutions: " />
-                <Run Text=" " />
-                <Run Text="{Binding Count, Mode=OneWay}" />
+                <Run Text="{Binding Count}" />
+                <Run Text=" solutions" />
             </TextBlock>
             <TextBlock
                 x:Name="textBlock3"
@@ -564,11 +592,8 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 Foreground="White"
-                TextAlignment="Center"
-                Visibility="{Binding Status, Converter={StaticResource StatusConverter}}">
-                <Run Text="Durée: " />
-                <Run Text=" " /><Run Text="{Binding Duree, Mode=OneWay}" />
-            </TextBlock>
+                Text="{Binding Duree, StringFormat=Durée {0}}"
+                TextAlignment="Right" />
         </Grid>
     </Grid>
 </Window>

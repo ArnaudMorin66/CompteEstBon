@@ -36,6 +36,7 @@ namespace CompteEstBon.ViewModel {
         private string _result = "Résoudre";
 
         public string _solution;
+        public IEnumerable<CebBase> _solutions;
         private string _titre = "Le compte est bon";
 
         public DispatcherTimer dateDispatcher;
@@ -95,7 +96,13 @@ namespace CompteEstBon.ViewModel {
                 NotifiedChanged();
             }
         }
-
+        public IEnumerable<CebBase> Solutions {
+            get => _solutions;
+            set {
+                _solutions = value;
+                NotifiedChanged();
+            }
+        }
         public int Search {
             get => Tirage.Search;
             set {
@@ -138,11 +145,9 @@ namespace CompteEstBon.ViewModel {
                 _isBusy = value;
                 if (_isBusy) {
                     WaitStory.Begin();
-                    // AnimationStory.Begin();
                 } else {
                     WaitStory.Pause();
                 }
-
                 NotifiedChanged();
             }
         }
@@ -234,15 +239,14 @@ namespace CompteEstBon.ViewModel {
         }
 
         private void UpdateColors() {
-#pragma warning disable CS8509 // L'expression switch ne prend pas en charge toutes les entrées possibles (elle n'est pas exhaustive).
             (Background, Foreground) = Tirage.Status switch
-#pragma warning restore CS8509 // L'expression switch ne prend pas en charge toutes les entrées possibles (elle n'est pas exhaustive).
             {
-                CebStatus.Valid => (Color.FromRgb(48, 48, 48), Colors.White),
+                CebStatus.Valid => (Colors.DarkSlateGray, Colors.White),
                 CebStatus.Erreur => (Colors.Red, Colors.White),
-                CebStatus.CompteEstBon => (Colors.LightGreen, Colors.Black),
-                CebStatus.CompteApproche => (Color.FromRgb(0xe0, 0xa8, 0), Colors.Black),
-                CebStatus.EnCours => (Color.FromRgb(64, 64, 64), Colors.White)
+                CebStatus.CompteEstBon => (Colors.ForestGreen, Colors.GhostWhite),
+                CebStatus.CompteApproche => (Colors.Salmon, Colors.White),
+                CebStatus.EnCours => (Colors.Gray, Colors.White),
+                _ => (Colors.Red, Colors.White)
 
             };
         }
@@ -260,8 +264,7 @@ namespace CompteEstBon.ViewModel {
             Duree = stopwatch.Elapsed.ToString();
             Solution = "";
             Count = 0;
-            if (ActiveWindow.SolutionsData != null)
-                ActiveWindow.SolutionsData.ItemsSource = null;
+            Solutions = null;
             Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
             Popup = false;
             UpdateColors();
@@ -299,7 +302,6 @@ namespace CompteEstBon.ViewModel {
             UpdateData();
         }
 
-        public static MainWindow ActiveWindow => Application.Current.MainWindow as MainWindow;
         private int _count;
 
         public int Count {
@@ -314,7 +316,7 @@ namespace CompteEstBon.ViewModel {
 
         public async Task ResolveAsync() {
             IsBusy = true;
-            Result = "...Calcul...";
+            Result = "";
             (Background, Foreground) = (Colors.Green, Colors.White);
             stopwatch.Start();
             await Tirage.ResolveAsync();
@@ -326,11 +328,10 @@ namespace CompteEstBon.ViewModel {
 
             stopwatch.Stop();
             Duree = stopwatch.Elapsed.ToString();
-            Solution = Tirage.Solution(0);
             UpdateColors();
             IsBusy = false;
             Solution = Tirage.Solution();
-            ActiveWindow.SolutionsData.ItemsSource = Tirage.Solutions;
+            Solutions = new HashSet<CebBase>(Tirage.Solutions);
             Count = Tirage.Count;
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");

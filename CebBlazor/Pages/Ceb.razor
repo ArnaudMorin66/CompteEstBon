@@ -134,6 +134,7 @@
                         <div class="col-md-2">
                             <EjsComboBox @bind-Value="@plq.Value"
                                          DataSource="@CebPlaque.AnyPlaques"
+                                         OnChange="ClearAsync"
                                          AllowCustom="true"
                                          ShowClearButton="false"
                                          Enabled="tirage.Status != CebStatus.EnCours">
@@ -155,6 +156,7 @@
                 <EjsNumericTextBox @bind-Value="@tirage.Search"
                                    Max="999"
                                    Min="100"
+                                   OnChange="ClearAsync"
                                    CssClass="e-ceb"
                                    Format="N0"
                                    Step="1"
@@ -220,23 +222,27 @@
     public CebSolutions Solutions;
 
     protected override void OnInitialized() {
-        tirage.PropertyChanged += async (_, _e) => {
-            await toast.HideAsync();
-            // ReSharper disable once PossibleNullReferenceException
-            Solutions?.Refresh();
-            await InvokeAsync(StateHasChanged);
-        };
         TypeGrille = CebTypeGrille.Grille;
         stopwatch = new Stopwatch();
         base.OnInitialized();
     }
 
+    protected async Task ClearAsync() {
+        await Solutions.ClearAsync();
+        await tirage.ClearAsync();
+    }
+    protected async Task RandomAsync() {
+        await Solutions.ClearAsync();
+        await tirage.RandomAsync();
+    }
+
     async Task ResolveAsync() {
-        // tirage.SetEncours();
-        await InvokeAsync(StateHasChanged);
         stopwatch.Reset();
         stopwatch.Start();
-        await tirage.ResolveAsync();
+        await Solutions.ClearAsync();
+
+        await Solutions.SetDataAsync(await tirage.ResolveAsync());
+        await InvokeAsync(StateHasChanged);
         stopwatch.Stop();
         await toast.ShowAsync(0);
     }

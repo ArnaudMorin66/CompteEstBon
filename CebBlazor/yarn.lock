@@ -15,7 +15,7 @@
     "@syncfusion/ej2-base" "~17.4.47"
     "@syncfusion/ej2-data" "~17.4.47"
 
-"@syncfusion/ej2-base@~17.4.47":
+"@syncfusion/ej2-base@17.4.47", "@syncfusion/ej2-base@~17.4.47":
   version "17.4.47"
   resolved "https://registry.yarnpkg.com/@syncfusion/ej2-base/-/ej2-base-17.4.47.tgz#920ffab880bcba5788343199bac41ffba31dab4f"
   integrity sha512-NtW0IKgLYzq4fZBmyG+kT3WEDqD9Wq+fsUkg6k1xQjp8Xy6zCqJul2U15BDF8GwY9nIH/nvsoPFV5+025ypJnA==

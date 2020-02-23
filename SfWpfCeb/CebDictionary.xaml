@@ -15,7 +15,7 @@
     <Style x:Key="BorderTitreStyle" TargetType="{x:Type Border}">
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="Background" Value="{StaticResource CebLinearGradientBrush2}" />
+        <Setter Property="Background" Value="{StaticResource CebLinearGradientBrush1}" />
     </Style>
     <Style x:Key="LabelTitreStyle" TargetType="{x:Type Label}">
         <Setter Property="VerticalAlignment" Value="Stretch" />
@@ -23,12 +23,12 @@
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="FontSize" Value="10" />
-        <Setter Property="Background" Value="{StaticResource CebLinearGradientBrush2}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
     </Style>
     <Style x:Key="TextBoxTitreStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="Foreground" Value="White" />
-        
+
     </Style>
     <ControlTemplate x:Key="CebButtonTemplate" TargetType="{x:Type s:ButtonAdv}">
         <Border
@@ -74,50 +74,6 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    <Storyboard x:Key="AnimationResult">
-        <DoubleAnimation
-            AutoReverse="True"
-            RepeatBehavior="Forever"
-            Storyboard.TargetName="AnimatedScaleSolutions"
-            Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-            To="1.5"
-            Duration="0:0:5" />
-        <DoubleAnimation
-            AutoReverse="True"
-            RepeatBehavior="Forever"
-            Storyboard.TargetName="AnimatedScaleSolutions"
-            Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
-            To="0.9"
-            Duration="0:0:5" />
-        <DoubleAnimation
-            AutoReverse="True"
-            RepeatBehavior="Forever"
-            Storyboard.TargetName="AnimatedScaleDuree"
-            Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-            To="1.5"
-            Duration="0:0:5" />
-        <DoubleAnimation
-            AutoReverse="True"
-            RepeatBehavior="Forever"
-            Storyboard.TargetName="AnimatedScaleDuree"
-            Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
-            To="0.9"
-            Duration="0:0:5" />
-        <DoubleAnimation
-            AutoReverse="True"
-            RepeatBehavior="Forever"
-            Storyboard.TargetName="AnimatedScaleResult"
-            Storyboard.TargetProperty="(ScaleTransform.ScaleX)"
-            To="1.5"
-            Duration="0:0:5" />
-        <DoubleAnimation
-            AutoReverse="True"
-            RepeatBehavior="Forever"
-            Storyboard.TargetName="AnimatedScaleResult"
-            Storyboard.TargetProperty="(ScaleTransform.ScaleY)"
-            To="0.9"
-            Duration="0:0:5" />
-    </Storyboard>
     <LinearGradientBrush x:Key="ButtonBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Offset="0.0" Color="{Binding Background}" />
         <GradientStop Offset="1.0" Color="Black" />
@@ -145,7 +101,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="Background" Value="{StaticResource CebLinearGradientBrush2}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
         <Setter Property="InputScope" Value="Number" />
         <Setter Property="IsEditable" Value="true" />
         <Setter Property="IsTabStop" Value="True" />
@@ -161,7 +117,10 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type s:ComboBoxAdv}">
-                    <Grid x:Name="MainGrid" SnapsToDevicePixels="True" Background="Black">
+                    <Grid
+                        x:Name="MainGrid"
+                        Background="{DynamicResource ButtonBackgroundBrush}"
+                        SnapsToDevicePixels="True">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="0" MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
@@ -184,7 +143,7 @@
                                 Color="#71000000">
                                 <Border
                                     x:Name="DropDownBorder"
-                                    Background="{TemplateBinding Background}"
+                                    Background="{DynamicResource ButtonBackgroundBrush}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="1">
                                     <Grid MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
@@ -244,7 +203,7 @@
                                     <Setter Property="IsTabStop" Value="False" />
                                     <Setter Property="Focusable" Value="True" />
                                     <Setter Property="BorderThickness" Value="1" />
-                                    <Setter Property="Background" Value="Gray" />
+                                    <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
                                     <Setter Property="BorderBrush" Value="#FF333333" />
                                     <Setter Property="ClickMode" Value="Press" />
                                     <Setter Property="Template">
@@ -252,7 +211,7 @@
                                             <ControlTemplate TargetType="{x:Type ToggleButton}">
                                                 <Border
                                                     x:Name="Chrome1"
-                                                    Background="#FF333333"
+                                                    Background="{DynamicResource ButtonBackgroundBrush}"
                                                     BorderBrush="Black"
                                                     BorderThickness="{TemplateBinding BorderThickness}"
                                                     CornerRadius="3"
@@ -266,7 +225,7 @@
                                                             x:Name="Chrome"
                                                             Grid.Column="1"
                                                             Width="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}"
-                                                            Background="Gray"
+                                                            Background="{DynamicResource ButtonBackgroundBrush}"
                                                             BorderBrush="#FF333333"
                                                             BorderThickness="1"
                                                             CornerRadius="3">
@@ -374,7 +333,7 @@
                             x:Name="PART_IsEditDefaultText"
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                            Background="{StaticResource CebLinearGradientBrush2}"
+                            Background="{DynamicResource ButtonBackgroundBrush}"
                             IsHitTestVisible="False"
                             Opacity="0.5"
                             Text="{TemplateBinding DefaultText}"
@@ -420,11 +379,15 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type s:ComboBoxAdv}">
                             <Grid>
-                                <Grid x:Name="MainGrid" SnapsToDevicePixels="True">
+                                <Grid
+                                    x:Name="MainGrid"
+                                    Background="{DynamicResource ButtonBackgroundBrush}"
+                                    SnapsToDevicePixels="True">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="0" MinWidth="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
                                     </Grid.ColumnDefinitions>
+
                                     <Popup
                                         x:Name="PART_Popup"
                                         Grid.ColumnSpan="2"
@@ -443,7 +406,7 @@
                                             Color="#71000000">
                                             <Border
                                                 x:Name="DropDownBorder"
-                                                Background="{TemplateBinding Background}"
+                                                Background="{DynamicResource ButtonBackgroundBrush}"
                                                 BorderBrush="{TemplateBinding BorderBrush}"
                                                 BorderThickness="1">
                                                 <Grid>
@@ -477,7 +440,7 @@
                                                                 x:Name="PART_SelectAll"
                                                                 Grid.Row="0"
                                                                 Margin="0.2,0,0,0.5"
-                                                                Background="{Binding Background, ElementName=DropDownBorder}"
+                                                                Background="{DynamicResource ButtonBackgroundBrush}"
                                                                 Content="{Binding SelectAll}">
                                                                 <s:ComboBoxItemAdv.Visibility>
                                                                     <TemplateBinding Property="AllowSelectAll">
@@ -530,7 +493,7 @@
                                                 <Setter Property="IsTabStop" Value="False" />
                                                 <Setter Property="Focusable" Value="True" />
                                                 <Setter Property="BorderThickness" Value="1" />
-                                                <Setter Property="Background" Value="Gray" />
+                                                <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
                                                 <Setter Property="BorderBrush" Value="#FF333333" />
                                                 <Setter Property="ClickMode" Value="Press" />
                                                 <Setter Property="Template">
@@ -538,7 +501,7 @@
                                                         <ControlTemplate TargetType="{x:Type ToggleButton}">
                                                             <Border
                                                                 x:Name="Chrome1"
-                                                                Background="#FF333333"
+                                                                Background="{DynamicResource ButtonBackgroundBrush}"
                                                                 BorderBrush="Black"
                                                                 BorderThickness="{TemplateBinding BorderThickness}"
                                                                 CornerRadius="3"

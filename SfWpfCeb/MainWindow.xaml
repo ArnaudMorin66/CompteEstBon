@@ -25,6 +25,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="CebDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         </ResourceDictionary>
     </s:ChromelessWindow.Resources>
     <s:ChromelessWindow.DataContext>
@@ -60,8 +61,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="40" />
-            <RowDefinition Height="40" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -159,7 +160,7 @@
             Padding="0"
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
-            Background="{DynamicResource CebLinearGradientBrush2}"
+            Background="{DynamicResource ButtonBackgroundBrush}"
             BorderBrush="Black"
             BorderThickness="1"
             CornerRadius="0,0,0,0"
@@ -170,6 +171,7 @@
             MinValue="0"
             NumberDecimalDigits="0"
             TabIndex="6"
+            TextAlignment="Center"
             Value="{Binding Search, Mode=TwoWay}" />
         <s:ButtonAdv
             x:Name="btnResoudre"
@@ -237,7 +239,7 @@
                 Background="{DynamicResource ButtonBackgroundBrush}"
                 Command="{Binding}"
                 CommandParameter="excel"
-                IsEnabled="{Binding IsCalculed}"
+                IsEnabled="{Binding IsComputed}"
                 IsTabStop="True"
                 Style="{StaticResource CebButtonStyle}"
                 TabIndex="9"
@@ -255,7 +257,7 @@
                 Background="{DynamicResource ButtonBackgroundBrush}"
                 Command="{Binding}"
                 CommandParameter="word"
-                IsEnabled="{Binding IsCalculed}"
+                IsEnabled="{Binding IsComputed}"
                 IsTabStop="True"
                 Style="{StaticResource CebButtonStyle}"
                 TabIndex="9"
@@ -268,57 +270,10 @@
                     Source="images/word.png" />
             </s:ButtonAdv>
         </Grid>
-        <Grid
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="10"
-            Margin="0,0,0,0"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            Background="{DynamicResource ButtonBackgroundBrush}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                x:Name="textBlock1"
-                Grid.Column="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="10"
-                Foreground="{DynamicResource ButtonForegroundBrush}"
-                TextAlignment="Center">
-                <TextBlock.RenderTransform>
-                    <ScaleTransform x:Name="AnimatedScaleResult" ScaleX="1" ScaleY="1" />
-                </TextBlock.RenderTransform><Run Text="{Binding Result}" /></TextBlock>
-            <TextBlock
-                x:Name="textBlock2"
-                Grid.Column="1"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="10"
-                Foreground="{DynamicResource ButtonForegroundBrush}"
-                TextAlignment="Center">
-                <TextBlock.RenderTransform>
-                    <ScaleTransform x:Name="AnimatedScaleSolutions" ScaleX="0.5" ScaleY="1" />
-                </TextBlock.RenderTransform> <Run Text="{Binding Count, Mode=OneWay}" /><Run Text=" solutions" /></TextBlock>
-            <TextBlock
-                x:Name="textBlock3"
-                Grid.Column="2"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="10"
-                Foreground="{DynamicResource ButtonForegroundBrush}"
-                TextAlignment="Center">
-                <TextBlock.RenderTransform>
-                    <ScaleTransform x:Name="AnimatedScaleDuree" ScaleX="1" ScaleY="1" />
-                </TextBlock.RenderTransform><Run Text="Durée: " /><Run Text=" " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
-        </Grid>
 
         <s:SfDataGrid
             x:Name="SolutionsData"
-            Grid.Row="3"
+            Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="10"
             x:FieldModifier="public"
@@ -329,12 +284,15 @@
             Background="{StaticResource CebLinearGradientBrush2}"
             CellStyle="{StaticResource SfDataGridCellStyle}"
             ColumnSizer="Star"
+            CurrentCellBorderThickness="1,1,1,1"
             FontSize="10"
             HeaderRowHeight="0"
             IsTabStop="True"
+            ItemsSource="{Binding Solutions}"
             NavigationMode="Row"
             RowStyle="{StaticResource sfDataGridRowStyle}"
             SelectionChanged="SolutionsData_SelectionChanged"
+            ShowBusyIndicator="True"
             TabIndex="10">
             <s:SfDataGrid.Columns>
                 <s:GridTextColumn
@@ -361,13 +319,56 @@
         </s:SfDataGrid>
         <s:ProgressRing
             Name="Wait"
-            Grid.Row="3"
+            Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="10"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Panel.ZIndex="10"
-            Visibility="{Binding Computing}" />
+            Text="Résolution..."
+            Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
+        <Grid
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="10"
+            Margin="0,0,0,0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="{DynamicResource ButtonBackgroundBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                x:Name="textBlock1"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="10"
+                Foreground="{DynamicResource ButtonForegroundBrush}"
+                TextAlignment="Center">
+                <Run Text="{Binding Result}" /></TextBlock>
+            <TextBlock
+                x:Name="textBlock2"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="10"
+                Foreground="{DynamicResource ButtonForegroundBrush}"
+                TextAlignment="Center"
+                Visibility="{Binding IsComputed, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Run Text="{Binding Count, Mode=OneWay}" /><Run Text=" solutions" /></TextBlock>
+            <TextBlock
+                x:Name="textBlock3"
+                Grid.Column="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="10"
+                Foreground="{DynamicResource ButtonForegroundBrush}"
+                TextAlignment="Center">
+                <Run Text="Durée: " /><Run Text=" " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
+        </Grid>
         <Popup
             Width="480"
             Height="120"
