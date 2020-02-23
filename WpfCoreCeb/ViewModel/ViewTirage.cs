@@ -241,11 +241,11 @@ namespace CompteEstBon.ViewModel {
         private void UpdateColors() {
             (Background, Foreground) = Tirage.Status switch
             {
-                CebStatus.Valid => (Colors.DarkSlateGray, Colors.White),
+                CebStatus.Valid => (Colors.Transparent, Colors.White),
                 CebStatus.Erreur => (Colors.Red, Colors.White),
-                CebStatus.CompteEstBon => (Colors.ForestGreen, Colors.GhostWhite),
-                CebStatus.CompteApproche => (Colors.Salmon, Colors.White),
-                CebStatus.EnCours => (Colors.Gray, Colors.White),
+                CebStatus.CompteEstBon => (Colors.DarkSlateGray, Colors.GhostWhite),
+                CebStatus.CompteApproche => (Colors.OrangeRed, Colors.White),
+                CebStatus.EnCours => (Colors.White, Colors.White),
                 _ => (Colors.Red, Colors.White)
 
             };
@@ -257,8 +257,6 @@ namespace CompteEstBon.ViewModel {
 
         private void ClearData() {
             if (_isUpdating) return;
-            // AnimationStory.Stop();
-            // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");
             stopwatch.Reset();
             Duree = stopwatch.Elapsed.ToString();

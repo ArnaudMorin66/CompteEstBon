@@ -22,7 +22,7 @@
     <Style x:Key="LabelTitreStyle" TargetType="{x:Type Label}">
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
-        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontSize" Value="11" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="BorderBrush" Value="Black" />
         <Setter Property="BorderThickness" Value="0" />
@@ -141,7 +141,7 @@
         <Setter Property="HorizontalContentAlignment" Value="Center" />
     </Style>
     <Style x:Key="DataGridRowStyle" TargetType="DataGridRow">
-        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Foreground" Value="White" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -150,9 +150,13 @@
                 <Setter Property="Background" Value="DarkGreen" />
                 <Setter Property="Foreground" Value="White" />
             </Trigger>
+            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                <Setter Property="Background" Value="Black"/>
+                <Setter Property="Foreground" Value="Yellow"/>
+            </Trigger>
         </Style.Triggers>
     </Style>
-    <Storyboard x:Key="WaitStoryboard" >
+    <Storyboard x:Key="WaitStoryboard">
         <DoubleAnimation
             RepeatBehavior="Forever"
             Storyboard.TargetName="Wait"

@@ -100,9 +100,7 @@
             CommandTarget="{Binding ElementName=btnExcel}"
             Modifiers="Ctrl" />
     </Window.InputBindings>
-
-    <Grid>
-
+    <Grid Background="{StaticResource ButtonBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="30" />
@@ -121,11 +119,13 @@
             <ColumnDefinition />
             <ColumnDefinition />
             <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid
             Grid.Row="0"
             Grid.Column="0"
-            Grid.ColumnSpan="10"
+            Grid.ColumnSpan="12"
             Background="{StaticResource ButtonBackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -152,110 +152,6 @@
                         Height="24"
                         Source="favicon.ico" />
                 </Button.Content>
-            </Button>
-            <Button
-                x:Name="btnHasard"
-                Grid.Column="1"
-                Width="80"
-                Margin="0"
-                Background="{DynamicResource ButtonBackgroundBrush}"
-                BorderThickness="0"
-                Command="{Binding}"
-                CommandParameter="random"
-                Foreground="White"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                IsTabStop="True"
-                TabIndex="8"
-                Template="{DynamicResource CebButtonTemplate}"
-                ToolTipService.ToolTip="Choisir les plaques,  Ctrl+H">
-                <StackPanel Orientation="Horizontal">
-                    <Image
-                        Width="16"
-                        Height="16"
-                        HorizontalAlignment="Left"
-                        Source="images/random.png" />
-                    <TextBlock
-                        Padding="4"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Text="Tirage" />
-                </StackPanel>
-            </Button>
-            <Button
-                x:Name="btnResoudre"
-                Grid.Column="2"
-                Width="80"
-                Background="{DynamicResource ButtonBackgroundBrush}"
-                BorderThickness="0"
-                Command="{Binding}"
-                CommandParameter="resolve"
-                FontWeight="Bold"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                IsTabStop="True"
-                TabIndex="9"
-                Template="{DynamicResource CebButtonTemplate}"
-                ToolTipService.ToolTip="Résoudre le compte, Ctrl+R">
-                <StackPanel Orientation="Horizontal">
-                    <Image
-                        Width="16"
-                        Height="16"
-                        HorizontalAlignment="Left"
-                        Opacity="50"
-                        OpacityMask="{DynamicResource ButtonForegroundBrush}"
-                        Source="images/resolve.png" />
-                    <TextBlock
-                        Padding="4"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Center"
-                        Foreground="White"
-                        Text="Résoudre" />
-                </StackPanel>
-            </Button>
-            <Button
-                x:Name="btnExcel"
-                Grid.Column="3"
-                Width="40"
-                Background="{DynamicResource ButtonBackgroundBrush}"
-                BorderThickness="0"
-                Command="{Binding}"
-                CommandParameter="Excel"
-                IsEnabled="{Binding Status, Converter={StaticResource StatusConverter}}"
-                IsTabStop="True"
-                TabIndex="10"
-                Template="{DynamicResource CebButtonTemplate}"
-                ToolTipService.ToolTip="Exportation vers Excel">
-                <StackPanel Orientation="Horizontal">
-                    <Image
-                        Width="16"
-                        Height="16"
-                        HorizontalAlignment="Left"
-                        Opacity="50"
-                        OpacityMask="{DynamicResource ButtonForegroundBrush}"
-                        Source="images/excel.png" />
-                </StackPanel>
-            </Button>
-            <Button
-                x:Name="btnWord"
-                Grid.Column="4"
-                Width="40"
-                Background="{DynamicResource ButtonBackgroundBrush}"
-                BorderThickness="0"
-                Command="{Binding}"
-                CommandParameter="Word"
-                IsEnabled="{Binding Status, Converter={StaticResource StatusConverter}}"
-                IsTabStop="True"
-                TabIndex="11"
-                Template="{DynamicResource CebButtonTemplate}"
-                ToolTipService.ToolTip="Exportation vers Word">
-                <StackPanel Orientation="Horizontal">
-                    <Image
-                        Width="16"
-                        Height="16"
-                        HorizontalAlignment="Left"
-                        Opacity="50"
-                        OpacityMask="{DynamicResource ButtonForegroundBrush}"
-                        Source="images/word.png" />
-                </StackPanel>
             </Button>
             <Label
                 Grid.Column="5"
@@ -331,13 +227,13 @@
         <Label
             Grid.Row="1"
             Grid.Column="0"
-            Grid.ColumnSpan="8"
+            Grid.ColumnSpan="7"
             Content="Plaques"
             Style="{StaticResource LabelTitreStyle}" />
         <Border
             Grid.Row="2"
             Grid.Column="0"
-            Grid.ColumnSpan="8"
+            Grid.ColumnSpan="7"
             Margin="0"
             Padding="0"
             BorderBrush="Black"
@@ -390,13 +286,13 @@
         </Border>
         <Label
             Grid.Row="1"
-            Grid.Column="8"
+            Grid.Column="7"
             Grid.ColumnSpan="2"
             Content="Chercher"
             Style="{StaticResource LabelTitreStyle}" />
         <Border
             Grid.Row="2"
-            Grid.Column="8"
+            Grid.Column="7"
             Grid.ColumnSpan="2"
             BorderBrush="Black"
             BorderThickness="1"
@@ -432,15 +328,122 @@
                     Style="{StaticResource CebRepeatButtonStyle}" />
             </Grid>
         </Border>
-
+        <Button
+            x:Name="btnResoudre"
+            Grid.Row="1"
+            Grid.Column="9"
+            Grid.ColumnSpan="3"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="{DynamicResource ButtonBackgroundBrush}"
+            BorderThickness="1"
+            Command="{Binding}"
+            CommandParameter="resolve"
+            FontWeight="Bold"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            IsTabStop="True"
+            TabIndex="9"
+            Template="{DynamicResource CebButtonTemplate}"
+            ToolTipService.ToolTip="Résoudre le compte, Ctrl+R">
+            <StackPanel Orientation="Horizontal">
+                <Image
+                    Width="16"
+                    Height="16"
+                    HorizontalAlignment="Left"
+                    Opacity="50"
+                    OpacityMask="{DynamicResource ButtonForegroundBrush}"
+                    Source="images/resolve.png" />
+                <TextBlock
+                    Padding="4"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Foreground="White"
+                    Text="Résoudre" />
+            </StackPanel>
+        </Button>
+        <Button
+            x:Name="btnHasard"
+            Grid.Row="2"
+            Grid.Column="9"
+            Margin="0"
+            Background="{DynamicResource ButtonBackgroundBrush}"
+            BorderThickness="1"
+            Command="{Binding}"
+            CommandParameter="random"
+            Foreground="White"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            IsTabStop="True"
+            TabIndex="8"
+            Template="{DynamicResource CebButtonTemplate}"
+            ToolTipService.ToolTip="Choisir les plaques,  Ctrl+H">
+            <StackPanel Orientation="Horizontal">
+                <Image
+                    Width="16"
+                    Height="16"
+                    HorizontalAlignment="Left"
+                    Source="images/random.png" />
+                <TextBlock
+                    Padding="4"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Text="Tirage" />
+            </StackPanel>
+        </Button>
+        <Button
+            x:Name="btnExcel"
+            Grid.Row="2"
+            Grid.Column="10"
+            Background="{DynamicResource ButtonBackgroundBrush}"
+            BorderThickness="1"
+            Command="{Binding}"
+            CommandParameter="Excel"
+            IsEnabled="{Binding Status, Converter={StaticResource StatusConverter}}"
+            IsTabStop="True"
+            TabIndex="10"
+            Template="{DynamicResource CebButtonTemplate}"
+            ToolTipService.ToolTip="Exportation vers Excel">
+            <StackPanel Orientation="Horizontal">
+                <Image
+                    Width="16"
+                    Height="16"
+                    HorizontalAlignment="Left"
+                    Opacity="50"
+                    OpacityMask="{DynamicResource ButtonForegroundBrush}"
+                    Source="images/excel.png" />
+            </StackPanel>
+        </Button>
+        <Button
+            x:Name="btnWord"
+            Grid.Row="2"
+            Grid.Column="11"
+            Background="{DynamicResource ButtonBackgroundBrush}"
+            BorderThickness="1"
+            Command="{Binding}"
+            CommandParameter="Word"
+            IsEnabled="{Binding Status, Converter={StaticResource StatusConverter}}"
+            IsTabStop="True"
+            TabIndex="11"
+            Template="{DynamicResource CebButtonTemplate}"
+            ToolTipService.ToolTip="Exportation vers Word">
+            <StackPanel Orientation="Horizontal">
+                <Image
+                    Width="16"
+                    Height="16"
+                    HorizontalAlignment="Left"
+                    Opacity="50"
+                    OpacityMask="{DynamicResource ButtonForegroundBrush}"
+                    Source="images/word.png" />
+            </StackPanel>
+        </Button>
         <DataGrid
             x:Name="SolutionsData"
             Grid.Row="3"
             Grid.Column="0"
-            Grid.ColumnSpan="10"
+            Grid.ColumnSpan="12"
             x:FieldModifier="public"
+            AlternationCount="2"
             AutoGenerateColumns="False"
-            Background="{DynamicResource CebLinearGradientBrush2}"
+            Background="{DynamicResource ButtonBackgroundBrush}"
             CanUserAddRows="False"
             CanUserDeleteRows="False"
             CanUserReorderColumns="False"
@@ -449,10 +452,10 @@
             CanUserSortColumns="False"
             CellStyle="{DynamicResource SolutionsCellStyle}"
             ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-            FontSize="11"
+            FontSize="12" 
+            FontWeight="DemiBold"
             GridLinesVisibility="None"
             HeadersVisibility="None"
-            HorizontalGridLinesBrush="Transparent"
             IsReadOnly="True"
             IsTabStop="True"
             ItemsSource="{Binding Solutions}"
@@ -491,7 +494,7 @@
             Name="Wait"
             Grid.Row="3"
             Grid.Column="0"
-            Grid.ColumnSpan="10"
+            Grid.ColumnSpan="12"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Panel.ZIndex="10"
@@ -555,7 +558,7 @@
         <Grid
             Grid.Row="5"
             Grid.Column="0"
-            Grid.ColumnSpan="10"
+            Grid.ColumnSpan="12"
             Margin="2"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
