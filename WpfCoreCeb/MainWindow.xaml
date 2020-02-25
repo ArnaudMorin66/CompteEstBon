@@ -26,7 +26,9 @@
             <viewModel:CebStatusConverter x:Key="StatusConverter" />
             <viewModel:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <viewModel:BusyVisibilityConverter x:Key="BusyVisibilityConverter" />
+            <viewModel:InverseVisibilityConverter x:Key="InverseVisibilityConverter" />
             <SolidColorBrush x:Key="{x:Static DataGrid.FocusBorderBrushKey}" Color="#FF000000" />
+            <viewModel:ViewTirage x:Key="xTirage" />
         </ResourceDictionary>
     </Window.Resources>
     <Window.TaskbarItemInfo>
@@ -72,7 +74,7 @@
         </TaskbarItemInfo>
     </Window.TaskbarItemInfo>
     <Window.DataContext>
-        <viewModel:ViewTirage x:Name="vwTirage" />
+        <Binding Source="{StaticResource xTirage}" />
     </Window.DataContext>
     <Window.InputBindings>
         <KeyBinding
@@ -129,11 +131,8 @@
             Background="{StaticResource ButtonBackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -143,7 +142,7 @@
                 Grid.Column="0"
                 Width="24"
                 Height="24"
-                Margin="5"
+                Margin="2"
                 Click="BtnMenu_Click"
                 MouseRightButtonDown="TextBlock_MouseRightButtonUp">
                 <Button.Content>
@@ -154,8 +153,8 @@
                 </Button.Content>
             </Button>
             <Label
-                Grid.Column="5"
-                Margin="5"
+                Grid.Column="1"
+                Margin="2"
                 VerticalAlignment="Center"
                 HorizontalContentAlignment="Center"
                 Content="{Binding Titre}"
@@ -163,8 +162,26 @@
                 MouseDoubleClick="Window_MouseDoubleClick"
                 MouseRightButtonUp="TextBlock_MouseRightButtonUp" />
             <Button
+                x:Name="btnMode"
+                Grid.Column="2"
+                Width="24"
+                Height="24"
+                Margin="2"
+                Padding="0"
+                Background="{DynamicResource ButtonBackgroundBrush}"
+                BorderThickness="0"
+                Click="btnMode_Click"
+                FontFamily="Wingdings"
+                FontSize="11"
+                Foreground="{DynamicResource ButtonForegroundBrush}">
+                <Button.Content>
+                    <TextBlock Text="{Binding ModeView}" />
+                </Button.Content>
+            </Button>
+
+            <Button
                 x:Name="btnMinimize"
-                Grid.Column="6"
+                Grid.Column="3"
                 Width="24"
                 Height="24"
                 Margin="2"
@@ -184,7 +201,7 @@
                 ToolTipService.ToolTip="Réduire" />
             <Button
                 x:Name="btnSize"
-                Grid.Column="7"
+                Grid.Column="4"
                 Width="24"
                 Height="24"
                 Margin="2"
@@ -204,7 +221,7 @@
                 ToolTipService.ToolTip="Rétablir précédent" />
             <Button
                 x:Name="btnClose"
-                Grid.Column="8"
+                Grid.Column="5"
                 Width="24"
                 Height="24"
                 Margin="2"
@@ -452,7 +469,7 @@
             CanUserSortColumns="False"
             CellStyle="{DynamicResource SolutionsCellStyle}"
             ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
-            FontSize="12" 
+            FontSize="12"
             FontWeight="DemiBold"
             GridLinesVisibility="None"
             HeadersVisibility="None"
@@ -467,27 +484,49 @@
                     Width="*"
                     Binding="{Binding Op1}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
-                    Header="Opération 1" />
+                    Header="Opération 1"
+                    Visibility="{Binding Vertical, Source={StaticResource xTirage}, Converter={StaticResource InverseVisibilityConverter}}" />
                 <DataGridTextColumn
                     Width="*"
                     Binding="{Binding Op2}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
-                    Header="Opération 2" />
+                    Header="Opération 2"
+                    Visibility="{Binding Vertical, Source={StaticResource xTirage}, Converter={StaticResource InverseVisibilityConverter}}" />
                 <DataGridTextColumn
                     Width="*"
                     Binding="{Binding Op3}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
-                    Header="Opération 3" />
+                    Header="Opération 3"
+                    Visibility="{Binding Vertical, Source={StaticResource xTirage}, Converter={StaticResource InverseVisibilityConverter}}" />
                 <DataGridTextColumn
                     Width="*"
                     Binding="{Binding Op4}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
-                    Header="Opération 4" />
+                    Header="Opération 4"
+                    Visibility="{Binding Vertical, Source={StaticResource xTirage}, Converter={StaticResource InverseVisibilityConverter}}" />
                 <DataGridTextColumn
                     Width="*"
                     Binding="{Binding Op5}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
-                    Header="Opération 5" />
+                    Header="Opération 5"
+                    Visibility="{Binding Vertical, Source={StaticResource xTirage}, Converter={StaticResource InverseVisibilityConverter}}" />
+                <DataGridTemplateColumn Width="*" Visibility="{Binding Vertical, Source={StaticResource xTirage}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ListBox
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Background="{DynamicResource ButtonBackgroundBrush}"
+                                Foreground="{DynamicResource ButtonForegroundBrush}">
+                                <ListBoxItem Content="{Binding Op1}" />
+                                <ListBoxItem Content="{Binding Op2}" />
+                                <ListBoxItem Content="{Binding Op3}" />
+                                <ListBoxItem Content="{Binding Op4}" />
+                                <ListBoxItem Content="{Binding Op5}" />
+                            </ListBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
         <TextBlock
@@ -552,7 +591,8 @@
                     FontSize="11"
                     FontWeight="Medium"
                     Foreground="White"
-                    TextAlignment="Center"><Run Text="Durée: " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
+                    Text="{Binding Duree, StringFormat=Durée {0:s'.'fff} s, ConverterCulture=fr}"
+                    TextAlignment="Center" />
             </StackPanel>
         </Popup>
         <Grid
@@ -595,7 +635,7 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
                 Foreground="White"
-                Text="{Binding Duree, StringFormat=Durée {0}}"
+                Text="{Binding Duree, StringFormat=Durée {0:s'.'fff} s, ConverterCulture=fr}"
                 TextAlignment="Right" />
         </Grid>
     </Grid>

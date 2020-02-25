@@ -10,23 +10,27 @@ namespace CompteEstBon {
     public partial class MainWindow {
         public MainWindow() {
             InitializeComponent();
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("fr");
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
+            
         }
 
         private void SolutionsData_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e) {
-            vwTirage.ShowNotify(SolutionsData.SelectedIndex);
+            if (DataContext is ViewModel.ViewTirage view) view.ShowNotify(SolutionsData.SelectedIndex);
         }
 
         private void TbPlus_Click(object sender, RoutedEventArgs e) {
-            if (vwTirage.Search < 999) {
-                vwTirage.Search++;
+            
+            if (DataContext is  ViewTirage tirage && tirage.Search < 999) {
+                tirage.Search++;
             }
         }
 
         private void TbMoins_Click(object sender, RoutedEventArgs e) {
-            if (vwTirage.Search > 100) {
-                vwTirage.Search--;
+            if (DataContext is ViewTirage tirage && tirage.Search > 100) {
+                tirage.Search++;
             }
+            
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e) {
@@ -73,6 +77,10 @@ namespace CompteEstBon {
                 WindowState = WindowState.Normal;
         }
 
-
+        private void btnMode_Click(object sender, RoutedEventArgs e) {
+            if (DataContext is ViewTirage tirage) {
+                tirage.Vertical = (tirage.Vertical == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
+            }
+        }
     }
 }

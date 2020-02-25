@@ -26,8 +26,9 @@ namespace CompteEstBon.ViewModel {
             Application.Current.MainWindow?.FindResource("WaitStoryboard") as Storyboard;
 
         private Color _background = Colors.Navy;
-
-        private string _duree;
+        private char _modeView = '\xE0';
+        private Visibility _vertical = Visibility.Hidden;
+        private TimeSpan _duree;
         private Color _foreground = Colors.White;
         private bool _isBusy;
         private bool _isUpdating;
@@ -36,7 +37,6 @@ namespace CompteEstBon.ViewModel {
         private string _result = "Résoudre";
 
         public string _solution;
-        public IEnumerable<CebBase> _solutions;
         private string _titre = "Le compte est bon";
 
         public DispatcherTimer dateDispatcher;
@@ -48,13 +48,14 @@ namespace CompteEstBon.ViewModel {
         /// <returns>
         /// </returns>
         public ViewTirage() {
+            Solutions = new ObservableCollection<CebBase>();
             stopwatch = new Stopwatch();
 
             dateDispatcher = new DispatcherTimer {
                 Interval = TimeSpan.FromMilliseconds(10)
             };
             dateDispatcher.Tick += (sender, e) => {
-                if (stopwatch.IsRunning) Duree = stopwatch.Elapsed.ToString();
+                if (stopwatch.IsRunning) Duree = stopwatch.Elapsed;
                 if (Popup && NotifyWatch.Elapsed > SolutionTimer)
                     Popup = false;
                 Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
@@ -81,14 +82,28 @@ namespace CompteEstBon.ViewModel {
 
         public ObservableCollection<string> Plaques { get; } =
             new ObservableCollection<string> { "", "", "", "", "", "" };
-        public string Duree {
+        public TimeSpan Duree {
             get => _duree;
             set {
                 _duree = value;
                 NotifiedChanged();
             }
         }
-
+        public Visibility Vertical {
+            get => _vertical;
+            set {
+                _vertical = value;
+                ModeView = (value == Visibility.Visible) ? '\xE2' : '\xE0'; 
+                NotifiedChanged();
+            }
+        }
+        public char ModeView {
+            get => _modeView;
+            set {
+                _modeView = value;
+                NotifiedChanged();
+            }
+        }
         public string Solution {
             get => _solution;
             set {
@@ -96,13 +111,8 @@ namespace CompteEstBon.ViewModel {
                 NotifiedChanged();
             }
         }
-        public IEnumerable<CebBase> Solutions {
-            get => _solutions;
-            set {
-                _solutions = value;
-                NotifiedChanged();
-            }
-        }
+        public ObservableCollection<CebBase> Solutions { get; set; }
+          
         public int Search {
             get => Tirage.Search;
             set {
@@ -259,10 +269,10 @@ namespace CompteEstBon.ViewModel {
             if (_isUpdating) return;
             NotifiedChanged("Status");
             stopwatch.Reset();
-            Duree = stopwatch.Elapsed.ToString();
+            Duree = stopwatch.Elapsed;
             Solution = "";
             Count = 0;
-            Solutions = null;
+            Solutions.Clear();
             Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
             Popup = false;
             UpdateColors();
@@ -323,15 +333,13 @@ namespace CompteEstBon.ViewModel {
                 : Tirage.Status == CebStatus.CompteApproche
                     ? $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}"
                     : "Tirage incorrect";
-
             stopwatch.Stop();
-            Duree = stopwatch.Elapsed.ToString();
+            Duree = stopwatch.Elapsed;
             UpdateColors();
             IsBusy = false;
             Solution = Tirage.Solution();
-            Solutions = new HashSet<CebBase>(Tirage.Solutions);
+            Tirage.Solutions.ForEach(s => Solutions.Add(s));
             Count = Tirage.Count;
-            // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");
             ShowNotify();
         }
