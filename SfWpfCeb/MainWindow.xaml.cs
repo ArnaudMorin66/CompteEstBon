@@ -1,4 +1,6 @@
 ﻿using Syncfusion.SfSkinManager;
+using Syncfusion.UI.Xaml.Grid;
+using Syncfusion.UI.Xaml.Grid.Helpers;
 using Syncfusion.Windows.Shared;
 using Syncfusion.Windows.Tools.Controls;
 using System;
@@ -24,8 +26,32 @@ namespace CompteEstBon {
             SfSkinManager.SetVisualStyle(this, VisualStyles.Default);
         }
         private void SolutionsData_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e) {
-            Tirage.ShowPopup(SolutionsData.SelectedIndex);
+            View.ShowPopup(SolutionsData.SelectedIndex);
+        }
+        private ViewTirage View => FindResource("Tirage") as ViewTirage;
+
+        private void SolutionsData_QueryRowHeight(object sender, Syncfusion.UI.Xaml.Grid.QueryRowHeightEventArgs e) {
+            if (e.RowIndex > 0) {
+                GridRowSizingOptions gridRowResizingOptions = new GridRowSizingOptions();
+                if (SolutionsData.GridColumnSizer.GetAutoRowHeight(e.RowIndex, gridRowResizingOptions, out double autoHeight)) {
+                        e.Height = autoHeight;
+                        e.Handled = true;
+          
+                }
+                
+            }
         }
 
+        private void btnMode_Click(object sender, RoutedEventArgs e) {
+            View.Vertical = !View.Vertical;
+            if (View.Solutions != null) {
+                for (var index = 0; index < View.Solutions.Count; index++) {
+                    SolutionsData.InvalidateRowHeight(index);
+
+                }
+
+            }
+
+        }
     }
 }

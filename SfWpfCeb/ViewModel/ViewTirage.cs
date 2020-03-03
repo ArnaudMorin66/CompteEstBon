@@ -90,7 +90,24 @@ namespace CompteEstBon {
                 NotifiedChanged();
             }
         }
+        private bool _vertical = false;
+        public bool Vertical {
+            get => _vertical;
+            set {
+                _vertical = value;
+                ModeView =  value ? '\xE2' : '\xE0';
+                NotifiedChanged();
+            }
+        }
 
+        private char _modeView = '\xE0';
+        public char ModeView {
+            get => _modeView;
+            set {
+                _modeView = value;
+                NotifiedChanged();
+            }
+        }
         public string Solution {
             get => _solution;
             set {
@@ -239,9 +256,9 @@ namespace CompteEstBon {
             (Background, Foreground) = Tirage.Status switch
             {
                 CebStatus.Valid => (Colors.DarkSlateGray, Colors.White),
-                CebStatus.Erreur => (Colors.Red, Colors.White),
+                CebStatus.Erreur => (Colors.Red, Colors.Navy),
                 CebStatus.CompteEstBon => (Colors.ForestGreen, Colors.GhostWhite),
-                CebStatus.CompteApproche => (Colors.Salmon, Colors.White),
+                CebStatus.CompteApproche => (Colors.Salmon, Colors.Black),
                 CebStatus.EnCours => (Colors.Gray, Colors.White),
                 _ => (Colors.Red, Colors.White)
 

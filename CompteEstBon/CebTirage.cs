@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using static System.Math;
 
@@ -136,7 +135,7 @@ namespace CompteEstBon {
             Valid();
             return Result;
         }
-        public async Task<CebData> ClearAsync() => await Task<CebData>.Run(() => Clear() );
+        public async Task<CebData> ClearAsync() => await Task.Run(Clear );
 
         /// <summary>
         /// resolution du compte

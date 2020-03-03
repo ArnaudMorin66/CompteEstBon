@@ -29,10 +29,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="17.4.0.50" />
-    <PackageReference Include="Syncfusion.SfInput.WPF" Version="17.4.0.50" />
-    <PackageReference Include="Syncfusion.Themes.Blend.WPF" Version="17.4.0.50" />
-    <PackageReference Include="Syncfusion.Themes.SystemTheme.WPF" Version="17.4.0.50" />
+    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="17.4.0.51" />
+    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="17.4.0.51" />
+    <PackageReference Include="Syncfusion.SfInput.WPF" Version="17.4.0.51" />
+    <PackageReference Include="Syncfusion.Themes.Blend.WPF" Version="17.4.0.51" />
+    <PackageReference Include="Syncfusion.Themes.SystemTheme.WPF" Version="17.4.0.51" />
   </ItemGroup>
 
   <ItemGroup>

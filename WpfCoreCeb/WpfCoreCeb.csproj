@@ -17,6 +17,13 @@
     <WarningLevel>3</WarningLevel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="ViewModel\CebStatusConverter.cs" />
+    <Compile Remove="ViewModel\InverseBooleanConverter.cs" />
+    <Compile Remove="ViewModel\InverseVisibilityConverter.cs" />
+    <Compile Remove="ViewModel\StringVisibilityConverter.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <None Remove="favicon.ico" />
