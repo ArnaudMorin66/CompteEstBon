@@ -2,7 +2,7 @@
 @using System.Threading
 @using CompteEstBon
 @inject CebTirage tirage
-<EjsDialog Width="480" @bind-Visible="@Visible" CssClass="a-toast" ShowCloseIcon="false"
+<SfDialog Width="480" @bind-Visible="@Visible" CssClass="a-toast" ShowCloseIcon="false"
                        ID="DlgToast">
                <DialogAnimationSettings Effect="@DialogEffect.SlideBottom" Duration="400"></DialogAnimationSettings>
                <DialogTemplates>
@@ -46,7 +46,7 @@
                        }
                    </Content>
                </DialogTemplates>
-           </EjsDialog>
+           </SfDialog>
 
            @code {
                protected Timer timer;

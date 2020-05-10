@@ -132,13 +132,13 @@
                 <div class="row">
                     @foreach (var plq in tirage.Plaques) {
                         <div class="col-md-2">
-                            <EjsComboBox @bind-Value="@plq.Value"
+                            <sfComboBox  Value="@plq.Value"
                                          DataSource="@CebPlaque.AnyPlaques"
                                          OnChange="ClearAsync"
                                          AllowCustom="true"
                                          ShowClearButton="false"
                                          Enabled="tirage.Status != CebStatus.EnCours">
-                            </EjsComboBox>
+                            </sfComboBox>
                         </div>
                     }
                 </div>
@@ -153,7 +153,7 @@
                 &nbsp;Trouver
             </div>
             <div class="card-body">
-                <EjsNumericTextBox @bind-Value="@tirage.Search"
+                <sfNumericTextBox  Value="@tirage.Search"
                                    Max="999"
                                    Min="100"
                                    OnChange="ClearAsync"
@@ -162,7 +162,7 @@
                                    Step="1"
                                    TValue="int"
                                    Enabled="tirage.Status != CebStatus.EnCours">
-                </EjsNumericTextBox>
+                </sfNumericTextBox>
             </div>
         </div>
     </div>

@@ -16,7 +16,10 @@ namespace CompteEstBon {
                 Found1 = value;
             }
         }
-        public override string ToString() => Found2 == int.MaxValue ? Found1.ToString() : $"{Found1} et {Found2}";
+        public override string ToString() => Found2 switch {
+            int.MaxValue => Found1.ToString(),
+            _ => $"{Found1} et {Found2}"
+        };
         public bool IsUnique => Found2 == int.MaxValue;
         public void Reset(int value = int.MaxValue) {
             Found1 = value;

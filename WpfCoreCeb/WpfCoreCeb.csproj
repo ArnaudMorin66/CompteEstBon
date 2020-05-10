@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>CompteEstBon</RootNamespace>
     <StartupObject></StartupObject>
@@ -41,7 +41,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CebOfficeCore\CebOfficeCore.csproj" />
-    <ProjectReference Include="..\CompteEstBon_2.1\CompteEstBon.core.csproj" />
+    <ProjectReference Include="..\CompteEstBon5\CompteEstBon5.csproj" />
   </ItemGroup>
 
   <ItemGroup>

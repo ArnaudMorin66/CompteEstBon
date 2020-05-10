@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.Configuration.Ini;
 using Microsoft.Extensions.FileProviders;
-using Syncfusion.EJ2.Blazor;
+using Syncfusion.Blazor;
 using System;
 
 namespace CebBlazor {
@@ -20,9 +20,8 @@ namespace CebBlazor {
         public void ConfigureServices(IServiceCollection services) {
             services.AddRazorPages(); 
             services.AddScoped<CompteEstBon.CebTirage>();
-           
-            services.AddSyncfusionBlazor();
             services.AddServerSideBlazor();
+            services.AddSyncfusionBlazor();
             // RegisterLicense();
         }
 

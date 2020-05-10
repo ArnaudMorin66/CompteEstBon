@@ -23,12 +23,13 @@
                 <ResourceDictionary Source="CebComboBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <mdl:BoolVisibilityConverter x:Key="BoolVisibilityConverter" />
+            <mdl:CebConverter x:Key="CebConverter" />
             <DataTemplate x:Key="ListeViewOperations">
                 <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
                 <ListBox HorizontalContentAlignment="Center"
                          Background="{DynamicResource ButtonBackgroundBrush}"
-                         BorderThickness="1"
+                         BorderBrush="Black"
+                         BorderThickness="0,0,0,1"
                          Foreground="{DynamicResource ButtonForegroundBrush}"
                          ItemsSource="{Binding Operations}"
                          KeyboardNavigation.DirectionalNavigation="Continue"
@@ -36,7 +37,6 @@
             </DataTemplate>
             <mdl:ViewTirage x:Key="viewTirage" />
             <s:Boolean x:Key="True">true</s:Boolean>
-            <s:Boolean x:Key="False">False</s:Boolean>
         </ResourceDictionary>
     </Window.Resources>
     <Window.TaskbarItemInfo>
@@ -50,7 +50,7 @@
                                      Description="Tirage"
                                      DismissWhenClicked="True"
                                      ImageSource="Images/random.png"
-                                     IsEnabled="{Binding IsBusy, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}" />
+                                     IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}" />
 
                     <ThumbButtonInfo Command="{Binding}"
                                      CommandParameter="Resolve"
@@ -58,21 +58,21 @@
                                      Description="Résoudre"
                                      DismissWhenClicked="True"
                                      ImageSource="Images/resolve.png"
-                                     IsEnabled="{Binding IsBusy, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}" />
+                                     IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}" />
                     <ThumbButtonInfo Command="{Binding}"
                                      CommandParameter="Excel"
                                      CommandTarget="{Binding ElementName=btnExcel}"
                                      Description="Exportation vers Excel"
                                      DismissWhenClicked="True"
                                      ImageSource="Images/excel.png"
-                                     IsEnabled="{Binding Status, Converter={StaticResource BoolVisibilityConverter}}" />
+                                     IsEnabled="{Binding Status, Converter={StaticResource CebConverter}}" />
                     <ThumbButtonInfo Command="{Binding}"
                                      CommandParameter="Word"
                                      CommandTarget="{Binding ElementName=btnWord}"
                                      Description="Exportation vers Word"
                                      DismissWhenClicked="True"
                                      ImageSource="Images/word.png"
-                                     IsEnabled="{Binding Status, Converter={StaticResource BoolVisibilityConverter}}" />
+                                     IsEnabled="{Binding Status, Converter={StaticResource CebConverter}}" />
                 </ThumbButtonInfoCollection>
             </TaskbarItemInfo.ThumbButtonInfos>
         </TaskbarItemInfo>
@@ -143,9 +143,9 @@
             <Button x:Name="btnMenu"
                     Grid.RowSpan="2"
                     Grid.Column="0"
-                    Width="24"
-                    Height="24"
-                    Margin="0,2,0,3"
+                    Width="20"
+                    Height="20"
+                    Margin="0"
                     Padding="0"
                     Click="BtnMenu_Click"
                     Cursor="Hand"
@@ -157,9 +157,10 @@
                            Source="favicon.ico" />
                 </Button.Content>
             </Button>
-            <Label Grid.RowSpan="2"
+            <Label Grid.Row="0"
+                   Grid.RowSpan="2"
                    Grid.Column="1"
-                   Margin="2,2,2,0"
+                   Margin="0"
                    VerticalAlignment="Top"
                    HorizontalContentAlignment="Center"
                    Content="{Binding Titre}"
@@ -167,9 +168,10 @@
                    MouseDoubleClick="Window_MouseDoubleClick"
                    MouseRightButtonUp="TextBlock_MouseRightButtonUp" />
             <Button x:Name="btnMode"
+                    Grid.Row="0"
                     Grid.RowSpan="2"
                     Grid.Column="2"
-                    Margin="0,2,0,0"
+                    Margin="0"
                     HorizontalAlignment="Center"
                     Background="{DynamicResource ButtonBackgroundBrush}"
                     Click="btnMode_Click"
@@ -177,9 +179,10 @@
                     Foreground="{DynamicResource ButtonForegroundBrush}"
                     Style="{StaticResource ButtonWindowsStyle}" />
             <Button x:Name="btnMinimize"
+                    Grid.Row="0"
                     Grid.RowSpan="2"
                     Grid.Column="3"
-                    Margin="0,2,0,0"
+                    Margin="0"
                     HorizontalAlignment="Center"
                     Click="BtnMinimize_Click"
                     Content="&#xAC;"
@@ -187,18 +190,20 @@
                     Style="{StaticResource ButtonWindowsStyle}"
                     ToolTipService.ToolTip="Réduire" />
             <Button x:Name="btnSize"
+                    Grid.Row="0"
                     Grid.RowSpan="2"
                     Grid.Column="4"
-                    Margin="0,2,0,0"
+                    Margin="0"
                     HorizontalAlignment="Center"
                     Click="BtnSize_Click"
                     Content="&#x6F;"
                     Style="{StaticResource ButtonWindowsStyle}"
                     ToolTipService.ToolTip="Rétablir précédent" />
             <Button x:Name="btnClose"
+                    Grid.Row="0"
                     Grid.RowSpan="2"
                     Grid.Column="5"
-                    Margin="0,2,0,0"
+                    Margin="0"
                     HorizontalAlignment="Center"
                     BorderBrush="Black"
                     Click="BtnClose_Click"
@@ -229,32 +234,32 @@
                 </Grid.ColumnDefinitions>
                 <ComboBox x:Name="Plaque1"
                           Grid.Column="0"
-                          IsEnabled="{Binding IsBusy, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}"
+                          IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}"
                           TabIndex="0"
                           Text="{Binding Plaques[0], Mode=TwoWay}" />
                 <ComboBox x:Name="Plaque2"
                           Grid.Column="1"
-                          IsEnabled="{Binding IsBusy, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}"
+                          IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}"
                           TabIndex="1"
                           Text="{Binding Plaques[1], Mode=TwoWay}" />
                 <ComboBox x:Name="Plaque3"
                           Grid.Column="2"
-                          IsEnabled="{Binding IsBusy, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}"
+                          IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}"
                           TabIndex="2"
                           Text="{Binding Plaques[2], Mode=TwoWay}" />
                 <ComboBox x:Name="Plaque4"
                           Grid.Column="3"
-                          IsEnabled="{Binding IsBusy, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}"
+                          IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}"
                           TabIndex="3"
                           Text="{Binding Plaques[3], Mode=TwoWay}" />
                 <ComboBox x:Name="Plaque5"
                           Grid.Column="4"
-                          IsEnabled="{Binding IsBusy, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}"
+                          IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}"
                           TabIndex="4"
                           Text="{Binding Plaques[4], Mode=TwoWay}" />
                 <ComboBox x:Name="Plaque6"
                           Grid.Column="5"
-                          IsEnabled="{Binding IsBusy, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}"
+                          IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}"
                           TabIndex="5"
                           Text="{Binding Plaques[5], Mode=TwoWay}" />
             </Grid>
@@ -282,13 +287,13 @@
                               Grid.Column="0"
                               Click="TbMoins_Click"
                               Content="-"
-                              IsEnabled="{Binding IsBusy, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}"
+                              IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}"
                               Style="{StaticResource CebRepeatButtonStyle}" />
                 <TextBox x:Name="txtSearch"
                          Grid.Column="1"
                          AcceptsTab="True"
                          GotFocus="txtSearch_GotFocus"
-                         IsEnabled="{Binding IsBusy, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}"
+                         IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}"
                          IsTabStop="True"
                          PreviewTextInput="TxtSearch_OnPreviewTextInput"
                          Style="{StaticResource SearchControlStyle}"
@@ -298,7 +303,7 @@
                               Grid.Column="2"
                               Click="TbPlus_Click"
                               Content="+"
-                              IsEnabled="{Binding IsBusy, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}"
+                              IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}"
                               Style="{StaticResource CebRepeatButtonStyle}" />
             </Grid>
         </Border>
@@ -314,7 +319,7 @@
                 Command="{Binding}"
                 CommandParameter="resolve"
                 FontWeight="Bold"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}"
+                IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}"
                 IsTabStop="True"
                 TabIndex="7"
                 Template="{DynamicResource CebButtonTemplate}"
@@ -342,7 +347,7 @@
                 Command="{Binding}"
                 CommandParameter="random"
                 Foreground="White"
-                IsEnabled="{Binding IsBusy, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}"
+                IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}"
                 IsTabStop="True"
                 TabIndex="8"
                 Template="{DynamicResource CebButtonTemplate}"
@@ -365,7 +370,7 @@
                 BorderThickness="1"
                 Command="{Binding}"
                 CommandParameter="Excel"
-                IsEnabled="{Binding Status, Converter={StaticResource BoolVisibilityConverter}}"
+                IsEnabled="{Binding Status, Converter={StaticResource CebConverter}}"
                 IsTabStop="True"
                 TabIndex="10"
                 Template="{DynamicResource CebButtonTemplate}"
@@ -386,7 +391,7 @@
                 BorderThickness="1"
                 Command="{Binding}"
                 CommandParameter="Word"
-                IsEnabled="{Binding Status, Converter={StaticResource BoolVisibilityConverter}}"
+                IsEnabled="{Binding Status, Converter={StaticResource CebConverter}}"
                 IsTabStop="True"
                 TabIndex="9"
                 Template="{DynamicResource CebButtonTemplate}"
@@ -430,35 +435,35 @@
                                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                                     Header="Opération 1"
                                     IsReadOnly="True"
-                                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}" />
+                                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}" />
                 <DataGridTextColumn Width="*"
                                     Binding="{Binding Op2}"
                                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                                     Header="Opération 2"
                                     IsReadOnly="True"
-                                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}" />
+                                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}" />
                 <DataGridTextColumn Width="*"
                                     Binding="{Binding Op3}"
                                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                                     Header="Opération 3"
                                     IsReadOnly="True"
-                                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}" />
+                                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}" />
                 <DataGridTextColumn Width="*"
                                     Binding="{Binding Op4}"
                                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                                     Header="Opération 4"
                                     IsReadOnly="True"
-                                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}" />
+                                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}" />
                 <DataGridTextColumn Width="*"
                                     Binding="{Binding Op5}"
                                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                                     Header="Opération 5"
                                     IsReadOnly="True"
-                                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource BoolVisibilityConverter}, ConverterParameter={StaticResource True}}" />
+                                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}" />
                 <DataGridTemplateColumn Width="*"
                                         CellTemplate="{StaticResource ListeViewOperations}"
                                         IsReadOnly="True"
-                                        Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource BoolVisibilityConverter}}" />
+                                        Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource CebConverter}}" />
             </DataGrid.Columns>
         </DataGrid>
         <TextBlock Name="Wait"
@@ -474,7 +479,7 @@
                    Foreground="Yellow"
                    RenderTransformOrigin="0.5, 0.5"
                    Text="&#xBC;"
-                   Visibility="{Binding IsBusy, Converter={StaticResource BoolVisibilityConverter}}">
+                   Visibility="{Binding IsBusy, Converter={StaticResource CebConverter}}">
             <TextBlock.RenderTransform>
                 <RotateTransform Angle="0" />
             </TextBlock.RenderTransform>
@@ -543,14 +548,14 @@
                        Foreground="White"
                        Text="{Binding Result}"
                        TextAlignment="Center"
-                       Visibility="{Binding Status, Converter={StaticResource BoolVisibilityConverter}}" />
+                       Visibility="{Binding Status, Converter={StaticResource CebConverter}}" />
             <TextBlock x:Name="textBlock2"
                        Grid.Column="1"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        Foreground="White"
                        TextAlignment="Center"
-                       Visibility="{Binding Status, Converter={StaticResource BoolVisibilityConverter}}">
+                       Visibility="{Binding Status, Converter={StaticResource CebConverter}}">
                 <Run Text="{Binding Count}" />
                 <Run Text=" solutions" />
             </TextBlock>

@@ -1,5 +1,5 @@
 param(
-	[string] $version="17.4.50"
+	[string] $version="18.1.42"
 )
 Remove-Item ./src/ej2.min.js
 Remove-Item ./src/ejs.interop.min.js 

@@ -3,8 +3,8 @@
 @using Microsoft.AspNetCore.Components
 @inject CebTirage tirage
 
-<EjsGrid @ref="solutions"
-         DataSource="@Details"
+<SfGrid @ref="solutions"
+         DataSource="@tirage.Solutions"
          GridLines="GridLine.None"
          TValue="CebDetail"
          Height="400"
@@ -13,8 +13,16 @@
          AllowResizing="true"
          EnableAltRow="true"
          ID="solutions">
-    
-</EjsGrid>
+    <GridColumns>
+        <GridColumn Field=@nameof(CebDetail.Op1) HeaderText="Opération 1" />
+        <GridColumn Field=@nameof(CebDetail.Op2) HeaderText="Opération 2" />
+        <GridColumn Field=@nameof(CebDetail.Op3)  HeaderText="Opération 3" />
+        <GridColumn Field=@nameof(CebDetail.Op4)  HeaderText="Opération 4" />
+        <GridColumn Field=@nameof(CebDetail.Op5)  HeaderText="Opération 5" />
+
+    </GridColumns>
+
+</SfGrid>
 @code {
     private CebTypeGrille _typegrille;
     [Parameter]
@@ -34,7 +42,7 @@
     [Parameter] public CebToast Toast { get; set; }
 
     // ReSharper disable once UnusedAutoPropertyAccessor.Local
-    EjsGrid<CebDetail> solutions { get; set; }
+    SfGrid<CebDetail> solutions { get; set; }
     public IEnumerable<CebDetail> Details { get; set; } = new List<CebDetail>();
 
 

@@ -8,7 +8,7 @@ $enable-shadows: true;
 $enable-responsive-font-sizes: true;
 $grid-header-border-color: $bg-body;
 
-@import "ej2/bootstrap4.scss";
+// @import "ej2/bootstrap4.scss";
 @import "bootstrap/scss/bootstrap";
 
 
@@ -18,7 +18,7 @@ body {
     font-size: $font-size;
 }
 
-#solutions, #lsolutions {
+#solutions_, #lsolutions_ {
     .e-gridheader {
         visibility: collapse;
         border: none;

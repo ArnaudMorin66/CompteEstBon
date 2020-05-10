@@ -27,7 +27,7 @@ namespace CompteEstBon {
         public static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
 
         [DllImport("user32.dll", SetLastError = true)]
-        static extern IntPtr SetFocus(IntPtr hWnd);
+        public static extern IntPtr SetFocus(IntPtr hWnd);
         [DllImport("user32.dll")]
         internal static extern IntPtr SetForegroundWindow(IntPtr hWnd);
 
@@ -36,10 +36,10 @@ namespace CompteEstBon {
         [DllImport("user32.dll")]
         internal static extern IntPtr SetActiveWindow(IntPtr hWnd);
         [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
-        internal static void SetFocusWindow(int hwnd) {
-            GetWindowThreadProcessId(hwnd, out IntPtr ProcIdXL);
+        public static void SetFocusWindow(int hwnd) {
+            GetWindowThreadProcessId(hwnd, out var ProcIdXL);
             ShowWindow(ProcIdXL, 5);
             SetForegroundWindow(Process.GetProcessById(ProcIdXL.ToInt32()).MainWindowHandle);
         }
@@ -63,7 +63,7 @@ namespace CompteEstBon {
                     Visible = true
                 };
                 return true;
-            } catch(Exception _) {
+            } catch(Exception) {
                 word = null;
                 return false;
             }

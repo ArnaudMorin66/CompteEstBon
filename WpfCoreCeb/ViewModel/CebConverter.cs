@@ -5,7 +5,7 @@ using System.Windows.Data;
 
 namespace CompteEstBon.ViewModel {
     // [ValueConversion(typeof(bool), typeof(Visibility))]
-    internal class BoolVisibilityConverter : IValueConverter {
+    internal class CebConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
             var inverse = parameter is bool bl && bl;
             return targetType.Name switch {
