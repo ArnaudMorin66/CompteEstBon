@@ -1,0 +1,96 @@
+@using CompteEstBon
+@using System.Threading;
+@using System.ComponentModel
+@using DevExpress.Blazor.FormLayout
+@inject CebTirage tirage
+
+<DxPopup @bind-Visible="@VisiblePopup" HeaderCssClass="HeaderPopup" FooterCssClass="HeaderPopup" CssClass="PopupClass">
+    <div class="bg-gradient-primary text-white w-100" style="cursor:pointer">
+        @{
+            string cls = "";
+            string title = "";
+            string icn = "";
+            string rsl = "";
+            switch (tirage.Status)
+            {
+                case CebStatus.CompteEstBon:
+                    title = "bg-gradient-success text-white";
+                    cls = "bg-success text-white";
+                    icn = "fa-thumbs-up text-white";
+                    rsl = "Compte est bon";
+                    break;
+                case CebStatus.CompteApproche:
+                    title = "bg-gradient-warning text-dark";
+                    icn = "fa-thumbs-down text-danger";
+                    cls = "bg-warning text-dark";
+                    rsl = "Compte approché";
+                    break;
+                default:
+                    return;
+            }
+            <div class="text-center text-uppercase font-weight-bold @title">
+                <div class="animation">
+                    <i class="far @icn"></i>&nbsp;@rsl
+                </div>
+            </div>
+            <div>&nbsp;</div>
+            <div class="text-center text-white">
+                <div>Trouvé(s):&nbsp;@tirage.Found</div>
+                @if (tirage.Diff != 0)
+                {
+                    <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
+                }
+                <div>@tirage.Solutions.Count()&nbsp;solutions</div>
+                <div>Durée:&nbsp;@($"{Duree:N3}")s</div>
+            </div>
+            <div>&nbsp;</div>
+            <div class="w-100 text-center  @cls">@Solution</div>
+        }
+    </div>
+</DxPopup>;
+@code {
+    protected Timer timer;
+    private bool VisiblePopup { get; set; }
+
+    public string Solution { get; set; }
+    [Parameter]
+    public double Duree { get; set; }
+    [Parameter]
+    public int DueTime { get; set; }
+
+    protected override void OnInitialized()
+    {
+        timer = new Timer(new TimerCallback(async (state) =>
+        {
+            VisiblePopup = false;
+            await InvokeAsync(StateHasChanged);
+        }));
+
+        VisiblePopup = false;
+    }
+
+    public async Task ShowAsync(CebDetail detail = null)
+    {
+        if (detail == null)
+        {
+            Solution = tirage.Solution();
+        }
+        else
+        {
+            Solution = detail.ToString();
+        }
+        VisiblePopup = true;
+        await InvokeAsync(StateHasChanged);
+        //await AnimationContainer.ShowAsync();
+        timer.Change(DueTime, 0);
+
+    }
+    public async Task HideAsync()
+    {
+        VisiblePopup = false;
+        await InvokeAsync(StateHasChanged);
+
+        //await AnimationContainer.HideAsync();
+    }
+
+}

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace CompteEstBon {
     [System.Runtime.InteropServices.Guid("F4D942FB-85DF-4391-AE82-9EFE20DDADB0")]
-    public abstract class CebBase: CebDetail {
+    public abstract class CebBase:  CebDetail {
         /// <summary>
         /// Valeur de la donn�e
         /// </summary>

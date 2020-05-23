@@ -1,8 +1,14 @@
 ﻿using System.Collections.Generic;
 
 namespace CompteEstBon {
-
-    public class CebDetail {
+    public interface ICebDetail {
+        public string Op1 { get; set; }
+        public string Op2 { get; set; }
+        public string Op3 { get; set; }
+        public string Op4 { get; set; }
+        public string Op5 { get; set; }
+    }
+    public class CebDetail: ICebDetail {
         public string Op1 { get; set; }
         public string Op2 { get; set; }
         public string Op3 { get; set; }

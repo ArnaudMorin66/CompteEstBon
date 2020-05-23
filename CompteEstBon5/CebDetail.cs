@@ -14,11 +14,8 @@ namespace CompteEstBon {
         [JsonIgnore]
         public IEnumerable<string> Operations {
             get {
-                for (var i = 0; i < 5; i++) {
-                    var tmp = this[i];
-                    if (tmp == null)
-                        break;
-                    yield return tmp;
+                for (var i = 0; i < 5 && this[i] != null; i++) {
+                    yield return this[i];                     
                 }
             }
         }

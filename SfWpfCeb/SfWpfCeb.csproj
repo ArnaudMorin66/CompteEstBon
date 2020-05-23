@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>CompteEstBon</RootNamespace>
     <StartupObject>CompteEstBon.App</StartupObject>
@@ -29,16 +29,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="17.4.0.51" />
-    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="17.4.0.51" />
-    <PackageReference Include="Syncfusion.SfInput.WPF" Version="17.4.0.51" />
-    <PackageReference Include="Syncfusion.Themes.Blend.WPF" Version="17.4.0.51" />
-    <PackageReference Include="Syncfusion.Themes.SystemTheme.WPF" Version="17.4.0.51" />
+    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="18.1.0.53" />
+    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="18.1.0.53" />
+    <PackageReference Include="Syncfusion.SfInput.WPF" Version="18.1.0.53" />
+    <PackageReference Include="Syncfusion.Themes.Blend.WPF" Version="18.1.0.53" />
+    <PackageReference Include="Syncfusion.Themes.SystemTheme.WPF" Version="18.1.0.53" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CebOfficeCore\CebOfficeCore.csproj" />
-    <ProjectReference Include="..\CompteEstBon_2.1\CompteEstBon.core.csproj" />
+    <ProjectReference Include="..\CompteEstBon5\CompteEstBon5.csproj" />
   </ItemGroup>
 
   <ItemGroup>

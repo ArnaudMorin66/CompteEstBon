@@ -115,9 +115,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    
                     @foreach (var plq in tirage.Plaques) {
-
                         <TelerikDropDownList Data="@CebPlaque.AnyPlaques"
                                              @bind-Value="plq.Value"
                                              OnChange="@ClearAsync"
@@ -148,7 +146,7 @@
         </div>
     </div>
 </div>
-<CebSolutions @ref="@solutions" TypeGrille="@TypeGrille" Toast="toast"></CebSolutions>
+<CebSolutions @ref="@solutions" TypeGrille="@TypeGrille" Toast="toast" OnSelect="ShowMessage" ></CebSolutions>
 <div class="text-white text-center font-weight-bolder text-wrap">
     <div class="anima">
         @switch (tirage.Status) {
@@ -206,21 +204,26 @@
     }
 
     protected async Task ClearAsync() {
-        await solutions.ClearAsync();
+
         await tirage.ClearAsync();
+        await solutions.ClearAsync();
     }
     protected async Task RandomAsync() {
-        await solutions.ClearAsync();
-        await tirage.RandomAsync();
-    }
 
+        await tirage.RandomAsync();
+        await solutions.ClearAsync();
+    }
+    private async Task ShowMessage()
+    {
+        await toast.ShowAsync();
+    }
     async Task ResolveAsync() {
 
         stopwatch.Reset();
         stopwatch.Start();
-        await solutions.ClearAsync();
-
-        await solutions.SetDataAsync(await tirage.ResolveAsync());
+        //await solutions.ClearAsync();
+        var reponse = await tirage.ResolveAsync();
+        await solutions.SetDataAsync(reponse.Solutions);
         await tirage.ResolveAsync();
         await InvokeAsync(StateHasChanged);
         stopwatch.Stop();

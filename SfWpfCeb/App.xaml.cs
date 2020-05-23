@@ -30,7 +30,7 @@ namespace CompteEstBon {
                 if (File.Exists(path2)) {
                     return File.ReadAllText(path2, Encoding.UTF8);
                 }
-                DirectoryInfo parent = Directory.GetParent(text);
+                var parent = Directory.GetParent(text);
                 if (parent == null) {
                     break;
                 }

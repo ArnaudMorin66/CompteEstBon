@@ -7,13 +7,13 @@
     <RunAnalyzersDuringLiveAnalysis>false</RunAnalyzersDuringLiveAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="3.1.3">
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Client" Version="5.0.0-preview.4.20257.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.76" />
-    <PackageReference Include="Syncfusion.Blazor" Version="18.1.0.48" />
-    <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="18.1.0.48" />
+    <PackageReference Include="Syncfusion.Blazor" Version="18.1.0.53" />
+    <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="18.1.0.53" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,8 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CompteEstBon_2.1\CompteEstBon.core.csproj" />
-    <ProjectReference Include="..\SFCebOffice\SFCebOffice.csproj" />
+    <ProjectReference Include="..\CompteEstBon5\CompteEstBon5.csproj" />
   </ItemGroup>
 
   <ProjectExtensions>

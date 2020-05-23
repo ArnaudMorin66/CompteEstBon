@@ -5,7 +5,7 @@
              Height="360px"
              SelectionMode="Telerik.Blazor.GridSelectionMode.Single"
              Class="solutions border border-secondary"
-             SelectedItemsChanged="@(async (IEnumerable<CebDetail> liste) => { await Toast.ShowAsync(liste.FirstOrDefault()); })"
+             SelectedItemsChanged="@OnSelect"
              TItem="CebDetail">
 
     <GridColumns>
@@ -51,10 +51,12 @@
     [Parameter] public CebToast Toast { get; set; }
 
     public IEnumerable<CebDetail> Details { get; set; }
+    [Parameter]
+    public EventCallback OnSelect { get; set; }
 
-    public async Task SetDataAsync(CebData data) {
+    public async Task SetDataAsync(IEnumerable<CebDetail> details) {
         await InvokeAsync(() => {
-            Details = data.Solutions;
+            Details = details;
             StateHasChanged();
         });
     }
@@ -68,5 +70,5 @@
 
         Details = new List<CebDetail>();
     }
-
+    // "@(async (IEnumerable<CebDetail> liste) => { await Toast.ShowAsync(liste.FirstOrDefault()); })"
 }

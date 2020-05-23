@@ -1,0 +1,24 @@
+﻿@page "/"
+@namespace DevBlazorCeb.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DevExpress-Compte est bon</title>
+    <base href="~/" />    
+    <link href="_content/DevExpress.Blazor/dx-blazor.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+    
+    <script src="~/lib/fontawesome/all.min.js" data-auto-replace-svg="nest" defer></script>
+</head>
+<body>
+    <app>
+        @(await Html.RenderComponentAsync<App>(RenderMode.ServerPrerendered))
+    </app>
+
+    <script src="_framework/blazor.server.js"></script>
+</body>
+</html>

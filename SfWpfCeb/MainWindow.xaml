@@ -19,7 +19,7 @@
     TitleTextAlignment="Center"
     UseNativeChrome="False"
     WindowStyle="None"
-    mc:Ignorable="d">
+    mc:Ignorable="d" WindowStartupLocation="CenterScreen">
     <s:ChromelessWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

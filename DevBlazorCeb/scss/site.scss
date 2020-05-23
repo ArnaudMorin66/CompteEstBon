@@ -1,0 +1,179 @@
+// $primary: darkslategray;
+$primary: #303030;
+$bg-body: #404040;
+
+$font-size: 0.8rem;
+$enable-gradients: true;
+$enable-shadows: true;
+$enable-responsive-font-sizes: true;
+$grid-header-border-color: $bg-body;
+@import "bootstrap/scss/bootstrap";
+$accent: $primary;
+
+
+html,
+body {
+    background-color: $bg-body;
+    font-size: $font-size;
+}
+
+.solutions {
+    div.k-grid-header {
+       visibility: collapse;
+       height:0;
+       margin:0;
+       padding:0;
+       border: none;
+    }
+
+
+    .k-grid-content {
+        background-color: $bg-body;
+        border-collapse: separate;
+        
+
+        tr {
+            text-align: center;         
+        }
+
+        tr:not(.k-alt):not(.k-grid-norecords) {
+            background-color: $bg-body;
+            color: White;
+            font-weight: bolder;
+        }
+
+        tr.k-alt {
+            color: yellow;
+            background-color: $primary;
+            font-weight: bolder;
+        }
+
+        td.k-state-selected, tr.k-state-selected > td {
+            color: white;
+            background-color: $black;
+            font-weight: bolder;
+        }
+        td {
+            border-width: 0px;
+            cursor: pointer;
+        }
+    }
+}
+
+.card-body,
+.card-text {
+    background-color: $bg-body; //  lightslategray;
+    color: black; // white;
+}
+
+
+
+.content {
+    padding-top: 1.1rem;
+}
+
+.separator {
+    margin: 0%;
+    padding: 0%;
+    height: 0.1rem;
+}
+/*
+.k-dropdown-wrap, .k-numeric-wrap  {
+    & > .k-input {
+        background-color: $bg-body;
+        color: white;
+        text-align:center;
+    }
+    
+    
+}
+.k-searchbar > .k-input, .k-numeric-wrap > .k-input {
+    background-color: $bg-body;
+    color:  white;
+    text-align: center;
+}
+
+.k-input {
+        background-color: $bg-body;
+        color: white;
+        text-align:center;
+    }
+*/
+ceb-entree, .k-combobox .k-dropdown-wrap, .k-searchbar > .k-input, .k-numeric-wrap > .k-input,
+    .k-numerictextbox .k-numeric-wrap .k-input {
+    background-color: $bg-body;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+ span.k-icon {
+     color: black;
+ }
+
+
+.k-popup {
+    background-color: $bg-body;
+    color: white;
+    border-color: $secondary;
+    max-width: 120px;
+    width: 15rem;
+    height:15rem;
+ 
+}
+
+
+.a-toast {
+    @extend .bg-gradient-primary;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 400px;
+    z-index: 10;
+    color: white;
+    border-style: ridge;
+    border-spacing: 0;
+    border-width: thin;
+    border-color: white;
+}
+
+@keyframes resultat {
+    from {
+        transform: translateX(50%);
+        width: 50%;
+    }
+
+    to {
+        transform: translateX(0);
+        width: 100%;
+    }
+}
+
+.animation {
+    animation-duration: 10s;
+    animation-name: resultat;
+    animation-direction: alternate-reverse;
+    animation-iteration-count: infinite;
+}
+
+.gradient {
+    background: radial-gradient($primary, $bg-body);
+    background-image: radial-gradient( #505050, $primary); // (rgb(48, 48, 48), rgb(73, 80, 87));
+}
+
+.footer {
+    @extend .fixed-bottom;
+    height: 2rem;
+}
+input .k-input .k-formatted-value {
+    background-color: $bg-body;
+}
+.HeaderPopup {
+    display:none;
+}
+.PopupClass {
+    background-color: transparent;
+}

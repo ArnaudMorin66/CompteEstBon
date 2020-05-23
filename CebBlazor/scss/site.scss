@@ -18,7 +18,7 @@ body {
     font-size: $font-size;
 }
 
-#solutions_, #lsolutions_ {
+#_solutions_, #lsolutions_ {
     .e-gridheader {
         visibility: collapse;
         border: none;
@@ -92,7 +92,7 @@ body {
     }
 }
 
-#lsolutions {
+#_lsolutions {
     td:nth-child(even) {
         @extend .e-altrow
     }

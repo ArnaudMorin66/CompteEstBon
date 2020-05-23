@@ -43,7 +43,7 @@ namespace CompteEstBon {
                 this[Rank++] = ceb[i];
                 if (Rank == 5) break;
             }
-            return this.Rank;
+            return Rank;
         }
 
         private int Add(CebBase gauche, char op, CebBase droite) {

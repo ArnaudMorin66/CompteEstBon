@@ -3,10 +3,10 @@
 @using Microsoft.AspNetCore.Components
 @inject CebTirage tirage
 
-<SfGrid @ref="solutions"
+<SfGrid @ref="gsolutions"
          DataSource="@tirage.Solutions"
          GridLines="GridLine.None"
-         TValue="CebDetail"
+         TValue="CebBase"
          Height="400"
          AllowSelection="true"
          AllowExcelExport="true"
@@ -14,11 +14,11 @@
          EnableAltRow="true"
          ID="solutions">
     <GridColumns>
-        <GridColumn Field=@nameof(CebDetail.Op1) HeaderText="Opération 1" />
-        <GridColumn Field=@nameof(CebDetail.Op2) HeaderText="Opération 2" />
-        <GridColumn Field=@nameof(CebDetail.Op3)  HeaderText="Opération 3" />
-        <GridColumn Field=@nameof(CebDetail.Op4)  HeaderText="Opération 4" />
-        <GridColumn Field=@nameof(CebDetail.Op5)  HeaderText="Opération 5" />
+        <GridColumn Field="Op1" HeaderText="Opération 1" />
+        <GridColumn Field="Op2" HeaderText="Opération 2" />
+        <GridColumn Field="Op3"  HeaderText="Opération 3" />
+        <GridColumn Field="Op4"  HeaderText="Opération 4" />
+        <GridColumn Field="Op5"  HeaderText="Opération 5" />
 
     </GridColumns>
 
@@ -33,8 +33,7 @@
                 _typegrille = value;
 
                 StateHasChanged();
-                solutions.RefreshColumns();
-                solutions.Refresh();
+                gsolutions.Refresh(); //.RefreshColumns();
             }
         }
     }
@@ -42,27 +41,20 @@
     [Parameter] public CebToast Toast { get; set; }
 
     // ReSharper disable once UnusedAutoPropertyAccessor.Local
-    SfGrid<CebDetail> solutions { get; set; }
-    public IEnumerable<CebDetail> Details { get; set; } = new List<CebDetail>();
+    SfGrid<CebBase> gsolutions { get; set; }
 
 
-    public async Task SetDataAsync(CebData data) {
-        await InvokeAsync(() => {
-            Details = data.Solutions;
-            StateHasChanged();
-        });
+    public async Task RefreshAsync() {
+        gsolutions.DataSource = tirage.Solutions; 
+        await InvokeAsync(StateHasChanged);
+       
     }
-    public async Task ClearAsync() {
-        await InvokeAsync(() => {
-            Details = new List<CebDetail>();
-            StateHasChanged();
-        });
-    }
+   
 
 
     public void ExportExcel() {
         // if (tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon) return;
-        solutions.ExcelExport(new ExcelExportProperties { ExportType = ExportType.AllPages });
+        gsolutions.ExcelExport(new ExcelExportProperties { ExportType = ExportType.AllPages });
         // CompteEstBon.ExportData.ToExcel(tirage);
     }
     public void ExportWord() {
@@ -73,6 +65,8 @@
 
     protected async override Task OnInitializedAsync() {
 
-         await base.OnInitializedAsync();
+        await base.OnInitializedAsync();
     }
+    
+
 }

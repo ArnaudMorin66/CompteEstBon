@@ -1,8 +1,5 @@
 ﻿@page "/"
 @using System.Collections.ObjectModel
-@using Syncfusion.EJ2.Blazor
-@using Syncfusion.EJ2.Blazor.Data
-@using Syncfusion.EJ2.Blazor.DropDowns
 @using System.Threading
 @using System.Diagnostics
 @using CompteEstBon
@@ -212,25 +209,21 @@
     CebToast toast;
     // EjsGrid<CebDetail> solutions { get; set; }
 
-    Object[] listeplaques { get; set; }
+    IEnumerable<int> listeplaques { get; set; }
     public IEnumerable<CebDetail> Details = new List<CebDetail>();
 
 
     protected override void OnInitialized() {
-        tirage.PropertyChanged += (_, _e) => {
-            toast.Hide();
-            Details = tirage.Details;
-            InvokeAsync(StateHasChanged);
-        };
+   
         stopwatch = new Stopwatch();
-        listeplaques = CompteEstBon.CebPlaque.ListePlaques.Distinct().Cast<Object>().ToArray();//.Select(elt=> new { value = elt });
+        listeplaques = CompteEstBon.CebPlaque.AnyPlaques;//.Select(elt=> new { value = elt });
         base.OnInitialized();
 
     }
 
 
     async Task ResolveAsync() {
-        tirage.SetEncours();
+        // tirage.SetEncours();
         await InvokeAsync(StateHasChanged);
 
         stopwatch.Reset();
@@ -240,7 +233,7 @@
         stopwatch.Stop();
 
         duree = stopwatch.Elapsed.TotalSeconds;
-        toast.Show(tirage.Details.First(), duree);
+        // toast.Show(tirage.Details.First(), duree);
     }
 
     void ExportExcel() {
@@ -249,7 +242,7 @@
     }
     void showtoast() {
 
-        toast.Show(new CebDetail(tirage.Solution), duree);
+        // toast.Show(new CebDetail(tirage.Solution), duree);
     }
 }
 

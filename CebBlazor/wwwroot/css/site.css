@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 /**
  * ej2 styles
  */
@@ -60052,59 +60052,59 @@ body {
   background-color: #404040;
   font-size: 0.8rem; }
 
-#solutions .e-gridheader, #lsolutions .e-gridheader {
+#sulutions_ .e-gridheader, #lsolutions .e-gridheader {
   visibility: collapse;
   border: none; }
 
-#solutions.e-grid, #solutions .e-table, #lsolutions.e-grid, #lsolutions .e-table {
+#sulutions_.e-grid, #sulutions_ .e-table, #lsolutions.e-grid, #lsolutions .e-table {
   border-spacing: 0px;
   border-collapse: separate;
   border-color: #6c757d;
   border-radius: 0;
   border-width: 1pt; }
 
-#solutions .e-content, #lsolutions .e-content {
+#sulutions_ .e-content, #lsolutions .e-content {
   background-color: #404040;
   text-align: center;
   color: white;
   font-size: 0.8rem; }
 
-#solutions .e-emptyrow, #lsolutions .e-emptyrow {
+#sulutions_ .e-emptyrow, #lsolutions .e-emptyrow {
   color: #404040;
   background-color: #404040;
   margin: 0;
   padding: 0; }
 
-#solutions .e-lastrowcell, #lsolutions .e-lastrowcell {
+#sulutions_ .e-lastrowcell, #lsolutions .e-lastrowcell {
   border-bottom-color: #303030;
   border-style: none; }
 
-#solutions .e-row td.e-rowcell, #lsolutions .e-row td.e-rowcell {
+#sulutions_ .e-row td.e-rowcell, #lsolutions .e-row td.e-rowcell {
   font-size: 0.8rem; }
 
-#solutions .e-row td.e-active, #lsolutions .e-row td.e-active {
+#sulutions_ .e-row td.e-active, #lsolutions .e-row td.e-active {
   background-color: #343a40;
   color: #fff; }
 
-#solutions .e-row td.e-rowcell.e-focus, #lsolutions .e-row td.e-rowcell.e-focus {
+#sulutions_ .e-row td.e-rowcell.e-focus, #lsolutions .e-row td.e-rowcell.e-focus {
   background-color: #222222;
   color: #ffc107;
   font-weight: 700; }
 
-#solutions .e-row .e-rowcell:not(.e-active), #lsolutions .e-row .e-rowcell:not(.e-active) {
+#sulutions_ .e-row .e-rowcell:not(.e-active), #lsolutions .e-row .e-rowcell:not(.e-active) {
   text-align: center;
   cursor: pointer;
   font-weight: bold; }
 
-#solutions .e-row:not(.e-altrow) > :not(.e-active), #lsolutions .e-row:not(.e-altrow) > :not(.e-active) {
+#sulutions_ .e-row:not(.e-altrow) > :not(.e-active), #lsolutions .e-row:not(.e-altrow) > :not(.e-active) {
   background-color: #404040;
   color: yellow; }
 
-#solutions .e-row.e-altrow > :not(.e-active), #solutions #lsolutions td.e-row:nth-child(even) > :not(.e-active), #lsolutions #solutions td.e-row:nth-child(even) > :not(.e-active), #lsolutions .e-row.e-altrow > :not(.e-active), #lsolutions td.e-row:nth-child(even) > :not(.e-active) {
+#sulutions_ .e-row.e-altrow > :not(.e-active), #sulutions_ #lsolutions td.e-row:nth-child(even) > :not(.e-active), #lsolutions #sulutions_ td.e-row:nth-child(even) > :not(.e-active), #lsolutions .e-row.e-altrow > :not(.e-active), #lsolutions td.e-row:nth-child(even) > :not(.e-active) {
   background-color: #303030;
   color: white; }
 
-#solutions .e-row td > .e-blazor-template, #lsolutions .e-row td > .e-blazor-template {
+#sulutions_ .e-row td > .e-blazor-template, #lsolutions .e-row td > .e-blazor-template {
   color: yellow;
   border: none;
   background-color: transparent; }
