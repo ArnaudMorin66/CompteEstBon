@@ -18,45 +18,17 @@ body {
 }
 
 .solutions {
-    div.k-grid-header {
-       visibility: collapse;
-       height:0;
-       margin:0;
-       padding:0;
-       border: none;
+    background-color: $bg-body;
+    border-collapse: separate;
+
+
+    tr {
+        text-align: center;
     }
 
-
-    .k-grid-content {
-        background-color: $bg-body;
-        border-collapse: separate;
-        
-
-        tr {
-            text-align: center;         
-        }
-
-        tr:not(.k-alt):not(.k-grid-norecords) {
-            background-color: $bg-body;
-            color: White;
-            font-weight: bolder;
-        }
-
-        tr.k-alt {
-            color: yellow;
-            background-color: $primary;
-            font-weight: bolder;
-        }
-
-        td.k-state-selected, tr.k-state-selected > td {
-            color: white;
-            background-color: $black;
-            font-weight: bolder;
-        }
-        td {
-            border-width: 0px;
-            cursor: pointer;
-        }
+    td {
+        border-width: 0px;
+        cursor: pointer;
     }
 }
 
@@ -77,30 +49,9 @@ body {
     padding: 0%;
     height: 0.1rem;
 }
-/*
-.k-dropdown-wrap, .k-numeric-wrap  {
-    & > .k-input {
-        background-color: $bg-body;
-        color: white;
-        text-align:center;
-    }
-    
-    
-}
-.k-searchbar > .k-input, .k-numeric-wrap > .k-input {
-    background-color: $bg-body;
-    color:  white;
-    text-align: center;
-}
 
-.k-input {
-        background-color: $bg-body;
-        color: white;
-        text-align:center;
-    }
-*/
 ceb-entree, .k-combobox .k-dropdown-wrap, .k-searchbar > .k-input, .k-numeric-wrap > .k-input,
-    .k-numerictextbox .k-numeric-wrap .k-input {
+.k-numerictextbox .k-numeric-wrap .k-input {
     background-color: $bg-body;
     color: white;
     font-weight: bold;
@@ -109,20 +60,10 @@ ceb-entree, .k-combobox .k-dropdown-wrap, .k-searchbar > .k-input, .k-numeric-wr
     margin: 0;
 }
 
- span.k-icon {
-     color: black;
- }
-
-
-.k-popup {
-    background-color: $bg-body;
-    color: white;
-    border-color: $secondary;
-    max-width: 120px;
-    width: 15rem;
-    height:15rem;
- 
+span.k-icon {
+    color: black;
 }
+
 
 
 .a-toast {
@@ -168,12 +109,42 @@ ceb-entree, .k-combobox .k-dropdown-wrap, .k-searchbar > .k-input, .k-numeric-wr
     @extend .fixed-bottom;
     height: 2rem;
 }
+
 input .k-input .k-formatted-value {
     background-color: $bg-body;
 }
+
 .HeaderPopup {
-    display:none;
+    display: none;
 }
+
 .PopupClass {
     background-color: transparent;
+}
+
+.drowclass {
+    background-color: $bg-body;
+}
+
+.gridclass {
+    height: 360px;
+}
+table {
+    > tbody {
+        > tr > td {
+            color: yellow;
+            text-align: center;
+            border: solid 1px;
+            align-content: center;
+        }
+    }
+}
+
+.dxbs-gridview > .card {
+    background-color: $bg-body;
+}
+
+.dxbs-gridview > .card > .dxgvHSDC + .dxgvCSD {
+    background-color: $bg-body;
+    color: yellow;
 }

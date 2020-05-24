@@ -1,11 +1,12 @@
 ﻿@using CompteEstBon
 @using System.Collections.ObjectModel
+@inject CebTirage tirage;
 
 <TelerikGrid Data="Details"
              Height="360px"
              SelectionMode="Telerik.Blazor.GridSelectionMode.Single"
              Class="solutions border border-secondary"
-             SelectedItemsChanged="@OnSelect"
+             SelectedItemsChanged="@(async (IEnumerable<CebDetail> liste) => { await Toast.ShowAsync(liste.FirstOrDefault()); })"
              TItem="CebDetail">
 
     <GridColumns>
@@ -51,24 +52,15 @@
     [Parameter] public CebToast Toast { get; set; }
 
     public IEnumerable<CebDetail> Details { get; set; }
-    [Parameter]
-    public EventCallback OnSelect { get; set; }
 
-    public async Task SetDataAsync(IEnumerable<CebDetail> details) {
-        await InvokeAsync(() => {
-            Details = details;
-            StateHasChanged();
-        });
+    public async Task RefreshAsync() {
+        Details = new List<CebDetail>(tirage.Solutions);
+        await InvokeAsync( StateHasChanged);
+       
     }
-    public async Task ClearAsync() {
-        await InvokeAsync(() => {
-            Details = new List<CebDetail>();
-            StateHasChanged();
-        });
-    }
+   
     protected override void OnInitialized() {
 
         Details = new List<CebDetail>();
     }
-    // "@(async (IEnumerable<CebDetail> liste) => { await Toast.ShowAsync(liste.FirstOrDefault()); })"
 }

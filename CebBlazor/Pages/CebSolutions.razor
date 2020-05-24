@@ -4,7 +4,7 @@
 @inject CebTirage tirage
 
 <SfGrid @ref="gsolutions"
-         DataSource="@tirage.Solutions"
+         DataSource="Solutions"
          GridLines="GridLine.None"
          TValue="CebBase"
          Height="400"
@@ -33,10 +33,11 @@
                 _typegrille = value;
 
                 StateHasChanged();
-                gsolutions.Refresh(); //.RefreshColumns();
+                // gsolutions.Refresh(); //.RefreshColumns();
             }
         }
     }
+    public List<CebBase> Solutions { get; set; }
 
     [Parameter] public CebToast Toast { get; set; }
 
@@ -44,12 +45,14 @@
     SfGrid<CebBase> gsolutions { get; set; }
 
 
-    public async Task RefreshAsync() {
-        gsolutions.DataSource = tirage.Solutions; 
-        await InvokeAsync(StateHasChanged);
-       
+    public void Refresh() {
+        Solutions = tirage.Solutions.ToList();
+        InvokeAsync(StateHasChanged);
+        // gsolutions.Refresh();
+        // await InvokeAsync(StateHasChanged);
+
     }
-   
+
 
 
     public void ExportExcel() {
@@ -64,9 +67,9 @@
     }
 
     protected async override Task OnInitializedAsync() {
-
+        Solutions = new List<CebBase>();
         await base.OnInitializedAsync();
     }
-    
+
 
 }

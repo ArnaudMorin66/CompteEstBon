@@ -7279,31 +7279,12 @@ body {
   background-color: #404040;
   font-size: 0.8rem; }
 
-.solutions div.k-grid-header {
-  visibility: collapse;
-  height: 0;
-  margin: 0;
-  padding: 0;
-  border: none; }
-
-.solutions .k-grid-content {
+.solutions {
   background-color: #404040;
   border-collapse: separate; }
-  .solutions .k-grid-content tr {
+  .solutions tr {
     text-align: center; }
-  .solutions .k-grid-content tr:not(.k-alt):not(.k-grid-norecords) {
-    background-color: #404040;
-    color: White;
-    font-weight: bolder; }
-  .solutions .k-grid-content tr.k-alt {
-    color: yellow;
-    background-color: #303030;
-    font-weight: bolder; }
-  .solutions .k-grid-content td.k-state-selected, .solutions .k-grid-content tr.k-state-selected > td {
-    color: white;
-    background-color: #000;
-    font-weight: bolder; }
-  .solutions .k-grid-content td {
+  .solutions td {
     border-width: 0px;
     cursor: pointer; }
 
@@ -7320,28 +7301,6 @@ body {
   padding: 0%;
   height: 0.1rem; }
 
-/*
-.k-dropdown-wrap, .k-numeric-wrap  {
-    & > .k-input {
-        background-color: $bg-body;
-        color: white;
-        text-align:center;
-    }
-    
-    
-}
-.k-searchbar > .k-input, .k-numeric-wrap > .k-input {
-    background-color: $bg-body;
-    color:  white;
-    text-align: center;
-}
-
-.k-input {
-        background-color: $bg-body;
-        color: white;
-        text-align:center;
-    }
-*/
 ceb-entree, .k-combobox .k-dropdown-wrap, .k-searchbar > .k-input, .k-numeric-wrap > .k-input,
 .k-numerictextbox .k-numeric-wrap .k-input {
   background-color: #404040;
@@ -7353,14 +7312,6 @@ ceb-entree, .k-combobox .k-dropdown-wrap, .k-searchbar > .k-input, .k-numeric-wr
 
 span.k-icon {
   color: black; }
-
-.k-popup {
-  background-color: #404040;
-  color: white;
-  border-color: #6c757d;
-  max-width: 120px;
-  width: 15rem;
-  height: 15rem; }
 
 .a-toast {
   position: absolute;
@@ -7404,5 +7355,24 @@ input .k-input .k-formatted-value {
 
 .PopupClass {
   background-color: transparent; }
+
+.drowclass {
+  background-color: #404040; }
+
+.gridclass {
+  height: 360px; }
+
+table > tbody > tr > td {
+  color: yellow;
+  text-align: center;
+  border: solid 1px;
+  align-content: center; }
+
+.dxbs-gridview > .card {
+  background-color: #404040; }
+
+.dxbs-gridview > .card > .dxgvHSDC + .dxgvCSD {
+  background-color: #404040;
+  color: yellow; }
 
 /*# sourceMappingURL=site.css.map */

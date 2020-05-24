@@ -64,25 +64,20 @@
 
     protected override void OnInitialized() {
         timer = new Timer(new TimerCallback(async (state) => {
-            await AnimationContainer.HideAsync();
+            await InvokeAsync(AnimationContainer.HideAsync);
         }));
 
 
     }
 
     public async Task ShowAsync(CebDetail detail = null) {
-        if (detail == null) {
-            Solution = tirage.Solution();
-        }
-        else { 
-            Solution = detail.ToString();
-        }
+        Solution = (detail == null) ? tirage.Solution() :  detail.ToString();
         await AnimationContainer.ShowAsync();
         timer.Change(DueTime, 0);
 
     }
-    public async Task HideAsync() {
-        await AnimationContainer.HideAsync();
-    }
+    // public async Task HideAsync() {
+    //    await AnimationContainer.HideAsync();
+    // }
 
 }

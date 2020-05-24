@@ -2,69 +2,70 @@
 @using System.Collections.ObjectModel
 @using DevExpress.Blazor.Grid
 @inject CebTirage tirage
-<DxDataGrid @ref="dxgrille" Data="tirage.Solutions"
-            ShowFilterRow="false"
-            CssClass="gridclass"
-            ShowColumnHeaders="false"
-            RowClick="@OnRowClick"
-            T="CebBase"
-            DataNavigationMode="@DataGridNavigationMode.VirtualScrolling">
-    <DxDataGridColumn Field="Op1" Caption="Opération 1" Visible="TypeGrille == CebTypeGrille.Grille"></DxDataGridColumn>
-    <DxDataGridColumn Field="Op2" Caption="Opération 2" Visible="TypeGrille == CebTypeGrille.Grille"></DxDataGridColumn>
-    <DxDataGridColumn Field="Op3" Caption="Opération 3" Visible="TypeGrille == CebTypeGrille.Grille"></DxDataGridColumn>
-    <DxDataGridColumn Field="Op4" Caption="Opération 4" Visible="TypeGrille == CebTypeGrille.Grille"></DxDataGridColumn>
-    <DxDataGridColumn Field="Op5" Caption="Opération 5" Visible="TypeGrille == CebTypeGrille.Grille"></DxDataGridColumn>
-    <DxDataGridColumn Field="Op3" Caption="Opération 5" Visible="TypeGrille == CebTypeGrille.Liste">
-        <DisplayTemplate>
-            @{
-                var lig = context as CebDetail;
-                <div>@lig.Op1</div>
-                <div>@lig.Op2</div>
-                <div>@lig.Op3</div>
-                <div>@lig.Op4</div>
-                <div>@lig.Op5</div>
+    <div style="height: 360px;">
+        <DxDataGrid Id="solutions" @ref="dxgrille" Data="Details"
+                    ShowFilterRow="false"
+                    CssClass="gridclass"
+                    DataRowCssClass="drowclass"
+                    ShowColumnHeaders="false"
+                    RowClick="@((arg)=> Task.Run(async ()=> await Toast.ShowAsync(arg.DataItem)))"
+                    T="CebBase"
+                    DataNavigationMode="@DataGridNavigationMode.VirtualScrolling">
+            <DxDataGridColumn Field="Op1" Caption="Opération 1" Visible="TypeGrille == CebTypeGrille.Grille" TextAlignment="@DataGridTextAlign.Center"></DxDataGridColumn>
+            <DxDataGridColumn Field="Op2" Caption="Opération 2" Visible="TypeGrille == CebTypeGrille.Grille" TextAlignment="@DataGridTextAlign.Center"></DxDataGridColumn>
+            <DxDataGridColumn Field="Op3" Caption="Opération 3" Visible="TypeGrille == CebTypeGrille.Grille" TextAlignment="@DataGridTextAlign.Center"></DxDataGridColumn>
+            <DxDataGridColumn Field="Op4" Caption="Opération 4" Visible="TypeGrille == CebTypeGrille.Grille" TextAlignment="@DataGridTextAlign.Center"></DxDataGridColumn>
+            <DxDataGridColumn Field="Op5" Caption="Opération 5" Visible="TypeGrille == CebTypeGrille.Grille" TextAlignment="@DataGridTextAlign.Center"></DxDataGridColumn>
+            <DxDataGridColumn Field="Op3" Caption="Opération 5" Visible="TypeGrille == CebTypeGrille.Liste" TextAlignment="@DataGridTextAlign.Center">
+                <DisplayTemplate>
+                    @{
+                        var lig = context as CebDetail;
+                        <div>@lig.Op1</div>
+                        <div>@lig.Op2</div>
+                        <div>@lig.Op3</div>
+                        <div>@lig.Op4</div>
+                        <div>@lig.Op5</div>
 
-            }
-        </DisplayTemplate>
-    </DxDataGridColumn>
+                    }
+                </DisplayTemplate>
+            </DxDataGridColumn>
 
-</DxDataGrid>
+        </DxDataGrid>
+    </div>
 
-@code {
-    DxDataGrid<CebBase> dxgrille { get; set; }
-    private CebTypeGrille _typegrille;
-    [Parameter]
-    public CebTypeGrille TypeGrille
-    {
-        get => _typegrille;
-        set
+    @code {
+        DxDataGrid<CebBase> dxgrille { get; set; }
+        private CebTypeGrille _typegrille;
+        [Parameter]
+        public CebTypeGrille TypeGrille
         {
-            if (_typegrille != value)
+            get => _typegrille;
+            set
             {
-                _typegrille = value;
-                InvokeAsync(StateHasChanged);
+                if (_typegrille != value)
+                {
+                    _typegrille = value;
+                    InvokeAsync(StateHasChanged);
+                }
             }
         }
-    }
 
-    [Parameter] public CebToast Toast { get; set; }
+        [Parameter] public CebToast Toast { get; set; }
+        private List<CebBase> Details;
 
 
-    public async Task RefreshAsync()
-    {
-        await dxgrille.Refresh();
-        await InvokeAsync(StateHasChanged);
+        public async Task RefreshAsync()
+        {
+            Details = new List<CebBase>(tirage.Solutions);
+            await dxgrille.Refresh();
+            await InvokeAsync(StateHasChanged);
 
-    }
+        }
 
-   
-    protected override void OnInitialized()
-    {
 
-    }
-    protected void OnRowClick(DataGridRowClickEventArgs<CebBase> arg)
-    {
-        Task.Run(async ()=> await Toast.ShowAsync(arg.DataItem));
+        protected override void OnInitialized()
+        {
+            Details = new List<CebBase>();
+        }
 
     }
-}

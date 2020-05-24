@@ -232,10 +232,10 @@
     {
         TypeGrille = CebTypeGrille.Grille;
         stopwatch = new Stopwatch();
-        tirage.PropertyChanged += async (sender, e) =>
+        tirage.PropertyChanged += (sender, e) =>
        {
-           await Solutions.RefreshAsync();
-           await InvokeAsync(StateHasChanged);
+           Solutions.Refresh();
+           //await InvokeAsync(StateHasChanged);
 
        };
         base.OnInitialized();
