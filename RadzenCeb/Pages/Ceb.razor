@@ -121,7 +121,6 @@
                         <RadzenDropDown TValue="int" 
                                         @bind-Value="@plq.Value"
                                         Data="@CebPlaque.AnyPlaques"
-                                        Change="@ClearAsync"
                                         Disabled="tirage.Status == CebStatus.EnCours">
                         </RadzenDropDown>
                     }
@@ -138,15 +137,15 @@
             </div>
             <div class="card-body">
                 <RadzenNumeric TValue="int" Min="100" Max="999"
-                               Change="@ClearAsync"
                                @bind-Value="@tirage.Search"
-                               Disabled="tirage.Status == CebStatus.EnCours"></RadzenNumeric>
+                               Disabled="tirage.Status == CebStatus.EnCours">
+                </RadzenNumeric>
 
             </div>
         </div>
     </div>
 </div>
-<CebSolutions @ref="@solutions" TypeGrille="@TypeGrille" ></CebSolutions>
+<CebSolutions @ref="@solutions" TypeGrille="@TypeGrille" Details="@Details" ></CebSolutions>
 <div class="text-white text-center font-weight-bolder text-wrap">
     <div class="anima">
         @switch (tirage.Status) {
@@ -196,19 +195,25 @@
     public CebToast toast;
     Stopwatch stopwatch;
     CebSolutions solutions { get; set; }
+    public IEnumerable<CebDetail> Details { get; set; }
 
     protected override void OnInitialized() {
         stopwatch = new Stopwatch();
+        Details = new List<CebDetail>(tirage.Solutions);
+        tirage.PropertyChanged += async (sender, e) =>
+        {
+            Details = new List<CebDetail>(tirage.Solutions);
+            await InvokeAsync(StateHasChanged);
+        }; //  solutions.RefreshAsync(); };
         base.OnInitialized();
 
     }
 
     protected async Task ClearAsync() {
-        await solutions.ClearAsync();
         await tirage.ClearAsync();
     }
     protected async Task RandomAsync() {
-        await solutions.ClearAsync();
+       
         await tirage.RandomAsync();
     }
 
@@ -216,10 +221,10 @@
 
         stopwatch.Reset();
         stopwatch.Start();
-        await solutions.ClearAsync();
+        
 
-        await solutions.SetDataAsync(await tirage.ResolveAsync());
         await tirage.ResolveAsync();
+        
         await InvokeAsync(StateHasChanged);
         stopwatch.Stop();
         duree = stopwatch.Elapsed.TotalSeconds;

@@ -140,7 +140,7 @@
                         <div class="col-md-2">
                             <SfComboBox Value="@plq.Value"
                                         DataSource="@CebPlaque.AnyPlaques"
-                                        OnChange="ClearAsync"
+                                        
                                         AllowCustom="true"
                                         ShowClearButton="false"
                                         Enabled="tirage.Status != CebStatus.EnCours">
@@ -162,7 +162,7 @@
                 <SfNumericTextBox Value="@tirage.Search"
                                   Max="999"
                                   Min="100"
-                                  OnChange="ClearAsync"
+                                 
                                   CssClass="e-ceb"
                                   Format="N0"
                                   Step="1"
@@ -173,7 +173,7 @@
         </div>
     </div>
 </div>
-<CebSolutions @ref="Solutions" TypeGrille="TypeGrille" Toast="toast"></CebSolutions>
+<CebSolutions @ref="Solutions" TypeGrille="TypeGrille"  Details="Details" Toast="toast"></CebSolutions>
 <div class="text-white text-center font-weight-bold" style="height: 1.8rem;">
     <div class="animation">
         @switch (tirage.Status)
@@ -223,6 +223,7 @@
 <CebToast @ref="toast" DueTime="10000" Duree="stopwatch.Elapsed.TotalSeconds"></CebToast>
 
 @code {
+    public IEnumerable<CebDetail> Details { get; set; }
     CebTypeGrille TypeGrille { get; set; }
     Stopwatch stopwatch;
     public CebToast toast;
@@ -232,12 +233,12 @@
     {
         TypeGrille = CebTypeGrille.Grille;
         stopwatch = new Stopwatch();
-        tirage.PropertyChanged += (sender, e) =>
-       {
-           Solutions.Refresh();
-           //await InvokeAsync(StateHasChanged);
+        tirage.PropertyChanged += async (sender, e) =>
+        {
+            Details = new List<CebDetail>(tirage.Solutions);
+            await InvokeAsync(StateHasChanged);
 
-       };
+        };
         base.OnInitialized();
     }
 
@@ -252,12 +253,12 @@
 
     async Task ResolveAsync()
     {
-        stopwatch.Reset();
-        stopwatch.Start();
+        //stopwatch.Reset();
+        //stopwatch.Start();
         await tirage.ResolveAsync();
         await InvokeAsync(StateHasChanged);
-        stopwatch.Stop();
-        await toast.ShowAsync(0);
+       // stopwatch.Stop();
+       // await toast.ShowAsync(0);
     }
 
 }

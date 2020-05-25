@@ -8,19 +8,19 @@
   integrity sha512-xKOeQEl5O47GPZYIMToj6uuA2syyFlq9EMSl2ui0uytjY9xbe8XS0pexNWmxrdcCyNGyDmLyYw5FtKsalBUeOg==
 
 "@progress/kendo-theme-bootstrap@^4.7.0":
-  version "4.16.1"
-  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-bootstrap/-/kendo-theme-bootstrap-4.16.1.tgz#f7e0a799afbea75f96ef6bdb084b1e6ea1393602"
-  integrity sha512-C4pK8oGW8+UqHWKzgFc9N1QTnm5DvOZPZluNuD2euK0D+DNkhaN6GDdk1rnd8+WyUzVkuyLIlFpAoWReVnTeOA==
+  version "4.16.2"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-bootstrap/-/kendo-theme-bootstrap-4.16.2.tgz#627d37a7271836d3e3fd681f3142d18cea530e80"
+  integrity sha512-/Au/inEbSSE6TfVcuNuwIUieJj5Q7QrLQKmTpOkCHBJFob1U5wWwA4sqMPI+/0J+EdUd12Iwlp5oSiDhpecC0g==
 
 "@progress/kendo-theme-default@^4.9.0":
-  version "4.18.1"
-  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-default/-/kendo-theme-default-4.18.1.tgz#9f5403d7e26a884894dcd66af072491ea888b1ff"
-  integrity sha512-2m9LJYnnj7vGBYkXJ0AWtjmBXA90rmRQ1rNULgojq+BQEcxLXhXqHEKGSnFAV58mQWLk1ySs99L85m0rAu0WDA==
+  version "4.18.2"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-default/-/kendo-theme-default-4.18.2.tgz#00390a357f83c124eb62fa4cea29ea8910fe2deb"
+  integrity sha512-1T5oRsFbenVFKZf4/NcHdgYth4LhL2naNOL6vz2bb3WWzAkC+59wv1h6KSoDZ5oqF7ubnyuhocrQONXtypE7MA==
 
 "@progress/kendo-theme-material@^3.7.0":
-  version "3.15.1"
-  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-material/-/kendo-theme-material-3.15.1.tgz#090bb32e30e0dc2e64522429e430bdc28cae5841"
-  integrity sha512-mhPLt2dy7BN5TXEYQrkSXn23PWhEqppwS/l4wn/V56ikQDCsmiswCkR2IH0T+Z9qOm4+rPelcTzxczksg2p1Lg==
+  version "3.15.2"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-material/-/kendo-theme-material-3.15.2.tgz#79960e64599d546b01796bbb73b4f8620ed96178"
+  integrity sha512-Od++KR1DXQoUz0wDbDY55mUxnlw1RpEAfezK+vRvAFVkaMsoUbORPRfQF9lLcfUjcoZkW4scaWRL2s4GrAFMjQ==
 
 abbrev@1:
   version "1.1.1"
@@ -115,9 +115,9 @@ aws-sign2@~0.7.0:
   integrity sha1-tG6JCTSpWR8tL2+G1+ap8bP+dqg=
 
 aws4@^1.8.0:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.9.1.tgz#7e33d8f7d449b3f673cd72deb9abdc552dbe528e"
-  integrity sha512-wMHVg2EOHaMRxbzgFJ9gtjOOCrI80OHLG14rxi28XwOW8ux6IiEbRCGGGqCtdAIg4FQCbW20k9RsT4y3gJlFug==
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.10.0.tgz#a17b3a8ea811060e74d47d306122400ad4497ae2"
+  integrity sha512-3YDiu347mtVtjpyV3u5kVqQLP242c06zwDOgpeRnybmXlYYsLbtTrUBUm8i8srONt+FWobl5aibnU1030PeeuA==
 
 balanced-match@^1.0.0:
   version "1.0.0"
@@ -1039,9 +1039,9 @@ source-map@^0.4.2:
     amdefine ">=0.0.4"
 
 spdx-correct@^3.0.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/spdx-correct/-/spdx-correct-3.1.0.tgz#fb83e504445268f154b074e218c87c003cd31df4"
-  integrity sha512-lr2EZCctC2BNR7j7WzJ2FpDznxky1sjfxvvYEyzxNyb6lZXHODmEoJeFu4JupYlkfha1KZpJyoqiJ7pgA1qq8Q==
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/spdx-correct/-/spdx-correct-3.1.1.tgz#dece81ac9c1e6713e5f7d1b6f17d468fa53d89a9"
+  integrity sha512-cOYcUWwhCuHCXi49RhFRCyJEK3iPj1Ziz9DpViV3tbZOwXD49QzIN3MpOLJNxh2qwq2lJJZaKMVw9qNi4jTC0w==
   dependencies:
     spdx-expression-parse "^3.0.0"
     spdx-license-ids "^3.0.0"

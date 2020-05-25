@@ -2,14 +2,14 @@
 @using System.Collections.ObjectModel
 @using DevExpress.Blazor.Grid
 @inject CebTirage tirage
-    <div style="height: 360px;">
+    
         <DxDataGrid Id="solutions" @ref="dxgrille" Data="Details"
                     ShowFilterRow="false"
                     CssClass="gridclass"
                     DataRowCssClass="drowclass"
                     ShowColumnHeaders="false"
-                    RowClick="@((arg)=> Task.Run(async ()=> await Toast.ShowAsync(arg.DataItem)))"
-                    T="CebBase"
+                    RowClick="@((arg)=> Task.Run(async ()=> await ShowDetail.InvokeAsync(arg.DataItem)))"
+                    T="CebDetail"
                     DataNavigationMode="@DataGridNavigationMode.VirtualScrolling">
             <DxDataGridColumn Field="Op1" Caption="Opération 1" Visible="TypeGrille == CebTypeGrille.Grille" TextAlignment="@DataGridTextAlign.Center"></DxDataGridColumn>
             <DxDataGridColumn Field="Op2" Caption="Opération 2" Visible="TypeGrille == CebTypeGrille.Grille" TextAlignment="@DataGridTextAlign.Center"></DxDataGridColumn>
@@ -31,10 +31,10 @@
             </DxDataGridColumn>
 
         </DxDataGrid>
-    </div>
+    
 
     @code {
-        DxDataGrid<CebBase> dxgrille { get; set; }
+            DxDataGrid<CebDetail> dxgrille { get; set; }
         private CebTypeGrille _typegrille;
         [Parameter]
         public CebTypeGrille TypeGrille
@@ -50,22 +50,15 @@
             }
         }
 
-        [Parameter] public CebToast Toast { get; set; }
-        private List<CebBase> Details;
+        [Parameter] public EventCallback<CebDetail> ShowDetail { get; set; }
+        [Parameter] public IEnumerable<CebDetail> Details { get; set; }
 
 
-        public async Task RefreshAsync()
-        {
-            Details = new List<CebBase>(tirage.Solutions);
-            await dxgrille.Refresh();
-            await InvokeAsync(StateHasChanged);
-
-        }
 
 
         protected override void OnInitialized()
         {
-            Details = new List<CebBase>();
+            Details = new List<CebDetail>();
         }
 
     }

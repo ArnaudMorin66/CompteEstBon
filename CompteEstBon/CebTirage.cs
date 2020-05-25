@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using static System.Math;
 
@@ -14,7 +15,7 @@ namespace CompteEstBon {
     /// Gestion tirage Compte est bon
     /// </summary>
     [System.Runtime.InteropServices.Guid("EC9CF01C-34A0-414C-BF2A-D06C5A61503D")]
-    public sealed class CebTirage {
+    public sealed class CebTirage:INotifyPropertyChanged {
         private int _search;
 
         public CebTirage() {
@@ -133,8 +134,10 @@ namespace CompteEstBon {
             Diff = int.MaxValue;
             Found.Reset();
             Valid();
+            NotifyPropertyChanged("Clear");
             return Result;
         }
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         public async Task<CebData> ClearAsync() => await Task.Run(Clear );
 
         /// <summary>
@@ -203,6 +206,7 @@ namespace CompteEstBon {
             Resolve(Plaques.ToList<CebBase>());
             Solutions.Sort((p, q) => p.Compare(q));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
+            NotifyPropertyChanged("Resolve");
             return Result;
         }
         public async Task<CebData> ResolveAsync() => await Task.Run(Resolve);
@@ -220,6 +224,8 @@ namespace CompteEstBon {
             Found = Found.ToString()
         };
         public IEnumerable<int> ListePlaques = CebPlaque.AnyPlaques;
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 
 }
