@@ -44,20 +44,9 @@
         }
     }
 
+    [Parameter]
     public IEnumerable<CebDetail> Details { get; set; }
 
-    public async Task SetDataAsync(CebData data) {
-        await InvokeAsync(() => {
-            Details = data.Solutions;
-            StateHasChanged();
-        });
-    }
-    public async Task ClearAsync() {
-        await InvokeAsync(() => {
-            Details = new List<CebDetail>();
-            StateHasChanged();
-        });
-    }
     protected override void OnInitialized() {
 
         Details = new List<CebDetail>();

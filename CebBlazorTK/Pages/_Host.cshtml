@@ -1,5 +1,5 @@
 ﻿@page "/"
-@namespace DevBlazorCeb.Pages
+@namespace CebBlazorTK.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <!DOCTYPE html>
@@ -7,18 +7,16 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DevExpress-Compte est bon</title>
-    <base href="~/" />    
+    <title>Telerik-Compte est bon</title>
+    <base href="~/" />
     <link href="css/site.css" rel="stylesheet" />
-    <link href="_content/DevExpress.Blazor/dx-blazor.css" rel="stylesheet" />
-    
-    
-    <script src="~/lib/fontawesome/all.min.js" data-auto-replace-svg="nest" defer></script>
 </head>
 <body>
     <app>
         @(await Html.RenderComponentAsync<App>(RenderMode.ServerPrerendered))
     </app>
+    <script src="~/lib/fontawesome/all.min.js" data-auto-replace-svg="nest" defer></script>
+    <script src="_content/telerik.ui.for.blazor.trial/js/telerik-blazor.js" defer></script>
 
     <script src="_framework/blazor.server.js"></script>
 </body>
