@@ -1,0 +1,59 @@
+﻿@using CompteEstBon
+@using System.Collections.ObjectModel
+
+<table class="table table-dark table-fixed border border-secondary">
+    <tbody>
+        @foreach (var rw in Details)
+        {
+            <tr class="text-center"  @onclick="@(async  () => { await ShowDetail.InvokeAsync(rw); })">
+                @if (TypeGrille == CebTypeGrille.Grille)
+                {
+                    <td>@rw.Op1</td>
+                    <td>@rw.Op2</td>
+                    <td>@rw.Op3</td>
+                    <td>@rw.Op4</td>
+                    <td>@rw.Op5</td>
+                }
+                else
+                {
+                    <td class="text-center">
+                        @foreach(var op in rw.Operations) {
+                            <div>@op</div>
+                        }
+                        
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+
+@code {
+    private CebTypeGrille _typegrille;
+    [Parameter]
+    public CebTypeGrille TypeGrille
+    {
+        get => _typegrille;
+        set
+        {
+            if (_typegrille != value)
+            {
+                _typegrille = value;
+                InvokeAsync(StateHasChanged);
+            }
+        }
+    }
+
+    [Parameter] public EventCallback<CebDetail> ShowDetail { get; set; }
+    [Parameter] public IEnumerable<CebDetail> Details { get; set; }
+
+
+
+    protected override void OnInitialized()
+    {
+
+        Details = new List<CebDetail>();
+    }
+}
