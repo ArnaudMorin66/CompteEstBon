@@ -42,13 +42,25 @@ else
                         @foreach (var plq in tirage.Plaques)
                         {
                             <div class="col-md-2">
+                                <div class="input-group">
+                                    <select @bind="plq.Value" class="custom-select bg-gradient-dark text-white text-center"  aria-label="Selectionner une plaque">
+                                        <option selected>Plaque...</option>
+                                         @foreach (var p in listeplaques)
+                                        {
+                                            <option value="@p">@p</option>
+                                        }
+                                       
+                                    </select>
+                                </div>
+                                @*<div class="input-group mb-3 col ceb-entree">
 
-                                <select @bind="plq.Value" class="w-100 text-center">
-                                    @foreach (var p in listeplaques)
-                                    {
-                                        <option value="@p">@p</option>
-                                    }
-                                </select>
+                                    <select @bind="plq.Value" class="form-control bg-gradient-dark text-white text-center">
+                                        @foreach (var p in listeplaques)
+                                        {
+                                            <option value="@p">@p</option>
+                                        }
+                                    </select>
+                                        </div>*@
 
                             </div>
                         }
@@ -64,7 +76,9 @@ else
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <input @bind="@tirage.Search" max="999" min="100" Class="col ceb-entree text-center" type="number" />
+                        <div class="input-group mb-3 col ceb-entree">
+                            <input @bind="@tirage.Search" max="999" min="100" class="form-control bg-gradient-dark text-white text-center" type="number" />
+                        </div>
                     </div>
                 </div>
             </div>
