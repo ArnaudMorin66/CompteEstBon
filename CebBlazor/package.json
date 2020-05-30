@@ -9,9 +9,11 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.12.1",
+    "@syncfusion/ej2": "18.1.54",
     "bootstrap": "^4.4.1"
   },
   "devDependencies": {
     "node-sass": "^4.13.1"
   }
+, "-vs-binding":{"BeforeBuild":["sass-debug"]}
 }

@@ -7,8 +7,11 @@ $enable-gradients: true;
 $enable-shadows: true;
 $enable-responsive-font-sizes: true;
 $grid-header-border-color: $bg-body;
+$font-family-sans-serif: 'Calibri',  'Segoe UI', 'GeezaPro', 'DejaVu Serif', sans-serif, '-apple-system', 'BlinkMacSystemFont' ;
+$font-family: $font-family-sans-serif;
 
-// @import "ej2/bootstrap4.scss";
+
+@import "ej2/fabric.scss";
 @import "bootstrap/scss/bootstrap";
 
 
@@ -18,7 +21,7 @@ body {
     font-size: $font-size;
 }
 
-#_solutions_, #lsolutions_ {
+#solutions, #lsolutions {
     .e-gridheader {
         visibility: collapse;
         border: none;
@@ -89,10 +92,13 @@ body {
             border: none;
             background-color: transparent;
         }
+        & td .e-rowcell {
+            text-align:center;
+        }
     }
 }
 
-#_lsolutions {
+#lsolutions {
     td:nth-child(even) {
         @extend .e-altrow
     }
@@ -231,3 +237,7 @@ body {
         border: none;
     }
 }
+.e-input {
+    background-color: $bg-body;
+}
+

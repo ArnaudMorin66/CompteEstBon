@@ -29,16 +29,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="18.1.0.53" />
-    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="18.1.0.53" />
-    <PackageReference Include="Syncfusion.SfInput.WPF" Version="18.1.0.53" />
-    <PackageReference Include="Syncfusion.Themes.Blend.WPF" Version="18.1.0.53" />
-    <PackageReference Include="Syncfusion.Themes.SystemTheme.WPF" Version="18.1.0.53" />
+    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="18.1.0.54" />
+    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="18.1.0.54" />
+    <PackageReference Include="Syncfusion.SfInput.WPF" Version="18.1.0.54" />
+    <PackageReference Include="Syncfusion.Themes.Blend.WPF" Version="18.1.0.54" />
+    <PackageReference Include="Syncfusion.Themes.SystemTheme.WPF" Version="18.1.0.54" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CebOfficeCore\CebOfficeCore.csproj" />
     <ProjectReference Include="..\CompteEstBon5\CompteEstBon5.csproj" />
+    <ProjectReference Include="..\SFCebOffice\SFCebOffice.csproj" />
   </ItemGroup>
 
   <ItemGroup>

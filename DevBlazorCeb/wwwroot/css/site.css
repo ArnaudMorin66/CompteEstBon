@@ -7375,4 +7375,17 @@ table > tbody > tr > td {
   background-color: #404040;
   color: yellow; }
 
+.table-fixed tbody {
+  height: 30rem;
+  overflow-y: auto;
+  width: 100%; }
+  .table-fixed tbody tr {
+    width: 100%; }
+  .table-fixed tbody td {
+    text-align: center;
+    width: 100%; }
+
+.modal-body {
+  background-color: #404040; }
+
 /*# sourceMappingURL=site.css.map */

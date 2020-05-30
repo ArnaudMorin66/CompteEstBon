@@ -7,10 +7,11 @@
 <div class="sticky-top">
     <div class="btn-toolbar  justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group w-100" role="group" aria-label="First group">
-            <button class="btn btn-primary h-100 @((tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon) ? "enabled" : "")"
+            <button class="btn btn-primary h-100" 
                     @onclick="() => TypeGrille = TypeGrille == CebTypeGrille.Grille ? CebTypeGrille.Liste : CebTypeGrille.Grille"
                     aria-disabled="true"
                     title="@(TypeGrille == CebTypeGrille.Liste ? "Mode Liste" : "Mode Grille")"
+                                        
                     accesskey="m"
                     role="button"
                     type="button">
@@ -40,6 +41,7 @@
                                              @bind-Value="plq.Value"
                                              ClearButton="false"
                                              Class="w-100 ceb-entree"
+                                             Enabled="tirage.Status != CebStatus.EnCours"
                                              TValue="int"
                                              TItem="int">
                             </TelerikComboBox>
@@ -58,6 +60,7 @@
             <div class="card-body">
                 <div class="row">
                     <TelerikNumericTextBox @bind-Value="tirage.Search" Step="1" Min="100" Max="999" Format="N0"
+                                           Enabled="tirage.Status != CebStatus.EnCours"
                                            T="int" Class="col ceb-entree"></TelerikNumericTextBox>
 
                 </div>
@@ -73,7 +76,6 @@
                         title="Tirage aléatoire (ALT-T)"
                         role="button"
                         type="button"
-                        Enabled="@(tirage.Status != CebStatus.EnCours)"
                         @onclick="tirage.RandomAsync">
                     <i class="fa fa-random"></i>
                     <div>Tirage</div>
@@ -131,7 +133,7 @@
                     default:
                         <button id="resoudre"
                                 title="Résolution du tirage (ALT-R)"
-                                class="btn btn-primary btn-block"
+                                class="btn btn-primary btn-block "
                                 role="button"
                                 @onclick="@ResolveAsync"
                                 type="button"
@@ -148,7 +150,7 @@
 </div>
 <CebSolutions @ref="@solutions"
               TypeGrille="@TypeGrille"
-              Details="@Details"
+              Details="@tirage.Solutions"
               ShowDetail="ShowSolutionAsync"></CebSolutions>
 <div class="card text-center bg-gradient-dark border-secondary">
     <div class="card-header">
@@ -191,7 +193,7 @@
 </div>
 <CebToast @ref="toast" DueTime="8000" Duree="@duree"></CebToast>
 @code {
-    public IEnumerable<CebDetail> Details { get; set; }
+    // public IEnumerable<CebDetail> Details { get; set; }
     int search { get; set; }
     CebTypeGrille TypeGrille { get; set; }
     double duree { get; set; } = 0;
@@ -202,11 +204,11 @@
 
     protected override void OnInitialized()
     {
-        Details = new List<CebDetail>(tirage.Solutions);
+        // Details = new List<CebDetail>(tirage.Solutions);
         stopwatch = new Stopwatch();
         tirage.PropertyChanged += async (sender, e) =>
         {
-            Details = tirage.Solutions.ToList(); // new List<CebDetail>(tirage.Solutions);
+            // Details = tirage.Solutions.ToList(); // new List<CebDetail>(tirage.Solutions);
             await InvokeAsync(StateHasChanged);
         }; //  solutions.RefreshAsync(); };
         base.OnInitialized();

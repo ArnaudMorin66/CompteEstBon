@@ -148,3 +148,20 @@ table {
     background-color: $bg-body;
     color: yellow;
 }
+.table-fixed {
+    tbody {
+        height: 30rem;
+        overflow-y: auto;
+        width: 100%;
+        tr {
+            width: 100%;
+        }
+        td {
+            text-align:center;
+            width:100%;
+        }
+    }
+}
+.modal-body {
+    background-color: $bg-body;
+}

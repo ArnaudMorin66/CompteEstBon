@@ -55,7 +55,7 @@ namespace CompteEstBon {
         /// <summary>
         /// Nombre de solutions
         /// </summary>
-        public int Count => Solutions.Count;
+        public int Count => _solutions.Count;
 
         /// <summary>
         /// Ecart
@@ -80,11 +80,14 @@ namespace CompteEstBon {
                 Clear();
             }
         }
+        private List<CebBase> _solutions = new List<CebBase>();
 
-        public List<CebBase> Solutions { get; } = new List<CebBase>();
+
+        public List<CebBase> Solutions => Status == CebStatus.CompteApproche || Status == CebStatus.CompteEstBon ? _solutions : new List<CebBase>();
 
         [JsonIgnore]
-        public IEnumerable<string> SolutionsToString => Solutions.Select(s => s.ToString());
+        public IEnumerable<string> SolutionsToString => _solutions.Select(s => s.ToString());
+
 
         /// <summary>
         /// Gets the status.
@@ -97,8 +100,8 @@ namespace CompteEstBon {
         public CebStatus Status { get; private set; } = CebStatus.Indefini;
 
         public CebData Clear() {
-            if (Solutions.Count != 0) {
-                Solutions.Clear();
+            if (_solutions.Count != 0) {
+                _solutions.Clear();
             }
 
             Diff = int.MaxValue;
@@ -115,7 +118,7 @@ namespace CompteEstBon {
             Plaques = Plaques.Select(p => p.Value),
             Status = Status,
             Diff = Diff,
-            Solutions = Solutions,
+            Solutions = _solutions,
             Found = Found.ToString()
         };
 
@@ -152,11 +155,10 @@ namespace CompteEstBon {
         /// <returns>
         /// </returns>
         public CebData Resolve() {
-            Clear();
-            if (Status != CebStatus.Valid) return GetData();
+            _solutions.Clear();
             Status = CebStatus.EnCours;
             Resolve(Plaques.ToList<CebBase>());
-            Solutions.Sort((p, q) => p.Compare(q));
+            _solutions.Sort((p, q) => p.Compare(q));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
             NotifyPropertyChanged("Resolve");
             return GetData();
@@ -196,7 +198,7 @@ namespace CompteEstBon {
             Clear();
         }
 
-        public string Solution(int no = 0) => Solutions.Count == 0 || no < 0 || no >= Solutions.Count ? "" : Solutions[no].ToString();
+        public string Solution(int no = 0) => _solutions.Count == 0 || no < 0 || no >= _solutions.Count ? "" : _solutions[no].ToString();
 
         /// <summary>
         /// Valid
@@ -213,13 +215,13 @@ namespace CompteEstBon {
 
             if (diff < Diff) {
                 Diff = diff;
-                Solutions.Clear();
+                _solutions.Clear();
                 Found.Reset();
             }
-            if (Solutions.Contains(sol)) return;
+            if (_solutions.Contains(sol)) return;
 
             Found.Add(sol.Value);
-            Solutions.Add(sol);
+            _solutions.Add(sol);
         }
 
         private void IsUpdated(object sender, PropertyChangedEventArgs e) {

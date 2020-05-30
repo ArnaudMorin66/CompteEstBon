@@ -60,11 +60,7 @@
 
     protected override void OnInitialized()
     {
-        timer = new Timer(new TimerCallback(async (state) =>
-        {
-            VisiblePopup = false;
-            await InvokeAsync(StateHasChanged);
-        }));
+       
 
         VisiblePopup = false;
     }
@@ -81,6 +77,12 @@
         }
         VisiblePopup = true;
         await InvokeAsync(StateHasChanged);
+         timer = new Timer(new TimerCallback(async (state) =>
+        {
+            VisiblePopup = false;
+            await InvokeAsync(StateHasChanged);
+            await timer.DisposeAsync();
+        }));
         //await AnimationContainer.ShowAsync();
         timer.Change(DueTime, 0);
 

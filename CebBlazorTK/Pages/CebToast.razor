@@ -54,7 +54,27 @@
 </TelerikWindow>;
 @code {
     protected Timer timer;
-    public bool ToastVisible { get; set; }
+    private bool _toastVisible;
+    public bool ToastVisible
+    {
+        get => _toastVisible;
+        set {
+            if (value == _toastVisible) return;
+            if (value) {
+                timer = new Timer(new TimerCallback( (state) => {
+                    ToastVisible = false;
+                    InvokeAsync(StateHasChanged);
+                    
+                }));
+                timer.Change(DueTime, 0);
+            }
+            else {
+                timer.Dispose();
+
+            }
+            _toastVisible = value;
+        }
+    }
 
     public string Solution { get; set; }
     [Parameter]
@@ -71,20 +91,11 @@
 
     public async Task ShowAsync(CebDetail detail = null)
     {
-        if (ToastVisible) {
-            ToastVisible = false;
-            await timer.DisposeAsync();
-        }
+        ToastVisible = false;
+       
         Solution = (detail == null) ? tirage.Solution() : detail.ToString();
         ToastVisible = true;
         await InvokeAsync(StateHasChanged);
-        timer = new Timer(new TimerCallback(async (state) =>
-        {
-            ToastVisible = false;
-            await InvokeAsync(StateHasChanged);
-            await timer.DisposeAsync();
-        }));
-        timer.Change(DueTime, 0);
 
     }
 }

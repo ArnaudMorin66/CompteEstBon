@@ -235,29 +235,16 @@ select, input {
         height: 20rem;
         overflow-y: auto;
         width: 100%;
-    }
-
-    thead,
-    tbody,
-    tr,
-    td,
-    .th {
-        display: block;
-    }
-
-    tr:after {
-        content: "";
-        display: block;
-        visibility: hidden;
-        clear: both;
-    }
-
-    tbody td,
-    thead > tr > th {
-        float: left;
-        width: 20%;
+        tr {
+            width: 100%;
+        }
+        td {
+            text-align:center;
+            width:100%;
+        }
     }
 }
+
 .custom-select {
     text-align:center;
 }

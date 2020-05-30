@@ -5,7 +5,7 @@
     
         <DxDataGrid Id="solutions" @ref="dxgrille" Data="Details"
                     ShowFilterRow="false"
-                    CssClass="gridclass"
+                    CssClass="table-fixed"
                     DataRowCssClass="drowclass"
                     ShowColumnHeaders="false"
                     RowClick="@((arg)=> Task.Run(async ()=> await ShowDetail.InvokeAsync(arg.DataItem)))"

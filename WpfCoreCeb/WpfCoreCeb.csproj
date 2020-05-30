@@ -36,12 +36,17 @@
 
 
   <ItemGroup>
+    <Compile Include="..\CebOffice\NativeMethods.cs" Link="ViewModel\NativeMethods.cs" />
+  </ItemGroup>
+
+
+  <ItemGroup>
     <Resource Include="Images\giphy.gif" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CebOfficeCore\CebOfficeCore.csproj" />
     <ProjectReference Include="..\CompteEstBon5\CompteEstBon5.csproj" />
+    <ProjectReference Include="..\SFCebOffice\SFCebOffice.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -65,6 +70,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="SyncfusionLicense.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

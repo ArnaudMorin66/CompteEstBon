@@ -1,11 +1,13 @@
 ﻿#region
 
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -21,7 +23,7 @@ namespace CompteEstBon {
         private readonly Stopwatch NotifyWatch = new Stopwatch();
         private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(CompteEstBon.Properties.Settings.Default.SolutionTimer);
         private Color _background = Colors.Black;
-        private string _duree;
+        private TimeSpan _duree;
 
         private Color _foreground = Colors.White;
         private bool _isUpdating;
@@ -50,7 +52,7 @@ namespace CompteEstBon {
                 Interval = TimeSpan.FromMilliseconds(Properties.Settings.Default.SolutionTimer)
             };
             dateDispatcher.Tick += (sender, e) => {
-                if (stopwatch.IsRunning) Duree = stopwatch.Elapsed.ToString();
+                if (stopwatch.IsRunning) Duree = stopwatch.Elapsed;
 
                 if (Popup && NotifyWatch.Elapsed > SolutionTimer) Popup = false;
                 Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
@@ -83,7 +85,7 @@ namespace CompteEstBon {
                 NotifiedChanged();
             }
         }
-        public string Duree {
+        public TimeSpan Duree {
             get => _duree;
             set {
                 _duree = value;
@@ -95,7 +97,7 @@ namespace CompteEstBon {
             get => _vertical;
             set {
                 _vertical = value;
-                ModeView =  value ? '\xE2' : '\xE0';
+                ModeView = value ? '\xE2' : '\xE0';
                 NotifiedChanged();
             }
         }
@@ -157,7 +159,7 @@ namespace CompteEstBon {
                 NotifiedChanged();
             }
         }
-      
+
 
         public bool IsComputed {
             get => _isComputed;
@@ -240,10 +242,10 @@ namespace CompteEstBon {
             await Task.Run(() => {
                 switch (fmt.ToLower()) {
                     case "excel":
-                        Tirage.ToExcel();
+                        ExportExcel();
                         break;
                     case "word":
-                        Tirage.ToWord();
+                        ExportWord();
                         break;
                 }
             });
@@ -272,14 +274,14 @@ namespace CompteEstBon {
         private void ClearData() {
             if (_isUpdating) return;
             stopwatch.Reset();
-            Duree = stopwatch.Elapsed.ToString();
+            Duree = stopwatch.Elapsed;
             IsComputed = false;
             Solution = "";
             Solutions = null;
             Count = 0;
             Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
             Popup = false;
-            
+
             UpdateColors();
         }
 
@@ -328,9 +330,9 @@ namespace CompteEstBon {
                     : "Tirage incorrect";
 
             stopwatch.Stop();
-            Duree = stopwatch.Elapsed.ToString();
+            Duree = stopwatch.Elapsed;
             Solution = Tirage.Solution();
-            Solutions = new HashSet<CebBase>( Tirage.Solutions);
+            Solutions = new HashSet<CebBase>(Tirage.Solutions);
             Count = Tirage.Count;
 
             UpdateColors();
@@ -341,5 +343,54 @@ namespace CompteEstBon {
         }
 
         #endregion Action
+        public (bool Select, string Name) FileSaveName(string ty) {
+            var dialog = new SaveFileDialog();
+            (dialog.Filter, dialog.Title) = ty switch
+            {
+                "xlsx" => ("Excel (*.xlsx)| *.xlsx", "Fichiers Excel"),
+                "docx" => ("Word (*.docx) | *.docx", "Fichiers Word"),
+                _ => ("Tous (*.*) | *.*", "Tous les fichiers")
+            };
+            if ((bool)dialog.ShowDialog()) {
+                return (true, dialog.FileName);
+            }
+            return (false, null);
+
+        }
+
+        public void ExportExcel() {
+            var Fichier = FileSaveName("xlsx");
+            if (Fichier.Select) {
+                if (File.Exists(Fichier.Name)) {
+                    File.Delete(Fichier.Name);
+                }
+                var stream = new FileStream(Fichier.Name, FileMode.CreateNew);
+                Tirage.ExportExcel(stream, Duree.TotalSeconds);
+                stream.Flush();
+                stream.Close();
+                Lancer(Fichier.Name);
+            }
+        }
+        public void ExportWord() {
+            var Fichier = FileSaveName("docx");
+            if (Fichier.Select) {
+                if (File.Exists(Fichier.Name)) {
+                    File.Delete(Fichier.Name);
+                }
+                var stream = new FileStream(Fichier.Name, FileMode.CreateNew);
+                Tirage.ExportWord(stream, Duree.TotalSeconds);
+                
+                stream.Flush();
+                stream.Close();
+                Lancer(Fichier.Name);
+            }
+        }
+        public static void Lancer(string nom) {
+            var info = new ProcessStartInfo {
+                UseShellExecute = true,
+                FileName = nom
+            };
+            Process.Start(info);
+        }
     }
 }

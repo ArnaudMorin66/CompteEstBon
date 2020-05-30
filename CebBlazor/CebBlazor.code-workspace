@@ -4,7 +4,10 @@
 			"path": "."
 		},
 		{
-			"path": "C:\\Users\\arnaud\\Source\\CompteEstBon\\CompteEstBon"
+			"path": "..\\SFCebOffice"
+		},
+		{
+			"path": "..\\CompteEstBon5"
 		}
 	],
 	"settings": {

@@ -9,7 +9,7 @@ using Microsoft.Extensions.FileProviders;
 using Syncfusion.Blazor;
 using System;
 
-namespace CebBlazor {
+namespace CompteEstBon {
     public class Startup {
         static Startup() {
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();

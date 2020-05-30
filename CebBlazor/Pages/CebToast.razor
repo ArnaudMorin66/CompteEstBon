@@ -57,8 +57,19 @@
                    set {
                        if (value != _visible) {
                            _visible = value;
+
                            if (_visible) {
-                               timer.Change(DueTime, 0);
+                               timer = new Timer((state) => {
+                                   Visible = false;
+                                   
+                               });
+                               timer?.Change(DueTime, 0);
+                           }
+                           else {
+                               timer?.Dispose();
+                               _visible = false;
+
+
                            }
                            InvokeAsync(StateHasChanged);
                        }
@@ -75,16 +86,22 @@
 
                protected override void OnInitialized() {
                    DueTime = 5000;
-                   timer = new Timer(state => { Visible = false; });
+
                }
 
-               public async Task ShowAsync(int index) {
-                   Solution = tirage.Solution(index);
+               public async Task ShowAsync(CebDetail detail) {
+                   if (Visible) {
+                       Visible = false;
+                   }
+
+                   Solution = detail?.ToString();
                    Visible = true;
+
                    await InvokeAsync(StateHasChanged);
                }
 
                public async Task HideAsync() {
+                  
                    Visible = false;
                    await InvokeAsync(StateHasChanged);
                }

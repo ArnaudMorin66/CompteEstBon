@@ -1,29 +1,51 @@
 ﻿@using CompteEstBon
 @using System.Collections.ObjectModel
 @using Microsoft.AspNetCore.Components
-@inject CebTirage tirage
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+
 
 <SfGrid @ref="gsolutions"
-        
-        @bind-DataSource="@Details"
+        @bind-DataSource="_Details"
         GridLines="GridLine.None"
         Height="400"
         AllowSelection="true"
         AllowExcelExport="true"
         AllowResizing="true"
         EnableAltRow="true"
+        TValue="TDetail"
         ID="solutions">
+    <GridEvents RowSelected="@(async (arg) => await ShowDetail.InvokeAsync(_Details.ElementAt((int)arg.RowIndex).Detail))"
+                TValue="Object"></GridEvents>
+    <GridSelectionSettings Mode="Syncfusion.Blazor.Grids.SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
     <GridColumns>
-        <GridColumn Field="Op1" HeaderText="Opération 1" />
-        <GridColumn Field="Op2" HeaderText="Opération 2" />
-        <GridColumn Field="Op3" HeaderText="Opération 3" />
-        <GridColumn Field="Op4" HeaderText="Opération 4" />
-        <GridColumn Field="Op5" HeaderText="Opération 5" />
+        <GridColumn Field=@(column(1))></GridColumn>
+        <GridColumn Field=@(column(2))></GridColumn>
+        <GridColumn>
+            <Template Context="data">
+                @if (TypeGrille == CebTypeGrille.Grille)
+                {
+                    @((data as TDetail).Op3)
+                }
+                else
+                {
+                    var det = data as TDetail;
+                    <div>@det.Op1</div>
+                    <div>@det.Op2</div>
+                    <div>@det.Op3</div>
+                    <div>@det.Op4</div>
+                    <div>@det.Op5</div>
 
+                }
+            </Template>
+        </GridColumn>
+        <GridColumn Field=@(column(4))></GridColumn>
+        <GridColumn Field=@(column(5))></GridColumn>
     </GridColumns>
-
 </SfGrid>
 @code {
+    public SfGrid<TDetail> gsolutions;
+
     private CebTypeGrille _typegrille;
     [Parameter]
     public CebTypeGrille TypeGrille
@@ -35,40 +57,34 @@
             {
                 _typegrille = value;
 
-                StateHasChanged();
-                // gsolutions.Refresh(); //.RefreshColumns();
+                InvokeAsync(StateHasChanged);
             }
         }
     }
-    [Parameter] public IEnumerable<CebDetail> Details { get; set; }
-
-    [Parameter] public CebToast Toast { get; set; }
-
-    // ReSharper disable once UnusedAutoPropertyAccessor.Local
-    SfGrid<CebDetail> gsolutions { get; set; }
+    private IEnumerable<TDetail> _Details;
 
 
-
-
-
-    public void ExportExcel()
+    [Parameter]
+    public IEnumerable<CebDetail> Details
     {
-        // if (tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon) return;
-        gsolutions.ExcelExport(new ExcelExportProperties { ExportType = ExportType.AllPages });
-        // CompteEstBon.ExportData.ToExcel(tirage);
+        get => _Details.Select(e => e.Detail);
+
+        set
+        {
+            _Details = value?.Select(e => new TDetail(e));
+            InvokeAsync(StateHasChanged);
+
+        }
     }
-    public void ExportWord()
-    {
-        // if (tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon) return;
-        // solutions.ExcelExport(new ExcelExportProperties { ExportType = ExportType.AllPages });
-        //CompteEstBon.ExportData.ToWord(tirage);
-    }
+
+    [Parameter] public EventCallback<CebDetail> ShowDetail { get; set; }
+
 
     protected async override Task OnInitializedAsync()
     {
-        Details = new List<CebDetail>();
+        //_Details = new List<TDetail>();
         await base.OnInitializedAsync();
     }
-
-
+    protected string column(int n) => TypeGrille == CebTypeGrille.Grille ? $"Op{n}" : "";
 }
+

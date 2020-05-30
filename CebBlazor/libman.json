@@ -3,15 +3,6 @@
   "defaultProvider": "filesystem",
   "libraries": [
     {
-      "library": "src",
-      "destination": "wwwroot/lib/",
-      "files": [
-        "ejs.interop.min.js",
-        "ej2.min.js"
-      ]
-    },
-   
-    {
       "library": "node_modules/@fortawesome/fontawesome-free/js",
       "destination": "wwwroot/lib/fontawesome/",
       "files": [

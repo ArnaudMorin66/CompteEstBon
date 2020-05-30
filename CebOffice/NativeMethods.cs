@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Word = Microsoft.Office.Interop.Word;
-using Excel = Microsoft.Office.Interop.Excel;
+// using Word = Microsoft.Office.Interop.Word;
+// using Excel = Microsoft.Office.Interop.Excel;
 
 
 namespace CompteEstBon {
@@ -45,30 +45,30 @@ namespace CompteEstBon {
         }
 
 
-        public static bool GetApplication(out Excel.Application excel) {
-            try {
-                excel = new Excel.Application {
-                    Visible = true
-                };
-                return true;
-            } catch (Exception) {
-                excel = null;
-                return false; 
-            }
+//        public static bool GetApplication(out Excel.Application excel) {
+//            try {
+//                excel = new Excel.Application {
+//                    Visible = true
+//                };
+//                return true;
+//            } catch (Exception) {
+//                excel = null;
+//                return false; 
+//            }
             
-        }
-        public static bool GetApplication(out Word.Application word) {
-            try {
-                word = new Word.Application {
-                    Visible = true
-                };
-                return true;
-            } catch(Exception) {
-                word = null;
-                return false;
-            }
+//        }
+//        public static bool GetApplication(out Word.Application word) {
+//            try {
+//                word = new Word.Application {
+//                    Visible = true
+//                };
+//                return true;
+//            } catch(Exception) {
+//                word = null;
+//                return false;
+//            }
             
-        }
+//        }
     }
 }
 

@@ -5,22 +5,22 @@
     <tbody>
         @foreach (var rw in Details)
         {
-            <tr class="text-center"  @onclick="@(async  () => { await ShowDetail.InvokeAsync(rw); })">
+            <tr class="text-center" style="cursor:pointer" @onclick="@(async  () => { await ShowDetail.InvokeAsync(rw); })">
                 @if (TypeGrille == CebTypeGrille.Grille)
                 {
-                    <td>@rw.Op1</td>
-                    <td>@rw.Op2</td>
-                    <td>@rw.Op3</td>
-                    <td>@rw.Op4</td>
-                    <td>@rw.Op5</td>
+                    @foreach (var op in rw.Operations)
+                    {
+                        <td>@op</td>
+                    }
                 }
                 else
                 {
-                    <td class="text-center">
-                        @foreach(var op in rw.Operations) {
+                    <td class="text-center w-100">
+                        @foreach (var op in rw.Operations)
+                        {
                             <div>@op</div>
                         }
-                        
+
                     </td>
                 }
             </tr>
@@ -54,6 +54,6 @@
     protected override void OnInitialized()
     {
 
-        Details = new List<CebDetail>();
+        Details =  new List<CebDetail>();
     }
 }

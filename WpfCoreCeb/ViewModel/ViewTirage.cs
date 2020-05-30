@@ -1,10 +1,12 @@
 ﻿#region
 
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -240,10 +242,13 @@ namespace CompteEstBon.ViewModel {
             await Task.Run(() => {
                 switch (fmt.ToLower()) {
                     case "excel":
-                        Tirage.ToExcel();
+
+                        ExportExcel();
+                       // Tirage.ToExcel();
                         break;
                     case "word":
-                        Tirage.ToWord();
+                        // Tirage.ToWord();
+                        ExportWord();
                         break;
                 }
             });
@@ -349,6 +354,46 @@ namespace CompteEstBon.ViewModel {
             NotifiedChanged("Status");
         }
 
+        public (bool select, string name ) GetFileName(string ty) {
+            var dialog = new SaveFileDialog();
+            if (ty == "xlsx") {
+                dialog.Filter = "Excel (*.xlsx)| *.xlsx";
+                dialog.Title = "Fichiers Excel";
+            } else {
+                dialog.Filter = "Word (*.docx) | *.docx";
+                dialog.Title = "Fichiers Word";
+            }
+            if ((bool) dialog.ShowDialog()) {
+                return (true, dialog.FileName);
+            }
+            return (false, null);
+
+        }
+
+        public void ExportExcel() {
+            var fich = GetFileName("xlsx");
+            if (!fich.select) return;
+            var stream = File.OpenWrite(fich.name);
+            Tirage.ExportExcel(stream, Duree.TotalSeconds);
+            stream.Close();
+            Lancer(fich.name);
+        }
+        public void ExportWord() {
+            var fich = GetFileName("docx");
+            if (!fich.select) return;
+            var stream = File.OpenWrite(fich.name);
+            Tirage.ExportWord(stream, Duree.TotalSeconds);
+            stream.Close();
+            Lancer(fich.name);
+ 
+        }
+        public void Lancer(string nom) {
+            var info = new ProcessStartInfo {
+                UseShellExecute = true,
+                FileName = nom
+            };
+            Process.Start(info);
+        }
         #endregion Action
     }
 }
