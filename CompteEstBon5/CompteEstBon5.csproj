@@ -8,4 +8,8 @@
     <RootNamespace>CompteEstBon</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="CebDetail.cs" />
+  </ItemGroup>
+
 </Project>

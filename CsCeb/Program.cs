@@ -1,39 +1,23 @@
 ﻿using CompteEstBon;
-using McMaster.Extensions.CommandLineUtils;
+using System.CommandLine;
+using System.CommandLine.DragonFruit;
 using System;
 using System.Linq;
 using static System.Console;
+using Microsoft.VisualBasic.FileIO;
 
 namespace CsCeb {
+   
     internal class Program {
-        private static void Main(string[] args) {
+        private static void Main(  int? search=null , int[] plaques = null, bool wait = false) {
             var tirage = new CebTirage();
-            var parser = new CommandLineApplication(false);
-            var argPlaques = parser.Argument("plaques", "liste des plaques", multipleValues: true);
-            var searchOption = parser.Option("-s | --search", "valeur à rechercher", CommandOptionType.SingleValue);
-            var waitOption = parser.Option("-w | --wait", "Attente fin calcul", CommandOptionType.NoValue);
-            parser.HelpOption("-h | --help");
-            parser.OnExecute(() => {
-                if (searchOption.HasValue()) {
-                    if (int.TryParse(searchOption.Value(), out int search)) {
-                        tirage.Search = search;
-                    }
-                    else {
-                        return -2;
-                    }
-                }
-                var ix = 0;
-                foreach (var value in argPlaques.Values) {
-                    if (int.TryParse(value, out int plaque)) {
-                        tirage.Plaques[ix++].Value = plaque;
-                    }
-                    else {
-                        return -1;
-                    }
-                }
-                return 0;
-            });
-            parser.Execute(args);
+            tirage.Search = search ?? tirage.Search;
+          
+            if (plaques != null) {
+                tirage.SetPlaques(plaques);
+            }
+           
+       
             var (ts, result) = EvalTime(tirage.Resolve);
             WriteLine("** Le Compte est bon **");
             Write("Tirage:\t");
@@ -62,7 +46,7 @@ namespace CsCeb {
             }
             WriteLine();
             WriteLine("** fin calcul **");
-            if (waitOption.HasValue())
+            if (wait)
                 ReadLine();
         }
 

@@ -1,17 +1,17 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace CompteEstBon
-{
+namespace CompteEstBon {
+
     /// <inheritdoc />
     /// /// /// ///
     /// <summary>
     ///     Classe op�ration
     /// </summary>
     [Guid("59276C20-8670-47FB-BA13-44A1450CB9BF")]
-    public sealed class CebOperation : CebBase
-    {
+    public sealed class CebOperation : CebBase {
         public static readonly char[] AllOperations = { 'x', '+', '-', '/' };
+
         /// <summary>
         ///     Constructor op�ration (g op d)
         /// </summary>
@@ -20,9 +20,8 @@ namespace CompteEstBon
         ///     name="op">
         /// </param>
         /// <param name="d"> </param>
-        public CebOperation(CebBase g, char op, CebBase d)
-        {
-            if(g.Value < d.Value) {
+        public CebOperation(CebBase g, char op, CebBase d) {
+            if (g.Value < d.Value) {
                 (g, d) = (d, g);
             }
             Value = op switch
@@ -34,15 +33,25 @@ namespace CompteEstBon
                 _ => 0
             };
             if (Value == 0) return;
-            Add(g);
-            Add(d);
-            this[Rank++] = $"{g.Value} {op} {d.Value} = {Value}";
+            Add(g, op, d);
         }
 
-        /// <summary>
-        ///     Renvoie le rang
-        /// </summary>
-
         public override bool IsValid => Value > 0;
+
+        private void Add(CebBase ceb) {
+            if (ceb is CebPlaque) return;
+            foreach (var o in ceb.Operations) {
+                AddOperation(o);
+            }
+
+
+        }
+
+        private int Add(CebBase gauche, char op, CebBase droite) {
+            Add(gauche);
+            Add(droite);
+            AddOperation($"{gauche.Value} {op} {droite.Value} = {Value}");
+            return Rank;
+        }
     }
 }

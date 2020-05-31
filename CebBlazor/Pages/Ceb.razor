@@ -263,7 +263,7 @@
         await toast.ShowAsync(tirage.Solutions[0]);
 
     }
-    private async Task ShowSolutionAsync(CebDetail sol) => await toast.ShowAsync(sol);
+    private async Task ShowSolutionAsync(CebBase sol) => await toast.ShowAsync(sol);
 
     private async Task ExportExcelAsync() {
         using var mstream = new MemoryStream();

@@ -73,7 +73,7 @@
         <Button
             Grid.Row="1"
             Grid.Column="0"
-            Grid.ColumnSpan="3"
+            Grid.ColumnSpan="2"
             Command="{Binding HasardCommand}"
             KeyboardAcceleratorPlacementMode="Auto"
             Style="{StaticResource CebButtonStyle}"
@@ -90,8 +90,8 @@
         </Button>
         <Button
             Grid.Row="1"
-            Grid.Column="3"
-            Grid.ColumnSpan="4"
+            Grid.Column="2"
+            Grid.ColumnSpan="3"
             Command="{Binding ResolveCommand}"
             Style="{StaticResource CebButtonStyle}"
             ToolTipService.ToolTip="Raccourci: Ctrl+R">
@@ -108,9 +108,11 @@
         <Button
             x:Name="ExportExcel"
             Grid.Row="1"
-            Grid.Column="7"
+            Grid.Column="5"
+            Grid.ColumnSpan="1"
+            
             Command="{Binding ExportCommand}"
-            CommandParameter="{Binding ElementName=SolutionsData}"
+            CommandParameter="Excel"
             Style="{StaticResource CebButtonStyle}"
             ToolTipService.ToolTip="Raccourci: Ctrl+X">
             <Button.KeyboardAccelerators>
@@ -120,6 +122,26 @@
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Margin="5" Symbol="Save" />
                     <TextBlock Margin="5" Text="Excel" />
+                </StackPanel>
+            </Button.Content>
+
+        </Button>
+        <Button
+            x:Name="ExportWord"
+            Grid.Row="1"
+            Grid.Column="6"
+            Grid.ColumnSpan="1"
+            Command="{Binding ExportCommand}"
+            CommandParameter="Word"
+            Style="{StaticResource CebButtonStyle}"
+            ToolTipService.ToolTip="Raccourci: Ctrl+W">
+            <Button.KeyboardAccelerators>
+                <KeyboardAccelerator Key="W" Modifiers="Control" />
+            </Button.KeyboardAccelerators>
+            <Button.Content>
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Margin="5" Symbol="Save" />
+                    <TextBlock Margin="5" Text="Word" />
                 </StackPanel>
             </Button.Content>
 
@@ -368,8 +390,15 @@
                         Style="{ThemeResource AppBarButtonRevealStyle}" />
                     <AppBarButton
                         Command="{Binding ExportCommand}"
+                        CommandParameter="Excel"
                         Icon="Save"
-                        Label="Export"
+                        Label="Excel"
+                        Style="{ThemeResource AppBarButtonRevealStyle}" />
+                     <AppBarButton
+                        Command="{Binding ExportCommand}"
+                        CommandParameter="Word"
+                        Icon="Save"
+                        Label="Word"
                         Style="{ThemeResource AppBarButtonRevealStyle}" />
 
                     <AppBarButton

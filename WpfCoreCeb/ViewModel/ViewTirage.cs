@@ -49,7 +49,7 @@ namespace CompteEstBon.ViewModel {
         /// <returns>
         /// </returns>
         public ViewTirage() {
-            Solutions = new ObservableCollection<CebDetail>();
+            Solutions = new ObservableCollection<CebBase>();
             stopwatch = new Stopwatch();
 
             dateDispatcher = new DispatcherTimer {
@@ -115,7 +115,7 @@ namespace CompteEstBon.ViewModel {
             }
         }
 
-        public ObservableCollection<CebDetail> Solutions { get; set; }
+        public ObservableCollection<CebBase> Solutions { get; set; }
         
 
         public int Search {

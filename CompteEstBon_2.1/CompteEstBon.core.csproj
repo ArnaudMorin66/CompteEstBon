@@ -9,7 +9,6 @@
   <ItemGroup>
     <Compile Include="..\CompteEstBon\CebBase.cs" Link="CebBase.cs" />
     <Compile Include="..\CompteEstBon\CebData.cs" Link="CebData.cs" />
-    <Compile Include="..\CompteEstBon\CebDetail.cs" Link="CebDetail.cs" />
     <Compile Include="..\CompteEstBon\CebFind.cs" Link="CebFind.cs" />
     <Compile Include="..\CompteEstBon\CebOperation.cs" Link="CebOperation.cs" />
     <Compile Include="..\CompteEstBon\CebPlaque.cs" Link="CebPlaque.cs" />

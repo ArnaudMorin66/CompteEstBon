@@ -46,14 +46,14 @@
         }
     }
 
-    [Parameter] public EventCallback<CebDetail> ShowDetail { get; set; }
-    [Parameter] public IEnumerable<CebDetail> Details { get; set; }
+    [Parameter] public EventCallback<CebBase> ShowDetail { get; set; }
+    [Parameter] public IEnumerable<CebBase> Details { get; set; }
 
 
 
     protected override void OnInitialized()
     {
 
-        Details =  new List<CebDetail>();
+        Details =  new List<CebBase>();
     }
 }

@@ -63,7 +63,7 @@
 @code {
     protected Timer timer;
 
-    public CebDetail Solution { get; set; }
+    public CebBase Solution { get; set; }
 
     [Parameter]
     public int DueTime { get; set; }
@@ -84,7 +84,7 @@
 
     }
 
-    public void Show(CebDetail detail) {
+    public void Show(CebBase detail) {
         timer?.Stop();
         Solution = detail;
 

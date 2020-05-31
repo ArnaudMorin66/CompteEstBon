@@ -86,7 +86,7 @@ namespace CompteEstBon {
                 var storageFolder =
                     ApplicationData.Current.LocalFolder;
                 var licenseFile =
-                    await storageFolder.GetFileAsync("syncfusion_uwp.lic");
+                    await storageFolder.GetFileAsync("SyncfusionLicense.txt");
                 SyncfusionLicenseProvider.RegisterLicense(await FileIO.ReadTextAsync(licenseFile));
             } catch (Exception) {
                 // ignored

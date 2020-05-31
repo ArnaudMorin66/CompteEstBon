@@ -1,0 +1,16 @@
+﻿
+@inject CompteEstBon.CebTirage tirage
+<select @bind="Plaque" class="custom-select bg-gradient-dark text-white text-center" aria-label="Selectionner une plaque">
+    <option selected>Plaque...</option>
+    @foreach (var p in CompteEstBon.CebPlaque.AnyPlaques)
+    {
+        <option value="@p">@p</option>
+    }
+
+</select>
+
+@code {
+    [Parameter]
+    public int Plaque { get; set; }
+
+}

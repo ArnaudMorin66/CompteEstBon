@@ -290,7 +290,7 @@
                 Style="{StaticResource CebButtonStyle}"
                 ToolTipService.ToolTip="Raccourci: Alt+W">
                 <Button.Content>
-                    <Image Source="/Assets/Word.png" />
+                    <Image Source="/Assets/Word.png" Margin="5"  Height="32" Width="32" />
                 </Button.Content>
 
             </Button>
@@ -304,7 +304,7 @@
                 Style="{StaticResource CebButtonStyle}"
                 ToolTipService.ToolTip="Raccourci: Alt+X">
                 <Button.Content>
-                    <Image Source="/Assets/Excel.png" />
+                    <Image Source="/Assets/Excel.png" Margin="5" Height="32" Width="32"/>
                 </Button.Content>
             </Button>
         </Grid>

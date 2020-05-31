@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -49,7 +50,7 @@ namespace CompteEstBon {
 
         public ObservableCollection<int> Plaques { get; } = new ObservableCollection<int> { -1, -1, -1, -1, -1, -1 };
 
-        public IEnumerable<int> ListePlaques { get; } = CebPlaque.ListePlaques;
+        public IEnumerable<int> ListePlaques { get; } = CebPlaque.AnyPlaques;
         private int _nsolutions;
         public int NSolutions {
             get => _nsolutions;
@@ -226,41 +227,40 @@ namespace CompteEstBon {
             }
         }
         private async void Exportcmd(object obj) {
-            var SolutionsData = (SfDataGrid)obj;
-            FileSavePicker savePicker = new FileSavePicker {
+            var cmd = obj as string;
+            var savePicker = new FileSavePicker {
                 SuggestedStartLocation = PickerLocationId.DocumentsLibrary
             };
             // Dropdown of file types the user can save the file as
-            savePicker.FileTypeChoices.Add("Excel", new List<string>() { ".xlsx" });
+            switch (cmd) {
+                case "Excel":
+                    savePicker.FileTypeChoices.Add("Excel", new List<string>() { ".xlsx" });
+                    break;
+                default:
+                    savePicker.FileTypeChoices.Add("Word", new List<string>() { ".docx" });
+                    break;
+            }
             // Default file name if the user does not type one in or select a file to replace
             savePicker.SuggestedFileName = "Ceb";
-            StorageFile file = await savePicker.PickSaveFileAsync();
+            var file = await savePicker.PickSaveFileAsync();
             if (file != null) {
                 // Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
                 CachedFileManager.DeferUpdates(file);
+                using (var stream = await file.OpenStreamForWriteAsync()) {
 
-                var options = new ExcelExportingOptions {
-                    ExcelVersion = ExcelVersion.Excel2016,
-                    ExportAllPages = true
-                };
-                var excelEngine = SolutionsData.ExportToExcel(SolutionsData.View, options);
-                var workBook = excelEngine.Excel.Workbooks[0];
-                var ws = workBook.Worksheets[0];
-                ws.ListObjects.Create("Table1", ws[$"A1:E{SolutionsData.View.Records.Count + 1}"])
-                    .BuiltInTableStyle = TableBuiltInStyles.TableStyleMedium1;
-                ws.InsertRow(1, 3);
-                ws.Range["A1"].Value = "Plaques:";
-                for (var i = 0; i < 6; i++) {
-                    ws.Range[1, i + 2].Value2 = Tirage.Plaques[i].Value;
+                    if (cmd == "Excel") {
+                        await Tirage.ExportExcelAsync(stream, Duree);
+                    }
+                    else {
+                        await Tirage.ExportWordAsync(stream, Duree);
+                    }
+
+                    stream.Close();
                 }
-                ws.Range["A2"].Value2 = "Cherche:";
-                ws.Range["B2"].Value2 = Search;
-                ws.Range["A3"].Value2 = Result;
 
-                await workBook.SaveAsAsync(file);
                 // Let Windows know that we're finished changing the file so the other app can update the remote version of the file.
                 // Completing updates may require Windows to ask for user input.
-                FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(file);
+                _ = await CachedFileManager.CompleteUpdatesAsync(file);
 
                 await Launcher.LaunchFileAsync(file);
 
@@ -320,7 +320,7 @@ namespace CompteEstBon {
                 PopupIsOpen = false;
             }
             if (no < 0) no = 0;
-            CurrentSolution = Tirage.SolutionIndex(no);
+            CurrentSolution = Tirage.Solution(no);
             PopupIsOpen = true; // Visibility.Visible;
             NotifyTimer.Start();
         }
@@ -363,11 +363,11 @@ namespace CompteEstBon {
                 : (Tirage.Status == CebStatus.CompteApproche ?
                 $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}" : "Tirage incorrect");
             IsCalculed = (Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche);
-            FirstSolutionString = Tirage.SolutionIndex(0);
+            FirstSolutionString = Tirage.Solution(0);
 
             var frame = Window.Current.Content as Frame;
             var page = frame.Content as MainPage;
-            page.SolutionsData.ItemsSource = Tirage.Details;
+            page.SolutionsData.ItemsSource = Tirage.Solutions;
             NSolutions = Tirage.Solutions.Count;
 
 

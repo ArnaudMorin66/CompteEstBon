@@ -38,18 +38,19 @@ namespace CompteEstBon {
 
         public override bool IsValid => Value > 0;
 
-        private int Add(CebBase ceb) {
-            for (var i = 0; i < ceb.Rank; i++) {
-                this[Rank++] = ceb[i];
-                if (Rank == 5) break;
+        private void Add(CebBase ceb) {
+            if (ceb is CebPlaque) return;
+            foreach (var o in ceb.Operations) {
+                AddOperation(o);
             }
-            return Rank;
+
+
         }
 
         private int Add(CebBase gauche, char op, CebBase droite) {
             Add(gauche);
             Add(droite);
-            this[Rank++] = $"{gauche.Value} {op} {droite.Value} = {Value}";
+            AddOperation($"{gauche.Value} {op} {droite.Value} = {Value}");
             return Rank;
         }
     }

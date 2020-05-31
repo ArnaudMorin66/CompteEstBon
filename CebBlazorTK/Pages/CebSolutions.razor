@@ -6,7 +6,7 @@
              SelectionMode="Telerik.Blazor.GridSelectionMode.Single"
              Class="solutions border border-secondary"
              SelectedItemsChanged="@(async (liste)=> await ShowDetail.InvokeAsync(liste.FirstOrDefault()))"
-             TItem="CebDetail">
+             TItem="CebBase">
 
     <GridColumns>
         @if (TypeGrille == CebTypeGrille.Grille) {
@@ -19,7 +19,7 @@
             <GridColumn>
                 <Template>
                     @{
-                        var row = context as CebDetail;
+                        var row = context as CebBase;
                         <div>@row.Op1</div>
                         <div>@row.Op2</div>
                         <div>@row.Op3</div>
@@ -35,7 +35,7 @@
 
 
 @code {
-    private IEnumerable<CebDetail> cebDetails;
+    // private IEnumerable<CebBase> CebBases;
     private CebTypeGrille _typegrille;
     [Parameter]
     public CebTypeGrille TypeGrille {
@@ -48,17 +48,12 @@
         }
     }
 
-    [Parameter] public EventCallback<CebDetail> ShowDetail { get; set; }
-    [Parameter] public IEnumerable<CebDetail> Details {
-        get => cebDetails;
-        set {
-            cebDetails = value?? null;
-        }
-
-    }
+    [Parameter] public EventCallback<CebBase> ShowDetail { get; set; }
+    [Parameter] public IEnumerable<CebBase> Details { get; set; }
+     
 
     protected override void OnInitialized() {
 
-        Details = new List<CebDetail>();
+        //Details = new List<CebBase>();
     }
 }

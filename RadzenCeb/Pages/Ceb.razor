@@ -145,7 +145,7 @@
         </div>
     </div>
 </div>
-<CebSolutions @ref="@solutions" TypeGrille="@TypeGrille" Details="@Details" ></CebSolutions>
+<CebSolutions @ref="@solutions" TypeGrille="@TypeGrille" Details="@tirage.Solutions" ></CebSolutions>
 <div class="text-white text-center font-weight-bolder text-wrap">
     <div class="anima">
         @switch (tirage.Status) {
@@ -195,16 +195,11 @@
     public CebToast toast;
     Stopwatch stopwatch;
     CebSolutions solutions { get; set; }
-    public IEnumerable<CebDetail> Details { get; set; }
+    
 
     protected override void OnInitialized() {
         stopwatch = new Stopwatch();
-        Details = new List<CebDetail>(tirage.Solutions);
-        tirage.PropertyChanged += async (sender, e) =>
-        {
-            Details = new List<CebDetail>(tirage.Solutions);
-            await InvokeAsync(StateHasChanged);
-        }; //  solutions.RefreshAsync(); };
+       
         base.OnInitialized();
 
     }

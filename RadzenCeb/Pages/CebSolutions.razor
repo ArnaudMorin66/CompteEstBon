@@ -3,19 +3,19 @@
 
     <RadzenGrid Data="Details" Style="height: 400px"     
         Class="solutions border border-secondary"
-        TItem="CebDetail" EmptyText="">
+        TItem="CebBase" EmptyText="">
         <Columns>
             @if (TypeGrille == CebTypeGrille.Grille)
             {
-                <RadzenGridColumn TItem="CebDetail" Property="Op1" Title="Opération 1"></RadzenGridColumn>
-                <RadzenGridColumn TItem="CebDetail" Property="Op2" Title="Opération 2"></RadzenGridColumn>
-                <RadzenGridColumn TItem="CebDetail" Property="Op3" Title="Opération 3"></RadzenGridColumn>
-                <RadzenGridColumn TItem="CebDetail" Property="Op4" Title="Opération 4"></RadzenGridColumn>
-                <RadzenGridColumn TItem="CebDetail" Property="Op5" Title="Opération 5"></RadzenGridColumn>
+                <RadzenGridColumn TItem="CebBase" Property="Op1" Title="Opération 1"></RadzenGridColumn>
+                <RadzenGridColumn TItem="CebBase" Property="Op2" Title="Opération 2"></RadzenGridColumn>
+                <RadzenGridColumn TItem="CebBase" Property="Op3" Title="Opération 3"></RadzenGridColumn>
+                <RadzenGridColumn TItem="CebBase" Property="Op4" Title="Opération 4"></RadzenGridColumn>
+                <RadzenGridColumn TItem="CebBase" Property="Op5" Title="Opération 5"></RadzenGridColumn>
             }
             else
             {
-                <RadzenGridColumn TItem="CebDetail" Property="Op3" Title="Opérations">
+                <RadzenGridColumn TItem="CebBase" Property="Op3" Title="Opérations">
                     <Template Context="data">
                             <div>@data.Op1</div>
                             <div>@data.Op2</div>
@@ -45,11 +45,11 @@
     }
 
     [Parameter]
-    public IEnumerable<CebDetail> Details { get; set; }
+    public IEnumerable<CebBase> Details { get; set; }
 
     protected override void OnInitialized() {
 
-        Details = new List<CebDetail>();
+        // Details = new List<CebBase>();
     }
 
 }

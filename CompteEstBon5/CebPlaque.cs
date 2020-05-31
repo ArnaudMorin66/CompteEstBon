@@ -25,9 +25,9 @@ namespace CompteEstBon {
         public event PropertyChangedEventHandler PropertyChanged;
 
         public CebPlaque(int value, PropertyChangedEventHandler /* EventHandler<int>*/ handler = null) {
-            Rank = 0;
+            
             Value = value;
-            Op1 = value.ToString();
+            AddOperation(value.ToString());
             if (handler != null)
                 PropertyChanged += handler;
         }
@@ -44,7 +44,7 @@ namespace CompteEstBon {
             set {
                 if (base.Value == value) return;
                 base.Value = value;
-                Op1 = value.ToString();
+                Operations[0] = value.ToString();
                 NotifyPropertyChanged();
             }
         }

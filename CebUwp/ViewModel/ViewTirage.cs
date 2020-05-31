@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -11,6 +12,9 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
+using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.System;
 using Windows.UI;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -19,7 +23,7 @@ using Windows.UI.Xaml.Media.Animation;
 namespace CompteEstBon.ViewModel {
 
     internal class ViewTirage : INotifyPropertyChanged, ICommand {
-        private ValueSet xlData;
+       
 
         private Color _background;
         private double _duree;
@@ -145,7 +149,7 @@ namespace CompteEstBon.ViewModel {
         /// </returns>
         public ViewTirage() {
 
-            App.AppServiceConnected += ViewTirage_AppServiceConnected;
+            
 
             Symbol = ListeSymbols[CebStatus.Valid];
             _background = Colors.DarkSlateGray;
@@ -174,26 +178,7 @@ namespace CompteEstBon.ViewModel {
             dateDispatcher.Start();
         }
 
-        private async void ViewTirage_AppServiceConnected(object sender, EventArgs e) {
-            AppServiceResponse response = await App.Connection.SendMessageAsync(xlData);
-
-            // check the result
-            object result;
-
-            MessageDialog dialog;
-            if (!response.Message.TryGetValue("RESPONSE", out result)) {
-                dialog = new MessageDialog("RESPONSE introuvable");
-                await dialog.ShowAsync();
-            } else if (result.ToString() != "SUCCESS") {
-                dialog = new MessageDialog(result.ToString());
-                await dialog.ShowAsync();
-            }
-
-            // no longer need the AppService connection
-            App.AppServiceDeferral.Complete();
-            IsBusy = false;
-        }
-
+        
         private void UpdateColors() {
             Symbol = ListeSymbols[Tirage.Status];
 
@@ -312,27 +297,46 @@ namespace CompteEstBon.ViewModel {
         };
 
         public async Task ExportAsync(string cmd) {
-            try {
-                xlData = new ValueSet {
-                    { "Command", cmd },
-                    { "Plaques", Plaques.ToArray() },
-                    { "Search", Search },
-                    { "Result", Result },
-                    { "Status", (int)Tirage.Status },
-                    { "Solutions", Tirage.Solutions.Select(p=> p.ToString()).ToArray() }
-                 };
-            } catch (Exception e) {
-                MessageDialog d = new MessageDialog(e.ToString());
-                await d.ShowAsync();
-                return;
+            var savePicker = new FileSavePicker {
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+            };
+            // Dropdown of file types the user can save the file as
+            switch (cmd) {
+                case "excel":
+                    savePicker.FileTypeChoices.Add("Excel", new List<string>() { ".xlsx" });
+                    break;
+                case "word":
+                    savePicker.FileTypeChoices.Add("Word", new List<string>() { ".docx" });
+                    break;
+                default:
+                    return;
             }
-            if (ApiInformation.IsApiContractPresent("Windows.ApplicationModel.FullTrustAppContract", 1, 0)) {
-                IsBusy = true;
-                await FullTrustProcessLauncher.LaunchFullTrustProcessForCurrentAppAsync();
-            } else {
+            // Default file name if the user does not type one in or select a file to replace
+            savePicker.SuggestedFileName = "Ceb";
+            var file = await savePicker.PickSaveFileAsync();
+            if (file != null) {
+                // Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
+                CachedFileManager.DeferUpdates(file);
+                using (var stream = await file.OpenStreamForWriteAsync()) {
 
-                MessageDialog dialog = new MessageDialog("This feature is only available on Windows 10 Desktop SKU");
-                await dialog.ShowAsync();
+                    switch (cmd) {
+                        case "excel":
+                            await Tirage.ExportExcelAsync(stream, Duree);
+                            break;
+                        case "word":
+                            await Tirage.ExportWordAsync(stream, Duree);
+                            break;
+                    }
+
+                    stream.Close();
+                }
+
+                // Let Windows know that we're finished changing the file so the other app can update the remote version of the file.
+                // Completing updates may require Windows to ask for user input.
+                _ = await CachedFileManager.CompleteUpdatesAsync(file);
+
+                await Launcher.LaunchFileAsync(file);
+
             }
         }
 

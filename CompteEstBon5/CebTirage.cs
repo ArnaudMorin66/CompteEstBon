@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -18,7 +19,6 @@ namespace CompteEstBon {
     /// Gestion tirage Compte est bon
     /// </summary>
     [System.Runtime.InteropServices.Guid("EC9CF01C-34A0-414C-BF2A-D06C5A61503D")]
-    [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     public sealed class CebTirage: INotifyPropertyChanged {
         public IEnumerable<int> ListePlaques = CebPlaque.AnyPlaques;
         private static readonly Random Rnd = new Random();
@@ -83,7 +83,7 @@ namespace CompteEstBon {
         private List<CebBase> _solutions = new List<CebBase>();
 
 
-        public List<CebBase> Solutions => Status == CebStatus.CompteApproche || Status == CebStatus.CompteEstBon ? _solutions : new List<CebBase>();
+        public ImmutableList<CebBase> Solutions => Status == CebStatus.CompteApproche || Status == CebStatus.CompteEstBon ? _solutions.ToImmutableList()  : ImmutableList<CebBase>.Empty;
 
         [JsonIgnore]
         public IEnumerable<string> SolutionsToString => _solutions.Select(s => s.ToString());
@@ -118,7 +118,7 @@ namespace CompteEstBon {
             Plaques = Plaques.Select(p => p.Value),
             Status = Status,
             Diff = Diff,
-            Solutions = _solutions,
+            Solutions = Solutions,
             Found = Found.ToString()
         };
 
@@ -246,8 +246,5 @@ namespace CompteEstBon {
             }
         }
 
-        private string GetDebuggerDisplay() {
-            return ToString();
-        }
     }
 }

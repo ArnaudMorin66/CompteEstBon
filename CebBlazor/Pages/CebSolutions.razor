@@ -5,17 +5,16 @@
 @using Syncfusion.Blazor.Grids
 
 
-<SfGrid @ref="gsolutions"
-        @bind-DataSource="_Details"
+<SfGrid @bind-DataSource="Details"
         GridLines="GridLine.None"
         Height="400"
         AllowSelection="true"
         AllowExcelExport="true"
         AllowResizing="true"
         EnableAltRow="true"
-        TValue="TDetail"
+        TValue="CebBase"
         ID="solutions">
-    <GridEvents RowSelected="@(async (arg) => await ShowDetail.InvokeAsync(_Details.ElementAt((int)arg.RowIndex).Detail))"
+    <GridEvents RowSelected="@(async (arg) => await ShowDetail.InvokeAsync(Details.ElementAt((int)arg.RowIndex)))"
                 TValue="Object"></GridEvents>
     <GridSelectionSettings Mode="Syncfusion.Blazor.Grids.SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
     <GridColumns>
@@ -25,11 +24,11 @@
             <Template Context="data">
                 @if (TypeGrille == CebTypeGrille.Grille)
                 {
-                    @((data as TDetail).Op3)
+                    @((data as CebBase).Op3)
                 }
                 else
                 {
-                    var det = data as TDetail;
+                    var det = data as CebBase;
                     <div>@det.Op1</div>
                     <div>@det.Op2</div>
                     <div>@det.Op3</div>
@@ -44,7 +43,7 @@
     </GridColumns>
 </SfGrid>
 @code {
-    public SfGrid<TDetail> gsolutions;
+
 
     private CebTypeGrille _typegrille;
     [Parameter]
@@ -61,23 +60,13 @@
             }
         }
     }
-    private IEnumerable<TDetail> _Details;
+
 
 
     [Parameter]
-    public IEnumerable<CebDetail> Details
-    {
-        get => _Details.Select(e => e.Detail);
+    public IEnumerable<CebBase> Details { get; set; }
 
-        set
-        {
-            _Details = value?.Select(e => new TDetail(e));
-            InvokeAsync(StateHasChanged);
-
-        }
-    }
-
-    [Parameter] public EventCallback<CebDetail> ShowDetail { get; set; }
+    [Parameter] public EventCallback<CebBase> ShowDetail { get; set; }
 
 
     protected async override Task OnInitializedAsync()

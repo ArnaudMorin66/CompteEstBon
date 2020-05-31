@@ -10,6 +10,6 @@ namespace CompteEstBon {
         public CebStatus? Status { get; set; }
         public string Found { get; set; }
         public int? Diff { get; set; }
-        public IEnumerable<CebDetail> Solutions { get; set; }
+        public IEnumerable<CebBase> Solutions { get; set; }
     }
 }

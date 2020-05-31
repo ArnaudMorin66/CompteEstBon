@@ -193,7 +193,7 @@
 </div>
 <CebToast @ref="toast" DueTime="8000" Duree="@duree"></CebToast>
 @code {
-    // public IEnumerable<CebDetail> Details { get; set; }
+    // public IEnumerable<CebBase> Details { get; set; }
     int search { get; set; }
     CebTypeGrille TypeGrille { get; set; }
     double duree { get; set; } = 0;
@@ -204,18 +204,18 @@
 
     protected override void OnInitialized()
     {
-        // Details = new List<CebDetail>(tirage.Solutions);
+        // Details = new List<CebBase>(tirage.Solutions);
         stopwatch = new Stopwatch();
         tirage.PropertyChanged += async (sender, e) =>
         {
-            // Details = tirage.Solutions.ToList(); // new List<CebDetail>(tirage.Solutions);
+            // Details = tirage.Solutions.ToList(); // new List<CebBase>(tirage.Solutions);
             await InvokeAsync(StateHasChanged);
         }; //  solutions.RefreshAsync(); };
         base.OnInitialized();
 
     }
 
-    private async Task ShowSolutionAsync(CebDetail sol)
+    private async Task ShowSolutionAsync(CebBase sol)
     {
         await toast.ShowAsync(sol);
     }
