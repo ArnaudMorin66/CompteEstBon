@@ -25,9 +25,10 @@
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="Background" Value="{StaticResource CebLinearGradientBrush2}" />
                 <Setter Property="Foreground" Value="White" />
-                <Setter Property="FontSize" Value="12" />
+                <Setter Property="FontSize" Value="10" />
             </Style>
             <local:FormatConverter x:Key="formatConverter" />
+            
 
         </ResourceDictionary>
     </Page.Resources>
@@ -39,7 +40,6 @@
     <Grid x:Name="Grid" x:FieldModifier="public">
         <Grid.Resources />
         <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
             <RowDefinition Height="50" />
             <RowDefinition Height="40" />
             <RowDefinition Height="40" />
@@ -54,11 +54,14 @@
             <ColumnDefinition />
             <ColumnDefinition />
             <ColumnDefinition />
+             <ColumnDefinition Width="120" />
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="80" />
         </Grid.ColumnDefinitions>
         <Border
             Grid.Row="0"
             Grid.Column="0"
-            Grid.ColumnSpan="7"
+            Grid.ColumnSpan="10"
             Background="{StaticResource CebLinearGradientBrush2}">
 
             <TextBlock
@@ -70,27 +73,20 @@
                 <TextBlock.Text>Jeu du compte est bon</TextBlock.Text>
             </TextBlock>
         </Border>
-        <Button
+       
+     
+        <Border
             Grid.Row="1"
             Grid.Column="0"
-            Grid.ColumnSpan="2"
-            Command="{Binding HasardCommand}"
-            KeyboardAcceleratorPlacementMode="Auto"
-            Style="{StaticResource CebButtonStyle}"
-            ToolTipService.ToolTip="Raccourci: Ctrl+H">
-            <Button.KeyboardAccelerators>
-                <KeyboardAccelerator Key="H" Modifiers="Control" />
-            </Button.KeyboardAccelerators>
-            <Button.Content>
-                <StackPanel Orientation="Horizontal">
-                    <SymbolIcon Margin="5" Symbol="Shuffle" />
-                    <TextBlock Margin="5" Text=" Hasard" />
-                </StackPanel>
-            </Button.Content>
-        </Button>
+            Grid.ColumnSpan="6"
+            Margin="0"
+            Padding="0"
+            Style="{StaticResource BorderTitreStyle}">
+            <TextBlock Style="{StaticResource TextBoxTitreStyle}">Plaques</TextBlock>
+        </Border>
         <Button
             Grid.Row="1"
-            Grid.Column="2"
+            Grid.Column="7"
             Grid.ColumnSpan="3"
             Command="{Binding ResolveCommand}"
             Style="{StaticResource CebButtonStyle}"
@@ -105,10 +101,93 @@
                 </StackPanel>
             </Button.Content>
         </Button>
+        <sfi:SfComboBox 
+            Grid.Row="2"
+            Grid.Column="0"
+            ItemsSource="{Binding ListePlaques}"
+            SelectedValue="{Binding Plaques[0], Mode=TwoWay}"
+            Style="{StaticResource SfComboboxStyle}" />
+        <sfi:SfComboBox
+            Grid.Row="2"
+            Grid.Column="1"
+            ItemsSource="{Binding ListePlaques}"
+            SelectedValue="{Binding Plaques[1], Mode=TwoWay}"
+            Style="{StaticResource SfComboboxStyle}" />
+        <sfi:SfComboBox
+            Grid.Row="2"
+            Grid.Column="2"
+            ItemsSource="{Binding ListePlaques}"
+            SelectedValue="{Binding Plaques[2], Mode=TwoWay}"
+            Style="{StaticResource SfComboboxStyle}" />
+        <sfi:SfComboBox
+            Grid.Row="2"
+            Grid.Column="3"
+            ItemsSource="{Binding ListePlaques}"
+            SelectedValue="{Binding Plaques[3], Mode=TwoWay}"
+            Style="{StaticResource SfComboboxStyle}" />
+        <sfi:SfComboBox
+            Grid.Row="2"
+            Grid.Column="4"
+            ItemsSource="{Binding ListePlaques}"
+            SelectedValue="{Binding Plaques[4], Mode=TwoWay}"
+            Style="{StaticResource SfComboboxStyle}" />
+        <sfi:SfComboBox
+            Grid.Row="2"
+            Grid.Column="5"
+            ItemsSource="{Binding ListePlaques}"
+            SelectedValue="{Binding Plaques[5], Mode=TwoWay}"
+            Style="{StaticResource SfComboboxStyle}" />
+
+        <Border
+            Grid.Row="1"
+            Grid.Column="6"
+            Style="{StaticResource BorderTitreStyle}">
+            <TextBlock Style="{StaticResource TextBoxTitreStyle}" Text="Cherche" />
+        </Border>
+        <sfi:SfNumericUpDown
+            Grid.Row="2"
+            Grid.Column="6"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Stretch"
+            Background="{StaticResource CebLinearGradientBrush2}"
+            BorderBrush="White"
+            BorderThickness="0.25"
+            FontSize="10"
+            Foreground="White"
+            FormatString="{}0"
+            Maximum="999"
+            MaximumNumberDecimalDigits="0"
+            Minimum="0"
+            SpinButtonsAlignment="Both"
+            TextAlignment="Center"
+            UpDownButtonColor="White"
+            Value="{Binding Search, Mode=TwoWay}" />
+
+        <Button
+            Grid.Row="2"
+            Grid.Column="7"
+            Grid.ColumnSpan="1"
+            Command="{Binding HasardCommand}"
+            KeyboardAcceleratorPlacementMode="Auto"
+            Style="{StaticResource CebButtonStyle}"
+            ToolTipService.ToolTip="Raccourci: Ctrl+H">
+            <Button.KeyboardAccelerators>
+                <KeyboardAccelerator Key="H" Modifiers="Control" />
+            </Button.KeyboardAccelerators>
+            <Button.Content>
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Margin="5" Symbol="Shuffle" />
+                    <TextBlock Margin="5" Text=" Hasard" />
+                </StackPanel>
+            </Button.Content>
+        </Button>
+           
         <Button
             x:Name="ExportExcel"
-            Grid.Row="1"
-            Grid.Column="5"
+            Grid.Row="2"
+            Grid.Column="8"
             Grid.ColumnSpan="1"
             
             Command="{Binding ExportCommand}"
@@ -128,8 +207,8 @@
         </Button>
         <Button
             x:Name="ExportWord"
-            Grid.Row="1"
-            Grid.Column="6"
+            Grid.Row="2"
+            Grid.Column="9"
             Grid.ColumnSpan="1"
             Command="{Binding ExportCommand}"
             CommandParameter="Word"
@@ -146,85 +225,11 @@
             </Button.Content>
 
         </Button>
-        <Border
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="6"
-            Margin="0"
-            Padding="0"
-            Style="{StaticResource BorderTitreStyle}">
-            <TextBlock Style="{StaticResource TextBoxTitreStyle}">Plaques</TextBlock>
-        </Border>
-        <sfi:SfComboBox
-            Grid.Row="3"
-            Grid.Column="0"
-            ItemsSource="{Binding ListePlaques}"
-            SelectedValue="{Binding Plaques[0], Mode=TwoWay}"
-            Style="{StaticResource SfComboboxStyle}" />
-        <sfi:SfComboBox
-            Grid.Row="3"
-            Grid.Column="1"
-            ItemsSource="{Binding ListePlaques}"
-            SelectedValue="{Binding Plaques[1], Mode=TwoWay}"
-            Style="{StaticResource SfComboboxStyle}" />
-        <sfi:SfComboBox
-            Grid.Row="3"
-            Grid.Column="2"
-            ItemsSource="{Binding ListePlaques}"
-            SelectedValue="{Binding Plaques[2], Mode=TwoWay}"
-            Style="{StaticResource SfComboboxStyle}" />
-        <sfi:SfComboBox
-            Grid.Row="3"
-            Grid.Column="3"
-            ItemsSource="{Binding ListePlaques}"
-            SelectedValue="{Binding Plaques[3], Mode=TwoWay}"
-            Style="{StaticResource SfComboboxStyle}" />
-        <sfi:SfComboBox
-            Grid.Row="3"
-            Grid.Column="4"
-            ItemsSource="{Binding ListePlaques}"
-            SelectedValue="{Binding Plaques[4], Mode=TwoWay}"
-            Style="{StaticResource SfComboboxStyle}" />
-        <sfi:SfComboBox
-            Grid.Row="3"
-            Grid.Column="5"
-            ItemsSource="{Binding ListePlaques}"
-            SelectedValue="{Binding Plaques[5], Mode=TwoWay}"
-            Style="{StaticResource SfComboboxStyle}" />
-
-        <Border
-            Grid.Row="2"
-            Grid.Column="6"
-            Style="{StaticResource BorderTitreStyle}">
-            <TextBlock Style="{StaticResource TextBoxTitreStyle}" Text="Cherche" />
-        </Border>
-        <sfi:SfNumericUpDown
-            Grid.Row="3"
-            Grid.Column="6"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Stretch"
-            Background="{StaticResource CebLinearGradientBrush2}"
-            BorderBrush="White"
-            BorderThickness="0.25"
-            FontSize="12"
-            Foreground="White"
-            FormatString="{}0"
-            Maximum="999"
-            MaximumNumberDecimalDigits="0"
-            Minimum="0"
-            SpinButtonsAlignment="Both"
-            TextAlignment="Center"
-            UpDownButtonColor="White"
-            Value="{Binding Search, Mode=TwoWay}" />
-
-       
         <sf:SfDataGrid
             x:Name="SolutionsData"
-            Grid.Row="4"
+            Grid.Row="3"
             Grid.Column="0"
-            Grid.ColumnSpan="7"
+            Grid.ColumnSpan="10"
             x:FieldModifier="public"
             AllowFiltering="False"
             AllowGrouping="False"
@@ -235,11 +240,11 @@
             BorderThickness="0.2"
             ColumnSizer="Star"
             CurrentCellBorderBrush="Navy"
-            FontSize="12"
+            FontSize="10"
             Foreground="White"
             HeaderRowHeight="0"
             HeaderStyle="{StaticResource SfDataGridHeaderStyle}"
-    
+            
             NavigationMode="Row"
             RowSelectionBrush="{StaticResource CebLinearGradientBrush1}"
             SelectionChanged="SolutionsData_SelectionChanged"
@@ -265,12 +270,13 @@
                     HeaderText="Opération 5"
                     MappingName="Op5"
                     TextAlignment="Center" />
+
             </sf:SfDataGrid.Columns>
         </sf:SfDataGrid>
          <Grid
-            Grid.Row="5"
+            Grid.Row="4"
             Grid.Column="0"
-            Grid.ColumnSpan="7"
+            Grid.ColumnSpan="10"
             Margin="0,0,0,0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
@@ -294,7 +300,7 @@
                 Grid.Column="1"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="18"
+                FontSize="16"
                 FontWeight="Bold"
                 Foreground="{StaticResource CebForegroundBrush}"
                 TextAlignment="Center">
@@ -306,7 +312,7 @@
                 Grid.Column="2"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                FontSize="18"
+                FontSize="16"
                 FontWeight="Bold"
                 Foreground="{StaticResource CebForegroundBrush}"
                 TextAlignment="Center">
@@ -317,9 +323,9 @@
         </Grid>
         <Popup
             x:Name="StandardPopup"
-            Grid.Row="4"
+            Grid.Row="3"
             Grid.Column="0"
-            Grid.ColumnSpan="7"
+            Grid.ColumnSpan="10"
             Width="600"
             Height="160"
             HorizontalAlignment="Center"
@@ -334,7 +340,7 @@
                 Orientation="Vertical">
                 <TextBlock
                     HorizontalAlignment="Center"
-                    FontSize="18"
+                    FontSize="16"
                     FontWeight="Bold"
                     Foreground="Yellow"
                     HorizontalTextAlignment="Center"

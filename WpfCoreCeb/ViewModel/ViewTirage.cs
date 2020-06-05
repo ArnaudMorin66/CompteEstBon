@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.DirectoryServices;
 using System.IO;
+using System.IO.Packaging;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -16,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
+
 #endregion
 
 namespace CompteEstBon.ViewModel {
@@ -23,8 +26,8 @@ namespace CompteEstBon.ViewModel {
         private readonly Stopwatch NotifyWatch = new Stopwatch();
         private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(10);
 
-        private readonly Storyboard WaitStory =
-            Application.Current.MainWindow?.FindResource("WaitStoryboard") as Storyboard;
+        //private readonly Storyboard WaitStory =
+        //    Application.Current.MainWindow?.FindResource("WaitStoryboard") as Storyboard;
 
         private Color _background = Colors.Navy;
         private TimeSpan _duree;
@@ -49,7 +52,7 @@ namespace CompteEstBon.ViewModel {
         /// <returns>
         /// </returns>
         public ViewTirage() {
-            Solutions = new ObservableCollection<CebBase>();
+            Solutions = null;
             stopwatch = new Stopwatch();
 
             dateDispatcher = new DispatcherTimer {
@@ -76,11 +79,11 @@ namespace CompteEstBon.ViewModel {
         }
 
 
-        public CebTirage Tirage { get; } = new CebTirage();
+        public CebTirage Tirage { get; set; } = new CebTirage();
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.AnyPlaques;
 
         public ObservableCollection<int> Plaques { get; } =
-            new ObservableCollection<int> {0, 0, 0, 0, 0, 0};
+            new ObservableCollection<int> { 0, 0, 0, 0, 0, 0 };
 
         public TimeSpan Duree {
             get => _duree;
@@ -94,7 +97,7 @@ namespace CompteEstBon.ViewModel {
             get => _vertical;
             set {
                 _vertical = value;
-                ModeView = value  ? '\xE2' : '\xE0';
+                ModeView = value ? '\xE2' : '\xE0';
                 NotifiedChanged();
             }
         }
@@ -114,9 +117,17 @@ namespace CompteEstBon.ViewModel {
                 NotifiedChanged();
             }
         }
+        private IEnumerable<CebBase> _solutions;
+        public IEnumerable<CebBase> Solutions { 
+            get => _solutions; 
+            set { 
+                _solutions = value;
+                
+                Count = value == null ? 0 : _solutions.Count();
+                NotifiedChanged();
+            } 
+        }
 
-        public ObservableCollection<CebBase> Solutions { get; set; }
-        
 
         public int Search {
             get => Tirage.Search;
@@ -158,10 +169,6 @@ namespace CompteEstBon.ViewModel {
             get => _isBusy;
             set {
                 _isBusy = value;
-                if (_isBusy)
-                    WaitStory.Begin();
-                else
-                    WaitStory.Pause();
                 NotifiedChanged();
             }
         }
@@ -195,69 +202,58 @@ namespace CompteEstBon.ViewModel {
 
         public async void Execute(object parameter) {
             try {
-                switch ((parameter as string)?.ToLower()) {
+                var cmd = (parameter as string)?.ToLower();
+                switch (cmd) {
                     case "random":
                         await RandomAsync();
                         break;
                     case "resolve": {
-                        switch (Tirage.Status) {
-                            case CebStatus.Valid:
-                                if (IsBusy) return;
-                                await ResolveAsync();
-                                break;
+                            switch (Tirage.Status) {
+                                case CebStatus.Valid:
+                                    if (IsBusy) return;
+                                    await ResolveAsync();
+                                    break;
 
-                            case CebStatus.CompteEstBon:
-                            case CebStatus.CompteApproche:
-                                await ClearAsync();
-                                break;
+                                case CebStatus.CompteEstBon:
+                                case CebStatus.CompteApproche:
+                                    await ClearAsync();
+                                    break;
 
-                            case CebStatus.Erreur:
-                                await RandomAsync();
-                                break;
-                            case CebStatus.Indefini:
-                                break;
-                            case CebStatus.EnCours:
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
+                                case CebStatus.Erreur:
+                                    await RandomAsync();
+                                    break;
+                                case CebStatus.Indefini:
+                                    break;
+                                case CebStatus.EnCours:
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+
+                            break;
                         }
-
+                    case "xlsx":
+                    case "docx":
+                        await ExportAsync(cmd);
                         break;
-                    }
-                    case "excel":
-                    case "word":
-                        await ExportAsync((string) parameter);
+                    default:
                         break;
                 }
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e) {
                 Console.WriteLine(e);
             }
+#pragma warning restore CA1031 // Do not catch general exception types
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async Task ExportAsync(string fmt) {
-            IsBusy = true;
-            await Task.Run(() => {
-                switch (fmt.ToLower()) {
-                    case "excel":
-
-                        ExportExcel();
-                       // Tirage.ToExcel();
-                        break;
-                    case "word":
-                        // Tirage.ToWord();
-                        ExportWord();
-                        break;
-                }
-            });
-            IsBusy = false;
-        }
 
         private void UpdateColors() {
-            (Background, Foreground) = Tirage.Status switch {
-                CebStatus.Valid => (Colors.CadetBlue, Colors.White),
+            (Background, Foreground) = Tirage.Status switch
+            {
+                CebStatus.Valid => (Colors.Transparent, Colors.White),
                 CebStatus.Erreur => (Colors.LightCoral, Colors.White),
                 CebStatus.CompteEstBon => (Colors.DarkSlateGray, Colors.GhostWhite),
                 CebStatus.CompteApproche => (Colors.Chocolate, Colors.White),
@@ -273,13 +269,13 @@ namespace CompteEstBon.ViewModel {
         private void ClearData() {
             if (_isUpdating) return;
             // ReSharper disable once ExplicitCallerInfoArgument
-            NotifiedChanged("Status");
+            NotifiedChanged(nameof(Status));
             stopwatch.Reset();
             Duree = stopwatch.Elapsed;
             Solution = "";
-            Count = 0;
-            Solutions.Clear();
-           
+      
+            Solutions = null;
+
             Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
             Popup = false;
             UpdateColors();
@@ -295,7 +291,7 @@ namespace CompteEstBon.ViewModel {
             ClearData();
 
             // ReSharper disable once ExplicitCallerInfoArgument
-            NotifiedChanged("Search");
+            NotifiedChanged(nameof(Search));
         }
 
         public void ShowNotify(int index = 0) {
@@ -316,7 +312,6 @@ namespace CompteEstBon.ViewModel {
             await Tirage.RandomAsync();
             UpdateData();
         }
-
         private int _count;
 
         public int Count {
@@ -329,65 +324,64 @@ namespace CompteEstBon.ViewModel {
             }
         }
 
+
         public async Task ResolveAsync() {
             IsBusy = true;
             Result = "";
-            (Background, Foreground) = (Colors.Transparent, Colors.White);
+            (Background, Foreground) = (Colors.CadetBlue, Colors.White);
             stopwatch.Start();
             var data = await Tirage.ResolveAsync();
-            Result = Tirage.Status switch {
+            Result = Tirage.Status switch
+            {
                 CebStatus.CompteEstBon => "Le Compte est bon",
                 CebStatus.CompteApproche => $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}",
                 _ => "Tirage incorrect"
             };
             stopwatch.Stop();
-            Duree = stopwatch.Elapsed;
+            Duree = Tirage.Duree;
             UpdateColors();
 
             Solution = Tirage.Solution();
-            foreach (var s in data.Solutions) Solutions.Add(s);
-            Count = Tirage.Count;
-
+            Solutions = data.Solutions;
             IsBusy = false;
             ShowNotify();
             // ReSharper disable once ExplicitCallerInfoArgument
-            NotifiedChanged("Status");
+            NotifiedChanged(nameof(Status));
         }
 
-        public (bool select, string name ) GetFileName(string ty) {
+        public static (bool select, string name) FileSaveName(string ty) {
             var dialog = new SaveFileDialog();
-            if (ty == "xlsx") {
-                dialog.Filter = "Excel (*.xlsx)| *.xlsx";
-                dialog.Title = "Fichiers Excel";
-            } else {
-                dialog.Filter = "Word (*.docx) | *.docx";
-                dialog.Title = "Fichiers Word";
-            }
-            if ((bool) dialog.ShowDialog()) {
-                return (true, dialog.FileName);
-            }
-            return (false, null);
+            (dialog.Filter, dialog.Title) = ty switch
+            {
+                "xlsx" => ("Excel (*.xlsx)| *.xlsx", "Fichiers Excel"),
+                "docx" => ("Word (*.docx) | *.docx", "Fichiers Word"),
+                _ => throw new NotImplementedException()
+            };
+            dialog.InitialDirectory = Environment.SpecialFolder.UserProfile + "\\Downloads";
+            return ((bool)dialog.ShowDialog()) ? (true, dialog.FileName) : (false, null);
 
         }
 
-        public void ExportExcel() {
-            var fich = GetFileName("xlsx");
-            if (!fich.select) return;
-            var stream = File.OpenWrite(fich.name);
-            Tirage.ExportExcel(stream, Duree.TotalSeconds);
-            stream.Close();
-            Lancer(fich.name);
+        public async Task ExportAsync(string ty) {
+            var (select, name) = FileSaveName(ty);
+            if (!select) return;
+#pragma warning disable IDE0007 // Utiliser un type implicite
+            Action<Stream> export = ty switch
+#pragma warning restore IDE0007 // Utiliser un type implicite
+            {
+                "xlsx" => Tirage.ExportExcel,
+                "docx" => Tirage.ExportWord,
+                _ => throw new NotImplementedException()
+            };
+            using var stream = new FileStream(name, FileMode.Create);
+            export(stream);
+            await stream.FlushAsync();
+            await stream.DisposeAsync();
+            OpenDocument(name);
+
         }
-        public void ExportWord() {
-            var fich = GetFileName("docx");
-            if (!fich.select) return;
-            var stream = File.OpenWrite(fich.name);
-            Tirage.ExportWord(stream, Duree.TotalSeconds);
-            stream.Close();
-            Lancer(fich.name);
- 
-        }
-        public void Lancer(string nom) {
+
+        public static void OpenDocument(string nom) {
             var info = new ProcessStartInfo {
                 UseShellExecute = true,
                 FileName = nom

@@ -104,7 +104,7 @@ namespace CebExcel {
                 Resultat.Font.Color = Color.White;
             }
 
-            tbSolutions.DataSource = Tirage.Solutions;
+            tbSolutions.DataSource = Tirage.Solutions.Select(s => new { s.Op1, s.Op2, s.Op3, s.Op4, s.Op5 }).ToArray();
             NbSolutions.Value = Tirage.Count;
             Durée.Value = (DateTime.Now - time).Milliseconds / 1000.0;
             Application.EnableEvents = true;

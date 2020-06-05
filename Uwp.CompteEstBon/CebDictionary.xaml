@@ -15,10 +15,10 @@
         <GradientStop Offset="1.0" Color="DarkSlateGray" />
     </LinearGradientBrush>
     <LinearGradientBrush x:Key="CebBackgroundBrush" StartPoint="0.5,0" EndPoint="0.5,1">
-        <GradientStop Color="{Binding Background}" Offset="0.0"/>
-        <GradientStop Color="DarkSlateGray" Offset="1.0"/>
+        <GradientStop Offset="0.0" Color="{Binding Background}" />
+        <GradientStop Offset="1.0" Color="DarkSlateGray" />
     </LinearGradientBrush>
-    <SolidColorBrush x:Key="CebForegroundBrush" Color="{Binding Foreground}"/>
+    <SolidColorBrush x:Key="CebForegroundBrush" Color="{Binding Foreground}" />
     <Style x:Key="CebButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource CebBackgroundBrush}" />
         <Setter Property="Foreground" Value="{StaticResource CebForegroundBrush}" />
@@ -116,5 +116,7 @@
         <Setter Property="Height" Value="40" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
     </Style>
-
+    <Style TargetType="grid:GridCell">
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
 </ResourceDictionary>

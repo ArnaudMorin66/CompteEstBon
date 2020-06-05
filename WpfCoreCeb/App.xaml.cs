@@ -28,9 +28,25 @@ namespace CompteEstBon {
             FrameworkElement.LanguageProperty.OverrideMetadata(
                 typeof(FrameworkElement), new FrameworkPropertyMetadata(
                     XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
-
+            SfCebOffice.RegisterLicense(FindLicenseKey());
             base.OnStartup(e);
         }
-          
+        private static string FindLicenseKey() {
+            
+            string path = "SyncfusionLicense.txt";
+            string text = Path.GetDirectoryName(Assembly.GetEntryAssembly().CodeBase.Replace("file:///", ""));
+            while (!string.IsNullOrEmpty(text)) {  
+                string path2 = Path.Combine(text, path);
+                if (File.Exists(path2)) {
+                    return File.ReadAllText(path2, Encoding.UTF8);
+                }
+                var parent = Directory.GetParent(text);
+                if (parent == null) {
+                    break;
+                }
+                text = parent.FullName;
+            }
+            return string.Empty;
+        }
     }
 }

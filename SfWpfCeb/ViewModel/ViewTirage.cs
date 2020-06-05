@@ -77,12 +77,14 @@ namespace CompteEstBon {
 
         public ObservableCollection<int> Plaques { get; } =
             new ObservableCollection<int> { 0, 0, 0, 0, 0, 0 };
-        public HashSet<CebBase> _solutions = new HashSet<CebBase>();
-        public HashSet<CebBase> Solutions {
+        public IEnumerable<CebBase> _solutions;
+        public IEnumerable<CebBase> Solutions {
             get => _solutions;
             set {
                 _solutions = value;
                 NotifiedChanged();
+
+                Count = _solutions == null ? 0 : _solutions.Count();
             }
         }
         public TimeSpan Duree {
@@ -229,8 +231,8 @@ namespace CompteEstBon {
                             break;
                     }
                     break;
-                case "excel":
-                case "word":
+                case "xlsx":
+                case "docx":
                     await ExportAsync((string)parameter);
                     break;
             }
@@ -239,16 +241,8 @@ namespace CompteEstBon {
         public event PropertyChangedEventHandler PropertyChanged;
         private async Task ExportAsync(string fmt) {
             IsBusy = true;
-            await Task.Run(() => {
-                switch (fmt.ToLower()) {
-                    case "excel":
-                        ExportExcel();
-                        break;
-                    case "word":
-                        ExportWord();
-                        break;
-                }
-            });
+            fmt = fmt.ToLower();
+            await Task.Run(() => ExportFichier(fmt)); 
             IsBusy = false;
         }
 
@@ -257,7 +251,7 @@ namespace CompteEstBon {
         private void UpdateColors() {
             (Background, Foreground) = Tirage.Status switch
             {
-                CebStatus.Valid => (Colors.DarkSlateGray, Colors.White),
+                CebStatus.Valid => (Colors.Transparent, Colors.White),
                 CebStatus.Erreur => (Colors.Red, Colors.Navy),
                 CebStatus.CompteEstBon => (Colors.ForestGreen, Colors.GhostWhite),
                 CebStatus.CompteApproche => (Colors.Salmon, Colors.Black),
@@ -278,7 +272,6 @@ namespace CompteEstBon {
             IsComputed = false;
             Solution = "";
             Solutions = null;
-            Count = 0;
             Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
             Popup = false;
 
@@ -295,7 +288,7 @@ namespace CompteEstBon {
             _isUpdating = false;
             ClearData();
 
-            NotifiedChanged("Search");
+            NotifiedChanged(nameof(Search));
         }
 
         public void ShowPopup(int index = 0) {
@@ -332,8 +325,8 @@ namespace CompteEstBon {
             stopwatch.Stop();
             Duree = stopwatch.Elapsed;
             Solution = Tirage.Solution();
-            Solutions = new HashSet<CebBase>(Tirage.Solutions);
-            Count = Tirage.Count;
+            Solutions = Tirage.Solutions;
+            // Count = Tirage.Count;
 
             UpdateColors();
             IsBusy = false;
@@ -343,9 +336,9 @@ namespace CompteEstBon {
         }
 
         #endregion Action
-        public (bool Select, string Name) FileSaveName(string ty) {
+        public (bool Select, string Name) FileSaveName(string ext) {
             var dialog = new SaveFileDialog();
-            (dialog.Filter, dialog.Title) = ty switch
+            (dialog.Filter, dialog.Title) = ext switch
             {
                 "xlsx" => ("Excel (*.xlsx)| *.xlsx", "Fichiers Excel"),
                 "docx" => ("Word (*.docx) | *.docx", "Fichiers Word"),
@@ -358,34 +351,28 @@ namespace CompteEstBon {
 
         }
 
-        public void ExportExcel() {
-            var Fichier = FileSaveName("xlsx");
+        private void ExportFichier(string ext) {
+            var Fichier = FileSaveName(ext);
             if (Fichier.Select) {
                 if (File.Exists(Fichier.Name)) {
                     File.Delete(Fichier.Name);
                 }
+                Action<Stream> fn = ext switch
+                {
+                    "xlsx" => Tirage.ExportExcel,
+                    "docx" => Tirage.ExportWord,
+                    _ => throw new NotImplementedException(),
+                };
                 var stream = new FileStream(Fichier.Name, FileMode.CreateNew);
-                Tirage.ExportExcel(stream, Duree.TotalSeconds);
+                fn(stream);
                 stream.Flush();
                 stream.Close();
-                Lancer(Fichier.Name);
+                OpenDocument(Fichier.Name);
             }
         }
-        public void ExportWord() {
-            var Fichier = FileSaveName("docx");
-            if (Fichier.Select) {
-                if (File.Exists(Fichier.Name)) {
-                    File.Delete(Fichier.Name);
-                }
-                var stream = new FileStream(Fichier.Name, FileMode.CreateNew);
-                Tirage.ExportWord(stream, Duree.TotalSeconds);
-                
-                stream.Flush();
-                stream.Close();
-                Lancer(Fichier.Name);
-            }
-        }
-        public static void Lancer(string nom) {
+
+
+        public static void OpenDocument(string nom) {
             var info = new ProcessStartInfo {
                 UseShellExecute = true,
                 FileName = nom

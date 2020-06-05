@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.AppService;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
+using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -70,6 +72,7 @@ namespace CompteEstBon {
             titleBar.InactiveBackgroundColor = Windows.UI.Colors.SeaGreen;
             titleBar.ButtonInactiveForegroundColor = Windows.UI.Colors.Gray;
             titleBar.ButtonInactiveBackgroundColor = Windows.UI.Colors.SeaGreen;
+            RegisterLicense();
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Ne répétez pas l'initialisation de l'application lorsque la fenêtre comporte déjà du contenu,
@@ -121,5 +124,22 @@ namespace CompteEstBon {
             //TODO: enregistrez l'état de l'application et arrêtez toute activité en arrière-plan
             deferral.Complete();
         }
+
+        public static void RegisterLicense() {
+            try {
+                var storageFolder = ApplicationData.Current.LocalFolder;
+                Task.Run(async () => {
+                    var licenseFile =
+                        await storageFolder.GetFileAsync("SyncfusionLicense.txt");
+                    SfCebOffice.RegisterLicense(await FileIO.ReadTextAsync(licenseFile));
+                });
+
+            }
+            catch (Exception) {
+                // ignored
+            }
+
+        }
     }
+
 }

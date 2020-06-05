@@ -75,8 +75,8 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
     <LinearGradientBrush x:Key="ButtonBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Offset="0.0" Color="{Binding Background}" />
-        <GradientStop Offset="1.0" Color="Black" />
+        <GradientStop Offset="0.0" Color="#FF171717" />
+        <GradientStop Offset="1.0" Color="{Binding Background}" />
     </LinearGradientBrush>
     <SolidColorBrush x:Key="ButtonForegroundBrush" Color="{Binding Foreground}" />
     <Style x:Key="ComboPlaqueStyle" TargetType="{x:Type s:ComboBoxAdv}">
@@ -324,7 +324,7 @@
                             x:Name="PART_Editable"
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                            Background="{StaticResource CebLinearGradientBrush2}"
+                            Background="Transparent"
                             IsHitTestVisible="False"
                             IsReadOnly="{Binding IsReadOnly, RelativeSource={RelativeSource TemplatedParent}}"
                             Text="{TemplateBinding Text}"

@@ -8,44 +8,28 @@ using System.Threading.Tasks;
 using Syncfusion.DocIO.DLS;
 using System.Reflection;
 using System.Text;
+using System;
 
 namespace CompteEstBon {
     //
 
     public static class SfCebOffice {
-        static SfCebOffice() {
+        public static void RegisterLicense( string licensefile) {
             
-            var licensefile = FindLicenseKey();
             if (!string.IsNullOrEmpty(licensefile)) {
                 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(licensefile);
             }
         }
 
-        private static string FindLicenseKey() {
-            int num = 12;
-            string path = "SyncfusionLicense.txt";
-            string text = Path.GetDirectoryName(Assembly.GetEntryAssembly().CodeBase.Replace("file:///", ""));
-            for (int i = 0; i < num; i++) {
-                string path2 = Path.Combine(text, path);
-                if (File.Exists(path2)) {
-                    return File.ReadAllText(path2, Encoding.UTF8);
-                }
-                var parent = Directory.GetParent(text);
-                if (parent == null) {
-                    break;
-                }
-                text = parent.FullName;
-            }
-            return string.Empty;
-        }
+        
 
-        public static void  ExportExcel(this CebTirage tirage, Stream stream, double duree) {
+        public static void  ExportExcel(this CebTirage tirage, Stream stream) {
             
             using var engine = new ExcelEngine();
             
             var application = engine.Excel;
             application.DefaultVersion = ExcelVersion.Excel2016;
-            var workbook = application.Workbooks.Create(names: new string[] { "Ceb" });
+            var workbook = application.Workbooks.Create(names: new string[] { "Compte Est Bon" });
             var ws = workbook.Worksheets[0];
             var styletb = tirage.Status == CebStatus.CompteEstBon ? TableBuiltInStyles.TableStyleMedium7 : TableBuiltInStyles.TableStyleMedium3;
             
@@ -71,7 +55,7 @@ namespace CompteEstBon {
                 rg.CellStyle.Font.Color = ExcelKnownColors.White;
                 rg.CellStyle.ColorIndex = ExcelKnownColors.Orange;
             }
-            res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {duree:N3} ";
+            res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.Duree.TotalSeconds:N3} ";
 
             rg.Value2 = res;
             rg.HorizontalAlignment = ExcelHAlign.HAlignCenter;
@@ -94,9 +78,15 @@ namespace CompteEstBon {
         }                    
       
             
-        public static void  ExportWord(this CebTirage tirage, System.IO.Stream stream, double duree) {
+        public static void  ExportWord(this CebTirage tirage, System.IO.Stream stream) {
             var wd = new WordDocument();
             var sect = wd.AddSection() as WSection;
+            var dotm = Environment.GetEnvironmentVariable("USERPROFILE") + @"\AppData\Roaming\Microsoft\Templates\Normal.dotm";
+            if (System.IO.File.Exists(dotm)) {
+                wd.AttachedTemplate.Path = dotm;
+                wd.UpdateStylesOnOpen = true;
+
+            }
             
             var tbl = sect.AddTable();
            
@@ -141,7 +131,7 @@ namespace CompteEstBon {
                 tcolor = Syncfusion.Drawing.Color.Black;
 
             }
-            res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {duree:N3} ";
+            res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.Duree.TotalSeconds:N3} ";
             pg = sect.AddParagraph();
             var tx = pg.AppendText(res);
             tx.CharacterFormat.TextColor = tcolor;

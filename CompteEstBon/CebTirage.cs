@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Dynamic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -64,6 +65,7 @@ namespace CompteEstBon {
         /// Return the find values
         /// </summary>
         public CebFind Found { get; } = new CebFind();
+        public TimeSpan Duree { get; private set; }
 
         public List<CebPlaque> Plaques { get; } = new List<CebPlaque>();
 
@@ -100,14 +102,14 @@ namespace CompteEstBon {
             if (_solutions.Count != 0) {
                 _solutions.Clear();
             }
-
+            Duree = TimeSpan.Zero;
             Diff = int.MaxValue;
             Found.Reset();
             Valid();
             NotifyPropertyChanged("Clear");
             return GetData();
         }
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") =>  PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         public async Task<CebData> ClearAsync() => await Task<CebData>.Run(() => Clear());
 
         public CebData GetData() => new CebData {
@@ -152,12 +154,16 @@ namespace CompteEstBon {
         /// <returns>
         /// </returns>
         public CebData Resolve() {
+            var watch = new Stopwatch();
+            watch.Start();
             _solutions.Clear();
             Status = CebStatus.EnCours;
             Resolve(Plaques.ToList<CebBase>());
             _solutions.Sort((p, q) => p.Compare(q));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
             NotifyPropertyChanged("Resolve");
+            watch.Stop();
+            Duree = watch.Elapsed;
             return GetData();
         }
 

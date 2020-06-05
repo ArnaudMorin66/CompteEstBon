@@ -35,6 +35,7 @@ namespace CompteEstBon {
             if (Value == 0) return;
             Add(g, op, d);
         }
+        public void AddOperation(string value) => Operations.Add(value);
 
         public override bool IsValid => Value > 0;
 

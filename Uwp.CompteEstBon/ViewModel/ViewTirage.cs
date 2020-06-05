@@ -27,6 +27,8 @@ namespace CompteEstBon {
         private Color _background;
         private double _duree;
         private bool _popupIsOpen;
+        private char _modeView = '\xE0';
+        private bool _vertical;
 
         private Color _foreground = Colors.White;
 
@@ -59,8 +61,21 @@ namespace CompteEstBon {
                 NotifiedChanged();
             }
         }
-
-
+        public bool Vertical {
+            get => _vertical;
+            set {
+                _vertical = value;
+                ModeView = value ? '\xE2' : '\xE0';
+                NotifiedChanged();
+            }
+        }
+        public char ModeView {
+            get => _modeView;
+            set {
+                _modeView = value;
+                NotifiedChanged();
+            }
+        }
         // public ObservableCollection<CebDetail> Solutions { get; } = new ObservableCollection<CebDetail>();
         public string _date;
 
@@ -227,32 +242,41 @@ namespace CompteEstBon {
             }
         }
         private async void Exportcmd(object obj) {
-            var cmd = obj as string;
+            var cmd = (obj as string)?.ToLower();
             var savePicker = new FileSavePicker {
-                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+                SuggestedStartLocation = PickerLocationId.Downloads,
+                SuggestedFileName="Ceb",
+               
             };
             // Dropdown of file types the user can save the file as
             switch (cmd) {
-                case "Excel":
+                case "excel":
                     savePicker.FileTypeChoices.Add("Excel", new List<string>() { ".xlsx" });
                     break;
-                default:
+                case "word":
                     savePicker.FileTypeChoices.Add("Word", new List<string>() { ".docx" });
                     break;
             }
-            // Default file name if the user does not type one in or select a file to replace
-            savePicker.SuggestedFileName = "Ceb";
+            
+          
+           
             var file = await savePicker.PickSaveFileAsync();
+            
             if (file != null) {
-                // Prevent updates to the remote version of the file until we finish making changes and call CompleteUpdatesAsync.
-                CachedFileManager.DeferUpdates(file);
-                using (var stream = await file.OpenStreamForWriteAsync()) {
+                // await file.DeleteAsync();
 
-                    if (cmd == "Excel") {
-                        await Tirage.ExportExcelAsync(stream, Duree);
-                    }
-                    else {
-                        await Tirage.ExportWordAsync(stream, Duree);
+                using (var stream = await file.OpenStreamForWriteAsync()) {
+                    
+
+                    switch (cmd) {
+                        case "excel":
+                            await Tirage.ExportExcelAsync(stream);
+                            break;
+                        case "word":
+                            await Tirage.ExportWordAsync(stream);
+                            break;
+                        default:
+                            return;
                     }
 
                     stream.Close();
@@ -372,7 +396,7 @@ namespace CompteEstBon {
 
 
             Dispatcher.Stop();
-            Duree = (DateTimeOffset.Now - _time).TotalSeconds;
+            Duree = Tirage.Duree.TotalSeconds;
             UpdateColors();
             IsBusy = false;
             ShowNotify(0);

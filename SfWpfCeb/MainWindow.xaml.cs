@@ -5,6 +5,7 @@ using Syncfusion.Windows.Shared;
 using Syncfusion.Windows.Tools.Controls;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -44,8 +45,10 @@ namespace CompteEstBon {
 
         private void btnMode_Click(object sender, RoutedEventArgs e) {
             View.Vertical = !View.Vertical;
-            if (View.Solutions != null) {
-                for (var index = 0; index < View.Solutions.Count; index++) {
+            if (SolutionsData.GetRecordsCount() > 0) {
+                
+                for (var index = 0; index < SolutionsData.GetRecordsCount(); index++) {
+                
                     SolutionsData.InvalidateRowHeight(index);
 
                 }

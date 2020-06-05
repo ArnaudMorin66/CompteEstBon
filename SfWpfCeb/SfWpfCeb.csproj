@@ -7,11 +7,12 @@
     <RootNamespace>CompteEstBon</RootNamespace>
     <StartupObject>CompteEstBon.App</StartupObject>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
-    <AssemblyName>Ceb</AssemblyName>
+    <AssemblyName>WpfCeb</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="ViewModel\InteropClass.cs" />
+    <Compile Remove="ViewModel\SfGridCellTemplate.cs" />
     <Compile Remove="xMainWindow.xaml.cs" />
   </ItemGroup>
 
@@ -29,11 +30,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="18.1.0.54" />
-    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="18.1.0.54" />
-    <PackageReference Include="Syncfusion.SfInput.WPF" Version="18.1.0.54" />
-    <PackageReference Include="Syncfusion.Themes.Blend.WPF" Version="18.1.0.54" />
-    <PackageReference Include="Syncfusion.Themes.SystemTheme.WPF" Version="18.1.0.54" />
+    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="18.1.0.55" />
+    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="18.1.0.55" />
+    <PackageReference Include="Syncfusion.SfInput.WPF" Version="18.1.0.55" />
+    <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="18.1.0.55" />
+    <PackageReference Include="Syncfusion.Themes.Blend.WPF" Version="18.1.0.55" />
+    <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="18.1.0.55" />
+    <PackageReference Include="Syncfusion.Themes.SystemTheme.WPF" Version="18.1.0.55" />
   </ItemGroup>
 
   <ItemGroup>

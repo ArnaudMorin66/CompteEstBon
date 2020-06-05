@@ -57,8 +57,21 @@ namespace CompteEstBon {
         private void TxtSearch_OnPreviewTextInput(object sender, TextCompositionEventArgs e) {
             var textbox = sender as TextBox;
             var fullText = textbox?.Text.Insert(textbox.SelectionStart, e.Text);
-            e.Handled = !int.TryParse(fullText, out _);
+            if (!int.TryParse(fullText, out int value)) {
+                e.Handled = true;
+                return;
+            }
 
+
+        }
+
+        private void txtSearch_LostFocus(object sender, RoutedEventArgs e) {
+            var textbox = sender as TextBox;
+            var r = int.TryParse(textbox?.Text, out int v);
+            if (r==false || v < 100 || v > 999) {
+                txtSearch.SelectAll();
+                e.Handled = true;
+            }
         }
     }
 }

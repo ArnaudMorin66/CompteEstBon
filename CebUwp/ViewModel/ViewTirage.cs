@@ -23,7 +23,7 @@ using Windows.UI.Xaml.Media.Animation;
 namespace CompteEstBon.ViewModel {
 
     internal class ViewTirage : INotifyPropertyChanged, ICommand {
-       
+
 
         private Color _background;
         private double _duree;
@@ -149,7 +149,7 @@ namespace CompteEstBon.ViewModel {
         /// </returns>
         public ViewTirage() {
 
-            
+
 
             Symbol = ListeSymbols[CebStatus.Valid];
             _background = Colors.DarkSlateGray;
@@ -166,6 +166,7 @@ namespace CompteEstBon.ViewModel {
                 Date = Date = $"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
 
+
             Plaques.CollectionChanged += (sender, e) => {
                 if (e.Action != NotifyCollectionChangedAction.Replace) return;
                 var i = e.NewStartingIndex;
@@ -178,7 +179,14 @@ namespace CompteEstBon.ViewModel {
             dateDispatcher.Start();
         }
 
-        
+        private int _count = 0;
+        public int Count {
+            get => _count;
+            set {
+                _count = value;
+                NotifiedChanged();
+            }
+        }
         private void UpdateColors() {
             Symbol = ListeSymbols[Tirage.Status];
 
@@ -199,21 +207,22 @@ namespace CompteEstBon.ViewModel {
 
         private void ClearData() {
             Duree = 0;
+            Count = 0;
             StoryBoard?.Pause();
             if (CurrentPage != null) {
                 CurrentPage.cebNotification?.Dismiss();
-                if (CurrentPage.SolutionsData != null)
+                if (CurrentPage.SolutionsData != null) {
                     CurrentPage.SolutionsData.ItemsSource = null;
+                }
             }
-
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");
 
 
             Result = (Tirage.Status != CebStatus.Erreur) ? "Résoudre" : "Tirage invalide";
             UpdateColors();
-        }
 
+        }
         private void UpdateData() {
             lock (Plaques) {
                 for (var i = 0; i < Tirage.Plaques.Count; i++) {
@@ -254,8 +263,9 @@ namespace CompteEstBon.ViewModel {
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged("Status");
             CurrentPage.SolutionsData.ItemsSource = Tirage.Solutions;
+            Count = Tirage.Count;
             heureDispatcher.Stop();
-            Duree = (DateTimeOffset.Now - _time).TotalSeconds;
+            Duree = Tirage.Duree.TotalSeconds;
             UpdateColors();
             IsBusy = false;
             StoryBoard.Resume();
@@ -297,8 +307,9 @@ namespace CompteEstBon.ViewModel {
         };
 
         public async Task ExportAsync(string cmd) {
+            cmd = cmd.ToLower();
             var savePicker = new FileSavePicker {
-                SuggestedStartLocation = PickerLocationId.DocumentsLibrary
+                SuggestedStartLocation = PickerLocationId.Downloads
             };
             // Dropdown of file types the user can save the file as
             switch (cmd) {
@@ -321,10 +332,10 @@ namespace CompteEstBon.ViewModel {
 
                     switch (cmd) {
                         case "excel":
-                            await Tirage.ExportExcelAsync(stream, Duree);
+                            await Tirage.ExportExcelAsync(stream);
                             break;
                         case "word":
-                            await Tirage.ExportWordAsync(stream, Duree);
+                            await Tirage.ExportWordAsync(stream);
                             break;
                     }
 
@@ -374,7 +385,8 @@ namespace CompteEstBon.ViewModel {
                         await ExportAsync("word");
                         break;
                 }
-            } catch (Exception) {
+            }
+            catch (Exception) {
                 // ignored
             }
         }

@@ -87,6 +87,7 @@ namespace CompteEstBon {
 
         [JsonIgnore]
         public IEnumerable<string> SolutionsToString => _solutions.Select(s => s.ToString());
+        public TimeSpan Duree { get; private set; }
 
 
         /// <summary>
@@ -103,7 +104,7 @@ namespace CompteEstBon {
             if (_solutions.Count != 0) {
                 _solutions.Clear();
             }
-
+            Duree = TimeSpan.Zero;
             Diff = int.MaxValue;
             Found.Reset();
             Valid();
@@ -156,11 +157,15 @@ namespace CompteEstBon {
         /// </returns>
         public CebData Resolve() {
             _solutions.Clear();
+            var watch = new Stopwatch();
+            watch.Start();
             Status = CebStatus.EnCours;
             Resolve(Plaques.ToList<CebBase>());
             _solutions.Sort((p, q) => p.Compare(q));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
             NotifyPropertyChanged("Resolve");
+            watch.Stop();
+            Duree = watch.Elapsed;
             return GetData();
         }
 

@@ -15,10 +15,9 @@ namespace CompteEstBon {
         public string Op4 => Rank > 3 ? Operations[3] : null;
         public string Op5 => Rank > 4 ? Operations[4] : null;
         public override string ToString() => string.Join(", ", Operations);
-
         
 
-        public List<string> Operations { get; }
+        public  List<string> Operations { get; private set; } 
         
         public (int gauche, char op, int droite) Decoup(int i) {
             if (i >= Rank) return   (0, '\0', 0);
@@ -29,8 +28,7 @@ namespace CompteEstBon {
             return (g, l[1][0], d);
         }
 
-        // public string Op(int i) => Operations[i];
-        public void AddOperation(string value) => Operations.Add(value);
+        
         /// <summary>
         /// Valeur de la donn�e
         /// </summary>
@@ -38,15 +36,14 @@ namespace CompteEstBon {
         public virtual int Value { get; set; } = 0;
 
         [JsonIgnore]
-        public int Rank => Operations.Count;
-
+        public int Rank =>  Operations.Count;
+        
         [JsonIgnore]
         public abstract bool IsValid { get; }
 
         public static implicit operator int(CebBase b) => b.Value;
 
-        public override bool Equals(object obj) => (obj is CebBase op && op.Rank == Rank) ?
-                            Operations.WithIndex().All(e => e.Item1 == op.Operations[e.Item2]) : false;
+        public override bool Equals(object obj) => (obj is CebBase op && op.Rank == Rank) && Operations.WithIndex().All(e => e.Item1 == op.Operations[e.Item2]);
 
         public int Compare(CebBase b) => Rank - b.Rank;
 

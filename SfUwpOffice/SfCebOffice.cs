@@ -6,31 +6,33 @@ using Syncfusion.DocIO.DLS;
 using Windows.Storage;
 using System;
 using Syncfusion.Licensing;
+using Windows.System;
 
 namespace CompteEstBon {
     //
 
     public static class SfCebOffice {
-        private static bool isRegister;
-        
+      
 
-        static async Task RegisterLicenseAsync() {
-            try {
-                var storageFolder =
-                    ApplicationData.Current.LocalFolder;
-                var licenseFile =
-                    await storageFolder.GetFileAsync("SyncfusionLicense.txt");
-                SyncfusionLicenseProvider.RegisterLicense(await FileIO.ReadTextAsync(licenseFile));
-                isRegister = true;
-            }
-            catch (Exception) {
-                // ignored
-            }
+        public static void RegisterLicense(string licence) {
+            //try {
+            //    var storageFolder =
+            //        ApplicationData.Current.LocalFolder;
+            //    Task.Run(async () => {
+            //        var licenseFile =
+            //            await storageFolder.GetFileAsync("");
+            //        SyncfusionLicenseProvider.RegisterLicense(await FileIO.ReadTextAsync(licenseFile));
+            //    }).Wait();
+
+            //}
+            //catch (Exception) {
+            //    // ignored
+            //}
+            SyncfusionLicenseProvider.RegisterLicense(licence);
         }
-        public static async Task<bool> ExportExcelAsync(this CebTirage tirage, Stream stream, double duree) {
-            if (!isRegister) await RegisterLicenseAsync();
+        public static async Task<bool> ExportExcelAsync(this CebTirage tirage, Stream stream) {
 
-            using (var engine = new ExcelEngine()) { 
+            using (var engine = new ExcelEngine()) {
 
                 var application = engine.Excel;
                 application.DefaultVersion = ExcelVersion.Excel2016;
@@ -60,7 +62,7 @@ namespace CompteEstBon {
                     rg.CellStyle.Font.Color = ExcelKnownColors.White;
                     rg.CellStyle.ColorIndex = ExcelKnownColors.Orange;
                 }
-                res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {duree:N3} ";
+                res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.Duree.TotalSeconds:N3} ";
 
                 rg.Value2 = res;
                 rg.HorizontalAlignment = ExcelHAlign.HAlignCenter;
@@ -81,30 +83,32 @@ namespace CompteEstBon {
                 return await workbook.SaveAsAsync(stream);
 
             }
-        }                    
-      
-            
-        public static async Task<bool> ExportWordAsync(this CebTirage tirage, Stream stream, double duree) {
-            if (!isRegister) await RegisterLicenseAsync();
+        }
+
+
+        public static async Task<bool> ExportWordAsync(this CebTirage tirage, Stream stream) {
             var wd = new WordDocument();
             var sect = wd.AddSection() as WSection;
+            var str =  StorageFile.GetFileFromPathAsync(Environment.GetEnvironmentVariable("USERPROFILE") + @"\AppData\Roaming\Microsoft\Templates\Normal.dotm");
             
+          
+
             var tbl = sect.AddTable();
-           
+
 
             var sty = tirage.Status == CebStatus.CompteEstBon ? BuiltinTableStyle.MediumGrid1Accent3 : BuiltinTableStyle.MediumGrid1Accent6;
             tbl.ResetCells(2, 7);
-            IWParagraph pg; 
+            IWParagraph pg;
             for (var i = 0; i < 6; i++) {
                 pg = tbl[0, i].AddParagraph();
                 pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
-                
+
                 pg.AppendText($"Plaque {i + 1}");
                 pg = tbl[1, i].AddParagraph();
                 pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
                 pg.AppendText($"{tirage.Plaques[i].Value}");
             }
-            
+
             pg = tbl[0, 6].AddParagraph();
             pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
             pg.AppendText("Chercher");
@@ -132,24 +136,24 @@ namespace CompteEstBon {
                 tcolor = Color.Black;
 
             }
-            res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {duree:N3} ";
+            res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.Duree.TotalSeconds:N3}";
             pg = sect.AddParagraph();
             var tx = pg.AppendText(res);
-            tx.CharacterFormat.TextBackgroundColor =  tcolor;
+            tx.CharacterFormat.TextBackgroundColor = tcolor;
             pg.ParagraphFormat.BackColor = bcolor;
             pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
-           
+
             sect.AddParagraph();
             tbl = sect.AddTable();
             tbl.ResetCells(1, 5);
             for (var i = 0; i < 5; i++) {
                 pg = tbl[0, i].AddParagraph();
                 pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
-                pg.AppendText($"Opération {i+1}");
+                pg.AppendText($"Opération {i + 1}");
             }
-            
+
             foreach (var s in tirage.Solutions) {
-                var rw = tbl.AddRow(); 
+                var rw = tbl.AddRow();
                 foreach (var (op, ix) in s.Operations.WithIndex()) {
                     pg = rw.Cells[ix].AddParagraph();
                     pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
@@ -161,9 +165,9 @@ namespace CompteEstBon {
             tbl.ApplyStyleForFirstColumn = false;
             tbl.Rows[0].IsHeader = true;
             return await wd.SaveAsync(stream, FormatType.Docx);
-            
-            
+
+
         }
     }
-    
+
 }

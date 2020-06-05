@@ -18,8 +18,9 @@
     TitleBarHeight="40"
     TitleTextAlignment="Center"
     UseNativeChrome="False"
+    WindowStartupLocation="CenterScreen"
     WindowStyle="None"
-    mc:Ignorable="d" WindowStartupLocation="CenterScreen">
+    mc:Ignorable="d">
     <s:ChromelessWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -33,13 +34,11 @@
                 <ListBox
                     HorizontalAlignment="Center"
                     HorizontalContentAlignment="Stretch"
-                    Foreground="Yellow"
                     local:IgnoreScrollBehaviour.IgnoreScroll="True"
                     Background="Transparent"
                     BorderThickness="0"
-                    ItemsSource="{Binding Operations}" >
-                    
-                </ListBox>
+                    Foreground="Yellow"
+                    ItemsSource="{Binding Operations}" />
             </DataTemplate>
         </ResourceDictionary>
     </s:ChromelessWindow.Resources>
@@ -62,13 +61,13 @@
         <KeyBinding
             Key="X"
             Command="{Binding}"
-            CommandParameter="excel"
+            CommandParameter="xlsx"
             CommandTarget="{Binding ElementName=btnExcel}"
             Modifiers="Ctrl" />
         <KeyBinding
             Key="W"
             Command="{Binding}"
-            CommandParameter="word"
+            CommandParameter="docx"
             CommandTarget="{Binding ElementName=btnWord}"
             Modifiers="Ctrl" />
     </s:ChromelessWindow.InputBindings>
@@ -270,7 +269,7 @@
                 Grid.Column="0"
                 Background="{DynamicResource ButtonBackgroundBrush}"
                 Command="{Binding}"
-                CommandParameter="excel"
+                CommandParameter="xlsx"
                 IsEnabled="{Binding IsComputed}"
                 IsTabStop="True"
                 Style="{StaticResource CebButtonStyle}"
@@ -288,7 +287,7 @@
                 Grid.Column="1"
                 Background="{DynamicResource ButtonBackgroundBrush}"
                 Command="{Binding}"
-                CommandParameter="word"
+                CommandParameter="docx"
                 IsEnabled="{Binding IsComputed}"
                 IsTabStop="True"
                 Style="{StaticResource CebButtonStyle}"

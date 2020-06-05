@@ -6,7 +6,6 @@ using System.Windows.Data;
 
 namespace CompteEstBon.ViewModel {
     // [ValueConversion(typeof(bool), typeof(Visibility))]
-    [DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
     internal class CebConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
             var inverse = parameter is bool bl && bl;
@@ -39,8 +38,6 @@ namespace CompteEstBon.ViewModel {
             throw new NotImplementedException();
         }
 
-        private string GetDebuggerDisplay() {
-            return ToString();
-        }
+      
     }
 }

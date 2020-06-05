@@ -1,17 +1,24 @@
 ﻿@using System.Runtime.InteropServices
-@using System.Threading
+@using System.Timers
 <div class="footer d-flex bg-gradient-dark justify-content-between align-items-center border border-secondary">
     <span class="badge badge-pill badge-info">
         &copy;Arnaud Morin,&nbsp;Syncfusion,&nbsp;
         @RuntimeInformation.FrameworkDescription
     </span>
-    <span class="badge badge-pill badge-info">@($"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}")</span>
+    <span class="badge badge-pill badge-info">@($"{datetime:dddd dd MMMM yyyy à HH:mm:ss}")</span>
 </div>
 
-@code {  
+@code { 
+    private DateTime datetime;
+
     protected override void OnInitialized() {
-        
-       (new Timer((state) => InvokeAsync(StateHasChanged))).Change(0, 1000);
-     }
+        var timer =  new Timer(1000);
+        timer.Elapsed += (sender, e) => {
+            datetime = e.SignalTime;
+            InvokeAsync(StateHasChanged);
+        };
+        timer.AutoReset = true;
+        timer.Enabled = true;
+    }
 
 }
