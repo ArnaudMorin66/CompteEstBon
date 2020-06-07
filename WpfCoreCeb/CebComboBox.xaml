@@ -21,7 +21,7 @@
         </Setter>
     </Style>
     <SolidColorBrush x:Key="ComboBox.Static.Border" Color="#FFACACAC" />
-    <SolidColorBrush x:Key="ComboBox.Static.Editable.Background" Color="{Binding Background}" />
+    <SolidColorBrush x:Key="ComboBox.Static.Editable.Background" Color="{StaticResource CebBackgroundBrush}" />
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Border" Color="#FFABADB3" />
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Background" Color="Transparent" />
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Border" Color="Black" />
@@ -31,7 +31,7 @@
         <GradientStop Offset="1.0" Color="#FFDCECFC" />
     </LinearGradientBrush>
     <SolidColorBrush x:Key="ComboBox.MouseOver.Border" Color="#FF7EB4EA" />
-    <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Background" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Background" Color="Transparent" />
     <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Border" Color="#FF7EB4EA" />
     <SolidColorBrush x:Key="ComboBox.MouseOver.Editable.Button.Background" Color="Transparent" />
 
@@ -94,9 +94,9 @@
                                 <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="false" />
                                 <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="true" />
                             </MultiDataTrigger.Conditions>
-                            <Setter TargetName="templateRoot" Property="Background" Value="{StaticResource ComboBox.Static.Editable.Background}" />
+                            <Setter TargetName="templateRoot" Property="Background" Value="{StaticResource CebBackgroundBrush}" />
                             <Setter TargetName="templateRoot" Property="BorderBrush" Value="{StaticResource ComboBox.Static.Editable.Border}" />
-                            <Setter TargetName="splitBorder" Property="Background" Value="{StaticResource CebLinearGradientBrush1}" />
+                            <Setter TargetName="splitBorder" Property="Background" Value="{StaticResource CebBackgroundBrush}" />
                             <Setter TargetName="splitBorder" Property="BorderBrush" Value="{StaticResource ComboBox.Static.Editable.Button.Border}" />
                         </MultiDataTrigger>
                         <Trigger Property="IsMouseOver" Value="true">

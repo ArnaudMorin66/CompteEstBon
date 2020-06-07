@@ -4,20 +4,30 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <SolidColorBrush x:Key="CebForegroundBrush" Color="{Binding Foreground}" />
+    <SolidColorBrush x:Key="CebBackgroundBrush" Color="#FF2D2D30" />
+    <LinearGradientBrush x:Key="CebLinearGradientBrush1" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Offset="0.0" Color="#808080" />
+        <GradientStop Offset="1.0" Color="DarkSlateGray" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="CebLinearGradientBrush2" StartPoint="0.5,0" EndPoint="0.5,1">
+        <GradientStop Offset="0.0" Color="#303030" />
+        <GradientStop Offset="1.0" Color="DarkSlateGray" />
+    </LinearGradientBrush>
     <Style x:Key="CebRepeatButtonStyle" TargetType="{x:Type RepeatButton}">
-        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource CebBackgroundBrush}" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FontSize" Value="10" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="IsTabStop" Value="False" />
     </Style>
-    <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#FF2D2D30" />
 
     <Style x:Key="BorderTitreStyle" TargetType="{x:Type Border}">
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource CebBackgroundBrush}" />
     </Style>
     <Style x:Key="LabelTitreStyle" TargetType="{x:Type Label}">
         <Setter Property="Margin" Value="0" />
@@ -30,7 +40,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource CebBackgroundBrush}" />
     </Style>
     <ControlTemplate x:Key="CebButtonTemplate" TargetType="{x:Type Button}">
         <Border
@@ -54,17 +64,18 @@
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="border" Property="Background" Value="{StaticResource CebLinearGradientBrush2}" />
-                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource CebLinearGradientBrush1}" />
+                <Setter TargetName="border" Property="Background" Value="Black" />
+                <Setter TargetName="border" Property="BorderBrush" Value="White" />
+
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter TargetName="border" Property="Background" Value="{StaticResource CebLinearGradientBrush1}" />
-                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource CebLinearGradientBrush2}" />
+                <Setter TargetName="border" Property="Background" Value="DarkSlateGray" />
+                <Setter TargetName="border" Property="BorderBrush" Value="Yellow" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    <SolidColorBrush x:Key="ButtonForegroundBrush" Color="{Binding Foreground}" />
+
     <Style x:Key="ColumnHeaderGripperStyle" TargetType="{x:Type Thumb}">
         <Setter Property="Width" Value="8" />
         <Setter Property="Background" Value="Transparent" />
@@ -79,7 +90,7 @@
     </Style>
     <Style x:Key="CebGridColumnHeaderStyle" TargetType="{x:Type DataGridRowHeader}">
         <Setter Property="Foreground" Value="Yellow" />
-        <Setter Property="Background" Value="{StaticResource CebLinearGradientBrush2}" />
+        <Setter Property="Background" Value="{StaticResource CebBackgroundBrush}" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
     </Style>
@@ -99,27 +110,16 @@
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="DarkGreen" />
-                <Setter Property="Foreground" Value="White" />
-            </Trigger>
-            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                <Setter Property="Background" Value="Black" />
-                <Setter Property="Foreground" Value="Yellow" />
+                <Setter Property="Background" Value="DarkSlateGray" />
+                <Setter Property="Foreground" Value="Green" />
             </Trigger>
         </Style.Triggers>
     </Style>
-    <!--<Storyboard x:Key="WaitStoryboard">
-        <DoubleAnimation RepeatBehavior="Forever"
-                         Storyboard.TargetName="Wait"
-                         Storyboard.TargetProperty="(TextBlock.RenderTransform).(RotateTransform.Angle)"
-                         From="0"
-                         To="360"
-                         Duration="0:0:0.2" />
-    </Storyboard>-->
+   
     <Style x:Key="SearchControlStyle" TargetType="{x:Type TextBox}">
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource CebBackgroundBrush}" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="InputScope" Value="Number" />
@@ -127,8 +127,10 @@
     </Style>
     <Style x:Key="SolutionsCellStyle" TargetType="{x:Type DataGridCell}">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground" Value="{DynamicResource CebForegroundBrush}"/>
+        <Setter Property="BorderBrush" Value="Black" />
+        <Setter Property="FontWeight" Value="Light"/>
+        <Setter Property="BorderThickness" Value="0,0,0,0.2" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type DataGridCell}">
@@ -176,7 +178,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Cursor" Value="Hand" />
-        
+
         <Setter Property="FontSize" Value="16" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Foreground" Value="White" />

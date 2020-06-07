@@ -30,10 +30,10 @@
                 <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
                 <ListBox
                     HorizontalContentAlignment="Center"
-                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Background="{DynamicResource CebBackgroundBrush}"
                     BorderBrush="Black"
                     BorderThickness="0,0,0,1"
-                    Foreground="{DynamicResource ButtonForegroundBrush}"
+                    Foreground="{DynamicResource CebForegroundBrush}"
                     ItemsSource="{Binding Operations}"
                     KeyboardNavigation.DirectionalNavigation="Continue"
                     PreviewMouseWheel="ListView_PreviewMouseWheel" />
@@ -114,7 +114,7 @@
             CommandTarget="{Binding ElementName=btnWord}"
             Modifiers="Ctrl" />
     </Window.InputBindings>
-    <Grid Background="{DynamicResource ButtonBackgroundBrush}">
+    <Grid Background="{DynamicResource CebBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="30" />
@@ -140,7 +140,7 @@
             Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="12"
-            Background="{DynamicResource ButtonBackgroundBrush}">
+            Background="{DynamicResource CebBackgroundBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="9*" />
                 <RowDefinition Height="5*" />
@@ -179,7 +179,7 @@
                 VerticalAlignment="Top"
                 HorizontalContentAlignment="Center"
                 Content="{Binding Titre}"
-                Foreground="White"
+                Foreground="{DynamicResource CebForegroundBrush}"
                 MouseDoubleClick="Window_MouseDoubleClick"
                 MouseRightButtonUp="TextBlock_MouseRightButtonUp" />
             <Button
@@ -189,7 +189,7 @@
                 Grid.Column="2"
                 Margin="0"
                 HorizontalAlignment="Center"
-                Background="{DynamicResource ButtonBackgroundBrush}"
+                Background="{DynamicResource CebBackgroundBrush}"
                 Click="btnMode_Click"
                 Content="{Binding ModeView}"
                 Cursor="Hand"
@@ -304,7 +304,7 @@
             <Grid
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                Background="{DynamicResource ButtonBackgroundBrush}">
+                Background="{DynamicResource CebBackgroundBrush}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="16" />
                     <ColumnDefinition Width="*" />
@@ -315,6 +315,7 @@
                     Grid.Column="0"
                     Click="TbMoins_Click"
                     Content="-"
+                    
                     IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}"
                     Style="{StaticResource CebRepeatButtonStyle}" />
                 <TextBox
@@ -346,7 +347,7 @@
             Grid.ColumnSpan="3"
             Height="30"
             VerticalAlignment="Top"
-            Background="{DynamicResource ButtonBackgroundBrush}"
+            Background="{DynamicResource CebBackgroundBrush}"
             BorderThickness="0"
             Command="{Binding}"
             CommandParameter="resolve"
@@ -362,7 +363,7 @@
                     Height="16"
                     HorizontalAlignment="Left"
                     Opacity="50"
-                    OpacityMask="{DynamicResource ButtonForegroundBrush}"
+                    OpacityMask="{DynamicResource CebForegroundBrush}"
                     Source="images/resolve.png" />
                 <TextBlock
                     Padding="4"
@@ -377,7 +378,7 @@
             Grid.Row="2"
             Grid.Column="9"
             Margin="0"
-            Background="{DynamicResource ButtonBackgroundBrush}"
+            Background="{DynamicResource CebBackgroundBrush}"
             BorderThickness="0"
             Command="{Binding}"
             CommandParameter="random"
@@ -404,7 +405,7 @@
             x:Name="btnExcel"
             Grid.Row="2"
             Grid.Column="10"
-            Background="{DynamicResource ButtonBackgroundBrush}"
+            Background="{DynamicResource CebBackgroundBrush}"
             BorderThickness="0"
             Command="{Binding}"
             CommandParameter="xlsx"
@@ -419,7 +420,7 @@
                     Height="16"
                     HorizontalAlignment="Left"
                     Opacity="50"
-                    OpacityMask="{DynamicResource ButtonForegroundBrush}"
+                    OpacityMask="{DynamicResource CebForegroundBrush}"
                     Source="images/excel.png" />
             </StackPanel>
         </Button>
@@ -427,7 +428,7 @@
             x:Name="btnWord"
             Grid.Row="2"
             Grid.Column="11"
-            Background="{DynamicResource ButtonBackgroundBrush}"
+            Background="{DynamicResource CebBackgroundBrush}"
             BorderThickness="0"
             Command="{Binding}"
             CommandParameter="docx"
@@ -442,7 +443,7 @@
                     Height="16"
                     HorizontalAlignment="Left"
                     Opacity="50"
-                    OpacityMask="{DynamicResource ButtonForegroundBrush}"
+                    OpacityMask="{DynamicResource CebForegroundBrush}"
                     Source="images/word.png" />
             </StackPanel>
         </Button>
@@ -452,9 +453,11 @@
             Grid.Column="0"
             Grid.ColumnSpan="12"
             x:FieldModifier="public"
-            AlternationCount="2"
+            AlternationCount="1"
             AutoGenerateColumns="False"
-            Background="{DynamicResource ButtonBackgroundBrush}"
+            Background="{DynamicResource CebBackgroundBrush}"
+            BorderBrush="Black"
+            BorderThickness="0.5"
             CanUserAddRows="False"
             CanUserDeleteRows="False"
             CanUserReorderColumns="False"
@@ -520,9 +523,9 @@
             Grid.ColumnSpan="12"
             Height="48"
             VerticalAlignment="Center"
-            Background="{DynamicResource ButtonBackgroundBrush}"
+            Background="DarkSlateGray"
             BorderThickness="0"
-            Foreground="{StaticResource CebLinearGradientBrush2}"
+            Foreground="{DynamicResource CebBackgroundBrush}"
             IsIndeterminate="True"
             Maximum="100"
             Minimum="0"
@@ -562,7 +565,7 @@
                     Content="{Binding Result}"
                     FontSize="11"
                     FontWeight="ExtraBlack"
-                    Foreground="{DynamicResource ButtonForegroundBrush}" />
+                    Foreground="{DynamicResource CebForegroundBrush}" />
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
@@ -599,7 +602,7 @@
             Margin="2"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            Background="{DynamicResource ButtonBackgroundBrush}">
+            Background="{DynamicResource CebBackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -611,7 +614,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 FontSize="11"
-                Foreground="{StaticResource ButtonForegroundBrush}"
+                Foreground="{StaticResource CebForegroundBrush}"
                 Text="{Binding Result}"
                 TextAlignment="Center"
                 Visibility="{Binding Status, Converter={StaticResource CebConverter}}" />
@@ -620,7 +623,7 @@
                 Grid.Column="1"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Foreground="{StaticResource ButtonForegroundBrush}"
+                Foreground="{StaticResource CebForegroundBrush}"
                 TextAlignment="Center"
                 Visibility="{Binding Status, Converter={StaticResource CebConverter}}">
                 <Run Text="{Binding Count, Mode=OneWay}" />
@@ -631,7 +634,7 @@
                 Grid.Column="2"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Foreground="{StaticResource ButtonForegroundBrush}"
+                Foreground="{StaticResource CebForegroundBrush}"
                 Text="{Binding Duree.TotalSeconds, StringFormat=Durée {0:N3}s}"
                 TextAlignment="Right" />
 

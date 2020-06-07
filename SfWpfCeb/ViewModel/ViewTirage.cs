@@ -273,7 +273,7 @@ namespace CompteEstBon {
                 CebStatus.Indefini => Colors.Blue, 
                 CebStatus.Valid => Colors.White, 
                 CebStatus.EnCours => Colors.Aqua, 
-                CebStatus.CompteEstBon => Colors.GreenYellow, 
+                CebStatus.CompteEstBon => Colors.ForestGreen, 
                 CebStatus.CompteApproche => Colors.Orange, 
                 CebStatus.Erreur => Colors.Red };
         }
@@ -299,6 +299,8 @@ namespace CompteEstBon {
             IsBusy = true;
             Result = "";
             stopwatch.Start();
+            Foreground = Colors.Aqua;
+
             await Tirage.ResolveAsync();
             Result = Tirage.Status == CebStatus.CompteEstBon
                 ? "Le Compte est bon"
@@ -307,7 +309,7 @@ namespace CompteEstBon {
                     : "Tirage incorrect";
 
             stopwatch.Stop();
-            Duree = stopwatch.Elapsed;
+            Duree = Tirage.Duree;
             Solution = Tirage.Solution();
             Solutions = Tirage.Solutions;
             UpdateForeground();

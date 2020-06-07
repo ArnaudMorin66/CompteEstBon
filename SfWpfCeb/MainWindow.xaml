@@ -8,18 +8,21 @@
     xmlns:s="http://schemas.syncfusion.com/wpf"
     xmlns:skin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
     Title="{Binding Titre}"
-    TitleBarForeground="{DynamicResource TextForegroundBrush}"
     skin:SfSkinManager.VisualStyle="MaterialDark"
     BorderThickness="0"
     FontSize="10"
     Icon="images/favicon.png"
-    RightHeaderItemsSource="{DynamicResource titleitems}"
+    RightHeaderItemsSource="{DynamicResource TitleBarItems}"
+    TitleBarForeground="{DynamicResource TextForegroundBrush}"
     TitleTextAlignment="Center"
     UseNativeChrome="True"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <s:ChromelessWindow.Resources>
+
         <ResourceDictionary>
+
+            <SolidColorBrush x:Key="TextForegroundBrush" Color="{Binding Foreground}" />
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <local:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <local:StringVisibilityConverter x:Key="StringVisibilityConverter" />
@@ -28,11 +31,16 @@
                 <ListBox
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
-                    Background="Transparent"
                     ItemsSource="{Binding Operations}"
                     KeyboardNavigation.DirectionalNavigation="Continue"
                     PreviewMouseWheel="ListBox_PreviewMouseWheel"
-                    ScrollViewer.VerticalScrollBarVisibility="Hidden" />
+                    ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{DynamicResource TextCellGrid}" Text="{Binding}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </DataTemplate>
             <Style
                 x:Key="ComboPlaqueStyle"
@@ -43,10 +51,14 @@
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="HorizontalContentAlignment" Value="Center" />
             </Style>
-            <SolidColorBrush x:Key="TextForegroundBrush" Color="{Binding Foreground}" />
-            <local:ControlsTitleBar x:Key="titleitems">
+            <Style TargetType="{x:Type s:VirtualizingCellsControl}">
+                <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
+            </Style>
+
+            <local:ControlsTitleBar x:Key="TitleBarItems">
                 <StackPanel Orientation="Horizontal">
                     <Button
+                        Width="32"
                         Background="{Binding Background}"
                         BorderThickness="0"
                         Click="btnMode_Click"
@@ -58,7 +70,11 @@
                 </StackPanel>
 
             </local:ControlsTitleBar>
-
+            <Style x:Key="TextCellGrid" TargetType="{x:Type TextBlock}">
+                <Setter Property="TextAlignment" Value="Center" />
+                <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
+                <Setter Property="FontWeight" Value="ExtraLight" />
+            </Style>
         </ResourceDictionary>
 
     </s:ChromelessWindow.Resources>
@@ -390,8 +406,9 @@
                 VerticalAlignment="Center"
                 FontSize="10"
                 Foreground="{DynamicResource TextForegroundBrush}"
-                TextAlignment="Center">
-                <Run Text="Durée: " /><Run Text=" " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
+                Text="{Binding Duree, Mode=OneWay, StringFormat={}Durée: {0:mm}:{0:ss}\,{0:fff}}"
+                TextAlignment="Center" />
+
         </Grid>
         <Popup
             Width="480"
@@ -433,7 +450,8 @@
                     FontSize="10"
                     FontWeight="Medium"
                     Foreground="White"
-                    TextAlignment="Center"><Run Text="Durée: " /><Run Text="{Binding Duree, Mode=OneWay}" /></TextBlock>
+                    Text="{Binding Duree, Mode=OneWay, StringFormat={}Durée: {0:mm}:{0:ss}\,{0:fff}}"
+                    TextAlignment="Center" />
             </StackPanel>
         </Popup>
     </Grid>
