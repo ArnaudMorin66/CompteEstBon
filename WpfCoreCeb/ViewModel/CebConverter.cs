@@ -15,8 +15,8 @@ namespace CompteEstBon.ViewModel {
                     bool vb => (inverse ? !vb : vb) ? Visibility.Visible : Visibility.Hidden,
                     Visibility visibility => ( inverse && visibility != Visibility.Visible) ||
                                              (!inverse && visibility == Visibility.Visible) ? Visibility.Visible : Visibility.Hidden,
-                    CebStatus status => ( inverse && !(status == CebStatus.CompteApproche || status == CebStatus.CompteEstBon)) ||
-                                        (!inverse &&  (status == CebStatus.CompteApproche || status == CebStatus.CompteEstBon))
+                    CebStatus status => ( inverse && !(status == CebStatus.CompteApproche || status == CebStatus.CompteEstBon || status == CebStatus.Erreur)) ||
+                                        (!inverse &&  (status == CebStatus.CompteApproche || status == CebStatus.CompteEstBon || status == CebStatus.Erreur))
                             ? Visibility.Visible : Visibility.Hidden, 
                        
                     _ => Visibility.Hidden

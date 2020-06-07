@@ -12,7 +12,7 @@
         AlwaysUseFallback="False"
         BackgroundSource="Backdrop"
         FallbackColor="Transparent"
-        TintColor="{Binding Background}"
+        TintColor="#FF2D2D30"
         TintOpacity="0.2" />
     <Style x:Key="CebButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource AcrylicButtonBackgroundBrush}" />
@@ -111,7 +111,7 @@
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="FontSize" Value="12" />
-        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Background" Value="#FF2D2D30" />
         <Setter Property="IsEditable" Value="True" />
     </Style>
     <Style x:Key="headerCellStyle" TargetType="ContentControl">
@@ -156,7 +156,7 @@
                             <ControlTemplate TargetType="Button">
                                 <Grid
                                     x:Name="ButtonLayoutGrid"
-                                    Background="black"
+                                    Background="#FF2D2D30"
                                     BorderBrush="{ThemeResource TextControlButtonBorderBrush}"
                                     BorderThickness="{TemplateBinding BorderThickness}">
                                     <TextBlock

@@ -17,18 +17,21 @@
                 <ResourceDictionary Source="CebDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style x:Key="SfComboboxStyle" TargetType="sfi:SfComboBox">
-                <Setter Property="BorderThickness" Value="0.25" />
-                <Setter Property="BorderBrush" Value="White" />
+                <Setter Property="BorderThickness" Value="0,0,0,1" />
+                <Setter Property="BorderBrush" Value="DarkSlateGray" />
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="HorizontalContentAlignment" Value="Center" />
                 <Setter Property="VerticalAlignment" Value="Stretch" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="Background" Value="{StaticResource CebLinearGradientBrush2}" />
+                <Setter Property="Background" Value="{StaticResource CebBackgroundBrush}" />
                 <Setter Property="Foreground" Value="White" />
+                <Setter Property="IsEditable" Value="True" />
                 <Setter Property="FontSize" Value="10" />
             </Style>
             <local:FormatConverter x:Key="formatConverter" />
-            
+
+
+
 
         </ResourceDictionary>
     </Page.Resources>
@@ -54,15 +57,15 @@
             <ColumnDefinition />
             <ColumnDefinition />
             <ColumnDefinition />
-             <ColumnDefinition Width="120" />
-            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="120" />
+            <ColumnDefinition Width="80" />
             <ColumnDefinition Width="80" />
         </Grid.ColumnDefinitions>
         <Border
             Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="10"
-            Background="{StaticResource CebLinearGradientBrush2}">
+            Background="{StaticResource CebBackgroundBrush}">
 
             <TextBlock
                 VerticalAlignment="Stretch"
@@ -73,8 +76,8 @@
                 <TextBlock.Text>Jeu du compte est bon</TextBlock.Text>
             </TextBlock>
         </Border>
-       
-     
+
+
         <Border
             Grid.Row="1"
             Grid.Column="0"
@@ -101,7 +104,7 @@
                 </StackPanel>
             </Button.Content>
         </Button>
-        <sfi:SfComboBox 
+        <sfi:SfComboBox
             Grid.Row="2"
             Grid.Column="0"
             ItemsSource="{Binding ListePlaques}"
@@ -151,9 +154,9 @@
             VerticalAlignment="Stretch"
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Stretch"
-            Background="{StaticResource CebLinearGradientBrush2}"
+            Background="{StaticResource CebBackgroundBrush}"
             BorderBrush="White"
-            BorderThickness="0.25"
+            BorderThickness="0"
             FontSize="10"
             Foreground="White"
             FormatString="{}0"
@@ -183,13 +186,12 @@
                 </StackPanel>
             </Button.Content>
         </Button>
-           
+
         <Button
             x:Name="ExportExcel"
             Grid.Row="2"
             Grid.Column="8"
             Grid.ColumnSpan="1"
-            
             Command="{Binding ExportCommand}"
             CommandParameter="Excel"
             Style="{StaticResource CebButtonStyle}"
@@ -235,18 +237,17 @@
             AllowGrouping="False"
             AllowSorting="False"
             AutoGenerateColumns="False"
-            Background="{StaticResource CebLinearGradientBrush2}"
+            Background="{StaticResource CebBackgroundBrush}"
             BorderBrush="White"
-            BorderThickness="0.2"
+            BorderThickness="0"
             ColumnSizer="Star"
             CurrentCellBorderBrush="Navy"
             FontSize="10"
             Foreground="White"
             HeaderRowHeight="0"
             HeaderStyle="{StaticResource SfDataGridHeaderStyle}"
-            
             NavigationMode="Row"
-            RowSelectionBrush="{StaticResource CebLinearGradientBrush1}"
+            RowSelectionBrush="{StaticResource CebBackgroundBrush}"
             SelectionChanged="SolutionsData_SelectionChanged"
             SelectionForegroundBrush="Yellow">
             <sf:SfDataGrid.Columns>
@@ -273,7 +274,7 @@
 
             </sf:SfDataGrid.Columns>
         </sf:SfDataGrid>
-         <Grid
+        <Grid
             Grid.Row="4"
             Grid.Column="0"
             Grid.ColumnSpan="10"
@@ -304,7 +305,7 @@
                 FontWeight="Bold"
                 Foreground="{StaticResource CebForegroundBrush}"
                 TextAlignment="Center">
-                
+
                 <Run Text="{Binding NSolutions}" />
                 <Run Text=" solutions " />
             </TextBlock>
@@ -359,7 +360,7 @@
 
                 <TextBlock Foreground="White" HorizontalTextAlignment="Center">
                     <Run Text="{Binding NSolutions}" />
-                    <Run Text=" solutions"/>
+                    <Run Text=" solutions" />
                 </TextBlock>
                 <TextBlock
                     HorizontalAlignment="Center"
@@ -400,7 +401,7 @@
                         Icon="Save"
                         Label="Excel"
                         Style="{ThemeResource AppBarButtonRevealStyle}" />
-                     <AppBarButton
+                    <AppBarButton
                         Command="{Binding ExportCommand}"
                         CommandParameter="Word"
                         Icon="Save"

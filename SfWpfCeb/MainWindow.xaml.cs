@@ -23,38 +23,47 @@ namespace CompteEstBon {
     public partial class MainWindow : ChromelessWindow {
         public MainWindow() {
             InitializeComponent();
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("fr"); 
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
-            SfSkinManager.SetVisualStyle(this, VisualStyles.Default);
         }
-        private void SolutionsData_SelectionChanged(object sender, Syncfusion.UI.Xaml.Grid.GridSelectionChangedEventArgs e) {
+        private void SolutionsData_SelectionChanged(object sender, GridSelectionChangedEventArgs e) {
             View.ShowPopup(SolutionsData.SelectedIndex);
         }
         private ViewTirage View => FindResource("Tirage") as ViewTirage;
 
-        private void SolutionsData_QueryRowHeight(object sender, Syncfusion.UI.Xaml.Grid.QueryRowHeightEventArgs e) {
+        private void SolutionsData_QueryRowHeight(object sender, QueryRowHeightEventArgs e) {
             if (e.RowIndex > 0) {
-                GridRowSizingOptions gridRowResizingOptions = new GridRowSizingOptions();
+                var gridRowResizingOptions = new GridRowSizingOptions();
                 if (SolutionsData.GridColumnSizer.GetAutoRowHeight(e.RowIndex, gridRowResizingOptions, out double autoHeight)) {
-                        e.Height = autoHeight;
-                        e.Handled = true;
-          
+                    e.Height = autoHeight;
+                    e.Handled = true;
+
                 }
-                
+
             }
         }
 
         private void btnMode_Click(object sender, RoutedEventArgs e) {
             View.Vertical = !View.Vertical;
             if (SolutionsData.GetRecordsCount() > 0) {
-                
-                for (var index = 0; index < SolutionsData.GetRecordsCount(); index++) {
-                
+                for (var index = 0; index <= SolutionsData.GetRecordsCount(); index++) {
                     SolutionsData.InvalidateRowHeight(index);
-
                 }
-
             }
 
+        }
+
+        private void ListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e) {
+            UIElement element = sender as UIElement;
+
+            if (element != null) {
+                e.Handled = true;
+
+                var e2 = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta) {
+                    RoutedEvent = UIElement.MouseWheelEvent
+                };
+                element.RaiseEvent(e2);
+            }
         }
     }
 }

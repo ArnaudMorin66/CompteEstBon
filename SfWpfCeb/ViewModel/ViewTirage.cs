@@ -19,16 +19,16 @@ using System.Windows.Threading;
 #endregion
 
 namespace CompteEstBon {
+    public class ControlsTitleBar : ObservableCollection<object> { }
     public class ViewTirage : INotifyPropertyChanged, ICommand {
         private readonly Stopwatch NotifyWatch = new Stopwatch();
         private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(CompteEstBon.Properties.Settings.Default.SolutionTimer);
-        private Color _background = Colors.Black;
+        
         private TimeSpan _duree;
 
         private Color _foreground = Colors.White;
         private bool _isUpdating;
         private bool _isBusy;
-        private bool _isComputed;
         private bool _popup;
 
         private string _result = "Résoudre";
@@ -47,6 +47,7 @@ namespace CompteEstBon {
         public ViewTirage() {
 
             stopwatch = new Stopwatch();
+            
 
             dateDispatcher = new DispatcherTimer {
                 Interval = TimeSpan.FromMilliseconds(Properties.Settings.Default.SolutionTimer)
@@ -66,7 +67,6 @@ namespace CompteEstBon {
             };
             _isUpdating = false;
             UpdateData();
-            UpdateColors();
             Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             dateDispatcher.Start();
         }
@@ -75,8 +75,8 @@ namespace CompteEstBon {
 
         public CebTirage Tirage { get; } = new CebTirage();
 
-        public ObservableCollection<int> Plaques { get; } =
-            new ObservableCollection<int> { 0, 0, 0, 0, 0, 0 };
+        public ObservableCollection<int> Plaques { get; } = new ObservableCollection<int> { 0, 0, 0, 0, 0, 0 }; 
+            
         public IEnumerable<CebBase> _solutions;
         public IEnumerable<CebBase> Solutions {
             get => _solutions;
@@ -99,12 +99,12 @@ namespace CompteEstBon {
             get => _vertical;
             set {
                 _vertical = value;
-                ModeView = value ? '\xE2' : '\xE0';
+                ModeView = value ? '⁞' : '…';
                 NotifiedChanged();
             }
         }
-
-        private char _modeView = '\xE0';
+        // ⁞…
+        private char _modeView = '…';
         public char ModeView {
             get => _modeView;
             set {
@@ -129,27 +129,18 @@ namespace CompteEstBon {
             }
         }
 
+        public Color Foreground {
+            get => _foreground;
+            set {
+                _foreground = value;
+                NotifiedChanged();
+            }
+        }
         public string Result {
             get => _result;
             set {
                 if (value == _result) return;
                 _result = value;
-                NotifiedChanged();
-            }
-        }
-
-        public Color Background {
-            get => _background;
-            set {
-                _background = value;
-                NotifiedChanged();
-            }
-        }
-
-        public Color Foreground {
-            get => _foreground;
-            set {
-                _foreground = value;
                 NotifiedChanged();
             }
         }
@@ -164,10 +155,8 @@ namespace CompteEstBon {
 
 
         public bool IsComputed {
-            get => _isComputed;
+            get => Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche;
             set {
-                if (value == _isComputed) return;
-                _isComputed = value;
                 NotifiedChanged();
             }
         }
@@ -211,7 +200,8 @@ namespace CompteEstBon {
         public bool CanExecute(object parameter) => true;
 
         public async void Execute(object parameter) {
-            switch ((parameter as string).ToLower()) {
+            var cmd = (parameter as string).ToLower(); 
+            switch (cmd) {
                 case "random":
                     await RandomAsync();
                     break;
@@ -233,7 +223,7 @@ namespace CompteEstBon {
                     break;
                 case "xlsx":
                 case "docx":
-                    await ExportAsync((string)parameter);
+                    await ExportAsync(cmd);
                     break;
             }
         }
@@ -241,25 +231,11 @@ namespace CompteEstBon {
         public event PropertyChangedEventHandler PropertyChanged;
         private async Task ExportAsync(string fmt) {
             IsBusy = true;
-            fmt = fmt.ToLower();
             await Task.Run(() => ExportFichier(fmt)); 
             IsBusy = false;
         }
 
 
-
-        private void UpdateColors() {
-            (Background, Foreground) = Tirage.Status switch
-            {
-                CebStatus.Valid => (Colors.Transparent, Colors.White),
-                CebStatus.Erreur => (Colors.Red, Colors.Navy),
-                CebStatus.CompteEstBon => (Colors.ForestGreen, Colors.GhostWhite),
-                CebStatus.CompteApproche => (Colors.Salmon, Colors.Black),
-                CebStatus.EnCours => (Colors.Gray, Colors.White),
-                _ => (Colors.Red, Colors.White)
-
-            };
-        }
 
         private void NotifiedChanged([CallerMemberName] string propertyName = "") {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -272,10 +248,9 @@ namespace CompteEstBon {
             IsComputed = false;
             Solution = "";
             Solutions = null;
+            UpdateForeground();
             Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
             Popup = false;
-
-            UpdateColors();
         }
 
         private void UpdateData() {
@@ -291,6 +266,17 @@ namespace CompteEstBon {
             NotifiedChanged(nameof(Search));
         }
 
+        private void UpdateForeground() {
+#pragma warning disable CS8509 // L'expression switch ne prend pas en charge toutes les valeurs possibles de son type d'entrée (elle n'est pas exhaustive).
+            Foreground = Tirage.Status switch {
+#pragma warning restore CS8509 // L'expression switch ne prend pas en charge toutes les valeurs possibles de son type d'entrée (elle n'est pas exhaustive).
+                CebStatus.Indefini => Colors.Blue, 
+                CebStatus.Valid => Colors.White, 
+                CebStatus.EnCours => Colors.Aqua, 
+                CebStatus.CompteEstBon => Colors.GreenYellow, 
+                CebStatus.CompteApproche => Colors.Orange, 
+                CebStatus.Erreur => Colors.Red };
+        }
         public void ShowPopup(int index = 0) {
             if (index >= 0 && index < Tirage.Solutions.Count()) {
                 Solution = Tirage.Solution(index);
@@ -309,11 +295,9 @@ namespace CompteEstBon {
             await Tirage.RandomAsync();
             UpdateData();
         }
-        // public static MainWindow Window => Application.Current.MainWindow as MainWindow;
         public async Task<CebStatus> ResolveAsync() {
             IsBusy = true;
             Result = "";
-            (Background, Foreground) = (Colors.Green, Colors.White);
             stopwatch.Start();
             await Tirage.ResolveAsync();
             Result = Tirage.Status == CebStatus.CompteEstBon
@@ -326,17 +310,16 @@ namespace CompteEstBon {
             Duree = stopwatch.Elapsed;
             Solution = Tirage.Solution();
             Solutions = Tirage.Solutions;
-            // Count = Tirage.Count;
-
-            UpdateColors();
+            UpdateForeground();
             IsBusy = false;
-            IsComputed = Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche;
+            NotifiedChanged(nameof(IsComputed));
+            
             ShowPopup();
             return Tirage.Status;
         }
 
         #endregion Action
-        public (bool Select, string Name) FileSaveName(string ext) {
+        public (bool Ok, string Path) FileSaveName(string ext) {
             var dialog = new SaveFileDialog();
             (dialog.Filter, dialog.Title) = ext switch
             {
@@ -352,22 +335,22 @@ namespace CompteEstBon {
         }
 
         private void ExportFichier(string ext) {
-            var Fichier = FileSaveName(ext);
-            if (Fichier.Select) {
-                if (File.Exists(Fichier.Name)) {
-                    File.Delete(Fichier.Name);
+            var (Ok, Path) = FileSaveName(ext);
+            if (Ok) {
+                if (File.Exists(Path)) {
+                    File.Delete(Path);
                 }
-                Action<Stream> fn = ext switch
+                Action<Stream> ExportFunction = ext switch
                 {
                     "xlsx" => Tirage.ExportExcel,
                     "docx" => Tirage.ExportWord,
                     _ => throw new NotImplementedException(),
                 };
-                var stream = new FileStream(Fichier.Name, FileMode.CreateNew);
-                fn(stream);
+                var stream = new FileStream(Path, FileMode.CreateNew);
+                ExportFunction(stream);
                 stream.Flush();
                 stream.Close();
-                OpenDocument(Fichier.Name);
+                OpenDocument(Path);
             }
         }
 
@@ -380,4 +363,5 @@ namespace CompteEstBon {
             Process.Start(info);
         }
     }
+    
 }

@@ -13,6 +13,7 @@
     FontSize="11"
     Icon="favicon.ico"
     MouseLeftButtonDown="Window_MouseLeftButtonDown"
+    OverridesDefaultStyle="False"
     ResizeMode="CanResize"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
@@ -158,16 +159,15 @@
                 Grid.Column="0"
                 Width="20"
                 Height="20"
-                Margin="0"
-                Padding="0"
+                Padding="2"
                 Click="BtnMenu_Click"
                 Cursor="Hand"
                 IsTabStop="False"
                 MouseRightButtonDown="TextBlock_MouseRightButtonUp">
                 <Button.Content>
                     <Image
-                        Width="24"
-                        Height="24"
+                        Width="16"
+                        Height="16"
                         Source="favicon.ico" />
                 </Button.Content>
             </Button>
@@ -192,7 +192,7 @@
                 Background="{DynamicResource ButtonBackgroundBrush}"
                 Click="btnMode_Click"
                 Content="{Binding ModeView}"
-                Foreground="{DynamicResource ButtonForegroundBrush}"
+                Cursor="Hand"
                 Style="{StaticResource ButtonWindowsStyle}" />
             <Button
                 x:Name="btnMinimize"
@@ -202,8 +202,7 @@
                 Margin="0"
                 HorizontalAlignment="Center"
                 Click="BtnMinimize_Click"
-                Content="&#xAC;"
-                FontFamily="Wingdings 3"
+                Content="_"
                 Style="{StaticResource ButtonWindowsStyle}"
                 ToolTipService.ToolTip="Réduire" />
             <Button
@@ -214,7 +213,7 @@
                 Margin="0"
                 HorizontalAlignment="Center"
                 Click="BtnSize_Click"
-                Content="&#x6F;"
+                Content="□"
                 Style="{StaticResource ButtonWindowsStyle}"
                 ToolTipService.ToolTip="Rétablir précédent" />
             <Button
@@ -226,7 +225,7 @@
                 HorizontalAlignment="Center"
                 BorderBrush="Black"
                 Click="BtnClose_Click"
-                Content="&#x78;"
+                Content="x"
                 Style="{StaticResource ButtonWindowsStyle}"
                 ToolTipService.ToolTip="Fermer" />
         </Grid>
@@ -242,8 +241,7 @@
             Grid.ColumnSpan="7"
             Margin="0"
             Padding="0"
-            BorderBrush="Black"
-            BorderThickness="1">
+            BorderThickness="0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
@@ -301,8 +299,7 @@
             Grid.Row="2"
             Grid.Column="7"
             Grid.ColumnSpan="2"
-            BorderBrush="Black"
-            BorderThickness="1"
+            BorderThickness="0"
             Style="{StaticResource BorderTitreStyle}">
             <Grid
                 HorizontalAlignment="Stretch"
@@ -327,11 +324,11 @@
                     GotFocus="txtSearch_GotFocus"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}"
                     IsTabStop="True"
+                    LostFocus="txtSearch_LostFocus"
                     PreviewTextInput="TxtSearch_OnPreviewTextInput"
                     Style="{StaticResource SearchControlStyle}"
                     TabIndex="6"
-                    Text="{Binding Tirage.Search, Mode=TwoWay, NotifyOnTargetUpdated=True, NotifyOnValidationError=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=Default}" LostFocus="txtSearch_LostFocus"
-                     />
+                    Text="{Binding Tirage.Search, Mode=TwoWay, NotifyOnTargetUpdated=True, NotifyOnValidationError=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=Default}" />
                 <RepeatButton
                     x:Name="tbPlus"
                     Grid.Column="2"
@@ -350,7 +347,7 @@
             Height="30"
             VerticalAlignment="Top"
             Background="{DynamicResource ButtonBackgroundBrush}"
-            BorderThickness="1"
+            BorderThickness="0"
             Command="{Binding}"
             CommandParameter="resolve"
             FontWeight="Bold"
@@ -381,7 +378,7 @@
             Grid.Column="9"
             Margin="0"
             Background="{DynamicResource ButtonBackgroundBrush}"
-            BorderThickness="1"
+            BorderThickness="0"
             Command="{Binding}"
             CommandParameter="random"
             Foreground="White"
@@ -408,7 +405,7 @@
             Grid.Row="2"
             Grid.Column="10"
             Background="{DynamicResource ButtonBackgroundBrush}"
-            BorderThickness="1"
+            BorderThickness="0"
             Command="{Binding}"
             CommandParameter="xlsx"
             IsEnabled="{Binding Status, Converter={StaticResource CebConverter}}"
@@ -431,7 +428,7 @@
             Grid.Row="2"
             Grid.Column="11"
             Background="{DynamicResource ButtonBackgroundBrush}"
-            BorderThickness="1"
+            BorderThickness="0"
             Command="{Binding}"
             CommandParameter="docx"
             IsEnabled="{Binding Status, Converter={StaticResource CebConverter}}"
@@ -561,7 +558,7 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
                     HorizontalContentAlignment="Center"
-                    Background="{DynamicResource ButtonBackgroundBrush}"
+                    Background="DarkSlateGray"
                     Content="{Binding Result}"
                     FontSize="11"
                     FontWeight="ExtraBlack"
@@ -614,7 +611,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 FontSize="11"
-                Foreground="White"
+                Foreground="{StaticResource ButtonForegroundBrush}"
                 Text="{Binding Result}"
                 TextAlignment="Center"
                 Visibility="{Binding Status, Converter={StaticResource CebConverter}}" />
@@ -623,7 +620,7 @@
                 Grid.Column="1"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Foreground="White"
+                Foreground="{StaticResource ButtonForegroundBrush}"
                 TextAlignment="Center"
                 Visibility="{Binding Status, Converter={StaticResource CebConverter}}">
                 <Run Text="{Binding Count, Mode=OneWay}" />
@@ -634,7 +631,7 @@
                 Grid.Column="2"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Center"
-                Foreground="White"
+                Foreground="{StaticResource ButtonForegroundBrush}"
                 Text="{Binding Duree.TotalSeconds, StringFormat=Durée {0:N3}s}"
                 TextAlignment="Right" />
 

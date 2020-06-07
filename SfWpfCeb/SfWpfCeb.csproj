@@ -3,15 +3,20 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>preview</LangVersion>
     <UseWPF>true</UseWPF>
     <RootNamespace>CompteEstBon</RootNamespace>
     <StartupObject>CompteEstBon.App</StartupObject>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
     <AssemblyName>WpfCeb</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="ViewModel\InteropClass.cs" />
+    <Compile Remove="ViewModel\MyObservableCollection.cs" />
     <Compile Remove="ViewModel\SfGridCellTemplate.cs" />
     <Compile Remove="xMainWindow.xaml.cs" />
   </ItemGroup>
@@ -30,13 +35,41 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="18.1.0.55" />
-    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="18.1.0.55" />
-    <PackageReference Include="Syncfusion.SfInput.WPF" Version="18.1.0.55" />
-    <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="18.1.0.55" />
-    <PackageReference Include="Syncfusion.Themes.Blend.WPF" Version="18.1.0.55" />
-    <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="18.1.0.55" />
-    <PackageReference Include="Syncfusion.Themes.SystemTheme.WPF" Version="18.1.0.55" />
+      <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.Shared.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfGrid.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.Data.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfChart.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfDiagram.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfShared.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfGauge.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfKanban.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfTreeMap.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfMaps.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfSmithChart.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfSunburstChart.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfBulletGraph.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfHeatMap.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.Themes.Metro.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.Themes.Office365.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.Themes.Saffron.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.Tools.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.PropertyGrid.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfInput.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfColorPalette.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfTextInputLayout.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfRadialMenu.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfSpellChecker.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SpellChecker.Base" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfHubTile.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfAccordion.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.SfTreeNavigator.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.Compression.Base" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.PdfViewer.WPF" Version="18.1.0.55" />
   </ItemGroup>
 
   <ItemGroup>

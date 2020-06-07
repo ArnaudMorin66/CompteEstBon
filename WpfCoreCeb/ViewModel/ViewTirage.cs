@@ -29,12 +29,11 @@ namespace CompteEstBon.ViewModel {
         //private readonly Storyboard WaitStory =
         //    Application.Current.MainWindow?.FindResource("WaitStoryboard") as Storyboard;
 
-        private Color _background = Colors.Navy;
         private TimeSpan _duree;
         private Color _foreground = Colors.White;
         private bool _isBusy;
         private bool _isUpdating;
-        private char _modeView = '\xE0';
+        private char _modeView = '…';
         private bool _popup;
 
         private string _result = "Résoudre";
@@ -97,7 +96,7 @@ namespace CompteEstBon.ViewModel {
             get => _vertical;
             set {
                 _vertical = value;
-                ModeView = value ? '\xE2' : '\xE0';
+                ModeView = value ? '⁞' : '…';
                 NotifiedChanged();
             }
         }
@@ -149,14 +148,7 @@ namespace CompteEstBon.ViewModel {
             }
         }
 
-        public Color Background {
-            get => _background;
-            set {
-                _background = value;
-                NotifiedChanged();
-            }
-        }
-
+        
         public Color Foreground {
             get => _foreground;
             set {
@@ -251,14 +243,14 @@ namespace CompteEstBon.ViewModel {
 
 
         private void UpdateColors() {
-            (Background, Foreground) = Tirage.Status switch
+            Foreground = Tirage.Status switch
             {
-                CebStatus.Valid => (Colors.Transparent, Colors.White),
-                CebStatus.Erreur => (Colors.LightCoral, Colors.White),
-                CebStatus.CompteEstBon => (Colors.DarkSlateGray, Colors.GhostWhite),
-                CebStatus.CompteApproche => (Colors.Chocolate, Colors.White),
-                CebStatus.EnCours => (Colors.Yellow, Colors.White),
-                _ => (Colors.Red, Colors.White)
+                CebStatus.Valid =>  Colors.White,
+                CebStatus.Erreur => Colors.Red,
+                CebStatus.CompteEstBon => Colors.YellowGreen,
+                CebStatus.CompteApproche => Colors.Orange,
+                CebStatus.EnCours => Colors.Yellow,
+                _ => Colors.White
             };
         }
 
@@ -328,7 +320,7 @@ namespace CompteEstBon.ViewModel {
         public async Task ResolveAsync() {
             IsBusy = true;
             Result = "";
-            (Background, Foreground) = (Colors.CadetBlue, Colors.White);
+            
             stopwatch.Start();
             var data = await Tirage.ResolveAsync();
             Result = Tirage.Status switch

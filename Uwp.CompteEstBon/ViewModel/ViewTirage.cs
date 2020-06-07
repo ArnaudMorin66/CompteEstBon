@@ -24,7 +24,6 @@ using Windows.UI.Xaml.Controls;
 
 namespace CompteEstBon {
     public class ViewTirage : INotifyPropertyChanged {
-        private Color _background;
         private double _duree;
         private bool _popupIsOpen;
         private char _modeView = '\xE0';
@@ -123,13 +122,6 @@ namespace CompteEstBon {
             }
         }
 
-        public Color Background {
-            get => _background;
-            set {
-                _background = value;
-                NotifiedChanged();
-            }
-        }
 
         public Color Foreground {
             get => _foreground;
@@ -180,7 +172,7 @@ namespace CompteEstBon {
         /// </summary>
         /// <returns></returns>
         public ViewTirage() {
-            _background = Colors.DarkSlateGray;
+            
             HasardCommand = new DelegateCommand(Hasardcmd);
             ResolveCommand = new DelegateCommand(Resolvecmd);
             ExportCommand = new DelegateCommand(Exportcmd);
@@ -293,14 +285,14 @@ namespace CompteEstBon {
 
         private void UpdateColors() {
 
-            (Background, Foreground) = Tirage.Status switch
+            Foreground = Tirage.Status switch
             {
-                CebStatus.Valid => (Colors.DarkSlateGray, Colors.Yellow),
-                CebStatus.Erreur => (Colors.Red, Colors.White),
-                CebStatus.CompteEstBon => (Colors.DarkGreen, Colors.Yellow),
-                CebStatus.CompteApproche => (Colors.Chocolate, Colors.White),
-                CebStatus.EnCours => (Colors.Green, Colors.White),
-                _ => (Colors.DarkSlateGray, Colors.Yellow)
+                CebStatus.Valid =>  Colors.White,
+                CebStatus.Erreur => Colors.Red,
+                CebStatus.CompteEstBon =>  Colors.YellowGreen,
+                CebStatus.CompteApproche =>  Colors.Orange,
+                CebStatus.EnCours => Colors.GhostWhite,
+                _ =>  Colors.White
 
             };
 
