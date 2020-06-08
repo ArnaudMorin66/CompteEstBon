@@ -9,14 +9,8 @@
     xmlns:syncresource="using:Syncfusion.UI.Xaml.Controls.Input"
     xmlns:sys="using:System"
     mc:Ignorable="d">
-    <SolidColorBrush x:Key="CebBackgroundBrush" Color="#FF2D2D30" />
-
+    <SolidColorBrush x:Key="CebBackgroundBrush" Color="#FF232323" />
     <SolidColorBrush x:Key="CebForegroundBrush" Color="{Binding Foreground}" />
-    
-   
-    
-    
-    
     <Style x:Key="CebButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource CebBackgroundBrush}" />
         <Setter Property="Foreground" Value="{StaticResource CebForegroundBrush}" />

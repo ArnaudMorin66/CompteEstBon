@@ -19,8 +19,12 @@ namespace CompteEstBon {
         private ViewTirage viewTirage { get; }
         private void SolutionsData_SelectionChanged(object sender, SelectionChangedEventArgs e) => viewTirage.ShowNotify(SolutionsData.SelectedIndex);
 
-        private void TbPlus_Click(object sender, RoutedEventArgs e) => viewTirage.Search = Math.Min(viewTirage.Search + 1, 999);
-        private void TbMoins_Click(object sender, RoutedEventArgs e) => viewTirage.Search = Math.Max(viewTirage.Search - 1, 100);
+        private void TbPlus_Click(object sender, RoutedEventArgs e) {
+            viewTirage.Search = Math.Min(viewTirage.Search + 1, 999);
+        }
+        private void TbMoins_Click(object sender, RoutedEventArgs e) {
+            viewTirage.Search = Math.Max(viewTirage.Search - 1, 100);
+        }
         private void BtnClose_Click(object sender, RoutedEventArgs e) => Application.Current.Shutdown(0);
         private void BtnSize_Click(object sender, RoutedEventArgs e) => WindowState = (WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
 

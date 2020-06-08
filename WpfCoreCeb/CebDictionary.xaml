@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <SolidColorBrush x:Key="CebForegroundBrush" Color="{Binding Foreground}" />
-    <SolidColorBrush x:Key="CebBackgroundBrush" Color="#FF2D2D30" />
+    <SolidColorBrush x:Key="CebBackgroundBrush" Color="#FF181818" />
     <LinearGradientBrush x:Key="CebLinearGradientBrush1" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Offset="0.0" Color="#808080" />
         <GradientStop Offset="1.0" Color="DarkSlateGray" />
@@ -14,10 +14,10 @@
         <GradientStop Offset="0.0" Color="#303030" />
         <GradientStop Offset="1.0" Color="DarkSlateGray" />
     </LinearGradientBrush>
-    <Style x:Key="CebRepeatButtonStyle" TargetType="{x:Type RepeatButton}">
+    <Style TargetType="{x:Type RepeatButton}">
         <Setter Property="Background" Value="{DynamicResource CebBackgroundBrush}" />
         <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="FontSize" Value="10" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Foreground" Value="White" />
@@ -115,7 +115,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-   
+
     <Style x:Key="SearchControlStyle" TargetType="{x:Type TextBox}">
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
@@ -127,9 +127,9 @@
     </Style>
     <Style x:Key="SolutionsCellStyle" TargetType="{x:Type DataGridCell}">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="{DynamicResource CebForegroundBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource CebForegroundBrush}" />
         <Setter Property="BorderBrush" Value="Black" />
-        <Setter Property="FontWeight" Value="Light"/>
+        <Setter Property="FontWeight" Value="Light" />
         <Setter Property="BorderThickness" Value="0,0,0,0.2" />
         <Setter Property="Template">
             <Setter.Value>
@@ -184,4 +184,37 @@
         <Setter Property="Foreground" Value="White" />
         <Setter Property="IsTabStop" Value="True" />
     </Style>
+    <ControlTemplate x:Key="CebRepeatButtonTemplate" TargetType="{x:Type RepeatButton}">
+        <Border
+            x:Name="border"
+            Background="{TemplateBinding Background}"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            Cursor="Hand"
+            SnapsToDevicePixels="True">
+            <ContentPresenter
+                x:Name="contentPresenter"
+                Margin="{TemplateBinding Padding}"
+                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                Content="{TemplateBinding Content}"
+                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                ContentTemplate="{TemplateBinding ContentTemplate}"
+                Focusable="True"
+                RecognizesAccessKey="True"
+                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="border" Property="Background" Value="Black" />
+                <Setter TargetName="border" Property="BorderBrush" Value="White" />
+
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="border" Property="Background" Value="DarkSlateGray" />
+                <Setter TargetName="border" Property="BorderBrush" Value="Yellow" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
 </ResourceDictionary>

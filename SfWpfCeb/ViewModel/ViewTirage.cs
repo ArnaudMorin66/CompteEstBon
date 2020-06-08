@@ -1,6 +1,7 @@
 ﻿#region
 
 using Microsoft.Win32;
+using Syncfusion.SfSkinManager;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,7 +20,6 @@ using System.Windows.Threading;
 #endregion
 
 namespace CompteEstBon {
-    public class ControlsTitleBar : ObservableCollection<object> { }
     public class ViewTirage : INotifyPropertyChanged, ICommand {
         private readonly Stopwatch NotifyWatch = new Stopwatch();
         private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(CompteEstBon.Properties.Settings.Default.SolutionTimer);
@@ -35,6 +35,15 @@ namespace CompteEstBon {
 
         public string _solution;
         private string _titre = "Le compte est bon";
+        private string _style = "MaterialDark";
+        public string VisualStyle {
+            get => _style;
+            set {
+                _style = value;
+                SfSkinManager.SetVisualStyle(Application.Current.MainWindow, (VisualStyles)Enum.Parse(typeof(VisualStyles),value));
+                NotifiedChanged();
+            }
+        }
 
         public DispatcherTimer dateDispatcher;
         public Stopwatch stopwatch;
@@ -69,6 +78,7 @@ namespace CompteEstBon {
             UpdateData();
             Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             dateDispatcher.Start();
+            VisualStyle = "MaterialDark";
         }
 
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.AnyPlaques;
@@ -237,9 +247,7 @@ namespace CompteEstBon {
 
 
 
-        private void NotifiedChanged([CallerMemberName] string propertyName = "") {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        private void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private void ClearData() {
             if (_isUpdating) return;
@@ -329,10 +337,7 @@ namespace CompteEstBon {
                 "docx" => ("Word (*.docx) | *.docx", "Fichiers Word"),
                 _ => ("Tous (*.*) | *.*", "Tous les fichiers")
             };
-            if ((bool)dialog.ShowDialog()) {
-                return (true, dialog.FileName);
-            }
-            return (false, null);
+            return ((bool) dialog.ShowDialog(), dialog.FileName); 
 
         }
 

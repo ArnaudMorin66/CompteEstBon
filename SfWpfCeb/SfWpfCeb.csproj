@@ -51,6 +51,8 @@
         <PackageReference Include="Syncfusion.SfBulletGraph.WPF" Version="18.1.0.55" />
         <PackageReference Include="Syncfusion.SfHeatMap.WPF" Version="18.1.0.55" />
         <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="18.1.0.55" />
+        <PackageReference Include="Syncfusion.Themes.MaterialLight.WPF" Version="18.1.0.55" />
         <PackageReference Include="Syncfusion.Tools.WPF" Version="18.1.0.55" />
         <PackageReference Include="Syncfusion.PropertyGrid.WPF" Version="18.1.0.55" />
         <PackageReference Include="Syncfusion.SfInput.WPF" Version="18.1.0.55" />
@@ -99,13 +101,6 @@
     <None Update="SyncfusionLicense.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="CebDictionary.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
 
 </Project>

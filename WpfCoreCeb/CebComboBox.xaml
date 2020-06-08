@@ -206,12 +206,12 @@
                     x:Name="shadow"
                     MinWidth="{Binding ActualWidth, ElementName=templateRoot}"
                     MaxHeight="{TemplateBinding MaxDropDownHeight}"
-                    Color="Transparent">
+                    Color="White">
                     <Border
                         x:Name="dropDownBorder"
-                        Background="{DynamicResource ButtonBackgroundBrush}"
+                        Background="{StaticResource CebBackgroundBrush}"
                         BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}"
-                        BorderThickness="0">
+                        BorderThickness="1">
                         <ScrollViewer x:Name="DropDownScrollViewer">
                             <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
                                 <Canvas
@@ -307,7 +307,5 @@
         <Setter Property="ScrollViewer.PanningMode" Value="Both" />
         <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
         <Setter Property="Template" Value="{StaticResource ComboBoxEditableTemplate}" />
-
-
     </Style>
 </ResourceDictionary>

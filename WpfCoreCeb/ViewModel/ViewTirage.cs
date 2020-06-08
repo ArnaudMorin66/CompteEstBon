@@ -127,11 +127,11 @@ namespace CompteEstBon.ViewModel {
             } 
         }
 
-
+        private int _search;
         public int Search {
-            get => Tirage.Search;
+            get => _search;
             set {
-                Tirage.Search = value;
+                _search  = value;
                 NotifiedChanged();
                 ClearData();
             }
@@ -280,10 +280,11 @@ namespace CompteEstBon.ViewModel {
             for (var i = 0; i < Tirage.Plaques.Count; i++)
                 Plaques[i] = Tirage.Plaques[i].Value;
             _isUpdating = false;
-            ClearData();
+            Search = Tirage.Search;
+            // ClearData();
 
             // ReSharper disable once ExplicitCallerInfoArgument
-            NotifiedChanged(nameof(Search));
+  
         }
 
         public void ShowNotify(int index = 0) {

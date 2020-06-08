@@ -5,4 +5,12 @@
     xmlns:local="using:CompteEstBon"
     HighContrastAdjustment="Auto"
     RequestedTheme="Dark"
-    RequiresPointerMode="WhenRequested" />
+    RequiresPointerMode="WhenRequested" >
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/CombobxTtemp.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

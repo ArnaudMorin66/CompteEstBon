@@ -12,21 +12,22 @@
     BorderThickness="0"
     FontSize="10"
     Icon="images/favicon.png"
-    RightHeaderItemsSource="{DynamicResource TitleBarItems}"
+    
     TitleBarForeground="{DynamicResource TextForegroundBrush}"
     TitleTextAlignment="Center"
     UseNativeChrome="True"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <s:ChromelessWindow.Resources>
-
         <ResourceDictionary>
-
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary x:Name="dicstyle" Source="/Syncfusion.Themes.MaterialDark.WPF;component/Common/Brushes.xaml" />
+            </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="TextForegroundBrush" Color="{Binding Foreground}" />
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <local:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <local:StringVisibilityConverter x:Key="StringVisibilityConverter" />
-            <local:ViewTirage x:Key="Tirage" />
+            <local:ViewTirage x:Key="Tirage"  />
             <DataTemplate x:Key="listboxOperations">
                 <ListBox
                     HorizontalAlignment="Stretch"
@@ -54,22 +55,6 @@
             <Style TargetType="{x:Type s:VirtualizingCellsControl}">
                 <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
             </Style>
-
-            <local:ControlsTitleBar x:Key="TitleBarItems">
-                <StackPanel Orientation="Horizontal">
-                    <Button
-                        Width="32"
-                        Background="{Binding Background}"
-                        BorderThickness="0"
-                        Click="btnMode_Click"
-                        Content="{Binding ModeView}"
-                        FontSize="16"
-                        IsTabStop="False"
-                        ToolTipService.ToolTip="Vue grille ou liste" />
-                    <Label Content=" " />
-                </StackPanel>
-
-            </local:ControlsTitleBar>
             <Style x:Key="TextCellGrid" TargetType="{x:Type TextBlock}">
                 <Setter Property="TextAlignment" Value="Center" />
                 <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
@@ -79,7 +64,7 @@
 
     </s:ChromelessWindow.Resources>
     <s:ChromelessWindow.DataContext>
-        <Binding Source="{StaticResource Tirage}" />
+        <Binding Source="{StaticResource Tirage}" IsAsync="True"   />
     </s:ChromelessWindow.DataContext>
     <s:ChromelessWindow.InputBindings>
         <KeyBinding
@@ -322,7 +307,7 @@
             HeaderRowHeight="0"
             IsTabStop="True"
             ItemsSource="{Binding Solutions}"
-            NavigationMode="Cell"
+            NavigationMode="Row"
             QueryRowHeight="SolutionsData_QueryRowHeight"
             SelectionChanged="SolutionsData_SelectionChanged"
             ShowBusyIndicator="True"
@@ -378,6 +363,8 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="24"/>
             </Grid.ColumnDefinitions>
             <TextBlock
                 x:Name="textBlock1"
@@ -408,51 +395,76 @@
                 Foreground="{DynamicResource TextForegroundBrush}"
                 Text="{Binding Duree, Mode=OneWay, StringFormat={}Durée: {0:mm}:{0:ss}\,{0:fff}}"
                 TextAlignment="Center" />
+            <ComboBox
+                Grid.Column="3"
+                Width="120"
+                SelectedIndex="0"
+                Text="{Binding VisualStyle, Mode=TwoWay}">
+                <ComboBoxItem Content="MaterialDark" />
+                <ComboBoxItem Content="MaterialDarkBlue" />
+            </ComboBox>
+             <Button
+                 Grid.Column="4"
+                        Width="32"
+                        Background="{Binding Background}"
+                        BorderThickness="0"
+                        Click="btnMode_Click"
+                        Content="{Binding ModeView}"
+                        FontSize="16"
+                        IsTabStop="False"
+                        ToolTipService.ToolTip="Vue grille ou liste" />
+                    <Label Content=" " />
 
         </Grid>
         <Popup
             Width="480"
             Height="120"
+            AllowsTransparency="True"
             IsOpen="{Binding Popup}"
             Placement="Center"
             PlacementTarget="{Binding ElementName=SolutionsData}"
-            PopupAnimation="Slide">
-            <StackPanel
-                HorizontalAlignment="Stretch"
-                Background="Black"
-                Orientation="Vertical">
-                <Label
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    HorizontalContentAlignment="Center"
-                    Content="{Binding Result}"
-                    FontSize="10"
-                    FontWeight="ExtraBlack"
-                    Foreground="{DynamicResource TextForegroundBrush}" />
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontSize="10"
-                    FontWeight="ExtraBlack"
-                    Foreground="Yellow"
-                    Text="{Binding Solution}" />
-                <Separator Background="Transparent" />
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontSize="10"
-                    FontWeight="Medium"
-                    Foreground="White"
-                    TextAlignment="Center"><Run Text="{Binding Count, Mode=OneWay}" /><Run Text=" solutions" /></TextBlock>
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontSize="10"
-                    FontWeight="Medium"
-                    Foreground="White"
-                    Text="{Binding Duree, Mode=OneWay, StringFormat={}Durée: {0:mm}:{0:ss}\,{0:fff}}"
-                    TextAlignment="Center" />
-            </StackPanel>
+            PopupAnimation="Fade">
+            <Border
+                VerticalAlignment="Center"
+                Background="{StaticResource ContentBackground}"
+                BorderBrush="{DynamicResource TextForegroundBrush}"
+                BorderThickness="1"
+                CornerRadius="2,2,2,2">
+                <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
+                    <Label
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        Content="{Binding Result}"
+                        FontSize="14"
+                        FontWeight="ExtraBlack"
+                        Foreground="{DynamicResource TextForegroundBrush}" />
+                    <Separator Background="Transparent" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="10"
+                        FontWeight="ExtraBlack"
+                        Foreground="Yellow"
+                        Text="{Binding Solution}" />
+                    <Separator Background="Transparent" />
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="10"
+                        FontWeight="Medium"
+                        Foreground="White"
+                        TextAlignment="Center"><Run Text="{Binding Count, Mode=OneWay}" /><Run Text=" solutions" /></TextBlock>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="10"
+                        FontWeight="Medium"
+                        Foreground="White"
+                        Text="{Binding Duree, Mode=OneWay, StringFormat={}Durée: {0:mm}:{0:ss}\,{0:fff}}"
+                        TextAlignment="Center" />
+                </StackPanel>
+            </Border>
         </Popup>
     </Grid>
 </s:ChromelessWindow>

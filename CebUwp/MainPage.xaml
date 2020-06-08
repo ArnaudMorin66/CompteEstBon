@@ -7,7 +7,7 @@
     xmlns:tlk="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewModel="using:CompteEstBon.ViewModel"
     xmlns:tkx="using:Microsoft.Toolkit.Uwp.UI.Extensions"
-    Background="{ThemeResource SystemControlBaseLowAcrylicWindowBrush}"
+    Background="{ThemeResource SystemControlChromeHighAcrylicWindowMediumBrush}"
     Loaded="Page_Loaded"
     RequestedTheme="Dark"
     Unloaded="Page_Unloaded"
@@ -176,42 +176,42 @@
                     </StackPanel>
                 </Button.Content>
             </Button>
-        <ComboBox
+        <ComboBox Template="{StaticResource ComboBoxTemplate1}"
             Grid.Row="2"
             Grid.Column="0"
             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
             ItemsSource="{Binding ListePlaques}"
             SelectedValue="{Binding Plaques[0], Mode=TwoWay}"
             Style="{StaticResource ComboboxStyle}" />
-        <ComboBox
+        <ComboBox Template="{StaticResource ComboBoxTemplate1}"
             Grid.Row="2"
             Grid.Column="1"
             IsEnabled="{x:Bind Path=Tirage.IsBusy, Converter={StaticResource InverseBooleanConverter}}"
             ItemsSource="{Binding ListePlaques}"
             SelectedValue="{Binding Plaques[1], Mode=TwoWay}"
             Style="{StaticResource ComboboxStyle}" />
-        <ComboBox
+        <ComboBox Template="{StaticResource ComboBoxTemplate1}"
             Grid.Row="2"
             Grid.Column="2"
             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
             ItemsSource="{Binding ListePlaques}"
             SelectedValue="{Binding Plaques[2], Mode=TwoWay}"
             Style="{StaticResource ComboboxStyle}" />
-        <ComboBox
+        <ComboBox Template="{StaticResource ComboBoxTemplate1}"
             Grid.Row="2"
             Grid.Column="3"
             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
             ItemsSource="{Binding ListePlaques}"
             SelectedValue="{Binding Plaques[3], Mode=TwoWay}"
             Style="{StaticResource ComboboxStyle}" />
-        <ComboBox
+        <ComboBox Template="{StaticResource ComboBoxTemplate1}"
             Grid.Row="2"
             Grid.Column="4"
             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
             ItemsSource="{Binding ListePlaques}"
             SelectedValue="{Binding Plaques[4], Mode=TwoWay}"
             Style="{StaticResource ComboboxStyle}" />
-        <ComboBox
+        <ComboBox Template="{StaticResource ComboBoxTemplate1}"
             Grid.Row="2"
             Grid.Column="5"
             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
@@ -228,34 +228,41 @@
             Style="{StaticResource BorderTitreStyle}">
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="25" />
+                    <ColumnDefinition Width="30" />
                     <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="25" />
+                    <ColumnDefinition Width="30" />
                 </Grid.ColumnDefinitions>
                 <RepeatButton
                     Grid.Column="0"
                     HorizontalAlignment="Stretch"
                     Click="TbMoins_Click"
                     Content="-"
+                    Margin="1"
+                    Background="Transparent"
+                    BackgroundSizing="InnerBorderEdge"
                     Foreground="White"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     IsTabStop="False" />
-                <TextBox 
+                <TextBox Template="{StaticResource TextboxSearch}" 
                     x:Name="search"
                     Grid.Column="1"
                     GotFocus="Search_GotFocus"
+                    Margin="1"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     MaxLength="3"
                     tkx:TextBoxRegex.ValidationMode="Dynamic"
                     tkx:TextBoxRegex.ValidationType="Number"
                     Style="{StaticResource ChercheTextBoxStyle}"
-                    Text="{Binding Search, Mode=TwoWay}" />
+                    Text="{Binding Search, Mode=TwoWay}" RequestedTheme="Dark" />
                 <RepeatButton
                     Grid.Column="2"
                     HorizontalAlignment="Stretch"
+                    Margin="1"
+                    Background="Transparent"
                     Click="TbPlus_Click"
                     Content="+"
                     Foreground="White"
+                     BackgroundSizing="InnerBorderEdge"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     IsTabStop="False" />
 

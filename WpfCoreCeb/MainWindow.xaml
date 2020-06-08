@@ -8,8 +8,10 @@
     xmlns:vw="clr-namespace:CompteEstBon.ViewModel"
     d:DesignHeight="340.99"
     d:DesignWidth="676.677"
-    Background="Transparent"
-    BorderThickness="0"
+    AllowsTransparency="True"
+    
+    BorderBrush="{DynamicResource CebForegroundBrush}"
+    BorderThickness="0.2"
     FontSize="11"
     Icon="favicon.ico"
     MouseLeftButtonDown="Window_MouseLeftButtonDown"
@@ -17,7 +19,7 @@
     ResizeMode="CanResize"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
-    mc:Ignorable="d">
+    mc:Ignorable="d" >
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -163,7 +165,8 @@
                 Click="BtnMenu_Click"
                 Cursor="Hand"
                 IsTabStop="False"
-                MouseRightButtonDown="TextBlock_MouseRightButtonUp">
+                MouseRightButtonDown="TextBlock_MouseRightButtonUp"
+                Template="{DynamicResource CebButtonTemplate}">
                 <Button.Content>
                     <Image
                         Width="16"
@@ -193,7 +196,8 @@
                 Click="btnMode_Click"
                 Content="{Binding ModeView}"
                 Cursor="Hand"
-                Style="{StaticResource ButtonWindowsStyle}" />
+                Style="{StaticResource ButtonWindowsStyle}"
+                Template="{DynamicResource CebButtonTemplate}" />
             <Button
                 x:Name="btnMinimize"
                 Grid.Row="0"
@@ -204,6 +208,7 @@
                 Click="BtnMinimize_Click"
                 Content="_"
                 Style="{StaticResource ButtonWindowsStyle}"
+                Template="{DynamicResource CebButtonTemplate}"
                 ToolTipService.ToolTip="Réduire" />
             <Button
                 x:Name="btnSize"
@@ -215,6 +220,7 @@
                 Click="BtnSize_Click"
                 Content="□"
                 Style="{StaticResource ButtonWindowsStyle}"
+                Template="{DynamicResource CebButtonTemplate}"
                 ToolTipService.ToolTip="Rétablir précédent" />
             <Button
                 x:Name="btnClose"
@@ -227,6 +233,7 @@
                 Click="BtnClose_Click"
                 Content="x"
                 Style="{StaticResource ButtonWindowsStyle}"
+                Template="{DynamicResource CebButtonTemplate}"
                 ToolTipService.ToolTip="Fermer" />
         </Grid>
         <Label
@@ -315,9 +322,8 @@
                     Grid.Column="0"
                     Click="TbMoins_Click"
                     Content="-"
-                    
                     IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}"
-                    Style="{StaticResource CebRepeatButtonStyle}" />
+                    Template="{DynamicResource CebRepeatButtonTemplate}" />
                 <TextBox
                     x:Name="txtSearch"
                     Grid.Column="1"
@@ -329,14 +335,14 @@
                     PreviewTextInput="TxtSearch_OnPreviewTextInput"
                     Style="{StaticResource SearchControlStyle}"
                     TabIndex="6"
-                    Text="{Binding Tirage.Search, Mode=TwoWay, NotifyOnTargetUpdated=True, NotifyOnValidationError=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=Default}" />
+                    Text="{Binding Search, Mode=TwoWay, NotifyOnTargetUpdated=True, NotifyOnValidationError=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=Default}" />
                 <RepeatButton
                     x:Name="tbPlus"
                     Grid.Column="2"
                     Click="TbPlus_Click"
                     Content="+"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}"
-                    Style="{StaticResource CebRepeatButtonStyle}" />
+                    Template="{DynamicResource CebRepeatButtonTemplate}" />
             </Grid>
         </Border>
         <Button
