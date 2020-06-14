@@ -2,6 +2,7 @@
 
 using Microsoft.Win32;
 using Syncfusion.SfSkinManager;
+using Syncfusion.Windows.Shared;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,14 +16,15 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Threading;
 #endregion
 
+// ReSharper disable once CheckNamespace
 namespace CompteEstBon {
-    public class ViewTirage : INotifyPropertyChanged, ICommand {
+
+    public class ViewTirage : NotificationObject ,  ICommand {
         private readonly Stopwatch NotifyWatch = new Stopwatch();
-        private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(CompteEstBon.Properties.Settings.Default.SolutionTimer);
+        private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(Properties.Settings.Default.SolutionTimer);
         
         private TimeSpan _duree;
 
@@ -33,18 +35,8 @@ namespace CompteEstBon {
 
         private string _result = "Résoudre";
 
-        public string _solution;
+        public CebBase _solution;
         private string _titre = "Le compte est bon";
-        private string _style = "MaterialDark";
-        public string VisualStyle {
-            get => _style;
-            set {
-                _style = value;
-                SfSkinManager.SetVisualStyle(Application.Current.MainWindow, (VisualStyles)Enum.Parse(typeof(VisualStyles),value));
-                NotifiedChanged();
-            }
-        }
-
         public DispatcherTimer dateDispatcher;
         public Stopwatch stopwatch;
 
@@ -55,7 +47,7 @@ namespace CompteEstBon {
         /// </returns>
         public ViewTirage() {
 
-            stopwatch = new Stopwatch();
+            stopwatch = Tirage.watch; // new Stopwatch();
             
 
             dateDispatcher = new DispatcherTimer {
@@ -78,10 +70,9 @@ namespace CompteEstBon {
             UpdateData();
             Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             dateDispatcher.Start();
-            VisualStyle = "MaterialDark";
         }
 
-        public static IEnumerable<int> ListePlaques { get; } = CebPlaque.AnyPlaques;
+        public static IEnumerable<int> ListePlaques => CebPlaque.AnyPlaques;
 
         public CebTirage Tirage { get; } = new CebTirage();
 
@@ -104,7 +95,7 @@ namespace CompteEstBon {
                 NotifiedChanged();
             }
         }
-        private bool _vertical = false;
+        private bool _vertical;
         public bool Vertical {
             get => _vertical;
             set {
@@ -122,7 +113,7 @@ namespace CompteEstBon {
                 NotifiedChanged();
             }
         }
-        public string Solution {
+        public CebBase Solution {
             get => _solution;
             set {
                 _solution = value;
@@ -166,9 +157,8 @@ namespace CompteEstBon {
 
         public bool IsComputed {
             get => Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche;
-            set {
-                NotifiedChanged();
-            }
+            // ReSharper disable once ValueParameterNotUsed
+            set => NotifiedChanged();
         }
 
         private int _count;
@@ -210,7 +200,7 @@ namespace CompteEstBon {
         public bool CanExecute(object parameter) => true;
 
         public async void Execute(object parameter) {
-            var cmd = (parameter as string).ToLower(); 
+            var cmd = (parameter as string)?.ToLower(); 
             switch (cmd) {
                 case "random":
                     await RandomAsync();
@@ -233,28 +223,27 @@ namespace CompteEstBon {
                     break;
                 case "xlsx":
                 case "docx":
-                    await ExportAsync(cmd);
+                    if (Count != 0) {
+                        await ExportAsync(cmd);
+                    }
                     break;
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
         private async Task ExportAsync(string fmt) {
             IsBusy = true;
             await Task.Run(() => ExportFichier(fmt)); 
             IsBusy = false;
         }
 
-
-
-        private void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        private void NotifiedChanged([CallerMemberName] string propertyName = "") => RaisePropertyChanged(propertyName); // PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private void ClearData() {
             if (_isUpdating) return;
             stopwatch.Reset();
             Duree = stopwatch.Elapsed;
             IsComputed = false;
-            Solution = "";
+            Solution = null;
             Solutions = null;
             UpdateForeground();
             Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
@@ -287,7 +276,7 @@ namespace CompteEstBon {
         }
         public void ShowPopup(int index = 0) {
             if (index >= 0 && index < Tirage.Solutions.Count()) {
-                Solution = Tirage.Solution(index);
+                Solution = Tirage.Solutions[index];
                 Popup = true;
             }
         }
@@ -306,7 +295,7 @@ namespace CompteEstBon {
         public async Task<CebStatus> ResolveAsync() {
             IsBusy = true;
             Result = "";
-            stopwatch.Start();
+            // stopwatch.Start();
             Foreground = Colors.Aqua;
 
             await Tirage.ResolveAsync();
@@ -316,9 +305,8 @@ namespace CompteEstBon {
                     ? $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}"
                     : "Tirage incorrect";
 
-            stopwatch.Stop();
-            Duree = Tirage.Duree;
-            Solution = Tirage.Solution();
+            Duree = Tirage.watch.Elapsed;
+            Solution = Tirage.Solutions[0];
             Solutions = Tirage.Solutions;
             UpdateForeground();
             IsBusy = false;
@@ -329,7 +317,7 @@ namespace CompteEstBon {
         }
 
         #endregion Action
-        public (bool Ok, string Path) FileSaveName(string ext) {
+        public static (bool Ok, string Path) SaveFileName(string ext) {
             var dialog = new SaveFileDialog();
             (dialog.Filter, dialog.Title) = ext switch
             {
@@ -337,12 +325,13 @@ namespace CompteEstBon {
                 "docx" => ("Word (*.docx) | *.docx", "Fichiers Word"),
                 _ => ("Tous (*.*) | *.*", "Tous les fichiers")
             };
+            // ReSharper disable once PossibleInvalidOperationException
             return ((bool) dialog.ShowDialog(), dialog.FileName); 
 
         }
 
         private void ExportFichier(string ext) {
-            var (Ok, Path) = FileSaveName(ext);
+            var (Ok, Path) = SaveFileName(ext);
             if (Ok) {
                 if (File.Exists(Path)) {
                     File.Delete(Path);

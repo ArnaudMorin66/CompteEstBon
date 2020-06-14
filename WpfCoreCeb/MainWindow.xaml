@@ -2,14 +2,15 @@
     x:Class="CompteEstBon.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:compteEstBon="clr-namespace:CompteEstBon;assembly=CompteEstBon"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:s="clr-namespace:System;assembly=System.Runtime"
     xmlns:vw="clr-namespace:CompteEstBon.ViewModel"
+    x:Name="CebWindow"
     d:DesignHeight="340.99"
     d:DesignWidth="676.677"
     AllowsTransparency="True"
-    
     BorderBrush="{DynamicResource CebForegroundBrush}"
     BorderThickness="0.2"
     FontSize="11"
@@ -19,14 +20,13 @@
     ResizeMode="CanResize"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
-    mc:Ignorable="d" >
+    mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/CebDictionary.xaml" />
                 <ResourceDictionary Source="/CebComboBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
             <vw:CebConverter x:Key="CebConverter" />
             <DataTemplate x:Key="ListeViewOperations">
                 <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
@@ -40,7 +40,6 @@
                     KeyboardNavigation.DirectionalNavigation="Continue"
                     PreviewMouseWheel="ListView_PreviewMouseWheel" />
             </DataTemplate>
-            <vw:ViewTirage x:Key="viewTirage" />
             <s:Boolean x:Key="True">true</s:Boolean>
         </ResourceDictionary>
     </Window.Resources>
@@ -88,7 +87,7 @@
         </TaskbarItemInfo>
     </Window.TaskbarItemInfo>
     <Window.DataContext>
-        <Binding Source="{StaticResource viewTirage}" />
+        <vw:ViewTirage x:Name="ViewTirage" />
     </Window.DataContext>
     <Window.InputBindings>
         <KeyBinding
@@ -122,7 +121,7 @@
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -185,19 +184,7 @@
                 Foreground="{DynamicResource CebForegroundBrush}"
                 MouseDoubleClick="Window_MouseDoubleClick"
                 MouseRightButtonUp="TextBlock_MouseRightButtonUp" />
-            <Button
-                x:Name="btnMode"
-                Grid.Row="0"
-                Grid.RowSpan="2"
-                Grid.Column="2"
-                Margin="0"
-                HorizontalAlignment="Center"
-                Background="{DynamicResource CebBackgroundBrush}"
-                Click="btnMode_Click"
-                Content="{Binding ModeView}"
-                Cursor="Hand"
-                Style="{StaticResource ButtonWindowsStyle}"
-                Template="{DynamicResource CebButtonTemplate}" />
+
             <Button
                 x:Name="btnMinimize"
                 Grid.Row="0"
@@ -483,74 +470,46 @@
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Op1}"
+                    Binding="{Binding (compteEstBon:CebBase.Op1)}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 1"
                     IsReadOnly="True"
-                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}" />
+                    Visibility="{Binding Vertical, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Op2}"
+                    Binding="{Binding (compteEstBon:CebBase.Op2)}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 2"
                     IsReadOnly="True"
-                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}" />
+                    Visibility="{Binding Vertical, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Op3}"
+                    Binding="{Binding (compteEstBon:CebBase.Op3)}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 3"
                     IsReadOnly="True"
-                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}" />
+                    Visibility="{Binding Vertical, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Op4}"
+                    Binding="{Binding (compteEstBon:CebBase.Op4)}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 4"
                     IsReadOnly="True"
-                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}" />
+                    Visibility="{Binding Vertical, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Op5}"
+                    Binding="{Binding (compteEstBon:CebBase.Op5)}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 5"
                     IsReadOnly="True"
-                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}" />
+                    Visibility="{Binding Vertical, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}" />
                 <DataGridTemplateColumn
                     Width="*"
                     CellTemplate="{StaticResource ListeViewOperations}"
                     IsReadOnly="True"
-                    Visibility="{Binding Vertical, Source={StaticResource viewTirage}, Converter={StaticResource CebConverter}}" />
+                    Visibility="{Binding Vertical, Converter={StaticResource CebConverter}, Source={x:Reference ViewTirage}}" />
             </DataGrid.Columns>
         </DataGrid>
-        <ProgressBar
-            Grid.Row="3"
-            Grid.Column="0"
-            Grid.ColumnSpan="12"
-            Height="48"
-            VerticalAlignment="Center"
-            Background="DarkSlateGray"
-            BorderThickness="0"
-            Foreground="{DynamicResource CebBackgroundBrush}"
-            IsIndeterminate="True"
-            Maximum="100"
-            Minimum="0"
-            Visibility="{Binding IsBusy, Converter={StaticResource CebConverter}}" />
-        <TextBlock
-            Name="Wait"
-            Grid.Row="3"
-            Grid.Column="0"
-            Grid.ColumnSpan="12"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Panel.ZIndex="10"
-            FontFamily="Calibri"
-            FontSize="20"
-            FontWeight="Bold"
-            Foreground="Yellow"
-            RenderTransformOrigin="0.5, 0.5"
-            Text="Résolution du Compte Est Bon"
-            Visibility="{Binding IsBusy, Converter={StaticResource CebConverter}}" />
         <Popup
             Grid.Row="0"
             Grid.Column="0"
@@ -596,54 +555,96 @@
                     FontSize="11"
                     FontWeight="Medium"
                     Foreground="White"
-                    Text="{Binding Duree.TotalSeconds, StringFormat=Durée {0:N3}s}"
+                    Text="{Binding Duree.TotalSeconds, StringFormat=Durée {0:N3}}"
                     TextAlignment="Center" />
             </StackPanel>
         </Popup>
         <!--  ReSharper disable once Xaml.IndexOutOfGridDefinition  -->
-        <Grid
+        <StatusBar
             Grid.Row="5"
             Grid.Column="0"
             Grid.ColumnSpan="12"
-            Margin="2"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            Background="{DynamicResource CebBackgroundBrush}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                x:Name="textBlock1"
-                Grid.Column="0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                FontSize="11"
-                Foreground="{StaticResource CebForegroundBrush}"
-                Text="{Binding Result}"
-                TextAlignment="Center"
-                Visibility="{Binding Status, Converter={StaticResource CebConverter}}" />
-            <TextBlock
-                x:Name="textBlock2"
-                Grid.Column="1"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Foreground="{StaticResource CebForegroundBrush}"
-                TextAlignment="Center"
-                Visibility="{Binding Status, Converter={StaticResource CebConverter}}">
-                <Run Text="{Binding Count, Mode=OneWay}" />
-                <Run Text=" solutions" />
-            </TextBlock>
-            <TextBlock
-                x:Name="textBlock3"
-                Grid.Column="2"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Center"
-                Foreground="{StaticResource CebForegroundBrush}"
-                Text="{Binding Duree.TotalSeconds, StringFormat=Durée {0:N3}s}"
-                TextAlignment="Right" />
+            Background="Transparent"
+            BorderBrush="White"
+            BorderThickness="0.1">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="32" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem>
+                <TextBlock Foreground="{StaticResource CebForegroundBrush}" Text="{Binding DotnetVersion, ElementName=CebWindow}" />
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="1">
+                <TextBlock
+                    x:Name="textBlock1"
+                    FontSize="11"
+                    Foreground="{StaticResource CebForegroundBrush}"
+                    Text="{Binding Result}"
+                    TextAlignment="Center"
+                    Visibility="{Binding Status, Converter={StaticResource CebConverter}}" />
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="2">
+                <TextBlock
+                    x:Name="textBlock2"
+                    Foreground="{StaticResource CebForegroundBrush}"
+                    TextAlignment="Center"
+                    Visibility="{Binding Status, Converter={StaticResource CebConverter}}">
+                    <Run Text="{Binding Count, Mode=OneWay}" />
+                    <Run Text=" solutions" />
+                </TextBlock>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="3">
+                <TextBlock
+                    x:Name="textBlock3"
+                    Grid.Column="3"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Foreground="{StaticResource CebForegroundBrush}"
+                    Text="{Binding Duree.TotalSeconds, StringFormat=Durée {0:N3}}"
+                    TextAlignment="Right" />
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="4">
+                <ComboBox
+                    Foreground="{DynamicResource CebForegroundBrush}"
+                    ItemsSource="{Binding ThemeColors.Keys}"
+                    Text="{Binding Theme, Mode=TwoWay}" />
+            </StatusBarItem>
+            <StatusBarItem
+                Grid.Column="5"
+                Width="Auto"
+                HorizontalAlignment="Stretch">
+                <ProgressBar
+                    Width="100"
+                    HorizontalAlignment="Stretch"
+                    Background="{DynamicResource CebForegroundBrush}"
+                    Foreground="Yellow"
+                    IsIndeterminate="{Binding IsBusy, Mode=TwoWay}"
+                    Maximum="100"
+                    Minimum="0" />
 
-        </Grid>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="6">
+                <Button
+                    x:Name="btnMode"
+                    Margin="0"
+                    HorizontalAlignment="Center"
+                    Background="{DynamicResource CebBackgroundBrush}"
+                    Click="btnMode_Click"
+                    Content="{Binding ModeView}"
+                    Style="{StaticResource ButtonWindowsStyle}"
+                    Template="{DynamicResource CebButtonTemplate}" />
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

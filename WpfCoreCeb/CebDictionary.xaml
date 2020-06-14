@@ -5,15 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <SolidColorBrush x:Key="CebForegroundBrush" Color="{Binding Foreground}" />
-    <SolidColorBrush x:Key="CebBackgroundBrush" Color="#FF181818" />
-    <LinearGradientBrush x:Key="CebLinearGradientBrush1" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Offset="0.0" Color="#808080" />
-        <GradientStop Offset="1.0" Color="DarkSlateGray" />
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="CebLinearGradientBrush2" StartPoint="0.5,0" EndPoint="0.5,1">
-        <GradientStop Offset="0.0" Color="#303030" />
-        <GradientStop Offset="1.0" Color="DarkSlateGray" />
-    </LinearGradientBrush>
+    <SolidColorBrush x:Key="CebBackgroundBrush" Color="{Binding Background}" />
     <Style TargetType="{x:Type RepeatButton}">
         <Setter Property="Background" Value="{DynamicResource CebBackgroundBrush}" />
         <Setter Property="Cursor" Value="Hand" />
@@ -66,7 +58,6 @@
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter TargetName="border" Property="Background" Value="Black" />
                 <Setter TargetName="border" Property="BorderBrush" Value="White" />
-
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
                 <Setter TargetName="border" Property="Background" Value="DarkSlateGray" />
@@ -74,8 +65,6 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-
-
     <Style x:Key="ColumnHeaderGripperStyle" TargetType="{x:Type Thumb}">
         <Setter Property="Width" Value="8" />
         <Setter Property="Background" Value="Transparent" />
@@ -178,10 +167,9 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Cursor" Value="Hand" />
-
         <Setter Property="FontSize" Value="16" />
         <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Foreground" Value="{DynamicResource CebForegroundBrush}" />
         <Setter Property="IsTabStop" Value="True" />
     </Style>
     <ControlTemplate x:Key="CebRepeatButtonTemplate" TargetType="{x:Type RepeatButton}">
@@ -216,5 +204,4 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-
 </ResourceDictionary>

@@ -1,7 +1,6 @@
 // Plage Compte est bon
 
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Text.Json.Serialization;
 
@@ -47,6 +46,7 @@ namespace CompteEstBon {
 
         public int Compare(CebBase b) => Rank - b.Rank;
 
+        // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
         public override int GetHashCode() => base.GetHashCode();
 
         protected CebBase() {

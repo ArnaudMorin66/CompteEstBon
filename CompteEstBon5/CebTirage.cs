@@ -87,7 +87,7 @@ namespace CompteEstBon {
 
         [JsonIgnore]
         public IEnumerable<string> SolutionsToString => _solutions.Select(s => s.ToString());
-        public TimeSpan Duree { get; private set; }
+        // public TimeSpan Duree { get; private set; }
 
 
         /// <summary>
@@ -104,15 +104,16 @@ namespace CompteEstBon {
             if (_solutions.Count != 0) {
                 _solutions.Clear();
             }
-            Duree = TimeSpan.Zero;
+            // Duree = TimeSpan.Zero;
+            watch.Reset();
             Diff = int.MaxValue;
             Found.Reset();
             Valid();
-            NotifyPropertyChanged("Clear");
+            NotifyPropertyChanged();
             return GetData();
         }
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        public async Task<CebData> ClearAsync() => await Task<CebData>.Run(() => Clear());
+        public async Task<CebData> ClearAsync() => await Task.Run(Clear);
 
         public CebData GetData() => new CebData {
             Search = Search,
@@ -148,7 +149,8 @@ namespace CompteEstBon {
             return Clear();
         }
 
-        public async Task<CebData> RandomAsync() => await Task<CebData>.Run(Random);
+        public async Task<CebData> RandomAsync() => await Task.Run(Random);
+        public Stopwatch watch { get; } = new Stopwatch();
 
         /// <summary>
         /// resolution
@@ -157,15 +159,15 @@ namespace CompteEstBon {
         /// </returns>
         public CebData Resolve() {
             _solutions.Clear();
-            var watch = new Stopwatch();
+            watch.Reset();
             watch.Start();
             Status = CebStatus.EnCours;
             Resolve(Plaques.ToList<CebBase>());
             _solutions.Sort((p, q) => p.Compare(q));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
-            NotifyPropertyChanged("Resolve");
+            NotifyPropertyChanged();
             watch.Stop();
-            Duree = watch.Elapsed;
+            //Duree = watch.Elapsed;
             return GetData();
         }
 

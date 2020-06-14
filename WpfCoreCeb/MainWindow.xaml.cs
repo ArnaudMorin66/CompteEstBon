@@ -1,8 +1,11 @@
 ﻿using CompteEstBon.ViewModel;
 using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace CompteEstBon {
     /// <summary>
@@ -10,20 +13,37 @@ namespace CompteEstBon {
     /// </summary>
     public partial class MainWindow {
         
+        public string DotnetVersion => RuntimeInformation.FrameworkDescription;
+        public static Dictionary<string, Color> ThemeColors { get; } = new Dictionary<string, Color> {
+            ["Dark"] = Color.FromArgb(0xFF, 0x13, 0x18, 0x18),
+            ["Blue"] = Color.FromArgb(0xFF, 0x15, 0x25, 0x49),
+            ["Black"] = Colors.Black,
+            ["DarkBlue"] = Colors.DarkBlue,
+            ["DarkSlateGray"] = Colors.DarkSlateGray,
+            ["Green"] = Colors.Green
+        };
+        private string _theme = "Dark";
+        public string Theme {
+            get => _theme;
+            set {
+                if (_theme == value) return;
+                _theme = value;
+            }
+        }
         public MainWindow() {
             InitializeComponent();
             System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("fr");
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
-            viewTirage = FindResource("viewTirage") as ViewTirage;
+            
         }
-        private ViewTirage viewTirage { get; }
-        private void SolutionsData_SelectionChanged(object sender, SelectionChangedEventArgs e) => viewTirage.ShowNotify(SolutionsData.SelectedIndex);
+        // private ViewTirage viewTirage => DataContext  as ViewTirage;
+        private void SolutionsData_SelectionChanged(object sender, SelectionChangedEventArgs e) => ViewTirage.ShowNotify(SolutionsData.SelectedIndex);
 
         private void TbPlus_Click(object sender, RoutedEventArgs e) {
-            viewTirage.Search = Math.Min(viewTirage.Search + 1, 999);
+            ViewTirage.Search = Math.Min(ViewTirage.Search + 1, 999);
         }
         private void TbMoins_Click(object sender, RoutedEventArgs e) {
-            viewTirage.Search = Math.Max(viewTirage.Search - 1, 100);
+            ViewTirage.Search = Math.Max(ViewTirage.Search - 1, 100);
         }
         private void BtnClose_Click(object sender, RoutedEventArgs e) => Application.Current.Shutdown(0);
         private void BtnSize_Click(object sender, RoutedEventArgs e) => WindowState = (WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
@@ -43,7 +63,7 @@ namespace CompteEstBon {
         }
         private void TextBlock_MouseRightButtonUp(object sender, MouseButtonEventArgs e) => DisplaySystemMenu(sender);
         private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e) => WindowState = (WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;
-        private void btnMode_Click(object sender, RoutedEventArgs e) => viewTirage.Vertical = !viewTirage.Vertical;
+        private void btnMode_Click(object sender, RoutedEventArgs e) => ViewTirage.Vertical = !ViewTirage.Vertical;
 
         private void txtSearch_GotFocus(object sender, RoutedEventArgs e) {
             txtSearch.SelectAll();

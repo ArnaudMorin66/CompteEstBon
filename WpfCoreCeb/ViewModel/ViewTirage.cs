@@ -1,34 +1,27 @@
 ﻿#region
 
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.DirectoryServices;
 using System.IO;
-using System.IO.Packaging;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 using System.Windows.Threading;
-
+using Microsoft.Win32;
 
 #endregion
 
 namespace CompteEstBon.ViewModel {
+
     public class ViewTirage : INotifyPropertyChanged, ICommand {
         private readonly Stopwatch NotifyWatch = new Stopwatch();
         private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(10);
-
-        //private readonly Storyboard WaitStory =
-        //    Application.Current.MainWindow?.FindResource("WaitStoryboard") as Storyboard;
-
+        private Color _background;
         private TimeSpan _duree;
         private Color _foreground = Colors.White;
         private bool _isBusy;
@@ -38,7 +31,11 @@ namespace CompteEstBon.ViewModel {
 
         private string _result = "Résoudre";
 
-        public string _solution;
+        private int _search;
+
+        public CebBase _solution;
+        private IEnumerable<CebBase> _solutions;
+        private string _theme = "Dark";
         private string _titre = "Le compte est bon";
         private bool _vertical;
 
@@ -65,11 +62,13 @@ namespace CompteEstBon.ViewModel {
             };
             Plaques.CollectionChanged += (sender, e) => {
                 var i = e.NewStartingIndex;
-                if (Tirage.Plaques[i].Value != Plaques[i]) {
-                    Tirage.Plaques[i].Value = Plaques[i];
-                    ClearData();
-                }
+                if (Tirage.Plaques[i].Value == Plaques[i]) return;
+                Tirage.Plaques[i].Value = Plaques[i];
+                ClearData();
             };
+
+
+            Background = ThemeColors["Dark"];
             _isUpdating = false;
             UpdateData();
             UpdateColors();
@@ -77,12 +76,33 @@ namespace CompteEstBon.ViewModel {
             dateDispatcher.Start();
         }
 
+        //private readonly Storyboard WaitStory =
+        //    Application.Current.MainWindow?.FindResource("WaitStoryboard") as Storyboard;
+        public static Dictionary<string, Color> ThemeColors { get; } = new Dictionary<string, Color> {
+            ["Dark"] = Color.FromArgb(0xFF, 0x13, 0x18, 0x18),
+            ["Blue"] = Color.FromArgb(0xFF, 0x15, 0x25, 0x49),
+            ["Black"] = Colors.Black,
+            ["DarkBlue"] = Colors.DarkBlue,
+            ["DarkSlateGray"] = Colors.DarkSlateGray,
+            ["Green"] = Colors.Green
+        };
+
+        public string Theme {
+            get => _theme;
+            set {
+                if (_theme == value) return;
+                _theme = value;
+                Background = ThemeColors[value];
+                NotifiedChanged();
+            }
+        }
+
 
         public CebTirage Tirage { get; set; } = new CebTirage();
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.AnyPlaques;
 
         public ObservableCollection<int> Plaques { get; } =
-            new ObservableCollection<int> { 0, 0, 0, 0, 0, 0 };
+            new ObservableCollection<int> {0, 0, 0, 0, 0, 0};
 
         public TimeSpan Duree {
             get => _duree;
@@ -109,29 +129,28 @@ namespace CompteEstBon.ViewModel {
             }
         }
 
-        public string Solution {
+        public CebBase Solution {
             get => _solution;
             set {
                 _solution = value;
                 NotifiedChanged();
             }
         }
-        private IEnumerable<CebBase> _solutions;
-        public IEnumerable<CebBase> Solutions { 
-            get => _solutions; 
-            set { 
+
+        public IEnumerable<CebBase> Solutions {
+            get => _solutions;
+            set {
                 _solutions = value;
-                
+
                 Count = value == null ? 0 : _solutions.Count();
                 NotifiedChanged();
-            } 
+            }
         }
 
-        private int _search;
         public int Search {
             get => _search;
             set {
-                _search  = value;
+                _search = value;
                 NotifiedChanged();
                 ClearData();
             }
@@ -148,11 +167,19 @@ namespace CompteEstBon.ViewModel {
             }
         }
 
-        
+
         public Color Foreground {
             get => _foreground;
             set {
                 _foreground = value;
+                NotifiedChanged();
+            }
+        }
+
+        public Color Background {
+            get => _background;
+            set {
+                _background = value;
                 NotifiedChanged();
             }
         }
@@ -190,7 +217,9 @@ namespace CompteEstBon.ViewModel {
             remove => CommandManager.RequerySuggested -= value;
         }
 
-        public bool CanExecute(object parameter) => true;
+        public bool CanExecute(object parameter) {
+            return true;
+        }
 
         public async void Execute(object parameter) {
             try {
@@ -200,52 +229,49 @@ namespace CompteEstBon.ViewModel {
                         await RandomAsync();
                         break;
                     case "resolve": {
-                            switch (Tirage.Status) {
-                                case CebStatus.Valid:
-                                    if (IsBusy) return;
-                                    await ResolveAsync();
-                                    break;
+                        switch (Tirage.Status) {
+                            case CebStatus.Valid:
+                                if (IsBusy) return;
+                                await ResolveAsync();
+                                break;
 
-                                case CebStatus.CompteEstBon:
-                                case CebStatus.CompteApproche:
-                                    await ClearAsync();
-                                    break;
+                            case CebStatus.CompteEstBon:
+                            case CebStatus.CompteApproche:
+                                await ClearAsync();
+                                break;
 
-                                case CebStatus.Erreur:
-                                    await RandomAsync();
-                                    break;
-                                case CebStatus.Indefini:
-                                    break;
-                                case CebStatus.EnCours:
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-
-                            break;
+                            case CebStatus.Erreur:
+                                await RandomAsync();
+                                break;
+                            case CebStatus.Indefini:
+                                break;
+                            case CebStatus.EnCours:
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
                         }
+
+                        break;
+                    }
                     case "xlsx":
                     case "docx":
                         await ExportAsync(cmd);
                         break;
-                    default:
-                        break;
                 }
             }
-#pragma warning disable CA1031 // Do not catch general exception types
+            #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e) {
                 Console.WriteLine(e);
             }
-#pragma warning restore CA1031 // Do not catch general exception types
+            #pragma warning restore CA1031 // Do not catch general exception types
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
 
         private void UpdateColors() {
-            Foreground = Tirage.Status switch
-            {
-                CebStatus.Valid =>  Colors.White,
+            Foreground = Tirage.Status switch {
+                CebStatus.Valid => Colors.White,
                 CebStatus.Erreur => Colors.Red,
                 CebStatus.CompteEstBon => Colors.YellowGreen,
                 CebStatus.CompteApproche => Colors.Orange,
@@ -264,8 +290,8 @@ namespace CompteEstBon.ViewModel {
             NotifiedChanged(nameof(Status));
             stopwatch.Reset();
             Duree = stopwatch.Elapsed;
-            Solution = "";
-      
+            Solution = null;
+
             Solutions = null;
 
             Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
@@ -284,12 +310,11 @@ namespace CompteEstBon.ViewModel {
             // ClearData();
 
             // ReSharper disable once ExplicitCallerInfoArgument
-  
         }
 
         public void ShowNotify(int index = 0) {
             if (index >= 0 && Tirage.Solutions.Any() && index < Tirage.Solutions.Count()) {
-                Solution = Tirage.Solution(index);
+                Solution = Tirage.Solutions[index];
                 Popup = true;
             }
         }
@@ -305,6 +330,7 @@ namespace CompteEstBon.ViewModel {
             await Tirage.RandomAsync();
             UpdateData();
         }
+
         private int _count;
 
         public int Count {
@@ -321,11 +347,10 @@ namespace CompteEstBon.ViewModel {
         public async Task ResolveAsync() {
             IsBusy = true;
             Result = "";
-            
+
             stopwatch.Start();
             var data = await Tirage.ResolveAsync();
-            Result = Tirage.Status switch
-            {
+            Result = Tirage.Status switch {
                 CebStatus.CompteEstBon => "Le Compte est bon",
                 CebStatus.CompteApproche => $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}",
                 _ => "Tirage incorrect"
@@ -334,7 +359,7 @@ namespace CompteEstBon.ViewModel {
             Duree = Tirage.Duree;
             UpdateColors();
 
-            Solution = Tirage.Solution();
+            Solution = Tirage.Solutions[0];
             Solutions = data.Solutions;
             IsBusy = false;
             ShowNotify();
@@ -344,34 +369,32 @@ namespace CompteEstBon.ViewModel {
 
         public static (bool select, string name) FileSaveName(string ty) {
             var dialog = new SaveFileDialog();
-            (dialog.Filter, dialog.Title) = ty switch
-            {
+            (dialog.Filter, dialog.Title) = ty switch {
                 "xlsx" => ("Excel (*.xlsx)| *.xlsx", "Fichiers Excel"),
                 "docx" => ("Word (*.docx) | *.docx", "Fichiers Word"),
                 _ => throw new NotImplementedException()
             };
             dialog.InitialDirectory = Environment.SpecialFolder.UserProfile + "\\Downloads";
-            return ((bool)dialog.ShowDialog()) ? (true, dialog.FileName) : (false, null);
-
+            // ReSharper disable once PossibleInvalidOperationException
+            return (bool) dialog.ShowDialog() ? (true, dialog.FileName) : (false, null);
         }
 
         public async Task ExportAsync(string ty) {
             var (select, name) = FileSaveName(ty);
             if (!select) return;
-#pragma warning disable IDE0007 // Utiliser un type implicite
+            #pragma warning disable IDE0007 // Utiliser un type implicite
             Action<Stream> export = ty switch
-#pragma warning restore IDE0007 // Utiliser un type implicite
-            {
-                "xlsx" => Tirage.ExportExcel,
-                "docx" => Tirage.ExportWord,
-                _ => throw new NotImplementedException()
-            };
+                #pragma warning restore IDE0007 // Utiliser un type implicite
+                {
+                    "xlsx" => Tirage.ExportExcel,
+                    "docx" => Tirage.ExportWord,
+                    _ => throw new NotImplementedException()
+                };
             using var stream = new FileStream(name, FileMode.Create);
             export(stream);
             await stream.FlushAsync();
             await stream.DisposeAsync();
             OpenDocument(name);
-
         }
 
         public static void OpenDocument(string nom) {
@@ -381,6 +404,7 @@ namespace CompteEstBon.ViewModel {
             };
             Process.Start(info);
         }
+
         #endregion Action
     }
 }

@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
 namespace CompteEstBon.ViewModel {
-    // [ValueConversion(typeof(bool), typeof(Visibility))]
+     [ValueConversion(typeof(object), typeof(Visibility))]
     internal class CebConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
             var inverse = parameter is bool bl && bl;
             return targetType.Name switch {
                 // Retour Visibility
                 nameof(Visibility) => value switch {
+                   
                     bool vb => (inverse ? !vb : vb) ? Visibility.Visible : Visibility.Hidden,
                     Visibility visibility => ( inverse && visibility != Visibility.Visible) ||
                                              (!inverse && visibility == Visibility.Visible) ? Visibility.Visible : Visibility.Hidden,

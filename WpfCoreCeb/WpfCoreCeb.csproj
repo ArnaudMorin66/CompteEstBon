@@ -8,7 +8,7 @@
     <StartupObject></StartupObject>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
     <SignAssembly>false</SignAssembly>
-    <AssemblyName>WinCeb</AssemblyName>
+    <AssemblyName>Wpf.Ceb.Core</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

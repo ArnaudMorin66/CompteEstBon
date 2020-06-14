@@ -7,12 +7,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:s="http://schemas.syncfusion.com/wpf"
     xmlns:skin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
+    x:Name="chromelessWindow"
     Title="{Binding Titre}"
     skin:SfSkinManager.VisualStyle="MaterialDark"
     BorderThickness="0"
     FontSize="10"
     Icon="images/favicon.png"
-    
     TitleBarForeground="{DynamicResource TextForegroundBrush}"
     TitleTextAlignment="Center"
     UseNativeChrome="True"
@@ -21,14 +21,13 @@
     <s:ChromelessWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary x:Name="dicstyle" Source="/Syncfusion.Themes.MaterialDark.WPF;component/Common/Brushes.xaml" />
+                <ResourceDictionary Source="/Syncfusion.Themes.MaterialDark.WPF;component/Common/Brushes.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="TextForegroundBrush" Color="{Binding Foreground}" />
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <local:InverseBooleanConverter x:Key="InverseBooleanConverter" />
-            <local:StringVisibilityConverter x:Key="StringVisibilityConverter" />
-            <local:ViewTirage x:Key="Tirage"  />
             <DataTemplate x:Key="listboxOperations">
+                <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
                 <ListBox
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
@@ -60,11 +59,21 @@
                 <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
                 <Setter Property="FontWeight" Value="ExtraLight" />
             </Style>
+            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+            <Style BasedOn="{StaticResource {x:Type StatusBarItem}}" TargetType="{x:Type StatusBarItem}">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="VerticalAlignment" Value="Stretch" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="BorderBrush" Value="White" />
+                <Setter Property="BorderThickness" Value="0.2" />
+                <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
+            </Style>
         </ResourceDictionary>
-
     </s:ChromelessWindow.Resources>
     <s:ChromelessWindow.DataContext>
-        <Binding Source="{StaticResource Tirage}" IsAsync="True"   />
+        <local:ViewTirage x:Name="ViewTirage" />
     </s:ChromelessWindow.DataContext>
     <s:ChromelessWindow.InputBindings>
         <KeyBinding
@@ -109,7 +118,7 @@
             <ColumnDefinition />
             <ColumnDefinition />
             <ColumnDefinition />
-            <ColumnDefinition />
+            <ColumnDefinition Width="75" />
         </Grid.ColumnDefinitions>
         <Label
             x:Name="label"
@@ -120,9 +129,8 @@
             VerticalAlignment="Stretch"
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Center"
-            BorderThickness="0">
-            <TextBlock><Run Text="Plaques" /></TextBlock>
-        </Label>
+            BorderThickness="0"
+            Content="Plaques" />
         <Border
             Grid.Row="1"
             Grid.Column="0"
@@ -137,7 +145,6 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-
                 <ComboBox
                     x:Name="Plaque1"
                     Grid.Column="0"
@@ -183,9 +190,8 @@
             VerticalAlignment="Stretch"
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Center"
-            BorderThickness="0">
-            <TextBlock Text="Cherche" />
-        </Label>
+            BorderThickness="0"
+            Content="Cherche" />
         <s:UpDown
             x:Name="Search"
             Grid.Row="1"
@@ -206,7 +212,6 @@
             Grid.Row="0"
             Grid.Column="8"
             Grid.ColumnSpan="2"
-            Background="{Binding Background, BindsDirectlyToSource=False, ElementName=label, IsAsync=False, NotifyOnTargetUpdated=False, NotifyOnValidationError=False, NotifyOnSourceUpdated=False, ValidatesOnNotifyDataErrors=True, ValidatesOnExceptions=False, ValidatesOnDataErrors=False}"
             Command="{Binding}"
             CommandParameter="resolve"
             Foreground="{Binding Foreground}"
@@ -231,7 +236,6 @@
             x:Name="btnHasard"
             Grid.Row="1"
             Grid.Column="8"
-            Background="{Binding Background, BindsDirectlyToSource=False, ElementName=label, IsAsync=False, NotifyOnTargetUpdated=False, NotifyOnValidationError=False, NotifyOnSourceUpdated=False, ValidatesOnNotifyDataErrors=True, ValidatesOnExceptions=False, ValidatesOnDataErrors=False}"
             Command="{Binding}"
             CommandParameter="random"
             IsTabStop="True"
@@ -253,7 +257,7 @@
         <Grid
             Grid.Row="1"
             Grid.Column="9"
-            Background="{Binding Background, BindsDirectlyToSource=False, ElementName=label, IsAsync=False, NotifyOnTargetUpdated=False, NotifyOnValidationError=False, NotifyOnSourceUpdated=False, ValidatesOnNotifyDataErrors=True, ValidatesOnExceptions=False, ValidatesOnDataErrors=False}">
+            Background="Transparent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -263,11 +267,9 @@
                 Grid.Column="0"
                 Command="{Binding}"
                 CommandParameter="xlsx"
-                IsEnabled="{Binding IsComputed}"
                 IsTabStop="True"
                 TabIndex="9"
                 ToolTipService.ToolTip="Export Excel (Ctrl+X)">
-
                 <Image
                     Width="16"
                     Height="16"
@@ -280,7 +282,6 @@
                 Grid.Column="1"
                 Command="{Binding}"
                 CommandParameter="docx"
-                IsEnabled="{Binding IsComputed}"
                 IsTabStop="True"
                 TabIndex="9"
                 ToolTipService.ToolTip="Export Word (Ctrl+W)">
@@ -312,7 +313,6 @@
             SelectionChanged="SolutionsData_SelectionChanged"
             ShowBusyIndicator="True"
             TabIndex="10">
-
             <s:SfDataGrid.Columns>
                 <s:GridTextColumn
                     IsHidden="{Binding Vertical}"
@@ -350,75 +350,78 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Panel.ZIndex="10"
-            AnimationType="Ball"
+            AnimationType="DualRing"
             Foreground="DarkGreen"
+            ViewboxHeight="100"
+            ViewboxWidth="100"
             Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
-        <Grid
+        <StatusBar
             Grid.Row="3"
             Grid.Column="0"
-            Grid.ColumnSpan="10"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="24"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                x:Name="textBlock1"
+            Grid.ColumnSpan="10">
+
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="128" />
+                            <ColumnDefinition Width="24" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem
                 Grid.Column="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="10"
-                Foreground="{DynamicResource TextForegroundBrush}"
-                Text="{Binding Result}"
-                TextAlignment="Center" />
+                Background="Transparent"
+                Content="{Binding DotnetVersion, ElementName=chromelessWindow}" />
+            <StatusBarItem Grid.Column="1" Background="Transparent">
+                <TextBlock
+                    x:Name="textBlock1"
+                    Foreground="{DynamicResource TextForegroundBrush}"
+                    Text="{Binding Result}" />
+            </StatusBarItem>
 
-            <TextBlock
-                x:Name="textBlock2"
-                Grid.Column="1"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="10"
-                Foreground="{DynamicResource TextForegroundBrush}"
-                TextAlignment="Center"
-                Visibility="{Binding IsComputed, Converter={StaticResource BoolToVisibilityConverter}}">
-                <Run Text="{Binding Count, Mode=OneWay}" /><Run Text=" solutions" /></TextBlock>
-            <TextBlock
-                x:Name="textBlock3"
-                Grid.Column="2"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                FontSize="10"
-                Foreground="{DynamicResource TextForegroundBrush}"
-                Text="{Binding Duree, Mode=OneWay, StringFormat={}Durée: {0:mm}:{0:ss}\,{0:fff}}"
-                TextAlignment="Center" />
-            <ComboBox
-                Grid.Column="3"
-                Width="120"
-                SelectedIndex="0"
-                Text="{Binding VisualStyle, Mode=TwoWay}">
-                <ComboBoxItem Content="MaterialDark" />
-                <ComboBoxItem Content="MaterialDarkBlue" />
-            </ComboBox>
-             <Button
-                 Grid.Column="4"
-                        Width="32"
-                        Background="{Binding Background}"
-                        BorderThickness="0"
-                        Click="btnMode_Click"
-                        Content="{Binding ModeView}"
-                        FontSize="16"
-                        IsTabStop="False"
-                        ToolTipService.ToolTip="Vue grille ou liste" />
-                    <Label Content=" " />
+            <StatusBarItem Grid.Column="2" Background="Transparent">
+                <TextBlock
+                    x:Name="textBlock2"
+                    Foreground="{DynamicResource TextForegroundBrush}"
+                    Visibility="{Binding IsComputed, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Run Text="{Binding Count, Mode=OneWay}" /><Run Text=" solutions" /></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="3" Background="Transparent">
+                <TextBlock
+                    x:Name="textBlock3"
+                    Foreground="{DynamicResource TextForegroundBrush}"
+                    Text="{Binding Duree.TotalSeconds, Mode=OneWay, StringFormat=Durée: {0:N3}}" />
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="4" Background="Transparent">
+                <ComboBox
+                    x:Name="cbstyle"
+                    Foreground="{DynamicResource TextForegroundBrush}"
+                    SelectedIndex="0"
+                    Text="{Binding VisualStyle, ElementName=chromelessWindow, Mode=TwoWay}">
+                    <ComboBoxItem Content="MaterialDark" />
+                    <ComboBoxItem Content="MaterialDarkBlue" />
+                </ComboBox>
+            </StatusBarItem>
 
-        </Grid>
+            <StatusBarItem Grid.Column="5" Background="Transparent">
+                <Button
+                    Click="btnMode_Click"
+                    Content="{Binding ModeView}"
+                    IsTabStop="False"
+                    ToolTipService.ToolTip="Vue grille ou liste" />
+            </StatusBarItem>
+        </StatusBar>
+        <!--  ReSharper disable once Xaml.MissingGridIndex  -->
         <Popup
             Width="480"
-            Height="120"
+            Height="200"
             AllowsTransparency="True"
             IsOpen="{Binding Popup}"
             Placement="Center"
@@ -426,7 +429,7 @@
             PopupAnimation="Fade">
             <Border
                 VerticalAlignment="Center"
-                Background="{StaticResource ContentBackground}"
+                Background="{DynamicResource PopupBackground}"
                 BorderBrush="{DynamicResource TextForegroundBrush}"
                 BorderThickness="1"
                 CornerRadius="2,2,2,2">
@@ -440,13 +443,16 @@
                         FontWeight="ExtraBlack"
                         Foreground="{DynamicResource TextForegroundBrush}" />
                     <Separator Background="Transparent" />
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="10"
-                        FontWeight="ExtraBlack"
-                        Foreground="Yellow"
-                        Text="{Binding Solution}" />
+                    <ListBox
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        ItemsSource="{Binding Solution.Operations}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Foreground="Yellow" Text="{Binding}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                     <Separator Background="Transparent" />
                     <TextBlock
                         HorizontalAlignment="Center"
@@ -461,7 +467,7 @@
                         FontSize="10"
                         FontWeight="Medium"
                         Foreground="White"
-                        Text="{Binding Duree, Mode=OneWay, StringFormat={}Durée: {0:mm}:{0:ss}\,{0:fff}}"
+                        Text="{Binding Duree.TotalSeconds, Mode=OneWay, StringFormat=Durée: {0:N3}}"
                         TextAlignment="Center" />
                 </StackPanel>
             </Border>

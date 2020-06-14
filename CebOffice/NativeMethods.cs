@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 // using Word = Microsoft.Office.Interop.Word;
 // using Excel = Microsoft.Office.Interop.Excel;
 
 
-namespace CompteEstBon {
+namespace CompteEstBon.ViewModel {
       public static class NativeMethods {
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);

@@ -5,8 +5,6 @@
     xmlns:local="clr-namespace:CompteEstBon"
     StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <ResourceDictionary>
-           
-        </ResourceDictionary>
+        <ResourceDictionary />
     </Application.Resources>
 </Application>

@@ -1,6 +1,5 @@
 // Plage Compte est bon
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;

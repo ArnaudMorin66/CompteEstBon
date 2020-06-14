@@ -1,13 +1,7 @@
 ﻿using Syncfusion.XlsIO;
 using Syncfusion.DocIO;
-
-using System.Linq;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using Syncfusion.DocIO.DLS;
-using System.Reflection;
-using System.Text;
 using System;
 
 namespace CompteEstBon {
@@ -29,7 +23,7 @@ namespace CompteEstBon {
             
             var application = engine.Excel;
             application.DefaultVersion = ExcelVersion.Excel2016;
-            var workbook = application.Workbooks.Create(names: new string[] { "Compte Est Bon" });
+            var workbook = application.Workbooks.Create(names: new[] { "Compte Est Bon" });
             var ws = workbook.Worksheets[0];
             var styletb = tirage.Status == CebStatus.CompteEstBon ? TableBuiltInStyles.TableStyleMedium7 : TableBuiltInStyles.TableStyleMedium3;
             
@@ -44,7 +38,7 @@ namespace CompteEstBon {
             ws.ListObjects.Create("TabEntree", ws["A1:G2"])
                         .BuiltInTableStyle = styletb;
             var rg = ws["A5"];
-            string res = "";
+            string res;
             if (tirage.Status == CebStatus.CompteEstBon) {
                 res = "Compte est bon";
                 rg.CellStyle.Font.Color = ExcelKnownColors.White;
@@ -55,7 +49,7 @@ namespace CompteEstBon {
                 rg.CellStyle.Font.Color = ExcelKnownColors.White;
                 rg.CellStyle.ColorIndex = ExcelKnownColors.Orange;
             }
-            res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.Duree.TotalSeconds:N3} ";
+            res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.watch.Elapsed.TotalSeconds:N3} ";
 
             rg.Value2 = res;
             rg.HorizontalAlignment = ExcelHAlign.HAlignCenter;
@@ -78,16 +72,17 @@ namespace CompteEstBon {
         }                    
       
             
-        public static void  ExportWord(this CebTirage tirage, System.IO.Stream stream) {
+        public static void  ExportWord(this CebTirage tirage, Stream stream) {
             var wd = new WordDocument();
             var sect = wd.AddSection() as WSection;
             var dotm = Environment.GetEnvironmentVariable("USERPROFILE") + @"\AppData\Roaming\Microsoft\Templates\Normal.dotm";
-            if (System.IO.File.Exists(dotm)) {
+            if (File.Exists(dotm)) {
                 wd.AttachedTemplate.Path = dotm;
                 wd.UpdateStylesOnOpen = true;
 
             }
             
+            // ReSharper disable once PossibleNullReferenceException
             var tbl = sect.AddTable();
            
 
@@ -131,7 +126,7 @@ namespace CompteEstBon {
                 tcolor = Syncfusion.Drawing.Color.Black;
 
             }
-            res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.Duree.TotalSeconds:N3} ";
+            res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.watch.Elapsed.TotalSeconds:N3} ";
             pg = sect.AddParagraph();
             var tx = pg.AppendText(res);
             tx.CharacterFormat.TextColor = tcolor;

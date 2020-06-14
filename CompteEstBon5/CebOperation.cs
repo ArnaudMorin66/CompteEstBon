@@ -48,11 +48,10 @@ namespace CompteEstBon {
 
         }
 
-        private int Add(CebBase gauche, char op, CebBase droite) {
+        private void Add(CebBase gauche, char op, CebBase droite) {
             Add(gauche);
             Add(droite);
             AddOperation($"{gauche.Value} {op} {droite.Value} = {Value}");
-            return Rank;
         }
     }
 }
