@@ -83,7 +83,7 @@ namespace CompteEstBon {
             get => _solutions;
             set {
                 _solutions = value;
-                NotifiedChanged();
+                RaisePropertyChanged(nameof(Solutions));
 
                 Count = _solutions == null ? 0 : _solutions.Count();
             }
@@ -92,7 +92,7 @@ namespace CompteEstBon {
             get => _duree;
             set {
                 _duree = value;
-                NotifiedChanged();
+                RaisePropertyChanged(nameof(Duree));
             }
         }
         private bool _vertical;
@@ -101,7 +101,7 @@ namespace CompteEstBon {
             set {
                 _vertical = value;
                 ModeView = value ? '⁞' : '…';
-                NotifiedChanged();
+                RaisePropertyChanged(nameof(Vertical));
             }
         }
         // ⁞…
@@ -110,14 +110,14 @@ namespace CompteEstBon {
             get => _modeView;
             set {
                 _modeView = value;
-                NotifiedChanged();
+                RaisePropertyChanged(nameof(ModeView));
             }
         }
         public CebBase Solution {
             get => _solution;
             set {
                 _solution = value;
-                NotifiedChanged();
+                RaisePropertyChanged(nameof(Solution));
             }
         }
 
@@ -125,7 +125,7 @@ namespace CompteEstBon {
             get => Tirage.Search;
             set {
                 Tirage.Search = value;
-                NotifiedChanged();
+                RaisePropertyChanged(nameof(Search));
                 ClearData();
             }
         }
@@ -134,7 +134,7 @@ namespace CompteEstBon {
             get => _foreground;
             set {
                 _foreground = value;
-                NotifiedChanged();
+                RaisePropertyChanged(nameof(Foreground));
             }
         }
         public string Result {
@@ -142,7 +142,7 @@ namespace CompteEstBon {
             set {
                 if (value == _result) return;
                 _result = value;
-                NotifiedChanged();
+                RaisePropertyChanged(nameof(Result));
             }
         }
 
@@ -150,7 +150,7 @@ namespace CompteEstBon {
             get => _isBusy;
             set {
                 _isBusy = value;
-                NotifiedChanged();
+                RaisePropertyChanged(nameof(IsBusy));
             }
         }
 
@@ -158,7 +158,7 @@ namespace CompteEstBon {
         public bool IsComputed {
             get => Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche;
             // ReSharper disable once ValueParameterNotUsed
-            set => NotifiedChanged();
+            set => RaisePropertyChanged(nameof(IsComputed));
         }
 
         private int _count;
@@ -168,7 +168,7 @@ namespace CompteEstBon {
             set {
                 if (_count != value) {
                     _count = value;
-                    NotifiedChanged();
+                    RaisePropertyChanged(nameof(Count));
                 }
             }
         }
@@ -180,7 +180,7 @@ namespace CompteEstBon {
                 NotifyWatch.Stop();
                 NotifyWatch.Reset();
                 if (_popup) NotifyWatch.Start();
-                NotifiedChanged();
+                RaisePropertyChanged(nameof(Popup));
             }
         }
 
@@ -188,7 +188,7 @@ namespace CompteEstBon {
             get => _titre;
             set {
                 _titre = value;
-                NotifiedChanged();
+                RaisePropertyChanged(nameof(Titre));
             }
         }
 
@@ -236,8 +236,6 @@ namespace CompteEstBon {
             IsBusy = false;
         }
 
-        private void NotifiedChanged([CallerMemberName] string propertyName = "") => RaisePropertyChanged(propertyName); // PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
         private void ClearData() {
             if (_isUpdating) return;
             stopwatch.Reset();
@@ -260,7 +258,7 @@ namespace CompteEstBon {
             _isUpdating = false;
             ClearData();
 
-            NotifiedChanged(nameof(Search));
+            RaisePropertyChanged(nameof(Search));
         }
 
         private void UpdateForeground() {
@@ -310,7 +308,7 @@ namespace CompteEstBon {
             Solutions = Tirage.Solutions;
             UpdateForeground();
             IsBusy = false;
-            NotifiedChanged(nameof(IsComputed));
+            RaisePropertyChanged(nameof(IsComputed));
             
             ShowPopup();
             return Tirage.Status;

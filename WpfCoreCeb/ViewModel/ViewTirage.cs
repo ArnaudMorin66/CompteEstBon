@@ -356,7 +356,7 @@ namespace CompteEstBon.ViewModel {
                 _ => "Tirage incorrect"
             };
             stopwatch.Stop();
-            Duree = Tirage.Duree;
+            Duree = Tirage.watch.Elapsed;
             UpdateColors();
 
             Solution = Tirage.Solutions[0];

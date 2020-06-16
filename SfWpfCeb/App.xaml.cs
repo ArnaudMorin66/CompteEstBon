@@ -22,10 +22,11 @@ namespace CompteEstBon {
             SfSkinManager.ApplyStylesOnApplication = true;
         }
         public static string FindLicenseKey() {
-            int num = 12;
+           
             string path = "SyncfusionLicense.txt";
             string text = Path.GetDirectoryName(Assembly.GetEntryAssembly().CodeBase.Replace("file:///", ""));
-            for (int i = 0; i < num; i++) {
+
+            for (;;) {
                 string path2 = Path.Combine(text, path);
                 if (File.Exists(path2)) {
                     return File.ReadAllText(path2, Encoding.UTF8);

@@ -27,7 +27,6 @@
                 <ResourceDictionary Source="/CebDictionary.xaml" />
                 <ResourceDictionary Source="/CebComboBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <vw:CebConverter x:Key="CebConverter" />
             <DataTemplate x:Key="ListeViewOperations">
                 <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
                 <ListBox
@@ -41,6 +40,7 @@
                     PreviewMouseWheel="ListView_PreviewMouseWheel" />
             </DataTemplate>
             <s:Boolean x:Key="True">true</s:Boolean>
+            <vw:CebConverter x:Key="CebConverter" />
         </ResourceDictionary>
     </Window.Resources>
     <Window.TaskbarItemInfo>

@@ -54,7 +54,7 @@
             <Style TargetType="{x:Type s:VirtualizingCellsControl}">
                 <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
             </Style>
-            <Style x:Key="TextCellGrid" TargetType="{x:Type TextBlock}">
+            <Style x:Key="TextCellGrid" TargetType="TextBlock">
                 <Setter Property="TextAlignment" Value="Center" />
                 <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
                 <Setter Property="FontWeight" Value="ExtraLight" />
@@ -364,7 +364,6 @@
                 <ItemsPanelTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
-
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -385,7 +384,6 @@
                     Foreground="{DynamicResource TextForegroundBrush}"
                     Text="{Binding Result}" />
             </StatusBarItem>
-
             <StatusBarItem Grid.Column="2" Background="Transparent">
                 <TextBlock
                     x:Name="textBlock2"
@@ -449,7 +447,7 @@
                         ItemsSource="{Binding Solution.Operations}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Foreground="Yellow" Text="{Binding}" />
+                                <TextBlock Style="{DynamicResource TextCellGrid}" Text="{Binding}" />
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
