@@ -1225,6 +1225,11 @@ map-obj@^1.0.0, map-obj@^1.0.1:
   resolved "https://registry.yarnpkg.com/map-obj/-/map-obj-1.0.1.tgz#d933ceb9205d82bdcf4886f6742bdc2b4dea146d"
   integrity sha1-2TPOuSBdgr3PSIb2dCvcK03qFG0=
 
+mdb-ui-kit@~1.0.0-alpha3:
+  version "1.0.0-alpha3"
+  resolved "https://registry.yarnpkg.com/mdb-ui-kit/-/mdb-ui-kit-1.0.0-alpha3.tgz#18aca06f6a41bf72470d62993574d362a7d8c400"
+  integrity sha512-5x+Q4l5prEjdoPpbSJyWCFL9qAUcLSKog2/MbXWBbHtVzijIsKk89aFj+r8BS7yH2PvX7/JMQy4Uc/1vs94/CQ==
+
 meow@^3.7.0:
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/meow/-/meow-3.7.0.tgz#72cb668b425228290abbfa856892587308a801fb"

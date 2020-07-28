@@ -1,15 +1,15 @@
-﻿using Syncfusion.XlsIO;
-using Syncfusion.DocIO;
-using System.IO;
+﻿using Syncfusion.DocIO;
 using Syncfusion.DocIO.DLS;
+using Syncfusion.XlsIO;
 using System;
+using System.IO;
 
 namespace CompteEstBon {
     //
 
     public static class SfCebOffice {
-        public static void RegisterLicense( string licensefile) {
-            
+        public static void RegisterLicense(string licensefile) {
+
             if (!string.IsNullOrEmpty(licensefile)) {
                 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(licensefile);
             }
@@ -18,15 +18,15 @@ namespace CompteEstBon {
 
 
         public static void ExportExcel(this CebTirage tirage, Stream stream) {
-            
+
             using var engine = new ExcelEngine();
-            
+
             var application = engine.Excel;
             application.DefaultVersion = ExcelVersion.Excel2016;
             var workbook = application.Workbooks.Create(names: new[] { "Compte Est Bon" });
             var ws = workbook.Worksheets[0];
             var styletb = tirage.Status == CebStatus.CompteEstBon ? TableBuiltInStyles.TableStyleMedium7 : TableBuiltInStyles.TableStyleMedium3;
-            
+
             for (var i = 0; i < 6; i++) {
                 ws.Range[1, i + 1].Value2 = $"Plaque {i + 1}";
                 ws.Range[2, i + 1].Value2 = tirage.Plaques[i].Value;
@@ -54,14 +54,14 @@ namespace CompteEstBon {
             rg.Value2 = res;
             rg.HorizontalAlignment = ExcelHAlign.HAlignCenter;
             ws.Range["A5:F5"].Merge();
-            
+
 
             var l = 7;
             for (var i = 1; i < 6; i++) {
                 ws.Range[l, i].Value2 = $"Operation {i}";
 
             }
-           
+
             foreach (var s in tirage.Solutions) {
                 ws.ImportArray(s.Operations.ToArray(), ++l, 1, false);
             }
@@ -69,10 +69,10 @@ namespace CompteEstBon {
             ws.ListObjects.Create("TabSolutions", ws[$"A7:E{l}"]).BuiltInTableStyle = styletb;
 
             workbook.SaveAs(stream);
-        }                    
-      
-            
-        public static void  ExportWord(this CebTirage tirage, Stream stream) {
+        }
+
+
+        public static void ExportWord(this CebTirage tirage, Stream stream) {
             var wd = new WordDocument();
             var sect = wd.AddSection() as WSection;
             var dotm = Environment.GetEnvironmentVariable("USERPROFILE") + @"\AppData\Roaming\Microsoft\Templates\Normal.dotm";
@@ -81,24 +81,24 @@ namespace CompteEstBon {
                 wd.UpdateStylesOnOpen = true;
 
             }
-            
+
             // ReSharper disable once PossibleNullReferenceException
             var tbl = sect.AddTable();
-           
+
 
             var sty = tirage.Status == CebStatus.CompteEstBon ? BuiltinTableStyle.MediumGrid1Accent3 : BuiltinTableStyle.MediumGrid1Accent6;
             tbl.ResetCells(2, 7);
-            IWParagraph pg; 
+            IWParagraph pg;
             for (var i = 0; i < 6; i++) {
                 pg = tbl[0, i].AddParagraph();
                 pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
-                
+
                 pg.AppendText($"Plaque {i + 1}");
                 pg = tbl[1, i].AddParagraph();
                 pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
                 pg.AppendText($"{tirage.Plaques[i].Value}");
             }
-            
+
             pg = tbl[0, 6].AddParagraph();
             pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
             pg.AppendText("Chercher");
@@ -132,18 +132,18 @@ namespace CompteEstBon {
             tx.CharacterFormat.TextColor = tcolor;
             pg.ParagraphFormat.BackColor = bcolor;
             pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
-           
+
             sect.AddParagraph();
             tbl = sect.AddTable();
             tbl.ResetCells(1, 5);
             for (var i = 0; i < 5; i++) {
                 pg = tbl[0, i].AddParagraph();
                 pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
-                pg.AppendText($"Opération {i+1}");
+                pg.AppendText($"Opération {i + 1}");
             }
-            
+
             foreach (var s in tirage.Solutions) {
-                var rw = tbl.AddRow(); 
+                var rw = tbl.AddRow();
                 foreach (var (op, ix) in s.Operations.WithIndex()) {
                     pg = rw.Cells[ix].AddParagraph();
                     pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
@@ -155,8 +155,8 @@ namespace CompteEstBon {
             tbl.ApplyStyleForFirstColumn = false;
             tbl.Rows[0].IsHeader = true;
             wd.Save(stream, FormatType.Docx);
-            
+
         }
     }
-    
+
 }

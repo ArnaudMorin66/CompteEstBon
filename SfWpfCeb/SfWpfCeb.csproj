@@ -31,22 +31,22 @@
 
  
   <ItemGroup>
-      <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="18.1.0.56" />
-        <PackageReference Include="Syncfusion.Shared.WPF" Version="18.1.0.56" />
-        <PackageReference Include="Syncfusion.SfGrid.WPF" Version="18.1.0.56" />
-        <PackageReference Include="Syncfusion.Data.WPF" Version="18.1.0.56" />
-        <PackageReference Include="Syncfusion.SfShared.WPF" Version="18.1.0.56" />
-        <PackageReference Include="Syncfusion.SfSmithChart.WPF" Version="18.1.0.56" />
-        <PackageReference Include="Syncfusion.SfHeatMap.WPF" Version="18.1.0.56" />
-        <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="18.1.0.56" />
-        <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="18.1.0.56" />
-        <PackageReference Include="Syncfusion.Tools.WPF" Version="18.1.0.56" />
-        <PackageReference Include="Syncfusion.PropertyGrid.WPF" Version="18.1.0.56" />
-        <PackageReference Include="Syncfusion.SfInput.WPF" Version="18.1.0.56" />
-        <PackageReference Include="Syncfusion.SfTextInputLayout.WPF" Version="18.1.0.56" />
-        <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="18.1.0.56" />
-        <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="18.1.0.56" />
-        <PackageReference Include="Syncfusion.Compression.Base" Version="18.1.0.56" />
+      <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="18.1.0.59" />
+        <PackageReference Include="Syncfusion.Shared.WPF" Version="18.1.0.59" />
+        <PackageReference Include="Syncfusion.SfGrid.WPF" Version="18.1.0.59" />
+        <PackageReference Include="Syncfusion.Data.WPF" Version="18.1.0.59" />
+        <PackageReference Include="Syncfusion.SfShared.WPF" Version="18.1.0.59" />
+        <PackageReference Include="Syncfusion.SfSmithChart.WPF" Version="18.1.0.59" />
+        <PackageReference Include="Syncfusion.SfHeatMap.WPF" Version="18.1.0.59" />
+        <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="18.1.0.59" />
+        <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="18.1.0.59" />
+        <PackageReference Include="Syncfusion.Tools.WPF" Version="18.1.0.59" />
+        <PackageReference Include="Syncfusion.PropertyGrid.WPF" Version="18.1.0.59" />
+        <PackageReference Include="Syncfusion.SfInput.WPF" Version="18.1.0.59" />
+        <PackageReference Include="Syncfusion.SfTextInputLayout.WPF" Version="18.1.0.59" />
+        <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="18.1.0.59" />
+        <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="18.1.0.59" />
+        <PackageReference Include="Syncfusion.Compression.Base" Version="18.1.0.59" />
   </ItemGroup>
 
   <ItemGroup>

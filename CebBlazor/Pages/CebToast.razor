@@ -2,7 +2,7 @@
 @using System.Threading
 @using CompteEstBon
 @inject CebTirage tirage
-<SfDialog Width="480" @bind-Visible="@Visible" CssClass="a-toast" ShowCloseIcon="false"
+<SfDialog Width="480"  @bind-Visible="@Visible" CssClass="a-toast" ShowCloseIcon="false"
           ID="DlgToast">
     <DialogAnimationSettings Effect="@DialogEffect.SlideBottom" Duration="400"></DialogAnimationSettings>
     <DialogTemplates>
@@ -12,6 +12,8 @@
                 var title = "";
                 var icn = "";
                 var rsl = "";
+
+
                 switch (tirage.Status)
                 {
                     case CebStatus.CompteEstBon:
@@ -44,7 +46,7 @@
                         <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
                     }
                     <div>@tirage.Count&nbsp;solutions</div>
-                    <div>Durée:&nbsp;@($"{tirage.Duree.TotalSeconds:N3}")s</div>
+                    <div>Durée:&nbsp;@($"{tirage.watch.Elapsed.TotalSeconds:N3}")s</div>
                 </div>
                 <div>&nbsp;</div>
                 <div class="w-100 text-center  @cls">@Solution</div>

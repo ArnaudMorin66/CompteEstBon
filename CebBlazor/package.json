@@ -10,7 +10,9 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@syncfusion/ej2": "^18.1.55",
-    "bootstrap": "^4.5.0"
+    "bootstrap": "^4.5.0",
+    "mdb-ui-kit": "~1.0.0-alpha3"
+
   },
   "devDependencies": {
     "node-sass": "4.14.1"

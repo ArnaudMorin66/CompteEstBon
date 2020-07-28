@@ -5,7 +5,7 @@
 @using Syncfusion.Blazor.Grids
 
 
-<SfGrid @bind-DataSource="Details"
+<SfGrid @ref="gdetails"  DataSource="@Details"
         GridLines="GridLine.None"
         Height="400"
         AllowSelection="true"
@@ -14,12 +14,13 @@
         EnableAltRow="true"
         TValue="CebBase"
         ID="solutions">
-    <GridEvents RowSelected="@(async (arg) => await ShowDetail.InvokeAsync(Details.ElementAt((int)arg.RowIndex)))"
-                TValue="Object"></GridEvents>
+    <GridEvents OnRecordClick="@(async (args)=> {await ShowDetail.InvokeAsync(args.RowData);} )"
+                TValue="CebBase"></GridEvents>
     <GridSelectionSettings Mode="Syncfusion.Blazor.Grids.SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
+   
     <GridColumns>
-        <GridColumn Field=@(column(1))></GridColumn>
-        <GridColumn Field=@(column(2))></GridColumn>
+        <GridColumn Field=@column(1)></GridColumn>
+        <GridColumn Field=@column(2)></GridColumn>
         <GridColumn>
             <Template Context="data">
                 @if (TypeGrille == CebTypeGrille.Grille)
@@ -38,24 +39,24 @@
                 }
             </Template>
         </GridColumn>
-        <GridColumn Field=@(column(4))></GridColumn>
-        <GridColumn Field=@(column(5))></GridColumn>
+       
+        <GridColumn Field=@column(4)></GridColumn>
+        <GridColumn Field=@column(5)></GridColumn>
     </GridColumns>
+   
+     
 </SfGrid>
 @code {
-
+    SfGrid<CebBase> gdetails { get; set; }
 
     private CebTypeGrille _typegrille;
     [Parameter]
-    public CebTypeGrille TypeGrille
-    {
+    public CebTypeGrille TypeGrille {
         get => _typegrille;
-        set
-        {
-            if (_typegrille != value)
-            {
+        set {
+            if (_typegrille != value) {
                 _typegrille = value;
-
+                gdetails.Refresh();
                 InvokeAsync(StateHasChanged);
             }
         }
@@ -69,11 +70,11 @@
     [Parameter] public EventCallback<CebBase> ShowDetail { get; set; }
 
 
-    protected async override Task OnInitializedAsync()
-    {
+    protected async override Task OnInitializedAsync() {
         //_Details = new List<TDetail>();
         await base.OnInitializedAsync();
     }
     protected string column(int n) => TypeGrille == CebTypeGrille.Grille ? $"Op{n}" : "";
+
 }
 

@@ -47,7 +47,7 @@ namespace CompteEstBon {
         /// </returns>
         public ViewTirage() {
 
-            stopwatch = Tirage.watch; // new Stopwatch();
+            stopwatch = Tirage.Watch; // new Stopwatch();
             
 
             dateDispatcher = new DispatcherTimer {
@@ -61,7 +61,10 @@ namespace CompteEstBon {
             };
 
             Plaques.CollectionChanged += (sender, e) => {
-                if (e.Action != NotifyCollectionChangedAction.Replace) return;
+                if (e.Action != NotifyCollectionChangedAction.Replace) {
+                    return;
+                }
+
                 var i = e.NewStartingIndex;
                 Tirage.Plaques[i].Value = Plaques[i];
                 ClearData();
@@ -76,8 +79,8 @@ namespace CompteEstBon {
 
         public CebTirage Tirage { get; } = new CebTirage();
 
-        public ObservableCollection<int> Plaques { get; } = new ObservableCollection<int> { 0, 0, 0, 0, 0, 0 }; 
-            
+        public ObservableCollection<int> Plaques { get; } = new ObservableCollection<int> { 0, 0, 0, 0, 0, 0 };
+
         public IEnumerable<CebBase> _solutions;
         public IEnumerable<CebBase> Solutions {
             get => _solutions;
@@ -303,7 +306,7 @@ namespace CompteEstBon {
                     ? $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}"
                     : "Tirage incorrect";
 
-            Duree = Tirage.watch.Elapsed;
+            Duree = Tirage.Watch.Elapsed;
             Solution = Tirage.Solutions[0];
             Solutions = Tirage.Solutions;
             UpdateForeground();

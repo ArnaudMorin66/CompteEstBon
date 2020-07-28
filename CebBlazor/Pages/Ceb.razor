@@ -200,7 +200,7 @@
                         <i class="text-danger far fa-thumbs-down"></i>&nbsp;
                         <span style="color: Navy">
                             &nbsp;Compte
-                            approch&eacute;:&nbsp;@tirage.Found,&nbsp;&eacute;cart:@tirage.Diff,&nbsp;@tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.Duree.TotalSeconds:N3}")&nbsp;s
+                            approch&eacute;:&nbsp;@tirage.Found,&nbsp;&eacute;cart:@tirage.Diff,&nbsp;@tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.watch.Elapsed.TotalSeconds:N3}")&nbsp;s
                         </span>
                     </div>
                     break;
@@ -208,7 +208,7 @@
                     <div class="alert-success" style="cursor: pointer;" @onclick="@tirage.ClearAsync">
                         <i class="far fa-thumbs-up"></i>
                         &nbsp;Compte est bon,&nbsp;@(tirage.Count)
-                        solutions,&nbsp;durée:&nbsp;@($"{tirage.Duree.TotalSeconds:N3}")&nbsp;s
+                        solutions,&nbsp;durée:&nbsp;@($"{tirage.watch.Elapsed.TotalSeconds:N3}")&nbsp;s
 
                     </div>
                     break;

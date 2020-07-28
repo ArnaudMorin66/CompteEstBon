@@ -7,20 +7,26 @@ using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.Configuration.Ini;
 using Microsoft.Extensions.FileProviders;
 using Syncfusion.Blazor;
+using CompteEstBon;
 using System;
 
 namespace CompteEstBon {
     public class Startup {
-        static Startup() {
-            var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(configuration.GetSection("syncfusion").GetValue<string>("license"));
+        public Startup(IConfiguration configuration) {
+
+            var cnf = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(cnf.GetSection("syncfusion").GetValue<string>("license"));
+            Configuration = configuration;
+
         }
+        public IConfiguration Configuration { get; }
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services) {
             services.AddRazorPages(); 
-            services.AddScoped<CompteEstBon.CebTirage>();
             services.AddServerSideBlazor();
+            services.AddScoped<CebTirage>();
+            
             services.AddSyncfusionBlazor();
             // RegisterLicense();
         }
