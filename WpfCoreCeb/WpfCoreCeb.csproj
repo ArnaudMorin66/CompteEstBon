@@ -8,6 +8,7 @@
     <StartupObject></StartupObject>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
     <SignAssembly>false</SignAssembly>
+    <Version>9.0</Version>
     <AssemblyName>Wpf.Ceb.Core</AssemblyName>
   </PropertyGroup>
 

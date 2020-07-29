@@ -6,6 +6,7 @@
     <Platforms>AnyCPU;x64</Platforms>
     <AssemblyName>CompteEstBon</AssemblyName>
     <RootNamespace>CompteEstBon</RootNamespace>
+    <LangVersion>9.0</LangVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
