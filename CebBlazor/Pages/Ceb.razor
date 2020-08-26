@@ -31,7 +31,7 @@
 <div class="row ">
     <div class="col text-center">
         <div class="card text-center border-secondary">
-            <div class="card-header bg-gradient-dark text-white">
+            <div class="card-header bg-primary bg-gradient text-white">
                 <i class="fas fa-bars"></i>
                 &nbsp;Plaques
             </div>
@@ -56,7 +56,7 @@
     </div>
     <div class="col-md-2">
         <div class="card text-center border border-secondary">
-            <div class="card-header bg-gradient-dark text-white">
+            <div class="card-header bg-primary bg-gradient text-white">
                 <i class="fas fa-search"></i>
                 &nbsp;Trouver
             </div>
@@ -180,7 +180,7 @@
               ShowDetail="ShowSolutionAsync"
               Details="tirage.Solutions"></CebSolutions>
 
-<div class="card text-center bg-gradient-dark border-secondary">
+<div class="card text-center bg-primary bg-gradient border-secondary">
     <div class="card-header">
         <div class="'text-center'">
             @switch (tirage.Status)
@@ -200,7 +200,7 @@
                         <i class="text-danger far fa-thumbs-down"></i>&nbsp;
                         <span style="color: Navy">
                             &nbsp;Compte
-                            approch&eacute;:&nbsp;@tirage.Found,&nbsp;&eacute;cart:@tirage.Diff,&nbsp;@tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.watch.Elapsed.TotalSeconds:N3}")&nbsp;s
+                            approch&eacute;:&nbsp;@tirage.Found,&nbsp;&eacute;cart:@tirage.Diff,&nbsp;@tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.Watch.Elapsed.TotalSeconds:N3}")&nbsp;s
                         </span>
                     </div>
                     break;
@@ -208,7 +208,7 @@
                     <div class="alert-success" style="cursor: pointer;" @onclick="@tirage.ClearAsync">
                         <i class="far fa-thumbs-up"></i>
                         &nbsp;Compte est bon,&nbsp;@(tirage.Count)
-                        solutions,&nbsp;durée:&nbsp;@($"{tirage.watch.Elapsed.TotalSeconds:N3}")&nbsp;s
+                        solutions,&nbsp;durée:&nbsp;@($"{tirage.Watch.Elapsed.TotalSeconds:N3}")&nbsp;s
 
                     </div>
                     break;

@@ -19,7 +19,7 @@ namespace CompteEstBon {
     /// Gestion tirage Compte est bon
     /// </summary>
     [System.Runtime.InteropServices.Guid("EC9CF01C-34A0-414C-BF2A-D06C5A61503D")]
-    public sealed class CebTirage: INotifyPropertyChanged {
+    public sealed class CebTirage : INotifyPropertyChanged {
         public IEnumerable<int> ListePlaques = CebPlaque.AnyPlaques;
         private static readonly Random Rnd = new Random();
         private int _search;
@@ -83,7 +83,7 @@ namespace CompteEstBon {
         private List<CebBase> _solutions = new List<CebBase>();
 
 
-        public ImmutableList<CebBase> Solutions => Status == CebStatus.CompteApproche || Status == CebStatus.CompteEstBon ? _solutions.ToImmutableList()  : ImmutableList<CebBase>.Empty;
+        public ImmutableList<CebBase> Solutions => Status == CebStatus.CompteApproche || Status == CebStatus.CompteEstBon ? _solutions.ToImmutableList() : ImmutableList<CebBase>.Empty;
 
         [JsonIgnore]
         public IEnumerable<string> SolutionsToString => _solutions.Select(s => s.ToString());
@@ -105,7 +105,7 @@ namespace CompteEstBon {
                 _solutions.Clear();
             }
             // Duree = TimeSpan.Zero;
-            watch.Reset();
+            Watch.Reset();
             Diff = int.MaxValue;
             Found.Reset();
             Valid();
@@ -141,16 +141,21 @@ namespace CompteEstBon {
             Status = CebStatus.EnCours;
             _search = Rnd.Next(100, 1000);
             var liste = new List<int>(CebPlaque.AllPlaques);
-            foreach (var plaque in Plaques) {
-                var n = Rnd.Next(0, liste.Count());
-                plaque.Value = liste[n];
+            Plaques.ForEach(p => {
+                var n = Rnd.Next(0, liste.Count);
+                p.Value = liste[n];
                 liste.RemoveAt(n);
-            }
+            });
+            //foreach (var plaque in Plaques) {
+            //    var n = Rnd.Next(0, liste.Count());
+            //    plaque.Value = liste[n];
+            //    liste.RemoveAt(n);
+            //}
             return Clear();
         }
 
         public async Task<CebData> RandomAsync() => await Task.Run(Random);
-        public Stopwatch watch { get; } = new Stopwatch();
+        public Stopwatch Watch { get; } = new Stopwatch();
 
         /// <summary>
         /// resolution
@@ -159,14 +164,14 @@ namespace CompteEstBon {
         /// </returns>
         public CebData Resolve() {
             _solutions.Clear();
-            watch.Reset();
-            watch.Start();
+            Watch.Reset();
+            Watch.Start();
             Status = CebStatus.EnCours;
             Resolve(Plaques.ToList<CebBase>());
             _solutions.Sort((p, q) => p.Compare(q));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
             NotifyPropertyChanged();
-            watch.Stop();
+            Watch.Stop();
             //Duree = watch.Elapsed;
             return GetData();
         }

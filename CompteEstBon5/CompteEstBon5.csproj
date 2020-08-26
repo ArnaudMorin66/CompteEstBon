@@ -11,6 +11,10 @@
     <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="CebDetail.cs" />
   </ItemGroup>

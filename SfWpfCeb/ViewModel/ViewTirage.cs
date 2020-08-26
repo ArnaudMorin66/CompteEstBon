@@ -352,13 +352,10 @@ namespace CompteEstBon {
         }
 
 
-        public static void OpenDocument(string nom) {
-            var info = new ProcessStartInfo {
-                UseShellExecute = true,
-                FileName = nom
-            };
-            Process.Start(info);
-        }
+        public static void OpenDocument(string nom) => Process.Start(new ProcessStartInfo {
+            UseShellExecute = true,
+            FileName = nom
+        });
     }
     
 }

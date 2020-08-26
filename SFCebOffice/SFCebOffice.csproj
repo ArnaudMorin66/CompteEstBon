@@ -8,13 +8,11 @@
     <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="18.2.0.55" />
+    <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="18.2.0.55" />
+  </ItemGroup>
 
-   <ItemGroup>
-     <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="18.2.0.47" />
-     <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="18.2.0.47" />
-   </ItemGroup>
-
- 
   <ItemGroup>
     <ProjectReference Include="..\CompteEstBon5\CompteEstBon5.csproj" />
   </ItemGroup>

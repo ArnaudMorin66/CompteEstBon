@@ -15,6 +15,7 @@
     Icon="images/favicon.png"
     TitleBarForeground="{DynamicResource TextForegroundBrush}"
     TitleTextAlignment="Center"
+    Top="6"
     UseNativeChrome="True"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -405,6 +406,7 @@
                     Text="{Binding VisualStyle, ElementName=chromelessWindow, Mode=TwoWay}">
                     <ComboBoxItem Content="MaterialDark" />
                     <ComboBoxItem Content="MaterialDarkBlue" />
+                    <ComboBoxItem Content="Office2019Black" />
                 </ComboBox>
             </StatusBarItem>
 

@@ -1,9 +1,11 @@
 // $primary: darkslategray;
-$primary: #303030;
-$bg-body: #404040;
+//$primary: #303030;
+// $bg-body: #404040;
+$primary: #404040;
+$bg-body: #303030;
 
-$font-size: 0.8rem;
-$enable-gradients: true;
+$font-size: 1rem;
+
 $enable-shadows: true;
 $enable-responsive-font-sizes: true;
 $grid-header-border-color: $bg-body;
@@ -12,8 +14,8 @@ $font-family: $font-family-sans-serif;
 
 
 @import "ej2/fabric.scss";
+$enable-gradients: true;
 @import "bootstrap/scss/bootstrap";
-// @import 'mdb-ui-kit/src/scss/mdb.free';
 
 
 
@@ -233,7 +235,8 @@ body {
 
 .a-toast  {   
     > .e-dlg-content, > .e-dlg-header-content, > .e-footer-content {
-        @extend .bg-gradient-primary;
+        @extend  .bg-gradient;
+        background: $primary;
         padding: 0px;
         margin: 0;
         border: none;

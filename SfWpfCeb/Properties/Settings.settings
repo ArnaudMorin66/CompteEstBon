@@ -5,5 +5,8 @@
     <Setting Name="SolutionTimer" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
+    <Setting Name="SfLicence" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Mjk3MDUwQDMxMzgyZTMyMmUzMFNrT0hON3o1c0VacUtYWTA3K05sVG9oOTQrZzBDM3gzNW1COVQ3NndXV009</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

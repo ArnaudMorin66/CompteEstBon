@@ -10,7 +10,7 @@ using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Helpers;
 
 namespace CompteEstBon {
-   
+
     /// <summary>
     ///     Logique d'interaction pour MainWindow.xaml
     /// </summary>
@@ -30,10 +30,13 @@ namespace CompteEstBon {
             set {
                 var resource = Resources.MergedDictionaries.First(v => v.Source.OriginalString.Contains(_style));
                 _style = value;
+                
                 SfSkinManager.SetVisualStyle(this, (VisualStyles) Enum.Parse(typeof(VisualStyles), value));
                 if (resource != null)
+
                     resource.Source =
                         new Uri($"pack://application:,,,/Syncfusion.Themes.{value}.WPF;component/Common/Brushes.xaml");
+                // SkinStorage.SetVisualStyle(this, value);
             }
         }
 

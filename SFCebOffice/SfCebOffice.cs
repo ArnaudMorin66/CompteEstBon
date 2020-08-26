@@ -49,7 +49,7 @@ namespace CompteEstBon {
                 rg.CellStyle.Font.Color = ExcelKnownColors.White;
                 rg.CellStyle.ColorIndex = ExcelKnownColors.Orange;
             }
-            res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.watch.Elapsed.TotalSeconds:N3} ";
+            res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.Watch.Elapsed.TotalSeconds:N3} ";
 
             rg.Value2 = res;
             rg.HorizontalAlignment = ExcelHAlign.HAlignCenter;
@@ -126,7 +126,7 @@ namespace CompteEstBon {
                 tcolor = Syncfusion.Drawing.Color.Black;
 
             }
-            res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.watch.Elapsed.TotalSeconds:N3} ";
+            res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.Watch.Elapsed.TotalSeconds:N3} ";
             pg = sect.AddParagraph();
             var tx = pg.AppendText(res);
             tx.CharacterFormat.TextColor = tcolor;
