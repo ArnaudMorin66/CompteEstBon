@@ -80,7 +80,7 @@ namespace CompteEstBon {
                 Clear();
             }
         }
-        private List<CebBase> _solutions = new List<CebBase>();
+        private List<CebBase> _solutions = new(); // List<CebBase>();
 
 
         public ImmutableList<CebBase> Solutions => Status == CebStatus.CompteApproche || Status == CebStatus.CompteEstBon ? _solutions.ToImmutableList() : ImmutableList<CebBase>.Empty;
@@ -155,7 +155,7 @@ namespace CompteEstBon {
         }
 
         public async Task<CebData> RandomAsync() => await Task.Run(Random);
-        public Stopwatch Watch { get; } = new Stopwatch();
+        public Stopwatch Watch { get; } = new(); // Stopwatch();
 
         /// <summary>
         /// resolution

@@ -19,7 +19,7 @@ namespace CompteEstBon {
 
         public static void ExportExcel(this CebTirage tirage, Stream stream) {
 
-            using var engine = new ExcelEngine();
+            using ExcelEngine engine=new();
 
             var application = engine.Excel;
             application.DefaultVersion = ExcelVersion.Excel2016;
@@ -73,7 +73,7 @@ namespace CompteEstBon {
 
 
         public static void ExportWord(this CebTirage tirage, Stream stream) {
-            var wd = new WordDocument();
+            WordDocument wd = new(); 
             var sect = wd.AddSection() as WSection;
             var dotm = Environment.GetEnvironmentVariable("USERPROFILE") + @"\AppData\Roaming\Microsoft\Templates\Normal.dotm";
             if (File.Exists(dotm)) {
