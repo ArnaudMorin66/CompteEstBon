@@ -61,13 +61,13 @@
                 &nbsp;Trouver
             </div>
             <div class="card-body">
-                <SfNumericTextBox @bind-Value="@tirage.Search"
+                <SfNumericTextBox  Value="tirage.Search"
                                   Max="999"
                                   Min="100"
                                   CssClass="e-ceb"
                                   Format="N0"
                                   Step="1"
-                                  TValue="int"
+                                  TValue="int?"
                                   Enabled="tirage.Status != CebStatus.EnCours">
                 </SfNumericTextBox>
             </div>
@@ -146,7 +146,7 @@
                             title="Tirage aléatoire (ALT-T)"
                             role="button"
                             type="button"
-                            @onclick="@RandomAsync">
+                            @onclick="tirage.RandomAsync">
                         <i class="fa fa-random"></i>
                         <div>Tirage</div>
                     </button>
@@ -231,7 +231,7 @@
 }
 
 @code {
-        CebTypeGrille TypeGrille { get; set; }
+    CebTypeGrille TypeGrille { get; set; }
 
     public CebToast toast;
 
@@ -269,8 +269,5 @@
 
         await js.SaveAsAsync(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "ceb.docx");
     }
-    private async Task RandomAsync(){
-        await tirage.RandomAsync();
-        await InvokeAsync(StateHasChanged);
-    }
+   
 }

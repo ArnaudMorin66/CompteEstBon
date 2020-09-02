@@ -139,7 +139,7 @@ namespace CompteEstBon {
         /// </summary>
         public CebData Random() {
             Status = CebStatus.EnCours;
-            _search = Rnd.Next(100, 1000);
+            Search = Rnd.Next(100, 1000);
             var liste = new List<int>(CebPlaque.AllPlaques);
             Plaques.ForEach(p => {
                 var n = Rnd.Next(0, liste.Count);
