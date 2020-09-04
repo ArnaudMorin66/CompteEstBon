@@ -270,3 +270,5 @@ obj
 /CebBlazor/wwwroot/lib/font-awesome
 /CebControllerCore/bin
 obj
+package-lock.json
+package-lock.json
