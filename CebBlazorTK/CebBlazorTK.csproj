@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.76" />
-    <PackageReference Include="Telerik.UI.for.Blazor.Trial" Version="2.13.0" />
+    <PackageReference Include="Telerik.UI.for.Blazor.Trial" Version="2.16.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,10 +14,10 @@
   </ItemGroup>
 
   <Target Name="PreBuildRelease" BeforeTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release' ">
-    <Exec Command="yarn run sass-release" />
+    <Exec Command="npm run sass-release" />
   </Target>
   <Target Name="PreBuildDebug" BeforeTargets="PreBuildEvent" Condition=" '$(Configuration)' == 'Debug' ">
-    <Exec Command="yarn run sass-debug" />
+    <Exec Command="npm run sass-debug" />
   </Target>
   <ProjectExtensions><VisualStudio><UserProperties package_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">

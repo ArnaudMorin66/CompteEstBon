@@ -14,14 +14,15 @@ namespace CompteEstBon {
     public partial class MainWindow {
         
         public string DotnetVersion => RuntimeInformation.FrameworkDescription;
-        public static Dictionary<string, Color> ThemeColors { get; } = new Dictionary<string, Color> {
-            ["Dark"] = Color.FromArgb(0xFF, 0x13, 0x18, 0x18),
-            ["Blue"] = Color.FromArgb(0xFF, 0x15, 0x25, 0x49),
-            ["Black"] = Colors.Black,
-            ["DarkBlue"] = Colors.DarkBlue,
-            ["DarkSlateGray"] = Colors.DarkSlateGray,
-            ["Green"] = Colors.Green
-        };
+        //public static Dictionary<string, Color> ThemeColors { get; } = new Dictionary<string, Color> {
+        //    ["Dark"] = Color.FromArgb(0xFF, 0x13, 0x18, 0x18),
+        //    ["Blue"] = Color.FromArgb(0xFF, 0x15, 0x25, 0x49),
+        //    ["Black"] = Colors.Black,
+        //    ["DarkBlue"] = Colors.DarkBlue,
+        //    ["DarkSlateGray"] = Colors.DarkSlateGray,
+        //    ["Green"] = Colors.Green,
+        //    ["Red"]=Colors.Red
+        //};
         private string _theme = "Dark";
         public string Theme {
             get => _theme;

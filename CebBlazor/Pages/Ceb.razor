@@ -61,13 +61,13 @@
                 &nbsp;Trouver
             </div>
             <div class="card-body">
-                <SfNumericTextBox  Value="tirage.Search"
+                <SfNumericTextBox @bind-Value="tirage.Search"
                                   Max="999"
                                   Min="100"
                                   CssClass="e-ceb"
                                   Format="N0"
                                   Step="1"
-                                  TValue="int?"
+                                  TValue="int"
                                   Enabled="tirage.Status != CebStatus.EnCours">
                 </SfNumericTextBox>
             </div>

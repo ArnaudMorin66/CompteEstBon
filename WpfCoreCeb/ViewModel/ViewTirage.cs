@@ -19,7 +19,7 @@ using Microsoft.Win32;
 namespace CompteEstBon.ViewModel {
 
     public class ViewTirage : INotifyPropertyChanged, ICommand {
-        private readonly Stopwatch NotifyWatch = new Stopwatch();
+        private readonly Stopwatch NotifyWatch = new();
         private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(10);
         private Color _background;
         private TimeSpan _duree;
@@ -49,7 +49,7 @@ namespace CompteEstBon.ViewModel {
         /// </returns>
         public ViewTirage() {
             Solutions = null;
-            stopwatch = new Stopwatch();
+            stopwatch = new();
 
             dateDispatcher = new DispatcherTimer {
                 Interval = TimeSpan.FromMilliseconds(10)
@@ -84,7 +84,10 @@ namespace CompteEstBon.ViewModel {
             ["Black"] = Colors.Black,
             ["DarkBlue"] = Colors.DarkBlue,
             ["DarkSlateGray"] = Colors.DarkSlateGray,
-            ["Green"] = Colors.Green
+            ["Green"] = Colors.Green,
+            ["Red"]=Colors.Red,
+            ["Yellow"]=Colors.Yellow,
+            ["Navy"]=Colors.Navy
         };
 
         public string Theme {
@@ -98,11 +101,11 @@ namespace CompteEstBon.ViewModel {
         }
 
 
-        public CebTirage Tirage { get; set; } = new CebTirage();
+        public CebTirage Tirage { get; set; } = new();
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.AnyPlaques;
 
         public ObservableCollection<int> Plaques { get; } =
-            new ObservableCollection<int> {0, 0, 0, 0, 0, 0};
+            new ObservableCollection<int> { 0, 0, 0, 0, 0, 0 };
 
         public TimeSpan Duree {
             get => _duree;
@@ -225,52 +228,53 @@ namespace CompteEstBon.ViewModel {
             try {
                 var cmd = (parameter as string)?.ToLower();
                 switch (cmd) {
-                    case "random":
-                        await RandomAsync();
-                        break;
-                    case "resolve": {
+                case "random":
+                    await RandomAsync();
+                    break;
+                case "resolve": {
                         switch (Tirage.Status) {
-                            case CebStatus.Valid:
-                                if (IsBusy) return;
-                                await ResolveAsync();
-                                break;
+                        case CebStatus.Valid:
+                            if (IsBusy) return;
+                            await ResolveAsync();
+                            break;
 
-                            case CebStatus.CompteEstBon:
-                            case CebStatus.CompteApproche:
-                                await ClearAsync();
-                                break;
+                        case CebStatus.CompteEstBon:
+                        case CebStatus.CompteApproche:
+                            await ClearAsync();
+                            break;
 
-                            case CebStatus.Erreur:
-                                await RandomAsync();
-                                break;
-                            case CebStatus.Indefini:
-                                break;
-                            case CebStatus.EnCours:
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
+                        case CebStatus.Erreur:
+                            await RandomAsync();
+                            break;
+                        case CebStatus.Indefini:
+                            break;
+                        case CebStatus.EnCours:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
                         }
 
                         break;
                     }
-                    case "xlsx":
-                    case "docx":
-                        await ExportAsync(cmd);
-                        break;
+                case "xlsx":
+                case "docx":
+                    await ExportAsync(cmd);
+                    break;
                 }
             }
-            #pragma warning disable CA1031 // Do not catch general exception types
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception e) {
                 Console.WriteLine(e);
             }
-            #pragma warning restore CA1031 // Do not catch general exception types
+#pragma warning restore CA1031 // Do not catch general exception types
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
 
         private void UpdateColors() {
-            Foreground = Tirage.Status switch {
+            Foreground = Tirage.Status switch
+            {
                 CebStatus.Valid => Colors.White,
                 CebStatus.Erreur => Colors.Red,
                 CebStatus.CompteEstBon => Colors.YellowGreen,
@@ -350,7 +354,8 @@ namespace CompteEstBon.ViewModel {
 
             stopwatch.Start();
             var data = await Tirage.ResolveAsync();
-            Result = Tirage.Status switch {
+            Result = Tirage.Status switch
+            {
                 CebStatus.CompteEstBon => "Le Compte est bon",
                 CebStatus.CompteApproche => $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}",
                 _ => "Tirage incorrect"
@@ -369,27 +374,26 @@ namespace CompteEstBon.ViewModel {
 
         public static (bool select, string name) FileSaveName(string ty) {
             var dialog = new SaveFileDialog();
-            (dialog.Filter, dialog.Title) = ty switch {
+            (dialog.Filter, dialog.Title) = ty switch
+            {
                 "xlsx" => ("Excel (*.xlsx)| *.xlsx", "Fichiers Excel"),
                 "docx" => ("Word (*.docx) | *.docx", "Fichiers Word"),
                 _ => throw new NotImplementedException()
             };
             dialog.InitialDirectory = Environment.SpecialFolder.UserProfile + "\\Downloads";
             // ReSharper disable once PossibleInvalidOperationException
-            return (bool) dialog.ShowDialog() ? (true, dialog.FileName) : (false, null);
+            return (bool)dialog.ShowDialog() ? (true, dialog.FileName) : (false, null);
         }
 
         public async Task ExportAsync(string ty) {
             var (select, name) = FileSaveName(ty);
             if (!select) return;
-            #pragma warning disable IDE0007 // Utiliser un type implicite
             Action<Stream> export = ty switch
-                #pragma warning restore IDE0007 // Utiliser un type implicite
-                {
-                    "xlsx" => Tirage.ExportExcel,
-                    "docx" => Tirage.ExportWord,
-                    _ => throw new NotImplementedException()
-                };
+            {
+                "xlsx" => Tirage.ExportExcel,
+                "docx" => Tirage.ExportWord,
+                _ => throw new NotImplementedException()
+            };
             using var stream = new FileStream(name, FileMode.Create);
             export(stream);
             await stream.FlushAsync();

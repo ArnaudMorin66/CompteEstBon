@@ -12,6 +12,11 @@ $accent: $primary;
 @import "@progress/kendo-theme-bootstrap/scss/all";
 
 
+.gradient {
+    background: radial-gradient($primary, $bg-body);
+    background-image: radial-gradient( #505050, $primary); // (rgb(48, 48, 48), rgb(73, 80, 87));
+}
+
 html,
 body {
     background-color: $bg-body;
@@ -126,7 +131,7 @@ span.k-icon {
 
 
 .a-toast {
-    @extend .bg-gradient-primary;
+   background-color: $bg-body;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -159,10 +164,6 @@ span.k-icon {
     animation-iteration-count: infinite;
 }
 
-.gradient {
-    background: radial-gradient($primary, $bg-body);
-    background-image: radial-gradient( #505050, $primary); // (rgb(48, 48, 48), rgb(73, 80, 87));
-}
 
 .footer {
     @extend .fixed-bottom;
@@ -175,6 +176,6 @@ input .k-input .k-formatted-value {
 }
 
 .toast-window {
-    @extend .bg-gradient-primary;
+   background-color: $bg-body;
     z-index: 44444;
 }

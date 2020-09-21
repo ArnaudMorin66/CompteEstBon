@@ -28,7 +28,7 @@
 <div class="row center-block">
     <div class="col">
         <div class="card text-center border border-secondary">
-            <div class="card-header bg-gradient-dark text-white">
+            <div class="card-header gradient text-white">
                 <i class="fas fa-bars"></i>
                 &nbsp;Plaques
             </div>
@@ -53,7 +53,7 @@
     </div>
     <div class="col-md-2">
         <div class="card text-center border border-secondary">
-            <div class="card-header bg-gradient-dark text-white">
+            <div class="card-header gradient text-white">
                 <i class="fas fa-search"></i>
                 &nbsp;Trouver
             </div>
@@ -152,7 +152,7 @@
               TypeGrille="@TypeGrille"
               Details="@tirage.Solutions"
               ShowDetail="ShowSolutionAsync"></CebSolutions>
-<div class="card text-center bg-gradient-dark border-secondary">
+<div class="card text-center gradient border-secondary">
     <div class="card-header">
         <div class="'text-center'">
             @switch (tirage.Status)
@@ -193,7 +193,6 @@
 </div>
 <CebToast @ref="toast" DueTime="8000" Duree="@duree"></CebToast>
 @code {
-    // public IEnumerable<CebBase> Details { get; set; }
     int search { get; set; }
     CebTypeGrille TypeGrille { get; set; }
     double duree { get; set; } = 0;
@@ -204,13 +203,11 @@
 
     protected override void OnInitialized()
     {
-        // Details = new List<CebBase>(tirage.Solutions);
         stopwatch = new Stopwatch();
         tirage.PropertyChanged += async (sender, e) =>
         {
-            // Details = tirage.Solutions.ToList(); // new List<CebBase>(tirage.Solutions);
             await InvokeAsync(StateHasChanged);
-        }; //  solutions.RefreshAsync(); };
+        }; 
         base.OnInitialized();
 
     }

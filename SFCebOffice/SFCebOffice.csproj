@@ -10,8 +10,8 @@
 
 
    <ItemGroup>
-     <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="18.2.0.56" />
-     <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="18.2.0.56" />
+     <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="18.2.0.58" />
+     <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="18.2.0.58" />
    </ItemGroup>
 
   <ItemGroup>

@@ -520,7 +520,7 @@
             PlacementTarget="{Binding ElementName=SolutionsData}">
             <StackPanel
                 HorizontalAlignment="Stretch"
-                Background="Black"
+                Background="{DynamicResource CebBackgroundBrush}"
                 Orientation="Vertical">
                 <Label
                     HorizontalAlignment="Stretch"
