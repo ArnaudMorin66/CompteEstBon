@@ -16,7 +16,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.76" />
-    <PackageReference Include="Syncfusion.Blazor" Version="18.2.0.58" />
+    <PackageReference Include="Syncfusion.Blazor" Version="18.2.0.59" />
   </ItemGroup>
 
   <ItemGroup>

@@ -20,11 +20,14 @@ namespace CompteEstBon {
         public App() {
             SyncfusionLicenseProvider.RegisterLicense(CompteEstBon.Properties.Settings.Default.SfLicence);
             SfSkinManager.ApplyStylesOnApplication = true;
+            Console.WriteLine(Assembly.GetExecutingAssembly().Location);
         }
         public static string FindLicenseKey() {
            
             string path = "SyncfusionLicense.txt";
-            string text = Path.GetDirectoryName(Assembly.GetEntryAssembly().CodeBase.Replace("file:///", ""));
+            
+            
+            string text = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
 
             for (;;) {
                 string path2 = Path.Combine(text, path);
