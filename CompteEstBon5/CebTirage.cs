@@ -157,7 +157,7 @@ namespace CompteEstBon {
 
         public async Task<CebData> RandomAsync() => await Task.Run(Random);
         public Stopwatch Watch { get; } = new(); // Stopwatch();
-
+        public double Duree => Watch.Elapsed.TotalSeconds;
         /// <summary>
         /// resolution
         /// </summary>

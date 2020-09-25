@@ -34,9 +34,9 @@
   </ProjectExtensions>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition=" '$(Configuration)'=='Debug' ">
-    <Exec Command="yarn run sass-debug" />
+    <Exec Command="npm run sass-debug" />
   </Target>
    <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition=" '$(Configuration)'=='Release' ">
-    <Exec Command="yarn run sass-debug" />
+    <Exec Command="npm run sass-debug" />
   </Target>
 </Project>
