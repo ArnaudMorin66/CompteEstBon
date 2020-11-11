@@ -265,18 +265,18 @@ namespace CompteEstBon {
         }
 
         private void UpdateForeground() {
-#pragma warning disable CS8509 // L'expression switch ne prend pas en charge toutes les valeurs possibles de son type d'entrée (elle n'est pas exhaustive).
             Foreground = Tirage.Status switch {
-#pragma warning restore CS8509 // L'expression switch ne prend pas en charge toutes les valeurs possibles de son type d'entrée (elle n'est pas exhaustive).
-                CebStatus.Indefini => Colors.Blue, 
-                CebStatus.Valid => Colors.White, 
-                CebStatus.EnCours => Colors.Aqua, 
-                CebStatus.CompteEstBon => Colors.ForestGreen, 
-                CebStatus.CompteApproche => Colors.Orange, 
-                CebStatus.Erreur => Colors.Red };
+                CebStatus.Indefini => Colors.Blue,
+                CebStatus.Valid => Colors.White,
+                CebStatus.EnCours => Colors.Aqua,
+                CebStatus.CompteEstBon => Colors.ForestGreen,
+                CebStatus.CompteApproche => Colors.Orange,
+                CebStatus.Erreur => Colors.Red,
+                _ => throw new NotImplementedException()
+            };
         }
         public void ShowPopup(int index = 0) {
-            if (index >= 0 && index < Tirage.Solutions.Count()) {
+            if (index >= 0 && index < Tirage.Solutions.Count) {
                 Solution = Tirage.Solutions[index];
                 Popup = true;
             }

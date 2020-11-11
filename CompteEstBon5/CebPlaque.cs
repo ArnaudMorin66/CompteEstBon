@@ -6,10 +6,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
-#pragma warning disable IDE1006 // Styles d'affectation de noms
 
 namespace CompteEstBon {
-#pragma warning restore IDE1006 // Styles d'affectation de noms
 
     [System.Runtime.InteropServices.Guid("A21F3DEC-8531-4F59-AF11-863BEF5ED340")]
     public sealed class CebPlaque : CebBase, INotifyPropertyChanged {
@@ -18,9 +16,9 @@ namespace CompteEstBon {
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25, 50, 75, 100,
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25
         };
-
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Les champs non constants ne doivent pas être visibles", Justification = "<En attente>")]
         public static IEnumerable<int> AnyPlaques = new SortedSet<int>(AllPlaques);
-
+      
         public event PropertyChangedEventHandler PropertyChanged;
 
         public CebPlaque(int value, PropertyChangedEventHandler /* EventHandler<int>*/ handler = null) {

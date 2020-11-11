@@ -21,7 +21,7 @@ namespace CompteEstBon {
     /// </summary>
     [System.Runtime.InteropServices.Guid("EC9CF01C-34A0-414C-BF2A-D06C5A61503D")]
     public sealed class CebTirage : INotifyPropertyChanged {
-        public IEnumerable<int> ListePlaques = CebPlaque.AnyPlaques;
+        public readonly IEnumerable<int> ListePlaques = CebPlaque.AnyPlaques;
         private static readonly Random Rnd = new Random();
         private int _search;
 
@@ -81,7 +81,7 @@ namespace CompteEstBon {
                 Clear();
             }
         }
-        private List<CebBase> _solutions = new(); // List<CebBase>();
+        private readonly List<CebBase> _solutions = new(); // List<CebBase>();
 
 
         public ImmutableList<CebBase> Solutions => Status == CebStatus.CompteApproche || Status == CebStatus.CompteEstBon ? _solutions.ToImmutableList() : ImmutableList<CebBase>.Empty;

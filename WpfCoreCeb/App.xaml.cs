@@ -34,7 +34,7 @@ namespace CompteEstBon {
         private static string FindLicenseKey() {
             
             string path = "SyncfusionLicense.txt";
-            string text = Path.GetDirectoryName(Assembly.GetEntryAssembly().CodeBase.Replace("file:///", ""));
+            string text = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             while (!string.IsNullOrEmpty(text)) {  
                 string path2 = Path.Combine(text, path);
                 if (File.Exists(path2)) {

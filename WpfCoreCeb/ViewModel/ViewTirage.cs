@@ -246,12 +246,8 @@ namespace CompteEstBon.ViewModel {
                         case CebStatus.Erreur:
                             await RandomAsync();
                             break;
-                        case CebStatus.Indefini:
-                            break;
-                        case CebStatus.EnCours:
-                            break;
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            break;
                         }
 
                         break;
@@ -317,7 +313,7 @@ namespace CompteEstBon.ViewModel {
         }
 
         public void ShowNotify(int index = 0) {
-            if (index >= 0 && Tirage.Solutions.Any() && index < Tirage.Solutions.Count()) {
+            if (index >= 0 && Tirage.Solutions.Any() && index < Tirage.Solutions.Count) {
                 Solution = Tirage.Solutions[index];
                 Popup = true;
             }

@@ -4,17 +4,18 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "sass-debug": "node-sass scss/site.scss -o wwwroot/css/ --include-path node_modules/ --source-map true",
-    "sass-release": "del wwwroot\\css\\site.* /Q & node-sass scss/site.scss -o wwwroot/css/ --include-path node_modules/ --output-style compressed"
+    "sass-debug": "sass scss/site.scss wwwroot/css/site.css -I node_modules/ --source-map",
+    "sass-release": "del wwwroot\\css\\site.* /Q & sass scss/site.scss  wwwroot/css/site.css -I node_modules/ -s compressed --no-source-map"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.14.0",
-    "@progress/kendo-theme-bootstrap": "^4.20.0",
-    "@progress/kendo-theme-default": "^4.22.0",
-    "@progress/kendo-theme-material": "^3.19.0",
-    "bootstrap": "^5.0.0-alpha1"
+    "@fortawesome/fontawesome-free": "^5.15.1",
+    "@progress/kendo-theme-bootstrap": "^4.21.1",
+    "@progress/kendo-theme-default": "^4.23.0",
+    "@progress/kendo-theme-material": "^3.19.2",
+    "bootstrap": "^5.0.0-alpha2"
   },
-  "devDependencies": {
-    "node-sass": "^4.14.1"
+  "devDependencies": {},
+  "optionalDependencies": {
+    "sass": "^1.27.0"
   }
 }
