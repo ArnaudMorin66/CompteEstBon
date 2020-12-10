@@ -29,25 +29,25 @@
     <None Remove="Images\word.png" />
   </ItemGroup>
 
- 
+
   <ItemGroup>
-      <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.Shared.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.SfGrid.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.Data.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.SfShared.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.SfSmithChart.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.SfHeatMap.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.Themes.Office2019Black.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.Tools.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.PropertyGrid.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.SfInput.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.SfTextInputLayout.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="18.3.0.47" />
-        <PackageReference Include="Syncfusion.Compression.Base" Version="18.3.0.47" />
+    <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.Shared.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.Data.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.SfShared.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.SfSmithChart.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.SfHeatMap.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.Themes.Office2019Black.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.Tools.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.PropertyGrid.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.SfInput.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.SfTextInputLayout.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="18.3.0.53" />
+    <PackageReference Include="Syncfusion.Compression.Base" Version="18.3.0.53" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,7 +55,7 @@
     <ProjectReference Include="..\SFCebOffice\SFCebOffice.csproj" />
   </ItemGroup>
 
-  
+
   <ItemGroup>
     <Resource Include="favicon.ico" />
     <Resource Include="Images\excel.png" />

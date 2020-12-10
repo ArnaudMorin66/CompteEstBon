@@ -22,7 +22,7 @@ namespace CompteEstBon {
     [System.Runtime.InteropServices.Guid("EC9CF01C-34A0-414C-BF2A-D06C5A61503D")]
     public sealed class CebTirage : INotifyPropertyChanged {
         public readonly IEnumerable<int> ListePlaques = CebPlaque.AnyPlaques;
-        private static readonly Random Rnd = new Random();
+        private static readonly Random Rnd = new();
         private int _search;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -116,7 +116,7 @@ namespace CompteEstBon {
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         public async Task<CebData> ClearAsync() => await Task.Run(Clear);
 
-        public CebData GetData() => new CebData {
+        public CebData GetData() => new() {
             Search = Search,
             Plaques = Plaques.Select(p => p.Value),
             Status = Status,
@@ -147,11 +147,7 @@ namespace CompteEstBon {
                 p.Value = liste[n];
                 liste.RemoveAt(n);
             });
-            //foreach (var plaque in Plaques) {
-            //    var n = Rnd.Next(0, liste.Count());
-            //    plaque.Value = liste[n];
-            //    liste.RemoveAt(n);
-            //}
+           
             return Clear();
         }
 

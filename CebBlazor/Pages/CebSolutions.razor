@@ -14,7 +14,7 @@
         EnableAltRow="true"
         TValue="CebBase"
         ID="solutions">
-    <GridEvents OnRecordClick="@(async (args)=> {await ShowDetail.InvokeAsync(args.RowData);} )"
+    <GridEvents OnRecordClick="ShowAsync"
                 TValue="CebBase"></GridEvents>
     <GridSelectionSettings Mode="Syncfusion.Blazor.Grids.SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
    
@@ -75,6 +75,10 @@
         await base.OnInitializedAsync();
     }
     protected string column(int n) => TypeGrille == CebTypeGrille.Grille ? $"Op{n}" : "";
+    private async Task ShowAsync(RecordClickEventArgs<CebBase> ligne){
+        await ShowDetail.InvokeAsync(ligne.RowData);
+
+    }
 
 }
 

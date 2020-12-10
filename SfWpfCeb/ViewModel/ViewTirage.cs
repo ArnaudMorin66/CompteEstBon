@@ -23,7 +23,7 @@ using System.Windows.Threading;
 namespace CompteEstBon {
 
     public class ViewTirage : NotificationObject ,  ICommand {
-        private readonly Stopwatch NotifyWatch = new Stopwatch();
+        private readonly Stopwatch NotifyWatch = new();
         private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(Properties.Settings.Default.SolutionTimer);
         
         private TimeSpan _duree;

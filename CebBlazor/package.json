@@ -8,11 +8,11 @@
     "sass-release": "del wwwroot\\css\\site.* /Q & node-sass scss/site.scss -o wwwroot/css/ --include-path node_modules/ --include-path node_modules/@syncfusion/ --output-style compressed"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.14.0",
-    "@syncfusion/ej2": "^18.3.35",
-    "bootstrap": "^5.0.0-alpha1"
+    "@fortawesome/fontawesome-free": "^5.15.1",
+    "@syncfusion/ej2": "^18.3.53",
+    "bootstrap": "^5.0.0-beta1"
   },
   "devDependencies": {
-    "node-sass": "^4.14.1"
+    "node-sass": "^5.0.0"
   }
 }
