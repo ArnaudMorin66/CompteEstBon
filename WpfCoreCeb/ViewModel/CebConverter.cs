@@ -7,7 +7,7 @@ namespace CompteEstBon.ViewModel {
      [ValueConversion(typeof(object), typeof(Visibility))]
     internal class CebConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-            var inverse = parameter is bool bl && bl;
+            var inverse = parameter is bool and true;
             return targetType.Name switch {
                 // Retour Visibility
                 nameof(Visibility) => value switch {

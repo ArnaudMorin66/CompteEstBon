@@ -470,35 +470,35 @@
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding (compteEstBon:CebBase.Op1)}"
+                    Binding="{Binding Operations[0]}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 1"
                     IsReadOnly="True"
                     Visibility="{Binding Vertical, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding (compteEstBon:CebBase.Op2)}"
+                    Binding="{Binding Operations[1]}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 2"
                     IsReadOnly="True"
                     Visibility="{Binding Vertical, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding (compteEstBon:CebBase.Op3)}"
+                    Binding="{Binding Operations[2]}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 3"
                     IsReadOnly="True"
                     Visibility="{Binding Vertical, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding (compteEstBon:CebBase.Op4)}"
+                    Binding="{Binding Operations[3]}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 4"
                     IsReadOnly="True"
                     Visibility="{Binding Vertical, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding (compteEstBon:CebBase.Op5)}"
+                    Binding="{Binding Operations[4]}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 5"
                     IsReadOnly="True"

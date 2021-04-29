@@ -54,13 +54,15 @@ namespace CompteEstBon.ViewModel {
             dateDispatcher = new DispatcherTimer {
                 Interval = TimeSpan.FromMilliseconds(10)
             };
-            dateDispatcher.Tick += (sender, e) => {
+            dateDispatcher.Tick += (_, _) => {
                 if (stopwatch.IsRunning) Duree = stopwatch.Elapsed;
                 if (Popup && NotifyWatch.Elapsed > SolutionTimer)
                     Popup = false;
-                Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
+                Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
+                
+                // Titre = $"😊 Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
-            Plaques.CollectionChanged += (sender, e) => {
+            Plaques.CollectionChanged += (_, e) => {
                 var i = e.NewStartingIndex;
                 if (Tirage.Plaques[i].Value == Plaques[i]) return;
                 Tirage.Plaques[i].Value = Plaques[i];
@@ -72,7 +74,7 @@ namespace CompteEstBon.ViewModel {
             _isUpdating = false;
             UpdateData();
             UpdateColors();
-            Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
+            Titre = $"😊 Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             dateDispatcher.Start();
         }
 
@@ -105,7 +107,7 @@ namespace CompteEstBon.ViewModel {
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.AnyPlaques;
 
         public ObservableCollection<int> Plaques { get; } =
-            new ObservableCollection<int> { 0, 0, 0, 0, 0, 0 };
+            new() { 0, 0, 0, 0, 0, 0 };
 
         public TimeSpan Duree {
             get => _duree;
@@ -153,7 +155,9 @@ namespace CompteEstBon.ViewModel {
         public int Search {
             get => _search;
             set {
+                if (_search == value) return;
                 _search = value;
+                Tirage.Search = value;
                 NotifiedChanged();
                 ClearData();
             }
@@ -246,8 +250,6 @@ namespace CompteEstBon.ViewModel {
                         case CebStatus.Erreur:
                             await RandomAsync();
                             break;
-                        default:
-                            break;
                         }
 
                         break;
@@ -294,7 +296,7 @@ namespace CompteEstBon.ViewModel {
 
             Solutions = null;
 
-            Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
+            Result = Tirage.Status != CebStatus.Erreur ? "Le Compte est Bon" : "🤬 Tirage incorrect";
             Popup = false;
             UpdateColors();
         }
@@ -346,22 +348,23 @@ namespace CompteEstBon.ViewModel {
 
         public async Task ResolveAsync() {
             IsBusy = true;
-            Result = "";
+            Result = "Calcul...";
 
             stopwatch.Start();
-            var data = await Tirage.ResolveAsync();
+            await Tirage.ResolveAsync();
             Result = Tirage.Status switch
             {
-                CebStatus.CompteEstBon => "Le Compte est bon",
-                CebStatus.CompteApproche => $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}",
-                _ => "Tirage incorrect"
+                CebStatus.CompteEstBon => "😊 Compte est bon",
+                CebStatus.CompteApproche => $"😢 Compte approché: {Tirage.Found}, écart: {Tirage.Diff}",
+                CebStatus.Erreur => "Tirage incorrect",
+                _ => "Le Compte est Bon"
             };
             stopwatch.Stop();
             Duree = Tirage.Watch.Elapsed;
             UpdateColors();
 
             Solution = Tirage.Solutions[0];
-            Solutions = data.Solutions;
+            Solutions = Tirage.Solutions;
             IsBusy = false;
             ShowNotify();
             // ReSharper disable once ExplicitCallerInfoArgument

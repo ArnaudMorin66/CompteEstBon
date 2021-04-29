@@ -8,23 +8,18 @@ namespace CompteEstBon {
 
     [System.Runtime.InteropServices.Guid("F4D942FB-85DF-4391-AE82-9EFE20DDADB0")]
     public abstract class CebBase  {
-        public string Op1 => Rank > 0 ? Operations[0] : null;
-        public string Op2 => Rank > 1 ? Operations[1] : null;
-        public string Op3 => Rank > 2 ? Operations[2] : null;
-        public string Op4 => Rank > 3 ? Operations[3] : null;
-        public string Op5 => Rank > 4 ? Operations[4] : null;
         public override string ToString() => string.Join(", ", Operations);
         
 
-        public  List<string> Operations { get; private set; } 
+        public List<string> Operations { get; private set; }
         
+        // public string[] ToArray() => Operations.ToArray();
         public (int gauche, char op, int droite) Decoup(int i) {
             if (i >= Rank) return   (0, '\0', 0);
             var l = Operations[i].Split();
             if (int.TryParse(l[0], out int g)) return (0, '\0', 0);
             if (this is CebPlaque) return (g, '\0', 0);
-            if (!int.TryParse(l[2], out int d)) return (0, '\0', 0);
-            return (g, l[1][0], d);
+            return !int.TryParse(l[2], out var d) ? (0, '\0', 0) : (g, l[1][0], d);
         }
 
         

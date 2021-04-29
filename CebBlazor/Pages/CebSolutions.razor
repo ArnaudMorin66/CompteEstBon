@@ -1,11 +1,6 @@
-﻿@using CompteEstBon
-@using System.Collections.ObjectModel
-@using Microsoft.AspNetCore.Components
-@using Syncfusion.Blazor.Data
-@using Syncfusion.Blazor.Grids
-
-
-<SfGrid @ref="gdetails"  DataSource="@Details"
+﻿@using Syncfusion.Blazor.Grids
+@using SelectionMode = Syncfusion.Blazor.Grids.SelectionMode
+<SfGrid @ref="gdetails" DataSource="@Details"
         GridLines="GridLine.None"
         Height="400"
         AllowSelection="true"
@@ -15,41 +10,41 @@
         TValue="CebBase"
         ID="solutions">
     <GridEvents OnRecordClick="ShowAsync"
-                TValue="CebBase"></GridEvents>
-    <GridSelectionSettings Mode="Syncfusion.Blazor.Grids.SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
-   
-    <GridColumns>
-        <GridColumn Field=@column(1)></GridColumn>
-        <GridColumn Field=@column(2)></GridColumn>
-        <GridColumn>
-            <Template Context="data">
-                @if (TypeGrille == CebTypeGrille.Grille)
-                {
-                    @((data as CebBase).Op3)
-                }
-                else
-                {
-                    var det = data as CebBase;
-                    <div>@det.Op1</div>
-                    <div>@det.Op2</div>
-                    <div>@det.Op3</div>
-                    <div>@det.Op4</div>
-                    <div>@det.Op5</div>
+                TValue="CebBase">
+    </GridEvents>
+    <GridSelectionSettings Mode="SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
+    @if (TypeGrille == CebTypeGrille.Grille) {
+        <GridColumns>
+            @for (var i = 0; i < 5; i++) {
+                var j = i;
+                <GridColumn>
+                    <Template Context="data">
+                        @GetColonne(data, j)
+                    </Template>
+                </GridColumn>
+            }
+        </GridColumns>
+    }
+    else {
+        <GridColumns>
+            <GridColumn TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    @foreach (var op in ((CebBase) data).Operations) {
+                        <div>@op</div>
+                    }
+                </Template>
+            </GridColumn>
 
-                }
-            </Template>
-        </GridColumn>
-       
-        <GridColumn Field=@column(4)></GridColumn>
-        <GridColumn Field=@column(5)></GridColumn>
-    </GridColumns>
-   
-     
+        </GridColumns>
+    }
+
 </SfGrid>
+
 @code {
     SfGrid<CebBase> gdetails { get; set; }
 
     private CebTypeGrille _typegrille;
+
     [Parameter]
     public CebTypeGrille TypeGrille {
         get => _typegrille;
@@ -63,22 +58,23 @@
     }
 
 
-
     [Parameter]
     public IEnumerable<CebBase> Details { get; set; }
 
-    [Parameter] public EventCallback<CebBase> ShowDetail { get; set; }
+    [Parameter]
+    public EventCallback<CebBase> ShowDetail { get; set; }
 
 
-    protected async override Task OnInitializedAsync() {
-        //_Details = new List<TDetail>();
+    protected override async Task OnInitializedAsync() {
         await base.OnInitializedAsync();
     }
-    protected string column(int n) => TypeGrille == CebTypeGrille.Grille ? $"Op{n}" : "";
-    private async Task ShowAsync(RecordClickEventArgs<CebBase> ligne){
-        await ShowDetail.InvokeAsync(ligne.RowData);
 
+    private async Task ShowAsync(RecordClickEventArgs<CebBase> ligne) {
+        await ShowDetail.InvokeAsync(ligne.RowData);
+    }
+
+    public string GetColonne(object o, int i) {
+        return i >= (o as CebBase)?.Operations.Count ? "" : (o as CebBase)?.Operations[i];
     }
 
 }
-

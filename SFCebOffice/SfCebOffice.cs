@@ -16,7 +16,6 @@ namespace CompteEstBon {
         }
 
 
-
         public static void ExportExcel(this CebTirage tirage, Stream stream) {
 
             using ExcelEngine engine=new();

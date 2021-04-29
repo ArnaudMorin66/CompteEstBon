@@ -3,12 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
-using Microsoft.Extensions.Configuration.Ini;
-using Microsoft.Extensions.FileProviders;
 using Syncfusion.Blazor;
-using CompteEstBon;
-using System;
 
 namespace CompteEstBon {
     public class Startup {
@@ -47,6 +42,8 @@ namespace CompteEstBon {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+           
         }
+       
     }
 }

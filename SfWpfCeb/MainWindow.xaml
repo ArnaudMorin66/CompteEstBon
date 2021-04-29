@@ -317,27 +317,27 @@
             <s:SfDataGrid.Columns>
                 <s:GridTextColumn
                     IsHidden="{Binding Vertical}"
-                    MappingName="Op1"
+                    MappingName="Operations[0]"
                     TextAlignment="Center"
                     UseBindingValue="True" />
                 <s:GridTextColumn
                     IsHidden="{Binding Vertical}"
-                    MappingName="Op2"
+                    MappingName="Operations[1]"
                     TextAlignment="Center"
                     UseBindingValue="True" />
                 <s:GridTextColumn
                     IsHidden="{Binding Vertical}"
-                    MappingName="Op3"
+                    MappingName="Operations[2]"
                     TextAlignment="Center"
                     UseBindingValue="True" />
                 <s:GridTextColumn
                     IsHidden="{Binding Vertical}"
-                    MappingName="Op4"
+                    MappingName="Operations[3]"
                     TextAlignment="Center"
                     UseBindingValue="True" />
                 <s:GridTextColumn
                     IsHidden="{Binding Vertical}"
-                    MappingName="Op5"
+                    MappingName="Operations[4]"
                     TextAlignment="Center"
                     UseBindingValue="True" />
                 <s:GridTemplateColumn CellTemplate="{StaticResource listboxOperations}" IsHidden="{Binding Vertical, Converter={StaticResource InverseBooleanConverter}}" />

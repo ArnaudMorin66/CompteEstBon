@@ -1,22 +1,20 @@
 ﻿#region
 
 using Microsoft.Win32;
-using Syncfusion.SfSkinManager;
+//using Syncfusion.Drawing;
 using Syncfusion.Windows.Shared;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+
 #endregion
 
 // ReSharper disable once CheckNamespace
@@ -36,7 +34,7 @@ namespace CompteEstBon {
         private string _result = "Résoudre";
 
         public CebBase _solution;
-        private string _titre = "Le compte est bon";
+        private string _titre = "Jeu du Compte Est Bon";
         public DispatcherTimer dateDispatcher;
         public Stopwatch stopwatch;
 
@@ -53,14 +51,14 @@ namespace CompteEstBon {
             dateDispatcher = new DispatcherTimer {
                 Interval = TimeSpan.FromMilliseconds(Properties.Settings.Default.SolutionTimer)
             };
-            dateDispatcher.Tick += (sender, e) => {
+            dateDispatcher.Tick += (_, _) => {
                 if (stopwatch.IsRunning) Duree = stopwatch.Elapsed;
 
                 if (Popup && NotifyWatch.Elapsed > SolutionTimer) Popup = false;
-                Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
+                Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
 
-            Plaques.CollectionChanged += (sender, e) => {
+            Plaques.CollectionChanged += (_, e) => {
                 if (e.Action != NotifyCollectionChangedAction.Replace) {
                     return;
                 }
@@ -71,7 +69,7 @@ namespace CompteEstBon {
             };
             _isUpdating = false;
             UpdateData();
-            Titre = $"Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
+            Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             dateDispatcher.Start();
         }
 
@@ -88,7 +86,7 @@ namespace CompteEstBon {
                 _solutions = value;
                 RaisePropertyChanged(nameof(Solutions));
 
-                Count = _solutions == null ? 0 : _solutions.Count();
+                Count = _solutions?.Count() ?? 0;
             }
         }
         public TimeSpan Duree {
@@ -247,7 +245,7 @@ namespace CompteEstBon {
             Solution = null;
             Solutions = null;
             UpdateForeground();
-            Result = Tirage.Status != CebStatus.Erreur ? "" : "Tirage incorrect";
+            Result = Tirage.Status != CebStatus.Erreur ? "Jeu du Compte Est Bon" : "Tirage incorrect";
             Popup = false;
         }
 
@@ -295,17 +293,18 @@ namespace CompteEstBon {
         }
         public async Task<CebStatus> ResolveAsync() {
             IsBusy = true;
-            Result = "";
+            Result = "⏰ Calcul en cours...";
             // stopwatch.Start();
             Foreground = Colors.Aqua;
 
             await Tirage.ResolveAsync();
-            Result = Tirage.Status == CebStatus.CompteEstBon
-                ? "Le Compte est bon"
-                : Tirage.Status == CebStatus.CompteApproche
-                    ? $"Compte approché: {Tirage.Found}, écart: {Tirage.Diff}"
-                    : "Tirage incorrect";
-
+            Result = Tirage.Status switch {
+                CebStatus.CompteEstBon => "😊 Compte est Bon",
+                CebStatus.CompteApproche => $"😢 Compte approché: {Tirage.Found}, écart: {Tirage.Diff}",
+                CebStatus.Erreur => $"🤬 Tirage incorrect",
+                _ => "Jeu du Compte Est Bon"
+            };
+              
             Duree = Tirage.Watch.Elapsed;
             Solution = Tirage.Solutions[0];
             Solutions = Tirage.Solutions;
@@ -330,7 +329,7 @@ namespace CompteEstBon {
             return ((bool) dialog.ShowDialog(), dialog.FileName); 
 
         }
-
+        
         private void ExportFichier(string ext) {
             var (Ok, Path) = SaveFileName(ext);
             if (Ok) {
@@ -343,7 +342,7 @@ namespace CompteEstBon {
                     "docx" => Tirage.ExportWord,
                     _ => throw new NotImplementedException(),
                 };
-                var stream = new FileStream(Path, FileMode.CreateNew);
+                var stream = new FileStream(Path!, FileMode.CreateNew);
                 ExportFunction(stream);
                 stream.Flush();
                 stream.Close();

@@ -19,28 +19,9 @@ namespace CompteEstBon {
     public partial class App : Application {
         public App() {
             SyncfusionLicenseProvider.RegisterLicense(CompteEstBon.Properties.Settings.Default.SfLicence);
+            SfCebOffice.RegisterLicense(CompteEstBon.Properties.Settings.Default.SfLicence);
             SfSkinManager.ApplyStylesOnApplication = true;
         }
-        //public static string FindLicenseKey() {
-           
-        //    string path = "SyncfusionLicense.txt";
-            
-            
-        //    string text = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-
-        //    for (;;) {
-        //        string path2 = Path.Combine(text, path);
-        //        if (File.Exists(path2)) {
-        //            return File.ReadAllText(path2, Encoding.UTF8);
-        //        }
-        //        var parent = Directory.GetParent(text);
-        //        if (parent == null) {
-        //            break;
-        //        }
-        //        text = parent.FullName;
-        //    }
-        //    return string.Empty;
-        //}
     }
     
 }

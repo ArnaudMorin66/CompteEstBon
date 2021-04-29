@@ -12,7 +12,7 @@ namespace CompteEstBon.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -37,8 +37,8 @@ namespace CompteEstBon.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Mjk3MDUwQDMxMzgyZTMyMmUzMFNrT0hON3o1c0VacUtYWTA3K05sVG9oOTQrZzBDM3gzNW1COVQ3NndXV" +
-            "009")]
+        [global::System.Configuration.DefaultSettingValueAttribute("NDE3OTAzQDMxMzgyZTM0MmUzMFZRYzhzemhydi9JendKcUQ3NVZIa256ZmMxRE1lMmxqTTJ6ZFZoWDg0Y" +
+            "jQ9")]
         public string SfLicence {
             get {
                 return ((string)(this["SfLicence"]));

@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
-    "@syncfusion/ej2": "^18.3.53",
+    "@syncfusion/ej2": "^18.4.30",
     "bootstrap": "^5.0.0-beta1"
   },
   "devDependencies": {
