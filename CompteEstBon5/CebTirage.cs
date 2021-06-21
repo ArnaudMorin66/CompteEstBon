@@ -81,7 +81,7 @@ namespace CompteEstBon {
 
 
         public ImmutableList<CebBase> Solutions =>
-            Status == CebStatus.CompteApproche || Status == CebStatus.CompteEstBon
+            Status is CebStatus.CompteApproche or CebStatus.CompteEstBon
                 ? _solutions.ToImmutableList()
                 : ImmutableList<CebBase>.Empty;
 
@@ -115,13 +115,9 @@ namespace CompteEstBon {
             return GetData();
         }
 
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public async Task<CebData> ClearAsync() {
-            return await Task.Run(Clear);
-        }
+        public async Task<CebData> ClearAsync() => await Task.Run(Clear);
 
         public CebData GetData() {
             return new() {
@@ -145,9 +141,7 @@ namespace CompteEstBon {
         /// </summary>
         /// <returns>
         /// </returns>
-        public bool IsSearchValid() {
-            return _search > 99 && _search < 1000;
-        }
+        public bool IsSearchValid() => _search > 99 && _search < 1000;
 
         /// <summary>
         ///     Select the value and the plaque's list
@@ -165,9 +159,7 @@ namespace CompteEstBon {
             return Clear();
         }
 
-        public async Task<CebData> RandomAsync() {
-            return await Task.Run(Random);
-        }
+        public async Task<CebData> RandomAsync() => await Task.Run(Random);
 
         /// <summary>
         ///     resolution
@@ -188,13 +180,10 @@ namespace CompteEstBon {
             return Status;
         }
 
-        public async Task<CebStatus> ResolveAsync() {
-            return await Task.Run(Resolve);
-        }
+        public async Task<CebStatus> ResolveAsync() => await Task.Run(Resolve);
 
-        public async Task<CebStatus> ResolveAsync(int search, params int[] plq) {
-            return await Task.Run(() => ResolveWithParam(search, plq));
-        }
+        public async Task<CebStatus> ResolveAsync(int search,
+                                                  params int[] plq) => await Task.Run(() => ResolveWithParam(search, plq));
 
         /// <summary>
         ///     resolution du compte
@@ -224,9 +213,7 @@ namespace CompteEstBon {
             Clear();
         }
 
-        public string Solution(int no = 0) {
-            return _solutions.Count == 0 || no < 0 || no >= _solutions.Count ? "" : _solutions[no].ToString();
-        }
+        public string Solution(int no = 0) => _solutions.Count == 0 || no < 0 || no >= _solutions.Count ? "" : _solutions[no].ToString();
 
         /// <summary>
         ///     Valid

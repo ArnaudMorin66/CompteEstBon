@@ -44,8 +44,6 @@ namespace CompteEstBon {
         // ReSharper disable once BaseObjectGetHashCodeCallInGetHashCode
         public override int GetHashCode() => base.GetHashCode();
 
-        protected CebBase() {
-            Operations = new List<string>();
-        }
+        protected CebBase() => Operations = new List<string>();
     }
 }

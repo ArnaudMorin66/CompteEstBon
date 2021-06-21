@@ -30,14 +30,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="19.1.0.58" />
-    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="19.1.0.58" />
-    <PackageReference Include="Syncfusion.SfInput.WPF" Version="19.1.0.58" />
-    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="19.1.0.58" />
-    <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="19.1.0.58" />
-    <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="19.1.0.58" />
-    <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="19.1.0.58" />
-    <PackageReference Include="Syncfusion.Themes.Office2019Black.WPF" Version="19.1.0.58" />
+    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="19.1.0.59" />
+    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="19.1.0.59" />
+    <PackageReference Include="Syncfusion.SfInput.WPF" Version="19.1.0.59" />
+    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="19.1.0.59" />
+    <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="19.1.0.59" />
+    <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="19.1.0.59" />
+    <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="19.1.0.59" />
+    <PackageReference Include="Syncfusion.Themes.Office2019Black.WPF" Version="19.1.0.59" />
   </ItemGroup>
 
   <ItemGroup>

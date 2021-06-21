@@ -29,15 +29,24 @@
             </ResourceDictionary.MergedDictionaries>
             <DataTemplate x:Key="ListeViewOperations">
                 <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
+                <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
                 <ListBox
                     HorizontalContentAlignment="Center"
                     Background="{DynamicResource CebBackgroundBrush}"
                     BorderBrush="Black"
                     BorderThickness="0,0,0,1"
                     Foreground="{DynamicResource CebForegroundBrush}"
-                    ItemsSource="{Binding Operations}"
+                    
                     KeyboardNavigation.DirectionalNavigation="Continue"
-                    PreviewMouseWheel="ListView_PreviewMouseWheel" />
+                    PreviewMouseWheel="ListView_PreviewMouseWheel">
+                    <ListBoxItem Content="{Binding Op1}"/>
+                    <ListBoxItem Content="{Binding Op2}"/>
+                    <ListBoxItem Content="{Binding Op3}"/>
+                    <ListBoxItem Content="{Binding Op4}"/>
+                    <ListBoxItem Content="{Binding Op5}"/>
+                    
+                </ListBox>
+
             </DataTemplate>
             <s:Boolean x:Key="True">true</s:Boolean>
             <vw:CebConverter x:Key="CebConverter" />
@@ -470,35 +479,35 @@
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Operations[0]}"
+                    Binding="{Binding Op1}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 1"
                     IsReadOnly="True"
                     Visibility="{Binding Vertical, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Operations[1]}"
+                    Binding="{Binding Op2}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 2"
                     IsReadOnly="True"
                     Visibility="{Binding Vertical, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Operations[2]}"
+                    Binding="{Binding Op3}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 3"
                     IsReadOnly="True"
                     Visibility="{Binding Vertical, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Operations[3]}"
+                    Binding="{Binding Op4}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 4"
                     IsReadOnly="True"
                     Visibility="{Binding Vertical, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Operations[4]}"
+                    Binding="{Binding Op5}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 5"
                     IsReadOnly="True"

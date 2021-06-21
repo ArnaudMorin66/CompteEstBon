@@ -1,31 +1,25 @@
-﻿using CompteEstBon;
-using System.CommandLine;
-using System.CommandLine.DragonFruit;
-using System;
+﻿using System;
 using System.Linq;
+using CompteEstBon;
 using static System.Console;
-using Microsoft.VisualBasic.FileIO;
 
 namespace CsCeb {
-   
-    internal class Program {
-        private static void Main(  int? search=null , int[] plaques = null, bool wait = false) {
+    /// <summary>
+    /// </summary>
+    public class Program {
+        static void Main(int? search = null, int[] plaques = null, bool wait = false) {
             var tirage = new CebTirage();
             tirage.Search = search ?? tirage.Search;
-          
-            if (plaques != null) {
-                tirage.SetPlaques(plaques);
-            }
-           
-       
+
+            if (plaques != null) tirage.SetPlaques(plaques);
+
+
             var (ts, result) = EvalTime(tirage.Resolve);
             WriteLine("** Le Compte est bon **");
             Write("Tirage:\t");
-            WriteLine($"Recherche: {result.Search}");
+            WriteLine($"Recherche: {tirage.Search}");
             Write("Plaques: ");
-            foreach (var plaque in result.Plaques) {
-                Write($"{plaque} ");
-            }
+            foreach (var plaque in tirage.Plaques) Write($"{plaque} ");
             WriteLine();
             WriteLine();
             WriteLine($"Durée du calcul: {ts.TotalMilliseconds / 1000}");
@@ -34,16 +28,15 @@ namespace CsCeb {
                 WriteLine("Tirage invalide");
             }
             else {
-                Write(result.Status == CebStatus.CompteEstBon
+                Write(result == CebStatus.CompteEstBon
                     ? "Compte est bon"
-                    : $"Compte approché: {result.Found} ");
+                    : $"Compte approché: {tirage.Found} ");
 
-                WriteLine($", nombre de solutions {result.Solutions.Count()}");
+                WriteLine($", nombre de solutions {tirage.Solutions.Count()}");
                 WriteLine();
-                foreach (var solution in result.Solutions) {
-                    WriteLine(solution.ToString());
-                }
+                foreach (var solution in tirage.Solutions) WriteLine(solution.ToString());
             }
+
             WriteLine();
             WriteLine("** fin calcul **");
             if (wait)

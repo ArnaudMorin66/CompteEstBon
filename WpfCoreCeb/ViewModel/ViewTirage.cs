@@ -34,7 +34,8 @@ namespace CompteEstBon.ViewModel {
         private int _search;
 
         public CebBase _solution;
-        private IEnumerable<CebBase> _solutions;
+        //private IEnumerable<CebBase> _solutions;
+        private IEnumerable<CebDetail> _solutions;
         private string _theme = "Dark";
         private string _titre = "Le compte est bon";
         private bool _vertical;
@@ -142,7 +143,7 @@ namespace CompteEstBon.ViewModel {
             }
         }
 
-        public IEnumerable<CebBase> Solutions {
+        public IEnumerable<CebDetail> Solutions {
             get => _solutions;
             set {
                 _solutions = value;
@@ -364,7 +365,8 @@ namespace CompteEstBon.ViewModel {
             UpdateColors();
 
             Solution = Tirage.Solutions[0];
-            Solutions = Tirage.Solutions;
+            // Solutions = Tirage.Solutions;
+            Solutions = Tirage.Solutions.Select(p => CebDetail.FromCebBase(p));
             IsBusy = false;
             ShowNotify();
             // ReSharper disable once ExplicitCallerInfoArgument

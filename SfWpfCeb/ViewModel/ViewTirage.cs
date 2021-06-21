@@ -157,7 +157,7 @@ namespace CompteEstBon {
 
 
         public bool IsComputed {
-            get => Tirage.Status == CebStatus.CompteEstBon || Tirage.Status == CebStatus.CompteApproche;
+            get => Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche;
             // ReSharper disable once ValueParameterNotUsed
             set => RaisePropertyChanged(nameof(IsComputed));
         }
