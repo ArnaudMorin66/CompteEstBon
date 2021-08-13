@@ -92,14 +92,8 @@
         <KeyBinding
             Key="X"
             Command="{Binding}"
-            CommandParameter="xlsx"
-            CommandTarget="{Binding ElementName=btnExcel}"
-            Modifiers="Ctrl" />
-        <KeyBinding
-            Key="W"
-            Command="{Binding}"
-            CommandParameter="docx"
-            CommandTarget="{Binding ElementName=btnWord}"
+            CommandParameter="export"
+            CommandTarget="{Binding ElementName=btnExport}"
             Modifiers="Ctrl" />
     </s:ChromelessWindow.InputBindings>
     <Grid>
@@ -255,44 +249,23 @@
                     Text="Tirage" />
             </StackPanel>
         </Button>
-        <Grid
-            Grid.Row="1"
-            Grid.Column="9"
-            Background="Transparent">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Button
-                x:Name="btnExcel"
-                Grid.Column="0"
+        <Button
+                x:Name="btnExport"
+                Grid.Row="1"
+                Grid.Column="9"
+                Grid.ColumnSpan="2"
                 Command="{Binding}"
-                CommandParameter="xlsx"
+                CommandParameter="export"
                 IsTabStop="True"
                 TabIndex="9"
                 ToolTipService.ToolTip="Export Excel (Ctrl+X)">
-                <Image
+            <Image
                     Width="16"
                     Height="16"
                     HorizontalAlignment="Left"
                     Source="images/excel.png" />
 
-            </Button>
-            <Button
-                x:Name="btnWord"
-                Grid.Column="1"
-                Command="{Binding}"
-                CommandParameter="docx"
-                IsTabStop="True"
-                TabIndex="9"
-                ToolTipService.ToolTip="Export Word (Ctrl+W)">
-                <Image
-                    Width="16"
-                    Height="16"
-                    HorizontalAlignment="Left"
-                    Source="images/word.png" />
-            </Button>
-        </Grid>
+        </Button>
         <s:SfDataGrid
             x:Name="SolutionsData"
             Grid.Row="2"

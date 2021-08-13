@@ -13,23 +13,34 @@
                 TValue="CebBase">
     </GridEvents>
     <GridSelectionSettings Mode="SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
-    @if (TypeGrille == CebTypeGrille.Grille) {
+    @if (TypeGrille == CebTypeGrille.Grille)
+    {
         <GridColumns>
-            @for (var i = 0; i < 5; i++) {
+          
+            @for (var i = 0; i < 5; i++)
+            {
                 var j = i;
                 <GridColumn>
-                    <Template Context="data">
-                        @GetColonne(data, j)
+                    <Template>
+                        @{
+                            var op = (context as CebBase).Operations;
+                            if (j < op.Count) {
+                                @op[j]
+                            }
+                        }
+
                     </Template>
                 </GridColumn>
             }
         </GridColumns>
     }
-    else {
+    else
+    {
         <GridColumns>
             <GridColumn TextAlign="TextAlign.Center">
                 <Template Context="data">
-                    @foreach (var op in ((CebBase) data).Operations) {
+                    @foreach (var op in ((CebBase)data).Operations)
+                    {
                         <div>@op</div>
                     }
                 </Template>
@@ -46,10 +57,13 @@
     private CebTypeGrille _typegrille;
 
     [Parameter]
-    public CebTypeGrille TypeGrille {
+    public CebTypeGrille TypeGrille
+    {
         get => _typegrille;
-        set {
-            if (_typegrille != value) {
+        set
+        {
+            if (_typegrille != value)
+            {
                 _typegrille = value;
                 gdetails.Refresh();
                 InvokeAsync(StateHasChanged);
@@ -65,15 +79,18 @@
     public EventCallback<CebBase> ShowDetail { get; set; }
 
 
-    protected override async Task OnInitializedAsync() {
+    protected override async Task OnInitializedAsync()
+    {
         await base.OnInitializedAsync();
     }
 
-    private async Task ShowAsync(RecordClickEventArgs<CebBase> ligne) {
+    private async Task ShowAsync(RecordClickEventArgs<CebBase> ligne)
+    {
         await ShowDetail.InvokeAsync(ligne.RowData);
     }
 
-    public string GetColonne(object o, int i) {
+    public string GetColonne(object o, int i)
+    {
         return i >= (o as CebBase)?.Operations.Count ? "" : (o as CebBase)?.Operations[i];
     }
 

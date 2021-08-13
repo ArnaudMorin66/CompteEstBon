@@ -20,10 +20,10 @@ using System.Windows.Threading;
 // ReSharper disable once CheckNamespace
 namespace CompteEstBon {
 
-    public class ViewTirage : NotificationObject ,  ICommand {
+    public class ViewTirage : NotificationObject, ICommand {
         private readonly Stopwatch NotifyWatch = new();
         private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(Properties.Settings.Default.SolutionTimer);
-        
+
         private TimeSpan _duree;
 
         private Color _foreground = Colors.White;
@@ -46,7 +46,7 @@ namespace CompteEstBon {
         public ViewTirage() {
 
             stopwatch = Tirage.Watch; // new Stopwatch();
-            
+
 
             dateDispatcher = new DispatcherTimer {
                 Interval = TimeSpan.FromMilliseconds(Properties.Settings.Default.SolutionTimer)
@@ -201,7 +201,7 @@ namespace CompteEstBon {
         public bool CanExecute(object parameter) => true;
 
         public async void Execute(object parameter) {
-            var cmd = (parameter as string)?.ToLower(); 
+            var cmd = (parameter as string)?.ToLower();
             switch (cmd) {
                 case "random":
                     await RandomAsync();
@@ -222,18 +222,17 @@ namespace CompteEstBon {
                             break;
                     }
                     break;
-                case "xlsx":
-                case "docx":
+                case "export":
                     if (Count != 0) {
-                        await ExportAsync(cmd);
+                        await ExportAsync();
                     }
                     break;
             }
         }
 
-        private async Task ExportAsync(string fmt) {
+        private async Task ExportAsync() {
             IsBusy = true;
-            await Task.Run(() => ExportFichier(fmt)); 
+            await Task.Run(() => ExportFichier());
             IsBusy = false;
         }
 
@@ -304,42 +303,37 @@ namespace CompteEstBon {
                 CebStatus.Erreur => $"🤬 Tirage incorrect",
                 _ => "Jeu du Compte Est Bon"
             };
-              
+
             Duree = Tirage.Watch.Elapsed;
             Solution = Tirage.Solutions[0];
             Solutions = Tirage.Solutions;
             UpdateForeground();
             IsBusy = false;
             RaisePropertyChanged(nameof(IsComputed));
-            
+
             ShowPopup();
             return Tirage.Status;
         }
 
         #endregion Action
-        public static (bool Ok, string Path) SaveFileName(string ext) {
+        public static (bool Ok, string Path) SaveFileName() {
             var dialog = new SaveFileDialog();
-            (dialog.Filter, dialog.Title) = ext switch
-            {
-                "xlsx" => ("Excel (*.xlsx)| *.xlsx", "Fichiers Excel"),
-                "docx" => ("Word (*.docx) | *.docx", "Fichiers Word"),
-                _ => ("Tous (*.*) | *.*", "Tous les fichiers")
-            };
+            (dialog.Filter, dialog.Title) = ("Excel (*.xlsx)| *.xlsx | Word (*.docx) | *.docx", "Export Excel-Word");
             // ReSharper disable once PossibleInvalidOperationException
-            return ((bool) dialog.ShowDialog(), dialog.FileName); 
+            return ((bool)dialog.ShowDialog(), dialog.FileName);
 
         }
-        
-        private void ExportFichier(string ext) {
-            var (Ok, Path) = SaveFileName(ext);
+
+        private void ExportFichier() {
+            var (Ok, Path) = SaveFileName();
             if (Ok) {
-                if (File.Exists(Path)) {
-                    File.Delete(Path);
-                }
-                Action<Stream> ExportFunction = ext switch
-                {
-                    "xlsx" => Tirage.ExportExcel,
-                    "docx" => Tirage.ExportWord,
+                FileInfo fi = new FileInfo(Path);
+                if (fi.Exists)
+                    fi.Delete();
+
+                Action<Stream> ExportFunction = fi.Extension switch {
+                    ".xlsx" => Tirage.ExportExcel,
+                    ".docx" => Tirage.ExportWord,
                     _ => throw new NotImplementedException(),
                 };
                 var stream = new FileStream(Path!, FileMode.CreateNew);
@@ -356,5 +350,5 @@ namespace CompteEstBon {
             FileName = nom
         });
     }
-    
+
 }

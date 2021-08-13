@@ -3,15 +3,15 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>CompteEstBon</RootNamespace>
-    <LangVersion>9.0</LangVersion>
+    <LangVersion>10.0</LangVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
 
    <ItemGroup>
-     <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="19.2.0.47" />
-     <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="19.2.0.47" />
+     <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="19.2.0.49" />
+     <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="19.2.0.49" />
    </ItemGroup>
 
 
