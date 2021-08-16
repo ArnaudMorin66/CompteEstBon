@@ -327,7 +327,7 @@ namespace CompteEstBon {
         private void ExportFichier() {
             var (Ok, Path) = SaveFileName();
             if (Ok) {
-                FileInfo fi = new FileInfo(Path);
+                FileInfo fi = new (Path);
                 if (fi.Exists)
                     fi.Delete();
 
@@ -336,7 +336,7 @@ namespace CompteEstBon {
                     ".docx" => Tirage.ExportWord,
                     _ => throw new NotImplementedException(),
                 };
-                var stream = new FileStream(Path!, FileMode.CreateNew);
+                FileStream stream = new (Path!, FileMode.CreateNew);
                 ExportFunction(stream);
                 stream.Flush();
                 stream.Close();

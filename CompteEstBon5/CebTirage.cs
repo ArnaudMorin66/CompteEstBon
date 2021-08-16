@@ -1,7 +1,6 @@
 #region using
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -9,7 +8,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using static System.Math;
 
 #endregion using
@@ -213,7 +211,7 @@ namespace CompteEstBon {
             Clear();
         }
 
-        public string Solution(int no = 0) => _solutions.Count == 0 || no < 0 || no >= _solutions.Count ? "" : _solutions[no].ToString();
+        public string Solution(int no = 0) => _solutions.Count == 0 || no < 0 || no >= _solutions.Count ? string.Empty : _solutions[no].ToString();
 
         /// <summary>
         ///     Valid
@@ -254,7 +252,7 @@ namespace CompteEstBon {
                                 new CebOperation(p1, operation, p2))
                             .Where(o => o.Value != 0))
                         Resolve(
-                            liste.Where((_, k) => k != i1 && k != i2).Concat(new[] {oper})
+                            liste.Where((_, k) => k != i1 && k != i2).Concat(new[] { oper })
                         );
                 }
             }

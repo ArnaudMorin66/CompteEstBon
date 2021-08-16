@@ -10,7 +10,7 @@ namespace CompteEstBon {
     /// </summary>
     [Guid("59276C20-8670-47FB-BA13-44A1450CB9BF")]
    
-    public sealed class CebOperation : CebBase {
+    public sealed class  CebOperation : CebBase {
         public static readonly char[] AllOperations = { 'x', '+', '-', '/' };
         public CebOperation() {
             Value = 0;

@@ -1,5 +1,6 @@
 ﻿<Window
     x:Class="CompteEstBon.MainWindow"
+    x:Name="CebWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:compteEstBon="clr-namespace:CompteEstBon;assembly=CompteEstBon"
@@ -7,20 +8,19 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:s="clr-namespace:System;assembly=System.Runtime"
     xmlns:vw="clr-namespace:CompteEstBon.ViewModel"
-    x:Name="CebWindow"
-    d:DesignHeight="340.99"
-    d:DesignWidth="676.677"
+    mc:Ignorable="d"
     AllowsTransparency="True"
     BorderBrush="{DynamicResource CebForegroundBrush}"
     BorderThickness="0.2"
+    d:DesignHeight="340.99"
+    d:DesignWidth="676.677"
     FontSize="11"
     Icon="favicon.ico"
     MouseLeftButtonDown="Window_MouseLeftButtonDown"
     OverridesDefaultStyle="False"
     ResizeMode="CanResize"
     WindowStartupLocation="CenterScreen"
-    WindowStyle="None"
-    mc:Ignorable="d">
+    WindowStyle="None">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -36,15 +36,14 @@
                     BorderBrush="Black"
                     BorderThickness="0,0,0,1"
                     Foreground="{DynamicResource CebForegroundBrush}"
-                    
                     KeyboardNavigation.DirectionalNavigation="Continue"
                     PreviewMouseWheel="ListView_PreviewMouseWheel">
-                    <ListBoxItem Content="{Binding Op1}"/>
-                    <ListBoxItem Content="{Binding Op2}"/>
-                    <ListBoxItem Content="{Binding Op3}"/>
-                    <ListBoxItem Content="{Binding Op4}"/>
-                    <ListBoxItem Content="{Binding Op5}"/>
-                    
+                    <ListBoxItem Content="{Binding Op1}" />
+                    <ListBoxItem Content="{Binding Op2}" />
+                    <ListBoxItem Content="{Binding Op3}" />
+                    <ListBoxItem Content="{Binding Op4}" />
+                    <ListBoxItem Content="{Binding Op5}" />
+
                 </ListBox>
 
             </DataTemplate>
@@ -77,19 +76,11 @@
                         IsEnabled="{Binding IsBusy, Converter={StaticResource CebConverter}, ConverterParameter={StaticResource True}}" />
                     <ThumbButtonInfo
                         Command="{Binding}"
-                        CommandParameter="xlsx"
-                        CommandTarget="{Binding ElementName=btnExcel}"
-                        Description="Exportation vers Excel"
+                        CommandParameter="export"
+                        CommandTarget="{Binding ElementName=btnExport}"
+                        Description="Exportation Word/Excel"
                         DismissWhenClicked="True"
                         ImageSource="Images/excel.png"
-                        IsEnabled="{Binding Status, Converter={StaticResource CebConverter}}" />
-                    <ThumbButtonInfo
-                        Command="{Binding}"
-                        CommandParameter="Word"
-                        CommandTarget="{Binding ElementName=btnWord}"
-                        Description="Exportation vers Word"
-                        DismissWhenClicked="True"
-                        ImageSource="Images/word.png"
                         IsEnabled="{Binding Status, Converter={StaticResource CebConverter}}" />
                 </ThumbButtonInfoCollection>
             </TaskbarItemInfo.ThumbButtonInfos>
@@ -114,15 +105,10 @@
         <KeyBinding
             Key="X"
             Command="{Binding}"
-            CommandParameter="xlsx"
-            CommandTarget="{Binding ElementName=btnExcel}"
+            CommandParameter="export"
+            CommandTarget="{Binding ElementName=btnExport}"
             Modifiers="Ctrl" />
-        <KeyBinding
-            Key="W"
-            Command="{Binding}"
-            CommandParameter="docx"
-            CommandTarget="{Binding ElementName=btnWord}"
-            Modifiers="Ctrl" />
+        
     </Window.InputBindings>
     <Grid Background="{DynamicResource CebBackgroundBrush}">
         <Grid.RowDefinitions>
@@ -169,11 +155,11 @@
                 Grid.Column="0"
                 Width="20"
                 Height="20"
-                Padding="2"
                 Click="BtnMenu_Click"
                 Cursor="Hand"
                 IsTabStop="False"
                 MouseRightButtonDown="TextBlock_MouseRightButtonUp"
+                Padding="2"
                 Template="{DynamicResource CebButtonTemplate}">
                 <Button.Content>
                     <Image
@@ -243,8 +229,8 @@
             Grid.Column="0"
             Grid.ColumnSpan="7"
             Margin="0"
-            Padding="0"
-            BorderThickness="0">
+            BorderThickness="0"
+            Padding="0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
@@ -368,10 +354,10 @@
                     OpacityMask="{DynamicResource CebForegroundBrush}"
                     Source="images/resolve.png" />
                 <TextBlock
-                    Padding="4"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     Foreground="White"
+                    Padding="4"
                     Text="Résoudre" />
             </StackPanel>
         </Button>
@@ -397,25 +383,26 @@
                     HorizontalAlignment="Left"
                     Source="images/random.png" />
                 <TextBlock
-                    Padding="4"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
+                    Padding="4"
                     Text="Tirage" />
             </StackPanel>
         </Button>
         <Button
-            x:Name="btnExcel"
+            x:Name="btnExport"
             Grid.Row="2"
             Grid.Column="10"
+            Grid.ColumnSpan="2"
             Background="{DynamicResource CebBackgroundBrush}"
             BorderThickness="0"
             Command="{Binding}"
-            CommandParameter="xlsx"
+            CommandParameter="export"
             IsEnabled="{Binding Status, Converter={StaticResource CebConverter}}"
             IsTabStop="True"
             TabIndex="10"
             Template="{DynamicResource CebButtonTemplate}"
-            ToolTipService.ToolTip="Exportation vers Excel">
+            ToolTipService.ToolTip="Exportation vers Word ou Excel">
             <StackPanel Orientation="Horizontal">
                 <Image
                     Width="16"
@@ -426,35 +413,11 @@
                     Source="images/excel.png" />
             </StackPanel>
         </Button>
-        <Button
-            x:Name="btnWord"
-            Grid.Row="2"
-            Grid.Column="11"
-            Background="{DynamicResource CebBackgroundBrush}"
-            BorderThickness="0"
-            Command="{Binding}"
-            CommandParameter="docx"
-            IsEnabled="{Binding Status, Converter={StaticResource CebConverter}}"
-            IsTabStop="True"
-            TabIndex="9"
-            Template="{DynamicResource CebButtonTemplate}"
-            ToolTipService.ToolTip="Exportation vers Word">
-            <StackPanel Orientation="Horizontal">
-                <Image
-                    Width="16"
-                    Height="16"
-                    HorizontalAlignment="Left"
-                    Opacity="50"
-                    OpacityMask="{DynamicResource CebForegroundBrush}"
-                    Source="images/word.png" />
-            </StackPanel>
-        </Button>
         <DataGrid
             x:Name="SolutionsData"
             Grid.Row="3"
             Grid.Column="0"
             Grid.ColumnSpan="12"
-            x:FieldModifier="public"
             AlternationCount="1"
             AutoGenerateColumns="False"
             Background="{DynamicResource CebBackgroundBrush}"
@@ -475,7 +438,8 @@
             ItemsSource="{Binding Solutions}"
             RowStyle="{StaticResource DataGridRowStyle}"
             SelectionChanged="SolutionsData_SelectionChanged"
-            TabIndex="10">
+            TabIndex="10"
+            x:FieldModifier="public">
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="*"

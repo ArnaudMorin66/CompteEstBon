@@ -1,5 +1,6 @@
 ﻿#region
 
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,7 +13,6 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Microsoft.Win32;
 
 #endregion
 
@@ -60,7 +60,7 @@ namespace CompteEstBon.ViewModel {
                 if (Popup && NotifyWatch.Elapsed > SolutionTimer)
                     Popup = false;
                 Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
-                
+
                 // Titre = $"😊 Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
             Plaques.CollectionChanged += (_, e) => {
@@ -88,9 +88,9 @@ namespace CompteEstBon.ViewModel {
             ["DarkBlue"] = Colors.DarkBlue,
             ["DarkSlateGray"] = Colors.DarkSlateGray,
             ["Green"] = Colors.Green,
-            ["Red"]=Colors.Red,
-            ["Yellow"]=Colors.Yellow,
-            ["Navy"]=Colors.Navy
+            ["Red"] = Colors.Red,
+            ["Yellow"] = Colors.Yellow,
+            ["Navy"] = Colors.Navy
         };
 
         public string Theme {
@@ -233,32 +233,31 @@ namespace CompteEstBon.ViewModel {
             try {
                 var cmd = (parameter as string)?.ToLower();
                 switch (cmd) {
-                case "random":
-                    await RandomAsync();
-                    break;
-                case "resolve": {
-                        switch (Tirage.Status) {
-                        case CebStatus.Valid:
-                            if (IsBusy) return;
-                            await ResolveAsync();
-                            break;
+                    case "random":
+                        await RandomAsync();
+                        break;
+                    case "resolve": {
+                            switch (Tirage.Status) {
+                                case CebStatus.Valid:
+                                    if (IsBusy) return;
+                                    await ResolveAsync();
+                                    break;
 
-                        case CebStatus.CompteEstBon:
-                        case CebStatus.CompteApproche:
-                            await ClearAsync();
-                            break;
+                                case CebStatus.CompteEstBon:
+                                case CebStatus.CompteApproche:
+                                    await ClearAsync();
+                                    break;
 
-                        case CebStatus.Erreur:
-                            await RandomAsync();
+                                case CebStatus.Erreur:
+                                    await RandomAsync();
+                                    break;
+                            }
+
                             break;
                         }
-
+                    case "export":
+                        await ExportAsync();
                         break;
-                    }
-                case "xlsx":
-                case "docx":
-                    await ExportAsync(cmd);
-                    break;
                 }
             }
 #pragma warning disable CA1031 // Do not catch general exception types
@@ -267,13 +266,16 @@ namespace CompteEstBon.ViewModel {
             }
 #pragma warning restore CA1031 // Do not catch general exception types
         }
-
+        private async Task ExportAsync() {
+            IsBusy = true;
+            await Task.Run(() => ExportFichier());
+            IsBusy = false;
+        }
         public event PropertyChangedEventHandler PropertyChanged;
 
 
         private void UpdateColors() {
-            Foreground = Tirage.Status switch
-            {
+            Foreground = Tirage.Status switch {
                 CebStatus.Valid => Colors.White,
                 CebStatus.Erreur => Colors.Red,
                 CebStatus.CompteEstBon => Colors.YellowGreen,
@@ -353,8 +355,7 @@ namespace CompteEstBon.ViewModel {
 
             stopwatch.Start();
             await Tirage.ResolveAsync();
-            Result = Tirage.Status switch
-            {
+            Result = Tirage.Status switch {
                 CebStatus.CompteEstBon => "😊 Compte est bon",
                 CebStatus.CompteApproche => $"😢 Compte approché: {Tirage.Found}, écart: {Tirage.Diff}",
                 CebStatus.Erreur => "Tirage incorrect",
@@ -373,33 +374,33 @@ namespace CompteEstBon.ViewModel {
             NotifiedChanged(nameof(Status));
         }
 
-        public static (bool select, string name) FileSaveName(string ty) {
+        public static (bool select, string name) FileSaveName() {
             var dialog = new SaveFileDialog();
-            (dialog.Filter, dialog.Title) = ty switch
-            {
-                "xlsx" => ("Excel (*.xlsx)| *.xlsx", "Fichiers Excel"),
-                "docx" => ("Word (*.docx) | *.docx", "Fichiers Word"),
-                _ => throw new NotImplementedException()
-            };
+            dialog.DefaultExt = ".xlsx";
+            (dialog.Filter, dialog.Title) = ("Document Excel|*.xlsx|Document Word|*.docx", "Export Excel-Word");
             dialog.InitialDirectory = Environment.SpecialFolder.UserProfile + "\\Downloads";
             // ReSharper disable once PossibleInvalidOperationException
             return (bool)dialog.ShowDialog() ? (true, dialog.FileName) : (false, null);
         }
 
-        public async Task ExportAsync(string ty) {
-            var (select, name) = FileSaveName(ty);
-            if (!select) return;
-            Action<Stream> export = ty switch
-            {
-                "xlsx" => Tirage.ExportExcel,
-                "docx" => Tirage.ExportWord,
-                _ => throw new NotImplementedException()
-            };
-            using var stream = new FileStream(name, FileMode.Create);
-            export(stream);
-            await stream.FlushAsync();
-            await stream.DisposeAsync();
-            OpenDocument(name);
+        public void ExportFichier() {
+            var (Ok, Path) = FileSaveName();
+            if (Ok) {
+                FileInfo fi = new(Path);
+                if (fi.Exists)
+                    fi.Delete();
+
+                Action<Stream> ExportFunction = fi.Extension switch {
+                    ".xlsx" => Tirage.ExportExcel,
+                    ".docx" => Tirage.ExportWord,
+                    _ => throw new NotImplementedException(),
+                };
+                var stream = new FileStream(Path!, FileMode.CreateNew);
+                ExportFunction(stream);
+                stream.Flush();
+                stream.Close();
+                OpenDocument(Path);
+            }
         }
 
         public static void OpenDocument(string nom) {

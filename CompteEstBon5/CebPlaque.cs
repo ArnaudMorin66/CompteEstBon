@@ -1,6 +1,5 @@
 // Plage Compte est bon
 
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -18,11 +17,11 @@ namespace CompteEstBon {
         };
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2211:Les champs non constants ne doivent pas être visibles", Justification = "<En attente>")]
         public static IEnumerable<int> AnyPlaques = new SortedSet<int>(AllPlaques);
-      
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public CebPlaque(int value, PropertyChangedEventHandler /* EventHandler<int>*/ handler = null) {
-            
+
             Value = value;
             Operations.Add(value.ToString());
             if (handler != null)

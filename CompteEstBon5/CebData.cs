@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace CompteEstBon {
+﻿namespace CompteEstBon {
 
 #pragma warning disable CA1815 // Override equals and operator equals on value types
 
