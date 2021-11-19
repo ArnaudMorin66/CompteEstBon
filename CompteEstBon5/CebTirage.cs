@@ -1,10 +1,8 @@
 #region using
 
-using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
@@ -110,23 +108,21 @@ namespace CompteEstBon {
             Found.Reset();
             Valid();
             NotifyPropertyChanged();
-            return GetData();
+            return Data;
         }
 
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public async Task<CebData> ClearAsync() => await Task.Run(Clear);
 
-        public CebData GetData() {
-            return new() {
-                Search = Search,
-                Plaques = Plaques.Select(p => p.Value).ToArray(),
-                Status = Status,
-                Diff = Diff,
-                Solutions = Solutions,
-                Found = Found.ToString()
-            };
-        }
+        public CebData Data => new() {
+            Search = Search,
+            Plaques = Plaques.Select(p => p.Value).ToArray(),
+            Status = Status,
+            Diff = Diff,
+            Solutions = Solutions.Select(p => p.ToString()).ToArray(),
+            Found = Found.ToString()
+        };
 
         public bool IsPlaquesValid() {
             return Plaques.All(p => p.IsValid
@@ -166,6 +162,7 @@ namespace CompteEstBon {
         /// </returns>
         public CebStatus Resolve() {
             _solutions.Clear();
+            if (Status == CebStatus.Invalide) return Status;
             Watch.Reset();
             Watch.Start();
             Status = CebStatus.EnCours;
@@ -207,6 +204,7 @@ namespace CompteEstBon {
 
         public void SetPlaques(params int[] plaq) {
             Status = CebStatus.EnCours;
+            Plaques.ForEach(p => p.Value = 0); 
             foreach (var (p, i) in plaq.WithIndex().Where(elt => elt.Item2 < 6)) Plaques[i].Value = p;
             Clear();
         }
@@ -217,7 +215,7 @@ namespace CompteEstBon {
         ///     Valid
         /// </summary>
         public CebStatus Valid() {
-            Status = IsSearchValid() && IsPlaquesValid() ? CebStatus.Valid : CebStatus.Erreur;
+            Status = IsSearchValid() && IsPlaquesValid() ? CebStatus.Valide : CebStatus.Invalide;
             return Status;
         }
 

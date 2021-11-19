@@ -1,38 +1,45 @@
 // Programme Blazor CompteEstBon
 using CompteEstBon;
 using Syncfusion.Blazor;
+using Syncfusion.Licensing;
 
 var builder = WebApplication.CreateBuilder(args);
+var svc = builder.Services;
 
 // Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
-builder.Services.AddScoped<CebTirage>();
-builder.Services.AddSyncfusionBlazor();
+svc.AddRazorPages();
+svc.AddServerSideBlazor();
+var mdb = bool.Parse(builder.Configuration["mongodb:actif"]);
+var svr = builder.Configuration["mongodb:server"];
+svc.AddSingleton<CebSetting>(new CebSetting {
+    MongoDb = bool.Parse( builder.Configuration["mongodb:actif"]),
+    MongoDbConnectionString = builder.Configuration["mongodb:server"]
+});
+svc.AddScoped<CebTirage>();
+svc.AddSyncfusionBlazor();
+SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["syncfusion:license"]);
 
-var cnf = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(cnf.GetSection("syncfusion").GetValue<string>("license"));
+
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment()) {
+if(app.Environment.IsDevelopment()) {
     app.UseDeveloperExceptionPage();
-}
-else {
+} else {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
-
 app.UseRouting();
-
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
-app.Run();
+await app.RunAsync();
+
+public class CebSetting {
+    public bool MongoDb { get; set; }
+    public string? MongoDbConnectionString { get; set; }
+}

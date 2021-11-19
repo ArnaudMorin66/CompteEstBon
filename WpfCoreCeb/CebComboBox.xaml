@@ -21,7 +21,6 @@
         </Setter>
     </Style>
     <SolidColorBrush x:Key="ComboBox.Static.Border" Color="#FFACACAC" />
-    <SolidColorBrush x:Key="ComboBox.Static.Editable.Background" Color="{StaticResource CebBackgroundBrush}" />
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Border" Color="#FFABADB3" />
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Background" Color="Transparent" />
     <SolidColorBrush x:Key="ComboBox.Static.Editable.Button.Border" Color="Black" />
@@ -296,7 +295,6 @@
         <Setter Property="IsTabStop" Value="True" />
         <Setter Property="MaxDropDownHeight" Value="150" />
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
-        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
         <Setter Property="BorderBrush" Value="{StaticResource ComboBox.Static.Border}" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="BorderThickness" Value="0" />

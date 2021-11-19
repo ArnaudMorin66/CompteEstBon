@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Platforms>AnyCPU;x64</Platforms>
+    <ImplicitUsings>True</ImplicitUsings>
     <AssemblyName>CompteEstBon</AssemblyName>
     <RootNamespace>CompteEstBon</RootNamespace>
     <LangVersion>10.0</LangVersion>

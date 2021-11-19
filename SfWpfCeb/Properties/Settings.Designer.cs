@@ -12,7 +12,7 @@ namespace CompteEstBon.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.0.1.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.1.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -37,14 +37,38 @@ namespace CompteEstBon.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("NDc0Nzg4QDMxMzkyZTMyMmUzMEZoN05lM08vbC9uNXQvd0RCNWRvcStaT0JBeGp1MGZCL2tnc3BEYndOT" +
-            "0E9")]
+        [global::System.Configuration.DefaultSettingValueAttribute("NTEwOTA3QDMxMzkyZTMzMmUzMEUzOUg4NlE0WUFIc2d1cFRqMVNBRmpObFNGQ0hPNWlJQ0VlRXEreUdqa" +
+            "UU9")]
         public string SfLicence {
             get {
                 return ((string)(this["SfLicence"]));
             }
             set {
                 this["SfLicence"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MongoDB {
+            get {
+                return ((bool)(this["MongoDB"]));
+            }
+            set {
+                this["MongoDB"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("mongodb://127.0.0.1:27017")]
+        public string MongoServer {
+            get {
+                return ((string)(this["MongoServer"]));
+            }
+            set {
+                this["MongoServer"] = value;
             }
         }
     }

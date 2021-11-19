@@ -1,0 +1,36 @@
+{
+  "profiles": {
+    "CsCeb": {
+      "commandName": "Project"
+    },
+    "WSL": {
+      "commandName": "WSL2",
+      "environmentVariables": {},
+      "distributionName": ""
+    },
+    "help": {
+      "commandName": "Project",
+      "commandLineArgs": "-trempk"
+    },
+    "version": {
+      "commandName": "Project",
+      "commandLineArgs": "--version"
+    },
+    "JSon": {
+      "commandName": "Project",
+      "commandLineArgs": "--json"
+    },
+    "File": {
+      "commandName": "Project",
+      "commandLineArgs": "-f \"C:\\Users\\arnaud\\Downloads\\ceb.json\""
+    },
+    "Zip": {
+      "commandName": "Project",
+      "commandLineArgs": "-f \"C:\\Users\\arnaud\\Downloads\\compeestbon.zip\""
+    },
+    "Save": {
+      "commandName": "Project",
+      "commandLineArgs": "-S"
+    }
+  }
+}

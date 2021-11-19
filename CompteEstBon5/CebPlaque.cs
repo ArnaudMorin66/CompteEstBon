@@ -8,7 +8,6 @@ using System.Text.Json.Serialization;
 
 namespace CompteEstBon {
 
-    [System.Runtime.InteropServices.Guid("A21F3DEC-8531-4F59-AF11-863BEF5ED340")]
     public sealed class CebPlaque : CebBase, INotifyPropertyChanged {
 
         public static readonly int[] AllPlaques = {

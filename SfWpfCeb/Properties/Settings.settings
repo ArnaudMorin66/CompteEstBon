@@ -6,7 +6,13 @@
       <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="SfLicence" Type="System.String" Scope="User">
-      <Value Profile="(Default)">NDc0Nzg4QDMxMzkyZTMyMmUzMEZoN05lM08vbC9uNXQvd0RCNWRvcStaT0JBeGp1MGZCL2tnc3BEYndOT0E9</Value>
+      <Value Profile="(Default)">NTEwOTA3QDMxMzkyZTMzMmUzMEUzOUg4NlE0WUFIc2d1cFRqMVNBRmpObFNGQ0hPNWlJQ0VlRXEreUdqaUU9</Value>
+    </Setting>
+    <Setting Name="MongoDB" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="MongoServer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">mongodb://127.0.0.1:27017</Value>
     </Setting>
   </Settings>
 </SettingsFile>

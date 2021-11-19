@@ -5,6 +5,10 @@
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>CsCeb</RootNamespace>
     <SignAssembly>false</SignAssembly>
+    <LangVersion>10.0</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>ceb</AssemblyName>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -17,18 +21,117 @@
     <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.CommandLine.DragonFruit" Version="0.3.0-alpha.21216.1" />
-  </ItemGroup>
-
 
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0-rc.2.21480.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0-rc.2.21480.5" />
+    <PackageReference Include="MongoDB.Bson" Version="2.14.0-beta1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.14.0-beta1" />
+    <PackageReference Include="MongoDB.Driver.Core" Version="2.14.0-beta1" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.21308.1" />
+    <PackageReference Include="System.CommandLine.Rendering" Version="0.3.0-alpha.21216.1" />
   </ItemGroup>
 
 
   <ItemGroup>
     <ProjectReference Include="..\CompteEstBon5\CompteEstBon5.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="config.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+
+  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+
+  <ItemGroup>
+    <Content Remove="C:\Users\arnaud\.nuget\packages\mongodb.driver.core\2.14.0-beta1\build\..\runtimes\osx\native\libsnappy64.dylib" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Remove="C:\Users\arnaud\.nuget\packages\mongodb.driver.core\2.14.0-beta1\build\..\runtimes\osx\native\libsnappy64.dylib" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Remove="C:\Users\arnaud\.nuget\packages\mongodb.driver.core\2.14.0-beta1\build\..\runtimes\linux\native\libsnappy64.so" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Remove="C:\Users\arnaud\.nuget\packages\mongodb.driver.core\2.14.0-beta1\build\..\runtimes\linux\native\libsnappy64.so" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Remove="C:\Users\arnaud\.nuget\packages\mongodb.driver.core\2.14.0-beta1\build\..\runtimes\win\native\libzstd.dll" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Remove="C:\Users\arnaud\.nuget\packages\mongodb.driver.core\2.14.0-beta1\build\..\runtimes\win\native\libzstd.dll" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Remove="C:\Users\arnaud\.nuget\packages\mongodb.driver.core\2.14.0-beta1\build\..\runtimes\osx\native\libzstd.dylib" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Remove="C:\Users\arnaud\.nuget\packages\mongodb.driver.core\2.14.0-beta1\build\..\runtimes\osx\native\libzstd.dylib" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Remove="C:\Users\arnaud\.nuget\packages\mongodb.driver.core\2.14.0-beta1\build\..\runtimes\linux\native\libzstd.so" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Remove="C:\Users\arnaud\.nuget\packages\mongodb.driver.core\2.14.0-beta1\build\..\runtimes\linux\native\libzstd.so" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Remove="C:\Users\arnaud\.nuget\packages\mongodb.driver.core\2.14.0-beta1\build\..\runtimes\win\native\snappy32.dll" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Remove="C:\Users\arnaud\.nuget\packages\mongodb.driver.core\2.14.0-beta1\build\..\runtimes\win\native\snappy32.dll" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Remove="C:\Users\arnaud\.nuget\packages\mongodb.driver.core\2.14.0-beta1\build\..\runtimes\win\native\snappy64.dll" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Content Remove="C:\Users\arnaud\.nuget\packages\mongodb.driver.core\2.14.0-beta1\build\..\runtimes\win\native\snappy64.dll" />
   </ItemGroup>
 
 </Project>

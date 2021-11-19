@@ -1,0 +1,101 @@
+﻿@using Syncfusion.Blazor.Grids
+@using SelectionMode = Syncfusion.Blazor.Grids.SelectionMode
+@using CompteEstBon
+<SfGrid @ref="gdetails" DataSource="@Details"
+        GridLines="GridLine.None"
+        Height="400"
+        AllowSelection="true"
+        AllowExcelExport="true"
+        AllowResizing="true"
+        EnableAltRow="true"
+        TValue="CebBase"
+        ID="solutions">
+    <GridEvents OnRecordClick="ShowAsync"
+                TValue="CebBase">
+    </GridEvents>
+    <GridSelectionSettings Mode="SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
+    @if (TypeGrille == CebTypeGrille.Grille)
+    {
+        <GridColumns>
+          
+            @for (var i = 0; i < 5; i++)
+            {
+                var j = i;
+                <GridColumn>
+                    <Template>
+                        @{
+                            @if (context is CebBase bs) {
+
+                                var op = bs.Operations;
+                                if (j < op.Count) {
+                                    @op[j]
+                                }
+                            }
+                        }
+
+                    </Template>
+                </GridColumn>
+            }
+        </GridColumns>
+    }
+    else
+    {
+        <GridColumns>
+            <GridColumn TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    @foreach (var op in ((CebBase)data).Operations)
+                    {
+                        <div>@op</div>
+                    }
+                </Template>
+            </GridColumn>
+
+        </GridColumns>
+    }
+
+</SfGrid>
+
+@code {
+    SfGrid<CebBase> gdetails { get; set; }
+
+    private CebTypeGrille _typegrille;
+
+    [Parameter]
+    public CebTypeGrille TypeGrille
+    {
+        get => _typegrille;
+        set
+        {
+            if (_typegrille != value)
+            {
+                _typegrille = value;
+                gdetails.Refresh();
+                InvokeAsync(StateHasChanged);
+            }
+        }
+    }
+
+
+    [Parameter]
+    public IEnumerable<CebBase> Details { get; set; }
+
+    [Parameter]
+    public EventCallback<CebBase> ShowDetail { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    private async Task ShowAsync(RecordClickEventArgs<CebBase> ligne)
+    {
+        await ShowDetail.InvokeAsync(ligne.RowData);
+    }
+
+    public string GetColonne(object o, int i)
+    {
+        return i >= (o as CebBase)?.Operations.Count ? "" : (o as CebBase)?.Operations[i];
+    }
+
+}

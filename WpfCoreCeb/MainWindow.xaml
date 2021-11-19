@@ -28,8 +28,6 @@
                 <ResourceDictionary Source="/CebComboBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <DataTemplate x:Key="ListeViewOperations">
-                <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
-                <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
                 <ListBox
                     HorizontalContentAlignment="Center"
                     Background="{DynamicResource CebBackgroundBrush}"
@@ -532,7 +530,6 @@
                     TextAlignment="Center" />
             </StackPanel>
         </Popup>
-        <!--  ReSharper disable once Xaml.IndexOutOfGridDefinition  -->
         <StatusBar
             Grid.Row="5"
             Grid.Column="0"

@@ -1,6 +1,10 @@
 ﻿#region
 
 using Microsoft.Win32;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 //using Syncfusion.Drawing;
 using Syncfusion.Windows.Shared;
 using System;
@@ -208,7 +212,7 @@ namespace CompteEstBon {
                     break;
                 case "resolve":
                     switch (Tirage.Status) {
-                        case CebStatus.Valid:
+                        case CebStatus.Valide:
                             await ResolveAsync();
                             break;
 
@@ -217,7 +221,7 @@ namespace CompteEstBon {
                             await ClearAsync();
                             break;
 
-                        case CebStatus.Erreur:
+                        case CebStatus.Invalide:
                             await RandomAsync();
                             break;
                     }
@@ -244,7 +248,7 @@ namespace CompteEstBon {
             Solution = null;
             Solutions = null;
             UpdateForeground();
-            Result = Tirage.Status != CebStatus.Erreur ? "Jeu du Compte Est Bon" : "Tirage incorrect";
+            Result = Tirage.Status != CebStatus.Invalide ? "Jeu du Compte Est Bon" : "Tirage incorrect";
             Popup = false;
         }
 
@@ -264,11 +268,11 @@ namespace CompteEstBon {
         private void UpdateForeground() {
             Foreground = Tirage.Status switch {
                 CebStatus.Indefini => Colors.Blue,
-                CebStatus.Valid => Colors.White,
+                CebStatus.Valide => Colors.White,
                 CebStatus.EnCours => Colors.Aqua,
                 CebStatus.CompteEstBon => Colors.ForestGreen,
                 CebStatus.CompteApproche => Colors.Orange,
-                CebStatus.Erreur => Colors.Red,
+                CebStatus.Invalide => Colors.Red,
                 _ => throw new NotImplementedException()
             };
         }
@@ -300,7 +304,7 @@ namespace CompteEstBon {
             Result = Tirage.Status switch {
                 CebStatus.CompteEstBon => "😊 Compte est Bon",
                 CebStatus.CompteApproche => $"😢 Compte approché: {Tirage.Found}, écart: {Tirage.Diff}",
-                CebStatus.Erreur => $"🤬 Tirage incorrect",
+                CebStatus.Invalide => $"🤬 Tirage incorrect",
                 _ => "Jeu du Compte Est Bon"
             };
 
@@ -312,6 +316,10 @@ namespace CompteEstBon {
             RaisePropertyChanged(nameof(IsComputed));
 
             ShowPopup();
+            if(Properties.Settings.Default.MongoDB)
+                await SaveMongoDB();
+
+
             return Tirage.Status;
         }
 
@@ -324,6 +332,28 @@ namespace CompteEstBon {
 
         }
 
+        async Task SaveMongoDB() {
+            try {
+                ConventionRegistry.Register("EnumStringConvention",
+                   new ConventionPack {
+                new EnumRepresentationConvention(BsonType.String)
+                   },
+                   t => true);
+                var clientSettings = MongoClientSettings.FromConnectionString(Properties.Settings.Default.MongoServer);
+                clientSettings.LinqProvider = LinqProvider.V3;
+
+                var cl = new MongoClient(clientSettings)
+                    .GetDatabase("ceb")
+                    .GetCollection<BsonDocument>("comptes");
+
+                await cl.InsertOneAsync(
+                    new BsonDocument(new Dictionary<string, object> {
+                        { "_id",  new  { lang="wpf", domain=Environment.GetEnvironmentVariable("USERDOMAIN"), date= DateTime.UtcNow }.ToBsonDocument() } })
+                    .AddRange(Tirage.Data.ToBsonDocument()));
+            } catch (Exception ) {
+                
+            }
+        }
         private void ExportFichier() {
             var (Ok, Path) = SaveFileName();
             if (Ok) {

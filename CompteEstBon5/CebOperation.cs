@@ -31,7 +31,7 @@ namespace CompteEstBon {
             Value = op switch
             {
                 '+' => g.Value + d.Value,
-                '-' => Math.Max(0, g.Value - d.Value),
+                '-' => g.Value - d.Value,
                 'x' => g.Value <= 1 || d.Value <= 1 ? 0 : g.Value * d.Value,
                 '/' => d.Value <= 1 || g.Value % d.Value != 0 ? 0 : g.Value / d.Value,
                 _ => 0
@@ -48,7 +48,6 @@ namespace CompteEstBon {
             foreach (var o in ceb.Operations) {
                 AddOperation(o);
             }
-
 
         }
 

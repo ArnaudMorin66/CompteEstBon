@@ -1,6 +1,10 @@
 ﻿#region
 
 using Microsoft.Win32;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,8 +38,10 @@ namespace CompteEstBon.ViewModel {
         private int _search;
 
         public CebBase _solution;
+
         //private IEnumerable<CebBase> _solutions;
         private IEnumerable<CebDetail> _solutions;
+
         private string _theme = "Dark";
         private string _titre = "Le compte est bon";
         private bool _vertical;
@@ -70,7 +76,6 @@ namespace CompteEstBon.ViewModel {
                 ClearData();
             };
 
-
             Background = ThemeColors["Dark"];
             _isUpdating = false;
             UpdateData();
@@ -102,7 +107,6 @@ namespace CompteEstBon.ViewModel {
                 NotifiedChanged();
             }
         }
-
 
         public CebTirage Tirage { get; set; } = new();
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.AnyPlaques;
@@ -175,7 +179,6 @@ namespace CompteEstBon.ViewModel {
             }
         }
 
-
         public Color Foreground {
             get => _foreground;
             set {
@@ -236,9 +239,10 @@ namespace CompteEstBon.ViewModel {
                     case "random":
                         await RandomAsync();
                         break;
+
                     case "resolve": {
                             switch (Tirage.Status) {
-                                case CebStatus.Valid:
+                                case CebStatus.Valide:
                                     if (IsBusy) return;
                                     await ResolveAsync();
                                     break;
@@ -248,7 +252,7 @@ namespace CompteEstBon.ViewModel {
                                     await ClearAsync();
                                     break;
 
-                                case CebStatus.Erreur:
+                                case CebStatus.Invalide:
                                     await RandomAsync();
                                     break;
                             }
@@ -259,25 +263,23 @@ namespace CompteEstBon.ViewModel {
                         await ExportAsync();
                         break;
                 }
-            }
-#pragma warning disable CA1031 // Do not catch general exception types
-            catch (Exception e) {
+            } catch (Exception e) {
                 Console.WriteLine(e);
             }
-#pragma warning restore CA1031 // Do not catch general exception types
         }
+
         private async Task ExportAsync() {
             IsBusy = true;
             await Task.Run(() => ExportFichier());
             IsBusy = false;
         }
-        public event PropertyChangedEventHandler PropertyChanged;
 
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private void UpdateColors() {
             Foreground = Tirage.Status switch {
-                CebStatus.Valid => Colors.White,
-                CebStatus.Erreur => Colors.Red,
+                CebStatus.Valide => Colors.White,
+                CebStatus.Invalide => Colors.Red,
                 CebStatus.CompteEstBon => Colors.YellowGreen,
                 CebStatus.CompteApproche => Colors.Orange,
                 CebStatus.EnCours => Colors.Yellow,
@@ -299,7 +301,7 @@ namespace CompteEstBon.ViewModel {
 
             Solutions = null;
 
-            Result = Tirage.Status != CebStatus.Erreur ? "Le Compte est Bon" : "🤬 Tirage incorrect";
+            Result = Tirage.Status != CebStatus.Invalide ? "Le Compte est Bon" : "🤬 Tirage incorrect";
             Popup = false;
             UpdateColors();
         }
@@ -348,7 +350,6 @@ namespace CompteEstBon.ViewModel {
             }
         }
 
-
         public async Task ResolveAsync() {
             IsBusy = true;
             Result = "Calcul...";
@@ -358,7 +359,7 @@ namespace CompteEstBon.ViewModel {
             Result = Tirage.Status switch {
                 CebStatus.CompteEstBon => "😊 Compte est bon",
                 CebStatus.CompteApproche => $"😢 Compte approché: {Tirage.Found}, écart: {Tirage.Diff}",
-                CebStatus.Erreur => "Tirage incorrect",
+                CebStatus.Invalide => "Tirage incorrect",
                 _ => "Le Compte est Bon"
             };
             stopwatch.Stop();
@@ -368,15 +369,40 @@ namespace CompteEstBon.ViewModel {
             Solution = Tirage.Solutions[0];
             // Solutions = Tirage.Solutions;
             Solutions = Tirage.Solutions.Select(p => CebDetail.FromCebBase(p));
+            if (Properties.Settings.Default.MongoDB)
+                await SaveToMongoDB();
             IsBusy = false;
             ShowNotify();
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged(nameof(Status));
         }
 
+        public async Task SaveToMongoDB() {
+            try {
+                ConventionRegistry.Register("EnumStringConvention",
+                   new ConventionPack {
+                new EnumRepresentationConvention(BsonType.String)
+                   },
+                   t => true);
+                var clientSettings = MongoClientSettings.FromConnectionString(Properties.Settings.Default.MongoServer);
+                clientSettings.LinqProvider = LinqProvider.V3;
+
+                var cl = new MongoClient(clientSettings)
+                    .GetDatabase("ceb")
+                    .GetCollection<BsonDocument>("comptes");
+
+                await cl.InsertOneAsync(
+                    new BsonDocument(new Dictionary<string, object> {
+                { "_id",  new  { lang="wpf", domain=Environment.GetEnvironmentVariable("USERDOMAIN"), date= DateTime.UtcNow }.ToBsonDocument() } })
+                    .AddRange(Tirage.Data.ToBsonDocument()));
+            } catch (Exception) {
+            }
+        }
+
         public static (bool select, string name) FileSaveName() {
-            var dialog = new SaveFileDialog();
-            dialog.DefaultExt = ".xlsx";
+            SaveFileDialog dialog = new() {
+                DefaultExt = ".xlsx"
+            };
             (dialog.Filter, dialog.Title) = ("Document Excel|*.xlsx|Document Word|*.docx", "Export Excel-Word");
             dialog.InitialDirectory = Environment.SpecialFolder.UserProfile + "\\Downloads";
             // ReSharper disable once PossibleInvalidOperationException

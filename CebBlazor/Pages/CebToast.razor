@@ -53,6 +53,7 @@
 </SfDialog>
 
 @code {
+    #pragma warning disable CS8618
     protected Timer timer;
     private bool _visible;
 
@@ -89,7 +90,7 @@
         if (Visible) {
             Visible = false;
         }
-
+        #pragma warning disable CS8601
         Solution = detail?.ToString();
         Visible = true;
 
