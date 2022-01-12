@@ -5,7 +5,6 @@ using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System.CommandLine;
-using System.CommandLine.Parsing;
 using System.CommandLine.Rendering;
 using System.IO.Compression;
 using System.Runtime.Serialization;
@@ -14,9 +13,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 using static System.Console;
+// ReSharper disable LocalizableElement
 
-/// <summary>
-/// </summary>
+
 
 bool Json = false;
 bool Save = false;
@@ -31,12 +30,30 @@ ConfigurationBuilder builder = new();
 if (File.Exists(ConfigurationFile)) {
     builder.AddJsonFile(ConfigurationFile);
     var jbuild = builder.Build();
-    var vfichier = jbuild["win32:ZipFile"];
-    if (!string.IsNullOrEmpty(vfichier))
-        fichier = new(vfichier);
-    Save = bool.Parse(jbuild["Save"]);
-    SaveToMongoDb = bool.Parse(jbuild["MongoDB"]);
-    MongoServer = jbuild["MongoDBServer"];
+
+    foreach (var child in jbuild.GetChildren()) {
+        switch (child.Path) {
+            case "Save":
+                Save = bool.TryParse(child.Value, out var v) && v;
+                break;
+            case "MongoDB":
+                SaveToMongoDb = bool.TryParse(child.Value, out var wv) && wv; 
+                break;
+            case "MongoDbServer":
+                MongoServer = child.Value;
+                break;
+            case "platform":
+                foreach (var plt in child.GetChildren()) {
+                    if (plt["os"] == "win32") {
+                        fichier = new( plt["ZipFile"]);
+                        break;
+                    }
+                }
+
+                break;
+        }
+    }
+    
 }
 
 RootCommand rootCommand = new() {
@@ -57,25 +74,23 @@ var prs = rootCommand.Parse(args);
 
 if (prs.Errors.Any()) Environment.Exit(-1);
 
-if (prs.FindResultFor(rootCommand.First(p => p.Name == "help")) != null) Environment.Exit(0);
-if (prs.FindResultFor(rootCommand.First(p => p.Name == "version")) != null) Environment.Exit(0);
 
 foreach (var option in rootCommand.Options.Where(p => prs.FindResultFor(p) != null)) {
     switch (option.Name) {
         case "search":
-            tirage.Search = prs.ValueForOption<int>(option);
+            tirage.Search = prs.GetValueForOption<int>(option);
             break;
 
         case "plaques":
-            tirage.SetPlaques(prs.ValueForOption<int[]>(option));
+            tirage.SetPlaques(prs.GetValueForOption<int[]>(option));
             break;
 
         case "json":
-            Json = prs.ValueForOption<bool>(option);
+            Json = prs.GetValueForOption<bool>(option);
             break;
 
         case "file":
-            fichier = prs.ValueForOption<FileInfo>(option);
+            fichier = prs.GetValueForOption<FileInfo>(option);
             break;
 
         case "version":
@@ -84,24 +99,24 @@ foreach (var option in rootCommand.Options.Where(p => prs.FindResultFor(p) != nu
             break;
 
         case "save":
-            Save = prs.ValueForOption<bool>(option);
+            Save = prs.GetValueForOption<bool>(option);
             break;
 
         case "mongodb":
-            SaveToMongoDb = prs.ValueForOption<bool>(option);
+            SaveToMongoDb = prs.GetValueForOption<bool>(option);
             break;
 
         case "server":
-            MongoServer = prs.ValueForOption<string>(option);
+            MongoServer = prs.GetValueForOption<string>(option);
             break;
 
         default:
             Environment.Exit(-1);
             break;
     }
-};
+}
 
-var arguments = prs.ValueForArgument<int[]>(rootCommand.Arguments.First(p => p.Name == "arguments"));
+var arguments = prs.GetValueForArgument<int[]>(rootCommand.Arguments.First(p => p.Name == "arguments"));
 if (arguments.Length > 0) {
     if (arguments[0] == 0 && arguments.Length == 1) {
         WriteLine("Paramètre invalide".Red());
@@ -118,16 +133,17 @@ if (arguments.Length > 0) {
     }
 }
 
+
 if (Json) {
     await tirage.ResolveAsync();
     WriteLine(JsonSerializer.Serialize(tirage.Data, JsonOptions()));
 } else {
-    WriteLine("\n");
+    WriteLine('\n');
     WriteLine("*** Le Compte est bon ***".Red());
     WriteLine();
     Write("Tirage:\t".Yellow());
     Write("Plaques: ".LightYellow());
-    foreach (var plaque in tirage.Plaques) Write($"{plaque} ");
+    foreach (var plaque in tirage.Plaques) Write($@"{plaque} ");
     Write("Recherche: ".LightYellow());
     Write(tirage.Search);
 
@@ -161,13 +177,13 @@ if (Json) {
     WriteLine();
 }
 
-if (SaveToMongoDb && MongoServer != String.Empty)
+if (SaveToMongoDb && MongoServer != string.Empty)
     await SaveMongoDB();
 
 if (Save == false)
     Environment.Exit(0);
 
-if (fichier != null && Save == true) {
+if (fichier != null && Save) {
     switch (fichier.Extension) {
         case ".zip":
             SaveZip();
@@ -186,7 +202,7 @@ void SaveJson() {
 
 void SaveZip() {
     using var archive = ZipFile.Open(fichier.FullName, ZipArchiveMode.Update, System.Text.Encoding.UTF8);
-    int num = new[] { 0 }.Concat(archive.Entries
+    var num = new[] { 0 }.Concat(archive.Entries
        .Select(p => int.TryParse(p.Name[..p.Name.LastIndexOf('.')], out var result) ? result : 0))
        .Max();
     SaveStream(archive, $"{++num:000000}.json", JsonSaveStream);
@@ -199,9 +215,7 @@ void SaveStream(ZipArchive archive, string nom, Action<Stream> action) {
     stream.Close();
 }
 
-void JsonSaveStream(Stream stream) {
-    JsonSerializer.Serialize<CebData>(stream, tirage.Data, JsonOptions());
-}
+void JsonSaveStream(Stream stream) => JsonSerializer.Serialize(stream, tirage.Data, JsonOptions());
 
 void XmlSaveStream(Stream stream) {
     XmlSerializer mySerializer = new(typeof(CebData));
@@ -210,7 +224,7 @@ void XmlSaveStream(Stream stream) {
     } catch (SerializationException) {
         WriteLine("Erreur serialisation");
         throw;
-    };
+    }
 }
 
 JsonSerializerOptions JsonOptions() => new() {
@@ -227,7 +241,7 @@ async Task SaveMongoDB() {
            new ConventionPack {
                 new EnumRepresentationConvention(BsonType.String)
            },
-           t => true);
+           _ => true);
         var clientSettings = MongoClientSettings.FromConnectionString(MongoServer);
         clientSettings.LinqProvider = LinqProvider.V3;
 

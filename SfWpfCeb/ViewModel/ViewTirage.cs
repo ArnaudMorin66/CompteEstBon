@@ -49,7 +49,7 @@ namespace CompteEstBon {
         /// </returns>
         public ViewTirage() {
 
-            stopwatch = Tirage.Watch; // new Stopwatch();
+            stopwatch =  new Stopwatch();
 
 
             dateDispatcher = new DispatcherTimer {
@@ -79,9 +79,9 @@ namespace CompteEstBon {
 
         public static IEnumerable<int> ListePlaques => CebPlaque.AnyPlaques;
 
-        public CebTirage Tirage { get; } = new CebTirage();
+        public CebTirage Tirage { get; } = new();
 
-        public ObservableCollection<int> Plaques { get; } = new ObservableCollection<int> { 0, 0, 0, 0, 0, 0 };
+        public ObservableCollection<int> Plaques { get; } =  new() { 0, 0, 0, 0, 0, 0 };
 
         public IEnumerable<CebBase> _solutions;
         public IEnumerable<CebBase> Solutions {
@@ -297,7 +297,7 @@ namespace CompteEstBon {
         public async Task<CebStatus> ResolveAsync() {
             IsBusy = true;
             Result = "⏰ Calcul en cours...";
-            // stopwatch.Start();
+            stopwatch.Start();
             Foreground = Colors.Aqua;
 
             await Tirage.ResolveAsync();
@@ -307,8 +307,8 @@ namespace CompteEstBon {
                 CebStatus.Invalide => $"🤬 Tirage incorrect",
                 _ => "Jeu du Compte Est Bon"
             };
-
-            Duree = Tirage.Watch.Elapsed;
+            stopwatch.Stop();
+            Duree = stopwatch.Elapsed; // .FromSeconds( Tirage.Duree);
             Solution = Tirage.Solutions[0];
             Solutions = Tirage.Solutions;
             UpdateForeground();
@@ -338,7 +338,7 @@ namespace CompteEstBon {
                    new ConventionPack {
                 new EnumRepresentationConvention(BsonType.String)
                    },
-                   t => true);
+                   _ => true);
                 var clientSettings = MongoClientSettings.FromConnectionString(Properties.Settings.Default.MongoServer);
                 clientSettings.LinqProvider = LinqProvider.V3;
 
@@ -350,8 +350,9 @@ namespace CompteEstBon {
                     new BsonDocument(new Dictionary<string, object> {
                         { "_id",  new  { lang="wpf", domain=Environment.GetEnvironmentVariable("USERDOMAIN"), date= DateTime.UtcNow }.ToBsonDocument() } })
                     .AddRange(Tirage.Data.ToBsonDocument()));
-            } catch (Exception ) {
-                
+            }
+            catch (Exception) {
+                // ignored
             }
         }
         private void ExportFichier() {

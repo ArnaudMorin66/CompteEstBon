@@ -298,9 +298,7 @@ namespace CompteEstBon.ViewModel {
             stopwatch.Reset();
             Duree = stopwatch.Elapsed;
             Solution = null;
-
             Solutions = null;
-
             Result = Tirage.Status != CebStatus.Invalide ? "Le Compte est Bon" : "🤬 Tirage incorrect";
             Popup = false;
             UpdateColors();
@@ -314,7 +312,6 @@ namespace CompteEstBon.ViewModel {
                 Plaques[i] = Tirage.Plaques[i].Value;
             _isUpdating = false;
             Search = Tirage.Search;
-            // ClearData();
 
             // ReSharper disable once ExplicitCallerInfoArgument
         }
@@ -342,11 +339,10 @@ namespace CompteEstBon.ViewModel {
 
         public int Count {
             get => _count;
-            set {
-                if (_count != value) {
-                    _count = value;
-                    NotifiedChanged();
-                }
+            private set {
+                if (_count == value) return;
+                _count = value;
+                NotifiedChanged();
             }
         }
 
@@ -363,12 +359,12 @@ namespace CompteEstBon.ViewModel {
                 _ => "Le Compte est Bon"
             };
             stopwatch.Stop();
-            Duree = Tirage.Watch.Elapsed;
+            Duree = TimeSpan.FromSeconds( Tirage.Duree);
             UpdateColors();
 
             Solution = Tirage.Solutions[0];
             // Solutions = Tirage.Solutions;
-            Solutions = Tirage.Solutions.Select(p => CebDetail.FromCebBase(p));
+            Solutions = Tirage.Solutions.Select(CebDetail.FromCebBase);
             if (Properties.Settings.Default.MongoDB)
                 await SaveToMongoDB();
             IsBusy = false;
@@ -395,7 +391,9 @@ namespace CompteEstBon.ViewModel {
                     new BsonDocument(new Dictionary<string, object> {
                 { "_id",  new  { lang="wpf", domain=Environment.GetEnvironmentVariable("USERDOMAIN"), date= DateTime.UtcNow }.ToBsonDocument() } })
                     .AddRange(Tirage.Data.ToBsonDocument()));
-            } catch (Exception) {
+            }
+            catch (Exception) {
+                // ignored
             }
         }
 
@@ -411,31 +409,28 @@ namespace CompteEstBon.ViewModel {
 
         public void ExportFichier() {
             var (Ok, Path) = FileSaveName();
-            if (Ok) {
-                FileInfo fi = new(Path);
-                if (fi.Exists)
-                    fi.Delete();
+            if (!Ok) return;
+            FileInfo fi = new(Path);
+            if (fi.Exists)
+                fi.Delete();
 
-                Action<Stream> ExportFunction = fi.Extension switch {
-                    ".xlsx" => Tirage.ExportExcel,
-                    ".docx" => Tirage.ExportWord,
-                    _ => throw new NotImplementedException(),
-                };
-                var stream = new FileStream(Path!, FileMode.CreateNew);
-                ExportFunction(stream);
-                stream.Flush();
-                stream.Close();
-                OpenDocument(Path);
-            }
+            Action<Stream> ExportFunction = fi.Extension switch {
+                ".xlsx" => Tirage.ExportExcel,
+                ".docx" => Tirage.ExportWord,
+                _ => throw new NotImplementedException(),
+            };
+            var stream = new FileStream(Path!, FileMode.CreateNew);
+            ExportFunction(stream);
+            stream.Flush();
+            stream.Close();
+            OpenDocument(Path);
         }
 
-        public static void OpenDocument(string nom) {
-            var info = new ProcessStartInfo {
+        public static void OpenDocument(string nom) =>
+            Process.Start(new ProcessStartInfo {
                 UseShellExecute = true,
                 FileName = nom
-            };
-            Process.Start(info);
-        }
+            });
 
         #endregion Action
     }

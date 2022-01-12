@@ -1,11 +1,8 @@
 ﻿@page "/"
-
-@using System.IO
 @using MongoDB.Bson
 @using MongoDB.Bson.Serialization.Conventions
 @using MongoDB.Driver
-@using MongoDB.Driver.Linq 
-@using static CebBlazor.Pages.CebSolutions
+@using MongoDB.Driver.Linq
 @inject IConfiguration Configuration
 @* ReSharper disable  UnknownCssClass *@
 @* ReSharper disable CoercedEqualsUsing *@
@@ -169,9 +166,9 @@
                     </button>
 
                     <button id="Excel"
-                            hidden="@(tirage.Status == CebStatus.CompteApproche || tirage.Status == CebStatus.CompteEstBon ? false : true)"
+                            
                             title="Export vers excel (ALT-X)"
-                            class="btn btn-primary w-25"
+                            class="btn btn-primary w-25 @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon  ? "" :"d-none")"
                             role="button"
                             @onclick="@ExportExcelAsync"
                             type="button"
@@ -183,8 +180,7 @@
                     </button>
                     <button id="Word"
                             title="Export vers Word (ALT-X)"
-                            class="btn btn-primary w-25"
-                            hidden="@(tirage.Status == CebStatus.CompteApproche || tirage.Status == CebStatus.CompteEstBon ? false : true)"
+                            class="btn btn-primary w-25 @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon  ? "" :"d-none")"
                             role="button"
                             @onclick="@ExportWordAsync"
                             type="button"
@@ -223,7 +219,7 @@
                         <i class="text-danger far fa-thumbs-down"></i>&nbsp;
                         <span style="color: Navy">
                             &nbsp;Compte
-                            approch&eacute;:&nbsp;@tirage.Found,&nbsp;&eacute;cart:@tirage.Diff,&nbsp;@tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.Watch.Elapsed.TotalSeconds:N3}")&nbsp;s
+                            approch&eacute;:&nbsp;@tirage.Found,&nbsp;&eacute;cart:@tirage.Diff,&nbsp;@tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.Duree:N3}")&nbsp;s
                         </span>
                     </div>
                     break;
@@ -255,10 +251,10 @@
 
 @code {
     CebTypeGrille TypeGrille { get; set; }
-    #pragma warning disable CS8618
+#pragma warning disable CS8618
     public CebToast toast { get; set; }
     public CebSolutions Solutions { get; set; }
-    public IEnumerable<string> ListePlaques = CebPlaque.AnyPlaques.Select(p => p.ToString());
+    public static IEnumerable<string> ListePlaques = CebPlaque.AnyPlaques.Select(p => p.ToString());
 
 
     protected override void OnInitialized() {
@@ -269,13 +265,12 @@
     async Task ResolveAsync() {
         await tirage.ResolveAsync();
         await InvokeAsync(StateHasChanged);
-        var b = Configuration["mongodb:actif"];
         if (setting.MongoDb)
             await SaveMongoDb();
         await toast.ShowAsync(tirage.Solutions[0]);
     }
 
-    private async Task ShowSolutionAsync(CebBase sol) {
+    private async Task ShowSolutionAsync(CebBase? sol) {
         await toast.ShowAsync(sol);
     }
 
@@ -290,15 +285,16 @@
         tirage.ExportWord(mstream);
         await SaveAsAsync(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "ceb.docx");
     }
-     private  async Task SaveMongoDb() {
+
+    private async Task SaveMongoDb() {
         try {
-            // Configure the HTTP request pipeline.
-            
+    // Configure the HTTP request pipeline.
+
             ConventionRegistry.Register("EnumStringConvention",
                 new ConventionPack {
-            new EnumRepresentationConvention(BsonType.String)
+                    new EnumRepresentationConvention(BsonType.String)
                 },
-                t => true);
+                _ => true);
             var clientSettings = MongoClientSettings.FromConnectionString(setting.MongoDbConnectionString);
             clientSettings.LinqProvider = LinqProvider.V3;
 
@@ -308,14 +304,16 @@
 
             await cl.InsertOneAsync(
                 new BsonDocument(new Dictionary<string, object> {
-            { "_id",  new  { lang="blazor", domain=Environment.GetEnvironmentVariable("USERDOMAIN"), date= DateTime.UtcNow }.ToBsonDocument() } })
-                .AddRange(tirage.Data.ToBsonDocument()));
-        } catch (Exception e) {
+                    { "_id", new { lang = "blazor", domain = Environment.GetEnvironmentVariable("USERDOMAIN"), date = DateTime.UtcNow }.ToBsonDocument() }
+                })
+                    .AddRange(tirage.Data.ToBsonDocument()));
+        }
+        catch (Exception e) {
             Console.WriteLine(e);
         }
     }
-    
-    public async Task SaveAsAsync(byte[] byteData, string mimeType, string fileName) {
+
+    public async Task SaveAsAsync(byte[]? byteData, string mimeType, string fileName) {
         if (byteData == null) {
             await js.InvokeVoidAsync("alert", "Le fichier à exporter est non défini.");
         }
@@ -323,4 +321,5 @@
             await js.InvokeVoidAsync("saveFile", Convert.ToBase64String(byteData), mimeType, fileName);
         }
     }
+
 }

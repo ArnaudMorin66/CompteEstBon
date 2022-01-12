@@ -32,17 +32,13 @@ namespace CompteEstBon {
                 _style = value;
                 
                 SfSkinManager.SetVisualStyle(this, (VisualStyles) Enum.Parse(typeof(VisualStyles), value));
-                if (resource != null)
-
-                    resource.Source =
-                        new Uri($"pack://application:,,,/Syncfusion.Themes.{value}.WPF;component/Common/Brushes.xaml");
+                resource.Source =
+                    new Uri($"pack://application:,,,/Syncfusion.Themes.{value}.WPF;component/Common/Brushes.xaml");
                 // SkinStorage.SetVisualStyle(this, value);
             }
         }
 
-        private void SolutionsData_SelectionChanged(object sender, GridSelectionChangedEventArgs e) {
-            ViewTirage.ShowPopup(SolutionsData.SelectedIndex);
-        }
+        private void SolutionsData_SelectionChanged(object sender, GridSelectionChangedEventArgs e) => ViewTirage.ShowPopup(SolutionsData.SelectedIndex);
 
         private void SolutionsData_QueryRowHeight(object sender, QueryRowHeightEventArgs e) {
             if (e.RowIndex <= 0) return;

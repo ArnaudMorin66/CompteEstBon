@@ -1,5 +1,5 @@
 ﻿// (function () {
-window.saveFile =  (bytesBase64, mimeType, fileName) => {
+window.saveFile =  (bytesBase64, mimeType, fileName) =>   {
 
 // function saveFile(bytesBase64, mimeType, fileName) {
     var fileUrl = "data:" + mimeType + ";base64," + bytesBase64;

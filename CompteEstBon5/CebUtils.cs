@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace CompteEstBon {
     public static class CebUtils {
+        
         public static IEnumerable<(T, int)> WithIndex<T>(this IEnumerable<T> self) => self.Select((value, index) => (value, index));
         /// <summary>
         /// Teste si une valeur est entre les 2 valeurs spécifiées (bornes inclues)

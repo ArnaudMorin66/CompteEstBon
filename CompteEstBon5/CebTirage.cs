@@ -1,10 +1,8 @@
 #region using
 
-using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
 using static System.Math;
 
@@ -16,15 +14,19 @@ namespace CompteEstBon {
     /// <summary>
     ///     Gestion tirage Compte est bon
     /// </summary>
-    [Guid("EC9CF01C-34A0-414C-BF2A-D06C5A61503D")]
+
     public sealed class CebTirage : INotifyPropertyChanged {
         private static readonly Random Rnd = new();
-        private readonly List<CebBase> _solutions = new(); // List<CebBase>();
-        public readonly IEnumerable<int> ListePlaques = CebPlaque.AnyPlaques;
+        private readonly List<CebBase> _solutions = new(); 
         private int _search;
+       
 
         public CebTirage() {
-            for (var i = 0; i < 6; i++) Plaques.Add(new CebPlaque(0, IsUpdated));
+            // CebPlaque.NotifyValueChange.Add(IsUpdated);
+            for (var i = 0; i < 6; i++) {
+                Plaques.Add(new CebPlaque(action: IsUpdated)); 
+            }
+            
             Random();
         }
 
@@ -76,13 +78,12 @@ namespace CompteEstBon {
         }
 
 
-        public ImmutableList<CebBase> Solutions =>
+        public List<CebBase> Solutions =>
             Status is CebStatus.CompteApproche or CebStatus.CompteEstBon
-                ? _solutions.ToImmutableList()
-                : ImmutableList<CebBase>.Empty;
+                ? _solutions
+                : new List<CebBase>();
 
         [JsonIgnore] public IEnumerable<string> SolutionsToString => _solutions.Select(s => s.ToString());
-        // public TimeSpan Duree { get; private set; }
 
 
         /// <summary>
@@ -95,14 +96,13 @@ namespace CompteEstBon {
         /// </value>
         public CebStatus Status { get; private set; } = CebStatus.Indefini;
 
-        public Stopwatch Watch { get; } = new(); // Stopwatch();
+        private Stopwatch Watch { get; } = new(); 
         public double Duree => Watch.Elapsed.TotalSeconds;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public CebData Clear() {
             if (_solutions.Count != 0) _solutions.Clear();
-            // Duree = TimeSpan.Zero;
             Watch.Reset();
             Diff = int.MaxValue;
             Found.Reset();
@@ -111,7 +111,8 @@ namespace CompteEstBon {
             return Data;
         }
 
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public async Task<CebData> ClearAsync() => await Task.Run(Clear);
 
@@ -124,7 +125,7 @@ namespace CompteEstBon {
             Found = Found.ToString()
         };
 
-        public bool IsPlaquesValid() {
+        private bool IsPlaquesValid() {
             return Plaques.All(p => p.IsValid
                                     && Plaques.Count(q => q.Value == p.Value) <=
                                     CebPlaque.AllPlaques.Count(i => i == p.Value));
@@ -135,21 +136,21 @@ namespace CompteEstBon {
         /// </summary>
         /// <returns>
         /// </returns>
-        public bool IsSearchValid() => _search > 99 && _search < 1000;
+        private bool IsSearchValid() => _search is > 99 and < 1000;
 
         /// <summary>
         ///     Select the value and the plaque's list
         /// </summary>
         public CebData Random() {
-            Status = CebStatus.EnCours;
-            Search = Rnd.Next(100, 1000);
+            Status = CebStatus.Indefini;
+            
             var liste = new List<int>(CebPlaque.AllPlaques);
             Plaques.ForEach(p => {
                 var n = Rnd.Next(0, liste.Count);
                 p.Value = liste[n];
                 liste.RemoveAt(n);
             });
-
+            _search = Rnd.Next(100, 1000);
             return Clear();
         }
 
@@ -171,14 +172,13 @@ namespace CompteEstBon {
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
             NotifyPropertyChanged();
             Watch.Stop();
-            //Duree = watch.Elapsed;
             return Status;
         }
 
         public async Task<CebStatus> ResolveAsync() => await Task.Run(Resolve);
 
         public async Task<CebStatus> ResolveAsync(int search,
-                                                  params int[] plq) => await Task.Run(() => ResolveWithParam(search, plq));
+            params int[] plq) => await Task.Run(() => ResolveWithParam(search, plq));
 
         /// <summary>
         ///     resolution du compte
@@ -194,22 +194,24 @@ namespace CompteEstBon {
         public CebStatus ResolveWithParam(int search, params int[] plq) {
             if (plq.Length != 6)
                 throw new ArgumentException("Nombre de plaques incorrecte");
-            Status = CebStatus.EnCours;
+            Status = CebStatus.Indefini;
             _search = search;
             foreach (var (p, i) in plq.WithIndex().Where((_, i) => i < 6))
                 Plaques[i].Value = p;
-
+            Valid();
             return Resolve();
         }
 
         public void SetPlaques(params int[] plaq) {
-            Status = CebStatus.EnCours;
-            Plaques.ForEach(p => p.Value = 0); 
+            Status = CebStatus.Indefini;
+            Plaques.ForEach(p => p.Value = 0);
             foreach (var (p, i) in plaq.WithIndex().Where(elt => elt.Item2 < 6)) Plaques[i].Value = p;
             Clear();
         }
 
-        public string Solution(int no = 0) => _solutions.Count == 0 || no < 0 || no >= _solutions.Count ? string.Empty : _solutions[no].ToString();
+        public string Solution(int no = 0) => _solutions.Count == 0 || no < 0 || no >= _solutions.Count
+            ? string.Empty
+            : _solutions[no].ToString();
 
         /// <summary>
         ///     Valid
@@ -219,7 +221,7 @@ namespace CompteEstBon {
             return Status;
         }
 
-        private void AddSolution(CebBase sol) {
+        private void PushSolution(CebBase sol) {
             var diff = Abs(_search - sol.Value);
             if (diff > Diff)
                 return;
@@ -236,24 +238,26 @@ namespace CompteEstBon {
             _solutions.Add(sol);
         }
 
-        private void IsUpdated(object sender, PropertyChangedEventArgs e) {
-            if (Status != CebStatus.EnCours) Clear();
+        private void IsUpdated(object objet, PropertyChangingEventArgs e)  {
+            if (Status is not CebStatus.EnCours and not CebStatus.Indefini) Clear();
         }
 
         private void Resolve(IEnumerable<CebBase> liste) {
             // ReSharper disable PossibleMultipleEnumeration
-            foreach (var (p1, i1) in liste.WithIndex()) {
-                AddSolution(p1);
-                foreach (var (p2, i2) in liste.WithIndex().Where((_, ix) => ix > i1)) {
+            foreach (var (p, i) in liste.WithIndex()) {
+                PushSolution(p);
+                foreach (var (q, j) in liste.WithIndex().Where((_, ix) => ix > i)) {
                     foreach (var oper in
-                        CebOperation.AllOperations.Select(operation =>
-                                new CebOperation(p1, operation, p2))
-                            .Where(o => o.Value != 0))
+                             CebOperation.AllOperations.Select(operation =>
+                                     new CebOperation(p, operation, q))
+                                 .Where(o => o.Value != 0))
                         Resolve(
-                            liste.Where((_, k) => k != i1 && k != i2).Concat(new[] { oper })
+                            new [] {oper}.Concat(
+                            liste.Where((_, k) => k != i && k != j)) //.Concat(new[] { oper })
                         );
                 }
             }
         }
+
     }
 }

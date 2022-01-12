@@ -1,5 +1,6 @@
 ﻿@using Syncfusion.Blazor.Grids
 @using SelectionMode = Syncfusion.Blazor.Grids.SelectionMode
+
 <SfGrid @ref="gdetails" DataSource="@Details"
 		GridLines="GridLine.None"
 		Height="400"
@@ -53,10 +54,7 @@
 </SfGrid>
 
 @code {
-	 public enum CebTypeGrille {
-		Grille,
-		Liste
-	}
+	
 	#pragma warning disable CS8618
 	SfGrid<CebBase> gdetails { get; set; }
 
@@ -66,14 +64,11 @@
 	public CebTypeGrille TypeGrille
 	{
 		get => _typegrille;
-		set
-		{
-			if (_typegrille != value)
-			{
-				_typegrille = value;
-				gdetails.Refresh();
-				InvokeAsync(StateHasChanged);
-			}
+		set {
+			if (_typegrille == value) return;
+			_typegrille = value;
+			gdetails.Refresh();
+			InvokeAsync(StateHasChanged);
 		}
 	}
 

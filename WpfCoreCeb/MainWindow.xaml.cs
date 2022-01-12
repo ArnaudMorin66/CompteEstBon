@@ -73,7 +73,6 @@ namespace CompteEstBon {
                 e.Handled = true;
             }
 
-
         }
 
         private void txtSearch_LostFocus(object sender, RoutedEventArgs e) {

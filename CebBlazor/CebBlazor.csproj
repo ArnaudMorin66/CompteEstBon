@@ -4,6 +4,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <TypeScriptEnabled>false</TypeScriptEnabled>
+        <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
       <NoWarn>1701;1702;8002</NoWarn>
@@ -14,17 +15,17 @@
     <ItemGroup>
       <Compile Remove="code\FileUtils.cs" />
       <Compile Remove="code\Util.cs" />
+      <TypeScriptCompile Remove="node_modules\**" />
     </ItemGroup>
    
     <ItemGroup>
         <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.113" />
-        <PackageReference Include="MongoDB.Driver" Version="2.14.0-beta1" />
-        <PackageReference Include="Syncfusion.Blazor.Grid" Version="19.3.0.54" />
-        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="19.3.0.54" />
+        <PackageReference Include="MongoDB.Driver" Version="2.14.0" />
+        <PackageReference Include="Syncfusion.Blazor.Grid" Version="19.3.0.55" />
+        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="19.3.0.55" />
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="code\" />
         <Folder Include="wwwroot\css\" />
         <Folder Include="wwwroot\lib\fontawesome\" />
     </ItemGroup>

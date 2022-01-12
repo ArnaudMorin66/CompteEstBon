@@ -7,10 +7,10 @@
         <Content>
             @* ReSharper disable once UnknownCssClass *@
             @{
-                var cls = "";
-                var title = "";
-                var icn = "";
-                var rsl = "";
+                string cls;
+                string title;
+                string icn;
+                string rsl;
 
 
                 switch (tirage.Status) {
@@ -64,11 +64,11 @@
                 _visible = value;
 
                 if (_visible) {
-                    timer = new Timer(state => { Visible = false; });
-                    timer?.Change(DueTime, 0);
+                    timer = new Timer(_ => { Visible = false; });
+                    timer.Change(DueTime, 0);
                 }
                 else {
-                    timer?.Dispose();
+                    timer.Dispose();
                     _visible = false;
                 }
                 InvokeAsync(StateHasChanged);
@@ -86,7 +86,7 @@
         DueTime = 5000;
     }
 
-    public async Task ShowAsync(CebBase detail) {
+    public async Task ShowAsync(CebBase? detail) {
         if (Visible) {
             Visible = false;
         }

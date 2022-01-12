@@ -253,7 +253,6 @@
                 x:Name="btnExport"
                 Grid.Row="1"
                 Grid.Column="9"
-                Grid.ColumnSpan="2"
                 Command="{Binding}"
                 CommandParameter="export"
                 IsTabStop="True"

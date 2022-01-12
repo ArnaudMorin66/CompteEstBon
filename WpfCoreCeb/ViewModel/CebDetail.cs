@@ -15,8 +15,8 @@ namespace CompteEstBon.ViewModel {
         public static CebDetail FromCebBase(CebBase sol) {
             CebDetail detail = new();
             int ix = 1 ;
-            foreach (string el in sol.Operations) {
-                detail.GetType().GetProperty($"Op{ix++}").SetValue(detail, el);
+            foreach (var el in sol.Operations) {
+                detail.GetType().GetProperty($"Op{ix++}")?.SetValue(detail, el);
             }
 
             return detail;
