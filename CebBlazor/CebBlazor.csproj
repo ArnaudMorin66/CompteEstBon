@@ -13,16 +13,14 @@
       <NoWarn>1701;1702;8002</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-      <Compile Remove="code\FileUtils.cs" />
-      <Compile Remove="code\Util.cs" />
       <TypeScriptCompile Remove="node_modules\**" />
     </ItemGroup>
    
     <ItemGroup>
-        <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.113" />
-        <PackageReference Include="MongoDB.Driver" Version="2.14.0" />
-        <PackageReference Include="Syncfusion.Blazor.Grid" Version="19.3.0.55" />
-        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="19.3.0.55" />
+        <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.161" />
+        <PackageReference Include="MongoDB.Driver" Version="2.14.1" />
+        <PackageReference Include="Syncfusion.Blazor.Grid" Version="19.4.0.48" />
+        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="19.4.0.48" />
     </ItemGroup>
 
     <ItemGroup>

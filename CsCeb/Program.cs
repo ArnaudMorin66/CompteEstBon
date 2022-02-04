@@ -32,17 +32,17 @@ if (File.Exists(ConfigurationFile)) {
     var jbuild = builder.Build();
 
     foreach (var child in jbuild.GetChildren()) {
-        switch (child.Path) {
-            case "Save":
+        switch (child.Path.ToUpper()) {
+            case "SAVE":
                 Save = bool.TryParse(child.Value, out var v) && v;
                 break;
-            case "MongoDB":
+            case "MONGODB":
                 SaveToMongoDb = bool.TryParse(child.Value, out var wv) && wv; 
                 break;
-            case "MongoDbServer":
+            case "MONGODBSERVER":
                 MongoServer = child.Value;
                 break;
-            case "platform":
+            case "PLATFORM":
                 foreach (var plt in child.GetChildren()) {
                     if (plt["os"] == "win32") {
                         fichier = new( plt["ZipFile"]);

@@ -14,6 +14,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Components;
 // ReSharper disable once CheckNamespace
 namespace CompteEstBon {
-   
+  public enum CebTypeGrille {
+        Grille,
+        Liste
+    }
     
 }
