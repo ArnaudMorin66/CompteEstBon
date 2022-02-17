@@ -20,7 +20,6 @@ svc.AddSyncfusionBlazor();
 SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["syncfusion:license"]);
 
 
-
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if(app.Environment.IsDevelopment()) {
