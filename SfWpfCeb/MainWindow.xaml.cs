@@ -24,7 +24,7 @@ namespace CompteEstBon {
             VisualStyle = "MaterialDark";
         }
 
-        public string DotnetVersion => $"{RuntimeInformation.FrameworkDescription}:v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version}";
+        public string DotnetVersion => $"Version: {System.Reflection.Assembly.GetExecutingAssembly().GetName().Version}, {RuntimeInformation.FrameworkDescription}";
         public string VisualStyle {
             get => _style;
             set {

@@ -78,19 +78,19 @@ if (prs.Errors.Any()) Environment.Exit(-1);
 foreach (var option in rootCommand.Options.Where(p => prs.FindResultFor(p) != null)) {
     switch (option.Name) {
         case "search":
-            tirage.Search = prs.GetValueForOption<int>(option);
+            tirage.Search = prs.GetValueForOption<int>((Option<int>)option);
             break;
 
         case "plaques":
-            tirage.SetPlaques(prs.GetValueForOption<int[]>(option));
+            tirage.SetPlaques(prs.GetValueForOption<int[]>((Option<int[]>)option));
             break;
 
         case "json":
-            Json = prs.GetValueForOption<bool>(option);
+            Json = prs.GetValueForOption<bool>((Option<bool>)option);
             break;
 
         case "file":
-            fichier = prs.GetValueForOption<FileInfo>(option);
+            fichier = prs.GetValueForOption<FileInfo>((global::System.CommandLine.Option<global::System.IO.FileInfo>)option);
             break;
 
         case "version":
@@ -99,15 +99,15 @@ foreach (var option in rootCommand.Options.Where(p => prs.FindResultFor(p) != nu
             break;
 
         case "save":
-            Save = prs.GetValueForOption<bool>(option);
+            Save = prs.GetValueForOption<bool>((Option<bool>)option);
             break;
 
         case "mongodb":
-            SaveToMongoDb = prs.GetValueForOption<bool>(option);
+            SaveToMongoDb = prs.GetValueForOption<bool>((Option<bool>)option);
             break;
 
         case "server":
-            MongoServer = prs.GetValueForOption<string>(option);
+            MongoServer = prs.GetValueForOption<string>((Option<string>)option);
             break;
 
         default:
@@ -116,7 +116,7 @@ foreach (var option in rootCommand.Options.Where(p => prs.FindResultFor(p) != nu
     }
 }
 
-var arguments = prs.GetValueForArgument<int[]>(rootCommand.Arguments.First(p => p.Name == "arguments"));
+var arguments = prs.GetValueForArgument<int[]>((Argument<int[]>)rootCommand.Arguments.First(p => p.Name == "arguments"));
 if (arguments.Length > 0) {
     if (arguments[0] == 0 && arguments.Length == 1) {
         WriteLine("Paramètre invalide".Red());

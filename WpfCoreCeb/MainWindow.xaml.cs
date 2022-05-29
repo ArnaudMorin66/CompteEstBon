@@ -10,9 +10,9 @@ namespace CompteEstBon {
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
     public partial class MainWindow {
-        
-        public string DotnetVersion => RuntimeInformation.FrameworkDescription;
-      
+
+        public string DotnetVersion => $"{RuntimeInformation.FrameworkDescription},v{System.Reflection.Assembly.GetExecutingAssembly().GetName().Version}";
+
         private string _theme = "Dark";
         public string Theme {
             get => _theme;
@@ -24,7 +24,7 @@ namespace CompteEstBon {
             InitializeComponent();
             System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("fr");
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
-            
+
         }
         // private ViewTirage viewTirage => DataContext  as ViewTirage;
         private void SolutionsData_SelectionChanged(object sender, SelectionChangedEventArgs e) => ViewTirage.ShowNotify(SolutionsData.SelectedIndex);
@@ -47,8 +47,8 @@ namespace CompteEstBon {
             var hMenu = NativeMethods.GetSystemMenu(hWnd, false);
             var location = elt.PointToScreen(Mouse.GetPosition(elt));
             var cmd = NativeMethods.TrackPopupMenu(hMenu, 0x100,
-                (int) location.X, (int) location.Y, 0, hWnd, IntPtr.Zero);
-            if (cmd > 0) NativeMethods.SendMessage(hWnd, 0x112, (IntPtr) cmd, IntPtr.Zero);
+                (int)location.X, (int)location.Y, 0, hWnd, IntPtr.Zero);
+            if (cmd > 0) NativeMethods.SendMessage(hWnd, 0x112, (IntPtr)cmd, IntPtr.Zero);
         }
         private void TextBlock_MouseRightButtonUp(object sender, MouseButtonEventArgs e) => DisplaySystemMenu(sender);
         private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e) => WindowState = (WindowState == WindowState.Normal) ? WindowState.Maximized : WindowState.Normal;

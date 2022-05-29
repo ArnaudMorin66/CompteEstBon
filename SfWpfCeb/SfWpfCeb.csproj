@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-Windows</TargetFramework>
+    <TargetFramework>net7.0-Windows</TargetFramework>
     <LangVersion>10</LangVersion>
     <UseWPF>true</UseWPF>
     <RootNamespace>CompteEstBon</RootNamespace>
@@ -12,8 +12,8 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
-    <AssemblyVersion>3.0.8083.6</AssemblyVersion>
-    <FileVersion>3.0.8083.6</FileVersion>
+    <AssemblyVersion>3.0.8114.8</AssemblyVersion>
+    <FileVersion>3.0.8114.8</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,15 +32,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.14.1" />
-    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="19.4.0.52" />
-    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="19.4.0.52" />
-    <PackageReference Include="Syncfusion.SfInput.WPF" Version="19.4.0.52" />
-    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="19.4.0.52" />
-    <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="19.4.0.52" />
-    <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="19.4.0.52" />
-    <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="19.4.0.52" />
-    <PackageReference Include="Syncfusion.Themes.Office2019Black.WPF" Version="19.4.0.52" />
+    <PackageReference Include="MongoDB.Driver" Version="2.15.0" />
+    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="19.4.0.56" />
+    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="19.4.0.56" />
+    <PackageReference Include="Syncfusion.SfInput.WPF" Version="19.4.0.56" />
+    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="19.4.0.56" />
+    <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="19.4.0.56" />
+    <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="19.4.0.56" />
+    <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="19.4.0.56" />
+    <PackageReference Include="Syncfusion.Themes.Office2019Black.WPF" Version="19.4.0.56" />
   </ItemGroup>
 
   <ItemGroup>
