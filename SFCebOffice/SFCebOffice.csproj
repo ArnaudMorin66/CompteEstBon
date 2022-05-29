@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>CompteEstBon</RootNamespace>
     <LangVersion>10.0</LangVersion>
     <SignAssembly>true</SignAssembly>
@@ -10,8 +10,8 @@
 
 
    <ItemGroup>
-     <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="19.4.0.52" />
-     <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="19.4.0.52" />
+     <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="20.1.0.56" />
+     <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="20.1.0.56" />
    </ItemGroup>
 
 

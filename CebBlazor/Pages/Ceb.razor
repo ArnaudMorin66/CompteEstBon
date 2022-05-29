@@ -45,12 +45,13 @@
                 <div class="row">
                     @foreach (var plq in tirage.Plaques) {
                         <div class="col-md-2">
-                            <SfComboBox TItem="string"
+                            <SfComboBox TItem="int"
                                         TValue="int"
                                         @bind-Value="plq.Value"
                                         DataSource="@ListePlaques"
                                         ShowClearButton="false"
                                         Enabled="tirage.Status != CebStatus.EnCours">
+                                        
                             </SfComboBox>
                         </div>
                     }
@@ -249,12 +250,15 @@
     </SfProgressBar>
 }
 
+
+
 @code {
-    CebTypeGrille TypeGrille { get; set; }
+    CebTypeGrille TypeGrille { get; set; }= CebTypeGrille.Grille;
 #pragma warning disable CS8618
-    public CebToast toast { get; set; }
-    public CebSolutions Solutions { get; set; }
-    public static IEnumerable<string> ListePlaques = CebPlaque.AnyPlaques.Select(p => p.ToString());
+#pragma warning disable CS8602
+    public CebToast? toast { get; set; }
+    public CebSolutions? Solutions { get; set; }
+    public static IEnumerable<int> ListePlaques = CebPlaque.AnyPlaques.Select(p => p);
 
 
     protected override void OnInitialized() {
