@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CompteEstBon5\CompteEstBon5.csproj" />
+    <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
   </ItemGroup>
 
   <Target Name="PreBuildRelease" BeforeTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Release' ">

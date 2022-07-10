@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30114.128
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevBlazorCeb", "DevBlazorCeb.csproj", "{3B0E2018-B80D-4A38-ACDB-44F110838B79}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon5", "..\CompteEstBon5\CompteEstBon5.csproj", "{A6F9A7FF-5A46-4354-92A5-7F65E0385C03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon", "..\CompteEstBon\CompteEstBon.csproj", "{A6F9A7FF-5A46-4354-92A5-7F65E0385C03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

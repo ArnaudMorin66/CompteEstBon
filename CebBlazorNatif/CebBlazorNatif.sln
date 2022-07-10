@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30114.128
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CebBlazorNatif", "CebBlazorNatif.csproj", "{4592B053-8072-490F-9541-9534FB7A2655}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon5", "..\CompteEstBon5\CompteEstBon5.csproj", "{C7D2490E-B8E5-4CBF-BB2B-9320910AA173}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon", "..\CompteEstBon\CompteEstBon.csproj", "{C7D2490E-B8E5-4CBF-BB2B-9320910AA173}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFCebOffice", "..\SFCebOffice\SFCebOffice.csproj", "{6091B195-47CA-418D-9F69-FD6E851F344D}"
 EndProject

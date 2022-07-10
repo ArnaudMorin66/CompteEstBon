@@ -53,7 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CompteEstBon5\CompteEstBon5.csproj" />
+    <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
     <ProjectReference Include="..\SFCebOffice\SFCebOffice.csproj" />
   </ItemGroup>
 

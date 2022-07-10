@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29814.53
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfCoreCeb", "WpfCoreCeb.csproj", "{20275AD7-0D4D-48D3-80C0-F18056A82DC8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon5", "..\CompteEstBon5\CompteEstBon5.csproj", "{2DC808FF-8D80-45BE-B4E2-89EA0E13E6C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon", "..\CompteEstBon\CompteEstBon.csproj", "{2DC808FF-8D80-45BE-B4E2-89EA0E13E6C2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFCebOffice", "..\SFCebOffice\SFCebOffice.csproj", "{4AA74D5C-B8F4-4D08-8BFB-4DE8F4B890F5}"
 EndProject

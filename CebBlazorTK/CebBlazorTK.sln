@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30114.128
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CebBlazorTK", "CebBlazorTK.csproj", "{40B9955A-D6B0-4689-8A17-97312D18D25E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon5", "..\CompteEstBon5\CompteEstBon5.csproj", "{C12D624F-7A8D-40A1-A8A1-D1506C8166B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon", "..\CompteEstBon\CompteEstBon.csproj", "{C12D624F-7A8D-40A1-A8A1-D1506C8166B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

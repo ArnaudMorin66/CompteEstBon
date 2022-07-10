@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon", "CompteEstBon\CompteEstBon.csproj", "{E870DA70-15E2-4113-8C79-2CA7610688BC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsCeb", "CsCeb\CsCeb.csproj", "{91D39D7D-9E1C-4CD7-86D3-2086B72BEAEF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CebExcel", "CebExcel\CebExcel.csproj", "{C46ED5C8-8E57-466D-AF3B-A535D1D0C2A2}"
@@ -23,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SfWpfCeb", "SfWpfCeb\SfWpfC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFCebOffice", "SFCebOffice\SFCebOffice.csproj", "{33341D4F-2A48-45E0-AF6E-1E4A2F4CF82F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon5", "CompteEstBon5\CompteEstBon5.csproj", "{10598870-CFF8-4899-A121-97606C7B043C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon", "CompteEstBon\CompteEstBon.csproj", "{10598870-CFF8-4899-A121-97606C7B043C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RadzenCeb", "RadzenCeb\RadzenCeb.csproj", "{F345C466-28BA-4186-82EA-23923AD784C1}"
 EndProject
