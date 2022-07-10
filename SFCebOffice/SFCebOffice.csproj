@@ -19,7 +19,7 @@
 
 
    <ItemGroup>
-     <ProjectReference Include="..\CompteEstBon5\CompteEstBon5.csproj" />
+     <ProjectReference Include="..\CompteEstBon5\CompteEstBon.csproj" />
    </ItemGroup>
 
 </Project>
