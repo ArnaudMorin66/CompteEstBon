@@ -6,9 +6,9 @@
     <LangVersion>10.0</LangVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
-    <Version>3.1.0.1</Version>
-    <FileVersion>3.1.0.1</FileVersion>
-    <AssemblyVersion>3.1.0.1</AssemblyVersion>
+    <Version>3.2.0.0</Version>
+    <FileVersion>3.2.0.0</FileVersion>
+    <AssemblyVersion>3.2.0.0</AssemblyVersion>
   </PropertyGroup>
 
 

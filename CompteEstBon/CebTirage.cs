@@ -24,7 +24,6 @@ namespace CompteEstBon {
 
 
         public CebTirage(bool auto = false) {
-            // CebPlaque.NotifyValueChange.Add(IsUpdated);
             Auto = auto;
             for (var i = 0; i < 6; i++) {
                 Plaques.Add(new CebPlaque(action: IsUpdated));
@@ -32,7 +31,6 @@ namespace CompteEstBon {
 
             Random();
 
-            // if (auto) Resolve();
         }
 
        
@@ -119,7 +117,7 @@ namespace CompteEstBon {
             if (Auto && Status == CebStatus.Valide)
                 Resolve();
 
-            NotifyPropertyChanged();
+            NotifyPropertyChanged("Clear");
             return Data;
         }
 
@@ -181,7 +179,7 @@ namespace CompteEstBon {
             Resolve(Plaques.ToList<CebBase>());
             _solutions.Sort((p, q) => p.Compare(q));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
-            NotifyPropertyChanged();
+            NotifyPropertyChanged("Resolve");
             Watch.Stop();
             return Status;
         }

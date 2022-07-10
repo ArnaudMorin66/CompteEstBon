@@ -307,7 +307,7 @@
                     Content="-"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     Template="{DynamicResource CebRepeatButtonTemplate}" />
-                <TextBox
+                <TextBox 
                     x:Name="txtSearch"
                     Grid.Column="1"
                     AcceptsTab="True"

@@ -35,22 +35,21 @@
 	<div class="col text-center">
 		<div class="card text-center border-secondary">
 			<div class="card-header bg-primary bg-gradient text-white">
-
-
 				<i class="fas fa-bars"></i>
-				&nbsp;Plaques
+				&nbsp;Plaques &nbsp;Mode auto: <InputCheckbox @bind-Value="Auto"></InputCheckbox>
 			</div>
 			<div class="card-body">
 				<div class="row">
-					@foreach (var plq in tirage.Plaques) {
+					@foreach (var plq in tirage.Plaques)
+					{
 						<div class="col-md-2">
 							<SfComboBox TItem="int"
-										TValue="int"
-										@bind-Value="plq.Value"
-										DataSource="@ListePlaques"
-										ShowClearButton="false"
-										Enabled="tirage.Status != CebStatus.EnCours">
-										
+									TValue="int"
+									@bind-Value="plq.Value"
+									DataSource="@ListePlaques"
+									ShowClearButton="false"
+									Enabled="tirage.Status != CebStatus.EnCours">
+
 							</SfComboBox>
 						</div>
 					}
@@ -81,7 +80,8 @@
 	<div class="col-md-3 card bg-transparent" style="border: none">
 		<div class="card-text bg-transparent" style="margin: 0;">
 			<div class="btn-group w-100" role="group" aria-label="resolve">
-				@switch (tirage.Status) {
+				@switch (tirage.Status)
+				{
 					case CebStatus.EnCours:
 						<button class="btn btn-info btn-block w-50">
 							<div>
@@ -95,11 +95,11 @@
 						break;
 					case CebStatus.CompteEstBon:
 						<button class="btn btn-success btn-block w-50"
-								@onclick="@tirage.ClearAsync"
-								title="Initialisation des résultats (ALT-I)"
-								role="button"
-								type="button"
-								accesskey="i">
+						@onclick="@tirage.ClearAsync"
+						title="Initialisation des résultats (ALT-I)"
+						role="button"
+						type="button"
+						accesskey="i">
 							<div>
 								<i class="text-dark far fa-thumbs-up"></i>
 							</div>
@@ -108,11 +108,11 @@
 						break;
 					case CebStatus.CompteApproche:
 						<button class="btn btn-warning btn-block w-50"
-								role="button"
-								type="button"
-								title="Initialisation des résultats (ALT-I)"
-								@onclick="tirage.ClearAsync"
-								accesskey="i">
+						role="button"
+						type="button"
+						title="Initialisation des résultats (ALT-I)"
+						@onclick="tirage.ClearAsync"
+						accesskey="i">
 							<div>
 								<i class="text-danger far fa-thumbs-down"></i>
 							</div>
@@ -121,11 +121,11 @@
 						break;
 					case CebStatus.Invalide:
 						<button class="btn btn-danger btn-block w-50"
-								role="button"
-								type="button"
-								title="Tirage aléatoire (ALT-T)"
-								@onclick="tirage.RandomAsync"
-								accesskey="T">
+						role="button"
+						type="button"
+						title="Tirage aléatoire (ALT-T)"
+						@onclick="tirage.RandomAsync"
+						accesskey="T">
 							<div class="animation">
 								<div>
 									<i class="far fa-exclamation-triangle"></i>
@@ -137,12 +137,12 @@
 						break;
 					default:
 						<button id="resoudre"
-								title="Résolution du tirage (ALT-R)"
-								class="btn btn-primary btn-block w-50"
-								role="button"
-								@onclick="ResolveAsync"
-								type="button"
-								accesskey="r">
+						title="Résolution du tirage (ALT-R)"
+						class="btn btn-primary btn-block w-50"
+						role="button"
+						@onclick="ResolveAsync"
+						type="button"
+						accesskey="r">
 							<div>
 								<i class="fas fa-bolt"></i>
 							</div>
@@ -166,7 +166,6 @@
 					</button>
 
 					<button id="Excel"
-							
 							title="Export vers excel (ALT-X)"
 							class="btn btn-primary w-25 @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon  ? "" :"d-none")"
 							role="button"
@@ -203,7 +202,8 @@
 <div class="card text-center bg-primary bg-gradient border-secondary">
 	<div class="card-header">
 		<div class="'text-center'">
-			@switch (tirage.Status) {
+			@switch (tirage.Status)
+			{
 				case CebStatus.EnCours:
 					<div class="alert-info" role="alert">
 						<i class="fas fa-spinner fa-spin"></i>&nbsp;Patientez, calcul en cours&hellip;
@@ -241,32 +241,51 @@
 <CebToast @ref="toast" DueTime="10000"></CebToast>
 <CebFooter></CebFooter>
 
-@if (tirage.Status == CebStatus.EnCours) {
+@if (tirage.Status == CebStatus.EnCours)
+{
 	<SfProgressBar ID="progress" Type="ProgressType.Circular" Height="80"
-				   IsIndeterminate="true"
-				   Value="20" Minimum="0" Maximum="100">
-		<ProgressBarAnimation Enable="@(tirage.Status == CebStatus.EnCours)" Duration="100" Delay="0"/>
+			   IsIndeterminate="true"
+			   Value="20" Minimum="0" Maximum="100">
+		<ProgressBarAnimation Enable="@(tirage.Status == CebStatus.EnCours)" Duration="100" Delay="0" />
 	</SfProgressBar>
 }
 
 
 
 @code {
-	CebTypeGrille TypeGrille { get; set; }= CebTypeGrille.Grille;
+	CebTypeGrille TypeGrille { get; set; } = CebTypeGrille.Grille;
+	private bool _auto = false;
+	bool  Auto { 
+		get => _auto;
+		set {
+			if (_auto == value) return;
+			_auto = value;
+			Task.Run(async () => {
+				await tirage.ClearAsync();
+				await InvokeAsync(StateHasChanged);
+			});
+		} }
 #pragma warning disable CS8618
 #pragma warning disable CS8602
 	public CebToast? toast { get; set; }
 	public CebSolutions? Solutions { get; set; }
 	public static IEnumerable<int> ListePlaques = CebPlaque.AnyPlaques.Select(p => p);
 
-	protected override async Task OnInitializedAsync() {
-		TypeGrille = CebTypeGrille.Grille;
+	protected override async Task OnInitializedAsync()
+	{
 		await base.OnInitializedAsync();
+		tirage.PropertyChanged += async (sender, args) => {
+			if (!Auto || args.PropertyName != "Clear" || tirage.Status == CebStatus.EnCours) return;
+			tirage.Valid();
+			await ResolveAsync();
+			await InvokeAsync(StateHasChanged);
+		};
 	}
 
-	
 
-	async Task ResolveAsync() {
+
+	async Task ResolveAsync()
+	{
 		await tirage.ResolveAsync();
 		// await InvokeAsync(StateHasChanged);
 		if (setting.MongoDb)
@@ -274,30 +293,35 @@
 		await toast.ShowAsync(tirage.Solutions[0]);
 	}
 
-	private async Task ShowSolutionAsync(CebBase? sol) {
+	private async Task ShowSolutionAsync(CebBase? sol)
+	{
 		await toast.ShowAsync(sol);
 	}
 
-	private async Task ExportExcelAsync() {
+	private async Task ExportExcelAsync()
+	{
 		await using var mstream = new MemoryStream();
 		tirage.ExportExcel(mstream);
 		await SaveAsAsync(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ceb.xlsx");
 	}
 
-	private async Task ExportWordAsync() {
+	private async Task ExportWordAsync()
+	{
 		await using var mstream = new MemoryStream();
 		tirage.ExportWord(mstream);
 		await SaveAsAsync(mstream.ToArray(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "ceb.docx");
 	}
 
-	private async Task SaveMongoDb() {
-		try {
-	// Configure the HTTP request pipeline.
+	private async Task SaveMongoDb()
+	{
+		try
+		{
+			// Configure the HTTP request pipeline.
 
 			ConventionRegistry.Register("EnumStringConvention",
 				new ConventionPack {
 					new EnumRepresentationConvention(BsonType.String)
-				},
+					},
 				_ => true);
 			var clientSettings = MongoClientSettings.FromConnectionString(setting.MongoDbConnectionString);
 			clientSettings.LinqProvider = LinqProvider.V3;
@@ -309,19 +333,23 @@
 			await cl.InsertOneAsync(
 				new BsonDocument(new Dictionary<string, object> {
 					{ "_id", new { lang = "blazor", domain = Environment.GetEnvironmentVariable("USERDOMAIN"), date = DateTime.UtcNow }.ToBsonDocument() }
-				})
+					})
 					.AddRange(tirage.Data.ToBsonDocument()));
 		}
-		catch (Exception e) {
+		catch (Exception e)
+		{
 			Console.WriteLine(e);
 		}
 	}
 
-	public async Task SaveAsAsync(byte[]? byteData, string mimeType, string fileName) {
-		if (byteData == null) {
+	public async Task SaveAsAsync(byte[]? byteData, string mimeType, string fileName)
+	{
+		if (byteData == null)
+		{
 			await js.InvokeVoidAsync("alert", "Le fichier à exporter est non défini.");
 		}
-		else {
+		else
+		{
 			await js.InvokeVoidAsync("saveFile", Convert.ToBase64String(byteData), mimeType, fileName);
 		}
 	}

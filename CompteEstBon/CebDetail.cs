@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace CompteEstBon {
    
@@ -28,13 +27,12 @@ namespace CompteEstBon {
         //}
         public (int gauche, char op, int droite) Decoup(int i) {
             var l = Op(i).Split();
-            if (int.TryParse(l[0], out int g)) return (0, '\0', 0);
-            if (this is CebPlaque) return (g, '\0', 0);
-            if (!int.TryParse(l[2], out int d)) return (0, '\0', 0);
-            return (g, l[1][0], d);
+            if (int.TryParse(l[0], out var g)) return (0, '\0', 0);
+            //if (this is CebPlaque) return (g, '\0', 0);
+            return !int.TryParse(l[2], out var d) ? (0, '\0', 0) : (g, l[1][0], d);
         }
 
-        public string Op(int i) => GetType().GetProperty($"Op{i + 1}").GetValue(this) as string;
-        public void SetOp(int i, string value) => GetType().GetProperty($"Op{i + 1}").SetValue(this, value);
+        public string Op(int i) => GetType().GetProperty($"Op{i + 1}")!.GetValue(this) as string;
+        public void SetOp(int i, string value) => GetType().GetProperty($"Op{i + 1}")!.SetValue(this, value);
     }
 }

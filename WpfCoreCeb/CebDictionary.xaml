@@ -6,6 +6,8 @@
     mc:Ignorable="d">
     <SolidColorBrush x:Key="CebForegroundBrush" Color="{Binding Foreground}" />
     <SolidColorBrush x:Key="CebBackgroundBrush" Color="{Binding Background}" />
+    <SolidColorBrush x:Key="TextBox.Disabled.Background" Color="#FF3F3F3F" />
+    <SolidColorBrush x:Key="TextBox.Disabled.Foreground" Color="#F0FFFFFF" />
     <Style TargetType="{x:Type RepeatButton}">
         <Setter Property="Background" Value="{DynamicResource CebBackgroundBrush}" />
         <Setter Property="Cursor" Value="Hand" />
@@ -108,11 +110,18 @@
     <Style x:Key="SearchControlStyle" TargetType="{x:Type TextBox}">
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Background" Value="{DynamicResource CebBackgroundBrush}" />
+        <!--<Setter Property="Background" Value="{DynamicResource CebBackgroundBrush}" />-->
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="InputScope" Value="Number" />
         <Setter Property="MaxLength" Value="3" />
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{DynamicResource TextBox.Disabled.Background}" />
+                <Setter Property="Foreground" Value="{DynamicResource TextBox.Disabled.Foreground}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
     <Style x:Key="SolutionsCellStyle" TargetType="{x:Type DataGridCell}">
         <Setter Property="Background" Value="Transparent" />

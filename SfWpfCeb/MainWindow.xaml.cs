@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Syncfusion.SfSkinManager;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Helpers;
+using Syncfusion.Windows.Shared;
 
 namespace CompteEstBon {
 
@@ -34,7 +35,7 @@ namespace CompteEstBon {
                 SfSkinManager.SetVisualStyle(this, (VisualStyles) Enum.Parse(typeof(VisualStyles), value));
                 resource.Source =
                     new Uri($"pack://application:,,,/Syncfusion.Themes.{value}.WPF;component/Common/Brushes.xaml");
-                // SkinStorage.SetVisualStyle(this, value);
+                
             }
         }
 

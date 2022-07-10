@@ -52,6 +52,7 @@
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
                 <Setter Property="HorizontalContentAlignment" Value="Center" />
             </Style>
+
             <Style TargetType="{x:Type s:VirtualizingCellsControl}">
                 <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
             </Style>
@@ -175,7 +176,61 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <ComboBox
+                <s:ComboBoxAdv 
+                    x:Name="Plaque1"
+                    Grid.Column="0"
+                    IsEditable="True" 
+                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}" 
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    TabIndex="0"
+                    Text="{Binding Plaques[0], Mode=TwoWay}" />
+                <s:ComboBoxAdv
+                    x:Name="Plaque2"
+                    Grid.Column="1"
+                    IsEditable="True" 
+                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}" 
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    TabIndex="1"
+                    Text="{Binding Plaques[1], Mode=TwoWay}" />
+                <s:ComboBoxAdv
+                    x:Name="Plaque3"
+                    Grid.Column="2"
+                    IsEditable="True" 
+                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}" 
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    TabIndex="2"
+                    Text="{Binding Plaques[2], Mode=TwoWay}" />
+                <s:ComboBoxAdv
+                    x:Name="Plaque4"
+                    Grid.Column="3"
+                    IsEditable="True" 
+                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}" 
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    TabIndex="3"
+                    Text="{Binding Plaques[3], Mode=TwoWay}" />
+                <s:ComboBoxAdv
+                    x:Name="Plaque5"
+                    Grid.Column="4"
+                    IsEditable="True" 
+                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}" 
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    TabIndex="4"
+                    Text="{Binding Plaques[4], Mode=TwoWay}" />
+                <s:ComboBoxAdv
+                    x:Name="Plaque6"
+                    Grid.Column="5"
+                    IsEditable="True" 
+                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}" 
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    TabIndex="5"
+                    Text="{Binding Plaques[5], Mode=TwoWay}" />
+                <!--<ComboBox
                     x:Name="Plaque1"
                     Grid.Column="0"
                     Style="{StaticResource ComboPlaqueStyle}"
@@ -210,7 +265,7 @@
                     Grid.Column="5"
                     Style="{StaticResource ComboPlaqueStyle}"
                     TabIndex="5"
-                    Text="{Binding Plaques[5], Mode=TwoWay}" />
+                    Text="{Binding Plaques[5], Mode=TwoWay}" />-->
             </Grid>
         </Border>
         <Label
@@ -237,6 +292,7 @@
             TabIndex="6"
             TextAlignment="Center"
             Value="{Binding Search, Mode=TwoWay}" />
+
         <Button
             x:Name="btnResoudre"
             Grid.Row="0"
@@ -282,7 +338,9 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     Text="Tirage" />
+
             </StackPanel>
+
         </Button>
         <Button
                 x:Name="btnExport"
@@ -418,17 +476,18 @@
                     <ComboBoxItem Content="MaterialDark" />
                     <ComboBoxItem Content="MaterialDarkBlue" />
                     <ComboBoxItem Content="Office2019Black" />
+                    <ComboBoxItem Content="FluentDark"/>
                 </ComboBox>
             </StatusBarItem>
             <StatusBarItem Grid.Column="5" Background="Transparent">
-               
-                    <CheckBox x:Name="cbAuto"
+
+                <CheckBox x:Name="cbAuto"
                               Content="Auto"
                               IsTabStop="False"
                               IsChecked="{Binding Auto}"
                               ToolTipService.ToolTip="Mode auto">
                 </CheckBox>
-                
+
             </StatusBarItem>
             <StatusBarItem Grid.Column="6" Background="Transparent">
                 <Button
@@ -437,7 +496,7 @@
                     IsTabStop="False"
                     ToolTipService.ToolTip="Vue grille ou liste" />
             </StatusBarItem>
-            
+
         </StatusBar>
         <!--  ReSharper disable once Xaml.MissingGridIndex  -->
         <Popup
