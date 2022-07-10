@@ -1,11 +1,7 @@
 {
   "profiles": {
-    "CsCeb": {
-      "commandName": "Project"
-    },
     "WSL": {
       "commandName": "WSL2",
-      "environmentVariables": {},
       "distributionName": ""
     },
     "help": {
@@ -31,6 +27,9 @@
     "Save": {
       "commandName": "Project",
       "commandLineArgs": "-S"
+    },
+    "ceb": {
+      "commandName": "Project"
     }
   }
 }

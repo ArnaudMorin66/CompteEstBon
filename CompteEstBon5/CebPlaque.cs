@@ -16,17 +16,17 @@ namespace CompteEstBon {
         };
         public static readonly IEnumerable<int> AnyPlaques = new SortedSet<int>(AllPlaques);
 
-        
+
         // public  event PropertyChangedEventHandler PropertyChanged;
 
-        public CebPlaque(int v=0, Action< object, PropertyChangingEventArgs> action=null) {
+        public CebPlaque(int v = 0, Action<object, PropertyChangingEventArgs> action = null) {
             Value = v;
             Operations.Add(Value.ToString());
-           
+
             PropertyChanging += (o, e) => {
-                action?.Invoke (o, e);
+                action?.Invoke(o, e);
             };
-            
+
 
         }
 
@@ -45,7 +45,7 @@ namespace CompteEstBon {
                 OnPropertyChanging(nameof(Value));
                 base.Value = value;
                 Operations[0] = value.ToString();
-                
+
             }
         }
         private void OnPropertyChanging(string propertyName) {

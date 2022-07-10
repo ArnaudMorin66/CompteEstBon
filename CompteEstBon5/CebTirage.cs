@@ -18,20 +18,24 @@ namespace CompteEstBon {
     /// </summary>
 
     public sealed class CebTirage : INotifyPropertyChanged {
-        private static readonly Random Rnd = new();
-        private readonly List<CebBase> _solutions = new(); 
+        private static readonly Random Rnd = System.Random.Shared;
+        private readonly List<CebBase> _solutions = new();
         private int _search;
-       
 
-        public CebTirage() {
+
+        public CebTirage(bool auto = false) {
             // CebPlaque.NotifyValueChange.Add(IsUpdated);
+            Auto = auto;
             for (var i = 0; i < 6; i++) {
-                Plaques.Add(new CebPlaque(action: IsUpdated)); 
+                Plaques.Add(new CebPlaque(action: IsUpdated));
             }
-            
+
             Random();
+
+            // if (auto) Resolve();
         }
 
+       
         /// <summary>
         ///     Constructeur Tirage du Compte est bon
         /// </summary>
@@ -48,8 +52,11 @@ namespace CompteEstBon {
                 foreach (var (p, i) in plaques.WithIndex().Where(elt => elt.Item2 < 6)) Plaques[i].Value = p;
                 Search = search;
             }
-        }
 
+            Resolve();
+        }
+        public bool Auto { get; set; }
+        
         /// <summary>
         ///     Nombre de solutions
         /// </summary>
@@ -98,7 +105,7 @@ namespace CompteEstBon {
         /// </value>
         public CebStatus Status { get; private set; } = CebStatus.Indefini;
 
-        private Stopwatch Watch { get; } = new(); 
+        private Stopwatch Watch { get; } = new();
         public double Duree => Watch.Elapsed.TotalSeconds;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -109,6 +116,9 @@ namespace CompteEstBon {
             Diff = int.MaxValue;
             Found.Reset();
             Valid();
+            if (Auto && Status == CebStatus.Valide)
+                Resolve();
+
             NotifyPropertyChanged();
             return Data;
         }
@@ -127,11 +137,10 @@ namespace CompteEstBon {
             Found = Found.ToString()
         };
 
-        private bool IsPlaquesValid() {
-            return Plaques.All(p => p.IsValid
-                                    && Plaques.Count(q => q.Value == p.Value) <=
-                                    CebPlaque.AllPlaques.Count(i => i == p.Value));
-        }
+        private bool IsPlaquesValid() =>
+            Plaques.All(p => p.IsValid
+                             && Plaques.Count(q => q.Value == p.Value) <=
+                             CebPlaque.AllPlaques.Count(i => i == p.Value));
 
         /// <summary>
         ///     Valid the search value
@@ -145,7 +154,7 @@ namespace CompteEstBon {
         /// </summary>
         public CebData Random() {
             Status = CebStatus.Indefini;
-            
+
             var liste = new List<int>(CebPlaque.AllPlaques);
             Plaques.ForEach(p => {
                 var n = Rnd.Next(0, liste.Count);
@@ -240,7 +249,7 @@ namespace CompteEstBon {
             _solutions.Add(sol);
         }
 
-        private void IsUpdated(object objet, PropertyChangingEventArgs e)  {
+        private void IsUpdated(object objet, PropertyChangingEventArgs e) {
             if (Status is not CebStatus.EnCours and not CebStatus.Indefini) Clear();
         }
 
@@ -254,7 +263,7 @@ namespace CompteEstBon {
                                      new CebOperation(p, operation, q))
                                  .Where(o => o.Value != 0))
                         Resolve(
-                            new [] {oper}.Concat(
+                            new[] { oper }.Concat(
                             liste.Where((_, k) => k != i && k != j)) //.Concat(new[] { oper })
                         );
                 }

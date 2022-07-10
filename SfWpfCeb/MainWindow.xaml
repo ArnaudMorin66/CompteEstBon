@@ -73,6 +73,41 @@
             </Style>
         </ResourceDictionary>
     </s:ChromelessWindow.Resources>
+    <s:ChromelessWindow.TaskbarItemInfo>
+        <TaskbarItemInfo
+            x:Name="CebTaskbarInfo"
+            Description="Le compte est bon"
+            Overlay="favicon.ico">
+            <TaskbarItemInfo.ThumbButtonInfos>
+                <ThumbButtonInfoCollection>
+                    <ThumbButtonInfo
+                        Command="{Binding}"
+                        CommandParameter="random"
+                        Description="Tirage"
+                        DismissWhenClicked="True"
+                        ImageSource="Images/random.png"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
+
+                    <ThumbButtonInfo
+                        Command="{Binding}"
+                        CommandParameter="Resolve"
+                        CommandTarget="{Binding ElementName=btnResoudre}"
+                        Description="Résoudre"
+                        DismissWhenClicked="True"
+                        ImageSource="Images/resolve.png"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
+                    <ThumbButtonInfo
+                        Command="{Binding}"
+                        CommandParameter="export"
+                        CommandTarget="{Binding ElementName=btnExport}"
+                        Description="Exportation Word/Excel"
+                        DismissWhenClicked="True"
+                        ImageSource="Images/excel.png"
+                        IsEnabled="{Binding IsComputed}" />
+                </ThumbButtonInfoCollection>
+            </TaskbarItemInfo.ThumbButtonInfos>
+        </TaskbarItemInfo>
+    </s:ChromelessWindow.TaskbarItemInfo>
     <s:ChromelessWindow.DataContext>
         <local:ViewTirage x:Name="ViewTirage" />
     </s:ChromelessWindow.DataContext>
@@ -312,7 +347,9 @@
                     MappingName="Operations[4]"
                     TextAlignment="Center"
                     UseBindingValue="True" />
-                <s:GridTemplateColumn CellTemplate="{StaticResource listboxOperations}" IsHidden="{Binding Vertical, Converter={StaticResource InverseBooleanConverter}}" />
+                <s:GridTemplateColumn 
+                    CellTemplate="{StaticResource listboxOperations}" 
+                    IsHidden="{Binding Vertical, Converter={StaticResource InverseBooleanConverter}}" />
             </s:SfDataGrid.Columns>
         </s:SfDataGrid>
         <s:SfBusyIndicator
@@ -342,6 +379,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="128" />
+                            <ColumnDefinition Width="64"/>
                             <ColumnDefinition Width="24" />
                         </Grid.ColumnDefinitions>
                     </Grid>
@@ -368,6 +406,7 @@
                 <TextBlock
                     x:Name="textBlock3"
                     Foreground="{DynamicResource TextForegroundBrush}"
+                    
                     Text="{Binding Duree.TotalSeconds, Mode=OneWay, StringFormat=Durée: {0:N3}}" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="4" Background="Transparent">
@@ -381,14 +420,24 @@
                     <ComboBoxItem Content="Office2019Black" />
                 </ComboBox>
             </StatusBarItem>
-
             <StatusBarItem Grid.Column="5" Background="Transparent">
+               
+                    <CheckBox x:Name="cbAuto"
+                              Content="Auto"
+                              IsTabStop="False"
+                              IsChecked="{Binding Auto}"
+                              ToolTipService.ToolTip="Mode auto">
+                </CheckBox>
+                
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="6" Background="Transparent">
                 <Button
                     Click="btnMode_Click"
                     Content="{Binding ModeView}"
                     IsTabStop="False"
                     ToolTipService.ToolTip="Vue grille ou liste" />
             </StatusBarItem>
+            
         </StatusBar>
         <!--  ReSharper disable once Xaml.MissingGridIndex  -->
         <Popup

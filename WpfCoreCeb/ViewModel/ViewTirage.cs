@@ -49,6 +49,19 @@ namespace CompteEstBon.ViewModel {
         public DispatcherTimer dateDispatcher;
         public Stopwatch stopwatch;
 
+        private bool _auto = false;
+        public bool Auto {
+            get => _auto;
+            set {
+                if (_auto == value) return;
+                _auto = value;
+                Task.Run(async () => {
+                    await ClearAsync();
+                    
+                });
+                NotifiedChanged();
+            }
+        }
         /// <summary>
         ///     Initialisation
         /// </summary>
@@ -73,7 +86,10 @@ namespace CompteEstBon.ViewModel {
                 var i = e.NewStartingIndex;
                 if (Tirage.Plaques[i].Value == Plaques[i]) return;
                 Tirage.Plaques[i].Value = Plaques[i];
+                Tirage.Valid();
                 ClearData();
+                if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide)
+                    Task.Run(async () => await ResolveAsync());
             };
 
             Background = ThemeColors["Dark"];
@@ -82,6 +98,7 @@ namespace CompteEstBon.ViewModel {
             UpdateColors();
             Titre = $"😊 Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             dateDispatcher.Start();
+            
         }
 
         //private readonly Storyboard WaitStory =
@@ -165,6 +182,8 @@ namespace CompteEstBon.ViewModel {
                 Tirage.Search = value;
                 NotifiedChanged();
                 ClearData();
+                if (Auto && Tirage.Status == CebStatus.Valide)
+                    Task.Run(async () => await ResolveAsync());
             }
         }
 
@@ -177,6 +196,11 @@ namespace CompteEstBon.ViewModel {
                 _result = value;
                 NotifiedChanged();
             }
+        }
+        public bool IsComputed {
+            get => Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche;
+            // ReSharper disable once ValueParameterNotUsed
+            set => NotifiedChanged(nameof(IsComputed));
         }
 
         public Color Foreground {
@@ -295,11 +319,12 @@ namespace CompteEstBon.ViewModel {
             if (_isUpdating) return;
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged(nameof(Status));
+            NotifiedChanged(nameof(IsComputed));
             stopwatch.Reset();
             Duree = stopwatch.Elapsed;
             Solution = null;
             Solutions = null;
-            Result = Tirage.Status != CebStatus.Invalide ? "Le Compte est Bon" : "🤬 Tirage incorrect";
+            Result = Tirage.Status != CebStatus.Invalide ? "Le Compte est Bon" : "🤬 Tirage invalide";
             Popup = false;
             UpdateColors();
         }
@@ -328,11 +353,18 @@ namespace CompteEstBon.ViewModel {
         public async Task ClearAsync() {
             await Tirage.ClearAsync();
             ClearData();
+            if ( !IsBusy && Auto && Tirage.Status == CebStatus.Valide)
+                await ResolveAsync();
         }
 
         public async Task RandomAsync() {
+            IsBusy = true;
             await Tirage.RandomAsync();
             UpdateData();
+            IsBusy = false;
+            if (Auto && Tirage.Status == CebStatus.Valide)
+                await ResolveAsync();
+
         }
 
         private int _count;
@@ -355,7 +387,7 @@ namespace CompteEstBon.ViewModel {
             Result = Tirage.Status switch {
                 CebStatus.CompteEstBon => "😊 Compte est bon",
                 CebStatus.CompteApproche => $"😢 Compte approché: {Tirage.Found}, écart: {Tirage.Diff}",
-                CebStatus.Invalide => "Tirage incorrect",
+                CebStatus.Invalide => "Tirage invalide",
                 _ => "Le Compte est Bon"
             };
             stopwatch.Stop();
@@ -368,9 +400,11 @@ namespace CompteEstBon.ViewModel {
             if (Properties.Settings.Default.MongoDB)
                 await SaveToMongoDB();
             IsBusy = false;
+
             ShowNotify();
             // ReSharper disable once ExplicitCallerInfoArgument
             NotifiedChanged(nameof(Status));
+            NotifiedChanged(nameof(IsComputed));
         }
 
         public async Task SaveToMongoDB() {

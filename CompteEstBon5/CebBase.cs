@@ -1,6 +1,5 @@
 // Plage Compte est bon
 
-using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace CompteEstBon {
@@ -10,7 +9,7 @@ namespace CompteEstBon {
         public override string ToString() => string.Join(", ", Operations);
 
 
-        public List<string> Operations { get; private set; }
+        public List<string> Operations { get; }
 
         // public string[] ToArray() => Operations.ToArray();
         public (int gauche, char op, int droite) Decoup(int i) {

@@ -12,8 +12,9 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
-    <AssemblyVersion>3.0.8114.8</AssemblyVersion>
-    <FileVersion>3.0.8114.8</FileVersion>
+    <AssemblyVersion>3.1.0.1</AssemblyVersion>
+    <FileVersion>3.1.0.1</FileVersion>
+    <Version>3.1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,19 +29,20 @@
     <None Remove="Images\exec.png" />
     <None Remove="Images\favicon.png" />
     <None Remove="Images\random.png" />
+    <None Remove="Images\resolve.png" />
     <None Remove="Images\word.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.15.0" />
-    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="19.4.0.56" />
-    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="19.4.0.56" />
-    <PackageReference Include="Syncfusion.SfInput.WPF" Version="19.4.0.56" />
-    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="19.4.0.56" />
-    <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="19.4.0.56" />
-    <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="19.4.0.56" />
-    <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="19.4.0.56" />
-    <PackageReference Include="Syncfusion.Themes.Office2019Black.WPF" Version="19.4.0.56" />
+    <PackageReference Include="MongoDB.Driver" Version="2.16.1" />
+    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="20.2.0.36" />
+    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="20.2.0.36" />
+    <PackageReference Include="Syncfusion.SfInput.WPF" Version="20.2.0.36" />
+    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="20.2.0.36" />
+    <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="20.2.0.36" />
+    <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="20.2.0.36" />
+    <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="20.2.0.36" />
+    <PackageReference Include="Syncfusion.Themes.Office2019Black.WPF" Version="20.2.0.36" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +57,7 @@
     <Resource Include="Images\exec.png" />
     <Resource Include="Images\favicon.png" />
     <Resource Include="Images\random.png" />
+    <Resource Include="Images\resolve.png" />
     <Resource Include="Images\word.png" />
   </ItemGroup>
 

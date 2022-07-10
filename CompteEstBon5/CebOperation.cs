@@ -6,11 +6,8 @@ namespace CompteEstBon {
     ///     Classe op�ration
     /// </summary>
 
-    public sealed class  CebOperation : CebBase {
-        public static readonly char[] AllOperations = { 'x', '+', '-', '/' };
-        public CebOperation() {
-            Value = 0;
-        }
+    public sealed class CebOperation : CebBase {
+        public static readonly string AllOperations = "x+-/";
 
         /// <summary>
         ///     Constructor op�ration (g op d)
@@ -24,8 +21,7 @@ namespace CompteEstBon {
             if (g.Value < d.Value) {
                 (g, d) = (d, g);
             }
-            Value = op switch
-            {
+            Value = op switch {
                 '+' => g.Value + d.Value,
                 '-' => g.Value - d.Value,
                 'x' => g.Value <= 1 || d.Value <= 1 ? 0 : g.Value * d.Value,

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29911.98
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32519.111
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CebBlazor", "CebBlazor.csproj", "{500538FD-3A52-45B2-A9DF-07F2F8E10B13}"
 EndProject
@@ -12,6 +12,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BFD4FEEC-0F29-48A8-A631-837868673C27}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CebBlazorWeb", "..\CebBlazorWeb\Client\CebBlazorWeb.csproj", "{CA12F188-5F94-4258-B03C-95B00CDE80BC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C71A3E11-EE24-43F3-84AE-812EFF6FAB96} = {C71A3E11-EE24-43F3-84AE-812EFF6FAB96}
+		{F25915FF-3954-46E2-8D7C-8BD98DD186FE} = {F25915FF-3954-46E2-8D7C-8BD98DD186FE}
 	EndProjectSection
 EndProject
 Global
@@ -60,6 +66,18 @@ Global
 		{F25915FF-3954-46E2-8D7C-8BD98DD186FE}.Release|x64.Build.0 = Release|Any CPU
 		{F25915FF-3954-46E2-8D7C-8BD98DD186FE}.Release|x86.ActiveCfg = Release|Any CPU
 		{F25915FF-3954-46E2-8D7C-8BD98DD186FE}.Release|x86.Build.0 = Release|Any CPU
+		{CA12F188-5F94-4258-B03C-95B00CDE80BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA12F188-5F94-4258-B03C-95B00CDE80BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA12F188-5F94-4258-B03C-95B00CDE80BC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CA12F188-5F94-4258-B03C-95B00CDE80BC}.Debug|x64.Build.0 = Debug|Any CPU
+		{CA12F188-5F94-4258-B03C-95B00CDE80BC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CA12F188-5F94-4258-B03C-95B00CDE80BC}.Debug|x86.Build.0 = Debug|Any CPU
+		{CA12F188-5F94-4258-B03C-95B00CDE80BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA12F188-5F94-4258-B03C-95B00CDE80BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA12F188-5F94-4258-B03C-95B00CDE80BC}.Release|x64.ActiveCfg = Release|Any CPU
+		{CA12F188-5F94-4258-B03C-95B00CDE80BC}.Release|x64.Build.0 = Release|Any CPU
+		{CA12F188-5F94-4258-B03C-95B00CDE80BC}.Release|x86.ActiveCfg = Release|Any CPU
+		{CA12F188-5F94-4258-B03C-95B00CDE80BC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

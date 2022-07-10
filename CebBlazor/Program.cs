@@ -11,14 +11,11 @@ svc.AddRazorPages();
 svc.AddServerSideBlazor();
 svc.AddSyncfusionBlazor();
 #pragma warning disable CS8604
-var mdb = bool.Parse(builder.Configuration["mongodb:actif"]);
-var svr = builder.Configuration["mongodb:server"];
-svc.AddSingleton<CebSetting>(new CebSetting {
+svc.AddSingleton(new CebSetting {
     MongoDb = bool.Parse( builder.Configuration["mongodb:actif"]),
     MongoDbConnectionString = builder.Configuration["mongodb:server"]
 });
 svc.AddScoped<CebTirage>();
-// svc.AddSyncfusionBlazor();
 SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["syncfusion:license"]);
 
 

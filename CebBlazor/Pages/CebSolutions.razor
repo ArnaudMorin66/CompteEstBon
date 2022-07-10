@@ -1,15 +1,7 @@
 ﻿@using Syncfusion.Blazor.Grids
 @using SelectionMode = Syncfusion.Blazor.Grids.SelectionMode
 
-<SfGrid @ref="gdetails" DataSource="@Details"
-		GridLines="GridLine.None"
-		Height="400"
-		AllowSelection="true"
-		AllowExcelExport="true"
-		AllowResizing="true"
-		EnableAltRow="true"
-		TValue="CebBase"
-		ID="solutions">
+<SfGrid AllowExcelExport="true" AllowResizing="true" AllowSelection="true" DataSource="@Details" EnableAltRow="true" GridLines="GridLine.None" Height="400" ID="solutions" @ref="gdetails" TValue="CebBase">
 	<GridEvents OnRecordClick="ShowAsync"
 				TValue="CebBase">
 	</GridEvents>
@@ -56,21 +48,10 @@
 @code {
 	
 	#pragma warning disable CS8618
-	SfGrid<CebBase> gdetails { get; set; }
-
-	private CebTypeGrille _typegrille;
+	SfGrid<CebBase>? gdetails { get; set; }
 
 	[Parameter]
-	public CebTypeGrille TypeGrille
-	{
-		get => _typegrille;
-		set {
-			if (_typegrille == value) return;
-			_typegrille = value;
-			gdetails.Refresh();
-			InvokeAsync(StateHasChanged);
-		}
-	}
+	public CebTypeGrille TypeGrille { get; set; }
 
 
 	[Parameter]
@@ -90,10 +71,10 @@
 		await ShowDetail.InvokeAsync(ligne.RowData);
 	}
 
-	public string GetColonne(object o, int i)
-	{
-		#pragma warning disable CS8603
-		return i >= (o as CebBase)?.Operations.Count ? "" : (o as CebBase)?.Operations[i];
-	}
+	//public string GetColonne(object o, int i)
+	//{
+	//	#pragma warning disable CS8603
+	//	return i >= (o as CebBase)?.Operations.Count ? "" : (o as CebBase)?.Operations[i];
+	//}
 
 }
