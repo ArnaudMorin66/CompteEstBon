@@ -23,8 +23,7 @@ namespace CompteEstBon {
         private int _search;
 
 
-        public CebTirage(bool auto = false) {
-            Auto = auto;
+        public CebTirage() {
             for (var i = 0; i < 6; i++) {
                 Plaques.Add(new CebPlaque(action: IsUpdated));
             }
@@ -53,8 +52,7 @@ namespace CompteEstBon {
 
             Resolve();
         }
-        public bool Auto { get; set; }
-        
+      
         /// <summary>
         ///     Nombre de solutions
         /// </summary>
@@ -114,9 +112,6 @@ namespace CompteEstBon {
             Diff = int.MaxValue;
             Found.Reset();
             Valid();
-            if (Auto && Status == CebStatus.Valide)
-                Resolve();
-
             NotifyPropertyChanged("Clear");
             return Data;
         }
@@ -172,15 +167,16 @@ namespace CompteEstBon {
         /// </returns>
         public CebStatus Resolve() {
             _solutions.Clear();
-            if (Status == CebStatus.Invalide) return Status;
-            Watch.Reset();
-            Watch.Start();
-            Status = CebStatus.EnCours;
-            Resolve(Plaques.ToList<CebBase>());
-            _solutions.Sort((p, q) => p.Compare(q));
-            Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
-            NotifyPropertyChanged("Resolve");
-            Watch.Stop();
+            if (Status != CebStatus.Invalide) {
+                Watch.Reset();
+                Watch.Start();
+                Status = CebStatus.EnCours;
+                Resolve(Plaques.ToList<CebBase>());
+                _solutions.Sort((p, q) => p.Compare(q));
+                Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
+            }
+
+            Watch.Stop(); NotifyPropertyChanged("Resolve");
             return Status;
         }
 

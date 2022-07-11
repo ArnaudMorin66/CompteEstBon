@@ -1,58 +1,79 @@
 ﻿@using Syncfusion.Blazor.Grids
 @using SelectionMode = Syncfusion.Blazor.Grids.SelectionMode
+@using SelectionType = Syncfusion.Blazor.Grids.SelectionType
+@if (Status == CebStatus.EnCours)
+{
+	<div class="row align-items-center"  style="height: 400px">
+		<div class="col" align="center">
+			<SfProgressBar Type="ProgressType.Circular"
+			               Value="90"
+			               Width="80px"
+			               Minimum="0"
+			               Maximum="360"
+			               IsGradient="true"
+			               IsStriped="true"
+			               Height="80px" IsIndeterminate="true">
+				<ProgressBarAnimation Enable="@(Status == CebStatus.EnCours)" Duration="500" Delay="0"></ProgressBarAnimation>
+			</SfProgressBar>
+		</div>
+	</div>
 
-<SfGrid AllowExcelExport="true" AllowResizing="true" AllowSelection="true" DataSource="@Details" EnableAltRow="true" GridLines="GridLine.None" Height="400" ID="solutions" @ref="gdetails" TValue="CebBase">
-	<GridEvents OnRecordClick="ShowAsync"
-				TValue="CebBase">
-	</GridEvents>
-	<GridSelectionSettings Mode="SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
-	@if (TypeGrille == CebTypeGrille.Grille)
-	{
-		<GridColumns>
-		  
-			@for (var i = 0; i < 5; i++)
-			{
-				var j = i;
-				<GridColumn>
-					<Template>
-						@{
-							#pragma warning disable CS8602
-							var op = (context as CebBase).Operations;
-							if (j < op.Count) {
-								@op[j]
+}
+else {
+
+	<SfGrid AllowExcelExport="true" AllowResizing="true"
+	        AllowSelection="true" DataSource="@Details" EnableAltRow="true" GridLines="GridLine.None"
+	        Height="400"
+	        ID="solutions" @ref="gdetails" TValue="CebBase">
+
+		<GridEvents OnRecordClick="ShowAsync"
+		            TValue="CebBase">
+		</GridEvents>
+		<GridSelectionSettings Mode="SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
+		@if (TypeGrille == CebTypeGrille.Grille) {
+			<GridColumns>
+
+				@for (var i = 0; i < 5; i++) {
+					var j = i;
+					<GridColumn>
+						<Template>
+							@{
+								#pragma warning disable CS8602
+								var op = (context as CebBase).Operations;
+								if (j < op.Count) {
+										@op[j]
+								}
 							}
-						}
 
+						</Template>
+					</GridColumn>
+				}
+			</GridColumns>
+		}
+		else {
+			<GridColumns>
+				<GridColumn TextAlign="TextAlign.Center">
+					<Template Context="data">
+						@foreach (var op in ((CebBase)data).Operations) {
+							<div>@op</div>
+						}
 					</Template>
 				</GridColumn>
-			}
-		</GridColumns>
-	}
-	else
-	{
-		<GridColumns>
-			<GridColumn TextAlign="TextAlign.Center">
-				<Template Context="data">
-					@foreach (var op in ((CebBase)data).Operations)
-					{
-						<div>@op</div>
-					}
-				</Template>
-			</GridColumn>
 
-		</GridColumns>
-	}
-
-</SfGrid>
+			</GridColumns>
+		}
+	</SfGrid>
+}
 
 @code {
-	
-	#pragma warning disable CS8618
+
+#pragma warning disable CS8618
 	SfGrid<CebBase>? gdetails { get; set; }
 
 	[Parameter]
 	public CebTypeGrille TypeGrille { get; set; }
-
+	[Parameter]
+	public CebStatus Status { get; set; }
 
 	[Parameter]
 	public IEnumerable<CebBase> Details { get; set; }
@@ -75,6 +96,6 @@
 	//{
 	//	#pragma warning disable CS8603
 	//	return i >= (o as CebBase)?.Operations.Count ? "" : (o as CebBase)?.Operations[i];
-	//}
+		//}
 
 }

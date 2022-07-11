@@ -1,4 +1,7 @@
 // Programme Blazor CompteEstBon
+
+
+
 using CompteEstBon;
 using Syncfusion.Blazor;
 using Syncfusion.Licensing;
@@ -12,18 +15,19 @@ svc.AddServerSideBlazor();
 svc.AddSyncfusionBlazor();
 #pragma warning disable CS8604
 svc.AddSingleton(new CebSetting {
-    MongoDb = bool.Parse( builder.Configuration["mongodb:actif"]),
+    MongoDb = bool.Parse(builder.Configuration["mongodb:actif"]),
     MongoDbConnectionString = builder.Configuration["mongodb:server"]
 });
 svc.AddScoped<CebTirage>();
-SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["syncfusion:license"]);
+SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["license"]);
 
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
-if(app.Environment.IsDevelopment()) {
+if (app.Environment.IsDevelopment()) {
     app.UseDeveloperExceptionPage();
-} else {
+}
+else {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
@@ -36,7 +40,7 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 await app.RunAsync();
-
+#pragma warning disable CA1050
 public class CebSetting {
     public bool MongoDb { get; set; }
     public string? MongoDbConnectionString { get; set; }

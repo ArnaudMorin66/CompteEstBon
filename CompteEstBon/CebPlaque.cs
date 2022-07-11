@@ -42,10 +42,10 @@ namespace CompteEstBon {
             get => base.Value;
             set {
                 if (base.Value == value) return;
-                OnPropertyChanging(nameof(Value));
+                
                 base.Value = value;
                 Operations[0] = value.ToString();
-
+                OnPropertyChanging(nameof(Value));
             }
         }
         private void OnPropertyChanging(string propertyName) {
