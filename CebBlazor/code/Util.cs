@@ -14,7 +14,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Components;
 // ReSharper disable once CheckNamespace
 namespace CompteEstBon {
-  public enum CebTypeGrille {
+#pragma warning disable CRR0048
+    public enum CebTypeGrille {
         Grille,
         Liste
     }

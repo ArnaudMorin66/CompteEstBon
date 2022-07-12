@@ -74,7 +74,7 @@ namespace CompteEstBon {
         public static void ExportWord(this CebTirage tirage, Stream stream) {
             WordDocument wd = new(); 
             var sect = wd.AddSection() as WSection;
-            var dotm = Environment.GetEnvironmentVariable("USERPROFILE") + @"\AppData\Roaming\Microsoft\Templates\Normal.dotm";
+            var dotm = $@"{Environment.GetEnvironmentVariable("USERPROFILE")}\AppData\Roaming\Microsoft\Templates\Normal.dotm";
             if (File.Exists(dotm)) {
                 wd.AttachedTemplate.Path = dotm;
                 wd.UpdateStylesOnOpen = true;

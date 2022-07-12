@@ -18,7 +18,9 @@
     Top="6"
     UseNativeChrome="True"
     WindowStartupLocation="CenterScreen"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    xmlns:resources="clr-namespace:Syncfusion.Windows.Shared;assembly=Syncfusion.Shared.WPF"
+    xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero">
     <s:ChromelessWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -43,15 +45,7 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </DataTemplate>
-            <Style
-                x:Key="ComboPlaqueStyle"
-                BasedOn="{StaticResource {x:Type ComboBox}}"
-                TargetType="ComboBox">
-                <Setter Property="IsEditable" Value="True" />
-                <Setter Property="ItemsSource" Value="{x:Static local:ViewTirage.ListePlaques}" />
-                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-            </Style>
+
 
             <Style TargetType="{x:Type s:VirtualizingCellsControl}">
                 <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
@@ -72,6 +66,9 @@
                 <Setter Property="BorderThickness" Value="0.2" />
                 <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
             </Style>
+
+
+
         </ResourceDictionary>
     </s:ChromelessWindow.Resources>
     <s:ChromelessWindow.TaskbarItemInfo>
@@ -230,42 +227,7 @@
                     HorizontalContentAlignment="Center"
                     TabIndex="5"
                     Text="{Binding Plaques[5], Mode=TwoWay}" />
-                <!--<ComboBox
-                    x:Name="Plaque1"
-                    Grid.Column="0"
-                    Style="{StaticResource ComboPlaqueStyle}"
-                    TabIndex="0"
-                    Text="{Binding Plaques[0], Mode=TwoWay}" />
-                <ComboBox
-                    x:Name="Plaque2"
-                    Grid.Column="1"
-                    Style="{StaticResource ComboPlaqueStyle}"
-                    TabIndex="1"
-                    Text="{Binding Plaques[1], Mode=TwoWay}" />
-                <ComboBox
-                    x:Name="Plaque3"
-                    Grid.Column="2"
-                    Style="{StaticResource ComboPlaqueStyle}"
-                    TabIndex="2"
-                    Text="{Binding Plaques[2], Mode=TwoWay}" />
-                <ComboBox
-                    x:Name="Plaque4"
-                    Grid.Column="3"
-                    Style="{StaticResource ComboPlaqueStyle}"
-                    TabIndex="3"
-                    Text="{Binding Plaques[3], Mode=TwoWay}" />
-                <ComboBox
-                    x:Name="Plaque5"
-                    Grid.Column="4"
-                    Style="{StaticResource ComboPlaqueStyle}"
-                    TabIndex="4"
-                    Text="{Binding Plaques[4], Mode=TwoWay}" />
-                <ComboBox
-                    x:Name="Plaque6"
-                    Grid.Column="5"
-                    Style="{StaticResource ComboPlaqueStyle}"
-                    TabIndex="5"
-                    Text="{Binding Plaques[5], Mode=TwoWay}" />-->
+
             </Grid>
         </Border>
         <Label
@@ -303,7 +265,9 @@
             Foreground="{Binding Foreground}"
             IsTabStop="True"
             TabIndex="7"
-            ToolTipService.ToolTip="Lancement résolution (Ctrl+R)">
+            ToolTipService.ToolTip="Lancement résolution (Ctrl+R)" 
+            BorderThickness="1">
+
             <StackPanel Orientation="Horizontal">
                 <Image
                     Width="16"
@@ -325,6 +289,7 @@
             Command="{Binding}"
             CommandParameter="random"
             IsTabStop="True"
+            BorderThickness="1"
             TabIndex="8"
             ToolTipService.ToolTip="Lancement tirage (Ctrl+H)">
             <StackPanel Orientation="Horizontal">
@@ -349,6 +314,7 @@
                 Command="{Binding}"
                 CommandParameter="export"
                 IsTabStop="True"
+            BorderThickness="1"
                 TabIndex="9"
                 ToolTipService.ToolTip="Export Excel (Ctrl+X)">
             <Image
@@ -438,6 +404,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="128" />
                             <ColumnDefinition Width="64"/>
+                            <ColumnDefinition Width="64"/>
                             <ColumnDefinition Width="24" />
                         </Grid.ColumnDefinitions>
                     </Grid>
@@ -490,6 +457,16 @@
 
             </StatusBarItem>
             <StatusBarItem Grid.Column="6" Background="Transparent">
+
+                <CheckBox x:Name="cbMongoDb"
+                          Content="Mongo"
+                          IsTabStop="False"
+                          IsChecked="{Binding MongoDb}"
+                          ToolTipService.ToolTip="Sauvegarde dans Mongo">
+                </CheckBox>
+
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="7" Background="Transparent">
                 <Button
                     Click="btnMode_Click"
                     Content="{Binding ModeView}"

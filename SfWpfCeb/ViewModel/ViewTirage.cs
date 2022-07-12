@@ -1,5 +1,12 @@
 ﻿#region
 
+using CompteEstBon.Properties;
+using Microsoft.Win32;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using Syncfusion.Windows.Shared;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,19 +18,12 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using CompteEstBon.Properties;
-using Microsoft.Win32;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Conventions;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
-using Syncfusion.Windows.Shared;
 //using Syncfusion.Drawing;
 
 #endregion
 
 // ReSharper disable once CheckNamespace
-namespace CompteEstBon; 
+namespace CompteEstBon;
 
 public class ViewTirage : NotificationObject, ICommand {
     private readonly Stopwatch NotifyWatch = new();
@@ -77,8 +77,19 @@ public class ViewTirage : NotificationObject, ICommand {
 
             var i = e.NewStartingIndex;
             Tirage.Plaques[i].Value = Plaques[i];
-            Tirage.Valid();
+
             Task.Run(ClearAsync);
+        };
+        Tirage.PropertyChanged += (sender, args) => {
+            switch (args.PropertyName) {
+                case "Clear":
+
+                    if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide)
+                        Task.Run(ResolveAsync);
+                    break;
+                case "Resolve":
+                    break;
+            }
         };
         _isUpdating = false;
         UpdateData();
@@ -179,6 +190,16 @@ public class ViewTirage : NotificationObject, ICommand {
         }
     }
 
+    private bool _mongodb;
+    public bool MongoDb {
+        get => _mongodb;
+        set {
+            if (_mongodb == value) return;
+            _mongodb = value;
+            RaisePropertyChanged(nameof(MongoDb));
+        }
+    }
+
     public bool IsComputed {
         get => Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche;
         // ReSharper disable once ValueParameterNotUsed
@@ -261,9 +282,12 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     private void ClearData() {
-        if (_isUpdating) return;
-        stopwatch.Reset();
-        Duree = stopwatch.Elapsed;
+        if (_isUpdating ) return;
+        if (!IsBusy) {
+            stopwatch.Reset();
+            Duree = stopwatch.Elapsed;
+        }
+
         RaisePropertyChanged(nameof(IsComputed));
         Solution = null;
         Solutions = null;
@@ -273,13 +297,14 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     private void UpdateData() {
-        if (_isUpdating) return;
+        if (_isUpdating ) return;
         _isUpdating = true;
         for (var i = 0; i < Tirage.Plaques.Count; i++)
             Plaques[i] = Tirage.Plaques[i].Value;
         _isUpdating = false;
         RaisePropertyChanged(nameof(Search));
-        Task.Run(ClearAsync);
+        //Task.Run(ClearAsync);
+        ClearData();
     }
 
     private void UpdateForeground() {
@@ -309,6 +334,7 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     private async Task SaveMongoDB() {
+
         try {
             ConventionRegistry.Register("EnumStringConvention",
                 new ConventionPack {
@@ -371,24 +397,23 @@ public class ViewTirage : NotificationObject, ICommand {
     public async Task ClearAsync() {
         await Tirage.ClearAsync();
         ClearData();
-        if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide)
-            await ResolveAsync();
+        //if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide)
+        //    await ResolveAsync();
     }
 
     public async Task RandomAsync() {
-        IsBusy = true;
+        //IsBusy = true;
         await Tirage.RandomAsync();
         UpdateData();
-        IsBusy = false;
-        //if (Auto && Tirage.Status == CebStatus.Valide) {
-        //    stopwatch.Stop();
-        //    await ResolveAsync();
-        //}
+        //if (!Auto)
+        //    IsBusy = false;
     }
 
     public async Task<CebStatus> ResolveAsync() {
+        if (IsBusy) return Tirage.Status;
         IsBusy = true;
         Result = "⏰ Calcul en cours...";
+        stopwatch.Reset();
         stopwatch.Start();
         Foreground = Colors.Aqua;
 
@@ -408,7 +433,7 @@ public class ViewTirage : NotificationObject, ICommand {
         RaisePropertyChanged(nameof(IsComputed));
 
         ShowPopup();
-        if (Settings.Default.MongoDB)
+        if (Settings.Default.MongoDB && MongoDb)
             await SaveMongoDB();
 
         return Tirage.Status;

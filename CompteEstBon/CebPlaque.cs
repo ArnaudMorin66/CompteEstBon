@@ -7,8 +7,8 @@ using System.Text.Json.Serialization;
 namespace CompteEstBon {
 
     public sealed class CebPlaque : CebBase, INotifyPropertyChanging {
+        public event PropertyChangingEventHandler PropertyChanging;
 
-        // public static readonly List<Action<CebPlaque,int,int>> NotifyValueChange = new();
 
         public static readonly int[] AllPlaques = {
             1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25, 50, 75, 100,
@@ -17,17 +17,10 @@ namespace CompteEstBon {
         public static readonly IEnumerable<int> AnyPlaques = new SortedSet<int>(AllPlaques);
 
 
-        // public  event PropertyChangedEventHandler PropertyChanged;
-
-        public CebPlaque(int v = 0, Action<object, PropertyChangingEventArgs> action = null) {
+        public CebPlaque(int v = 0) {
             Value = v;
             Operations.Add(Value.ToString());
-
-            PropertyChanging += (o, e) => {
-                action?.Invoke(o, e);
-            };
-
-
+            
         }
 
 
@@ -42,7 +35,7 @@ namespace CompteEstBon {
             get => base.Value;
             set {
                 if (base.Value == value) return;
-                
+                var old = base.Value;
                 base.Value = value;
                 Operations[0] = value.ToString();
                 OnPropertyChanging(nameof(Value));
@@ -55,8 +48,7 @@ namespace CompteEstBon {
         [JsonIgnore]
         public override bool IsValid => AnyPlaques.Contains(Value);
 
-        public event PropertyChangingEventHandler PropertyChanging;
-
+        
         public static implicit operator int(CebPlaque p) => p.Value;
 
         // private void NotifyPropertyChanged([CallerMemberName] string propertyName = "Value") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

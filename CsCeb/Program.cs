@@ -21,7 +21,7 @@ using static System.Console;
 var Json = false;
 var Save = false;
 var ConfigurationFile =
-    $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\Ceb\\config.json";
+    @$"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Ceb\config.json";
 var MongoServer = string.Empty;
 var SaveToMongoDb = false;
 FileInfo fichier = null;
@@ -128,7 +128,7 @@ if (arguments.Length > 0) {
 
     if (arguments.Length > 0) {
         tirage.SetPlaques(arguments);
-        if (arguments.Length > 6) tirage.Search = arguments[6];
+        if (arguments.Length > 6 && arguments[6] >= 100) tirage.Search = arguments[6];
     }
 }
 
