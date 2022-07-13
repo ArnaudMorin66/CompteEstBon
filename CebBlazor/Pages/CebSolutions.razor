@@ -1,4 +1,5 @@
-﻿@using Syncfusion.Blazor.Grids
+﻿@page "/controls"
+@using Syncfusion.Blazor.Grids
 @using SelectionMode = Syncfusion.Blazor.Grids.SelectionMode
 @using SelectionType = Syncfusion.Blazor.Grids.SelectionType
 
@@ -15,25 +16,7 @@
 		<EmptyRecordTemplate>
 			@if (Status == CebStatus.EnCours)
 			{
-				<div class="row align-items-center" >
-					<div class="col" align="center">
-						<SfProgressBar Type="ProgressType.Circular" Value="180"  
-						               TrackColor="green" 
-						               Radius="100%"
-								   SecondaryProgress="40"
-						               InnerRadius="80%" 
-						               ProgressColor="darkgreen" 
-						               TrackThickness="1" 
-						               ProgressThickness="2" 
-						               CornerRadius="CornerType.Round" 
-						               IsIndeterminate="true"
-						               Minimum="-0" 
-						               Maximum="360">
-							<ProgressBarAnimation  Enable="@(Status == CebStatus.EnCours)" Duration="500" Delay="0"></ProgressBarAnimation>
-							</SfProgressBar>
-						
-					</div>
-				</div>
+				<SfSpinner Size="80" Type="SpinnerType.Fabric" Visible="true"></SfSpinner>
 
 			}
 		</EmptyRecordTemplate>

@@ -1,7 +1,6 @@
 // Programme Blazor CompteEstBon
 
 
-
 using CompteEstBon;
 using Syncfusion.Blazor;
 using Syncfusion.Licensing;
@@ -14,10 +13,12 @@ svc.AddRazorPages();
 svc.AddServerSideBlazor();
 svc.AddSyncfusionBlazor();
 #pragma warning disable CS8604
-svc.AddSingleton(new CebSetting {
-    MongoDb = bool.Parse(builder.Configuration["mongodb:actif"]),
-    MongoDbConnectionString = builder.Configuration["mongodb:server"]
-});
+svc.AddSingleton(
+    new CebSetting {
+        MongoDb = bool.Parse(builder.Configuration["mongodb:actif"]),
+        MongoDbConnectionString = builder.Configuration["mongodb:server"],
+        AutoCalcul = bool.TryParse(builder.Configuration["AutoCalcul"], out bool res) ? res : false
+    });
 svc.AddScoped<CebTirage>();
 SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["license"]);
 
@@ -41,9 +42,13 @@ app.MapFallbackToPage("/_Host");
 #pragma warning disable CRR0029
 
 await app.RunAsync();
+
 #pragma warning disable CA1050
 #pragma warning disable CRR0048
 public class CebSetting {
     public bool MongoDb { get; set; }
+
     public string? MongoDbConnectionString { get; set; }
+
+    public bool AutoCalcul { get; set; }
 }

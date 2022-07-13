@@ -1,5 +1,4 @@
 ﻿#region
-
 using CompteEstBon.Properties;
 using Microsoft.Win32;
 using MongoDB.Bson;
@@ -19,7 +18,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 //using Syncfusion.Drawing;
-
 #endregion
 
 // ReSharper disable once CheckNamespace
@@ -55,31 +53,34 @@ public class ViewTirage : NotificationObject, ICommand {
     public Stopwatch stopwatch;
 
     /// <summary>
-    ///     Initialisation
+    /// Initialisation
     /// </summary>
     /// <returns>
+    ///
     /// </returns>
     public ViewTirage() {
         stopwatch = new Stopwatch();
 
-        dateDispatcher = new DispatcherTimer {
-            Interval = TimeSpan.FromMilliseconds(Settings.Default.SolutionTimer)
-        };
+        dateDispatcher = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(Settings.Default.SolutionTimer) };
         dateDispatcher.Tick += (_, _) => {
-            if (stopwatch.IsRunning) Duree = stopwatch.Elapsed;
+            if (stopwatch.IsRunning)
+                Duree = stopwatch.Elapsed;
 
-            if (Popup && NotifyWatch.Elapsed > SolutionTimer) Popup = false;
+            if (Popup && NotifyWatch.Elapsed > SolutionTimer)
+                Popup = false;
             Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
         };
 
         Plaques.CollectionChanged += (_, e) => {
-            if (e.Action != NotifyCollectionChangedAction.Replace) return;
+            if (e.Action != NotifyCollectionChangedAction.Replace)
+                return;
 
             var i = e.NewStartingIndex;
             Tirage.Plaques[i].Value = Plaques[i];
 
             Task.Run(ClearAsync);
         };
+
         Tirage.PropertyChanged += (sender, args) => {
             switch (args.PropertyName) {
                 case "Clear":
@@ -102,7 +103,7 @@ public class ViewTirage : NotificationObject, ICommand {
     public CebTirage Tirage { get; } = new();
 
     public ObservableCollection<int> Plaques { get; } = new() { 0, 0, 0, 0, 0, 0 };
-
+   
     public IEnumerable<CebBase> Solutions {
         get => _solutions;
         set {
@@ -166,7 +167,8 @@ public class ViewTirage : NotificationObject, ICommand {
     public string Result {
         get => _result;
         set {
-            if (value == _result) return;
+            if(value == _result)
+                return;
             _result = value;
             RaisePropertyChanged(nameof(Result));
         }
@@ -183,7 +185,8 @@ public class ViewTirage : NotificationObject, ICommand {
     public bool Auto {
         get => _auto;
         set {
-            if (_auto == value) return;
+            if(_auto == value)
+                return;
             _auto = value;
             RaisePropertyChanged(nameof(Auto));
             Task.Run(ClearAsync);
@@ -191,10 +194,12 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     private bool _mongodb;
+
     public bool MongoDb {
         get => _mongodb;
         set {
-            if (_mongodb == value) return;
+            if(_mongodb == value)
+                return;
             _mongodb = value;
             RaisePropertyChanged(nameof(MongoDb));
         }
@@ -209,7 +214,8 @@ public class ViewTirage : NotificationObject, ICommand {
     public int Count {
         get => _count;
         set {
-            if (_count == value) return;
+            if(_count == value)
+                return;
             _count = value;
             RaisePropertyChanged(nameof(Count));
         }
@@ -218,11 +224,13 @@ public class ViewTirage : NotificationObject, ICommand {
     public bool Popup {
         get => _popup;
         set {
-            if (_popup == value) return;
+            if(_popup == value)
+                return;
             _popup = value;
             NotifyWatch.Stop();
             NotifyWatch.Reset();
-            if (_popup) NotifyWatch.Start();
+            if(_popup)
+                NotifyWatch.Start();
             RaisePropertyChanged(nameof(Popup));
         }
     }
@@ -240,19 +248,17 @@ public class ViewTirage : NotificationObject, ICommand {
         remove => CommandManager.RequerySuggested -= value;
     }
 
-    public bool CanExecute(object parameter) {
-        return true;
-    }
+    public bool CanExecute(object parameter) { return true; }
 
     public async void Execute(object parameter) {
         var cmd = (parameter as string)?.ToLower();
-        switch (cmd) {
+        switch(cmd) {
             case "random":
                 await RandomAsync();
                 break;
 
             case "resolve":
-                switch (Tirage.Status) {
+                switch(Tirage.Status) {
                     case CebStatus.Valide:
                         await ResolveAsync();
                         break;
@@ -270,7 +276,8 @@ public class ViewTirage : NotificationObject, ICommand {
                 break;
 
             case "export":
-                if (Count != 0) await ExportAsync();
+                if(Count != 0)
+                    await ExportAsync();
                 break;
         }
     }
@@ -282,29 +289,34 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     private void ClearData() {
-        if (_isUpdating ) return;
-        if (!IsBusy) {
+        if(_isUpdating)
+            return;
+        if(!IsBusy) {
             stopwatch.Reset();
             Duree = stopwatch.Elapsed;
         }
 
-        RaisePropertyChanged(nameof(IsComputed));
+        _isUpdating = true;
         Solution = null;
         Solutions = null;
         UpdateForeground();
         Result = Tirage.Status != CebStatus.Invalide ? "Jeu du Compte Est Bon" : "Tirage invalide";
         Popup = false;
+        _isUpdating = false;
+        RaisePropertyChanged(nameof(IsComputed));
     }
 
     private void UpdateData() {
-        if (_isUpdating ) return;
+        if(_isUpdating)
+            return;
         _isUpdating = true;
-        for (var i = 0; i < Tirage.Plaques.Count; i++)
-            Plaques[i] = Tirage.Plaques[i].Value;
-        _isUpdating = false;
+        foreach (var (p, i) in Tirage.Plaques.WithIndex())
+            Plaques[i] = p.Value;
         RaisePropertyChanged(nameof(Search));
         //Task.Run(ClearAsync);
+        _isUpdating = false;
         ClearData();
+        
     }
 
     private void UpdateForeground() {
@@ -320,7 +332,7 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     public void ShowPopup(int index = 0) {
-        if (index >= 0 && index < Tirage.Solutions.Count) {
+        if(index >= 0 && index < Tirage.Solutions.Count) {
             Solution = Tirage.Solutions[index];
             Popup = true;
         }
@@ -334,12 +346,10 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     private async Task SaveMongoDB() {
-
         try {
-            ConventionRegistry.Register("EnumStringConvention",
-                new ConventionPack {
-                    new EnumRepresentationConvention(BsonType.String)
-                },
+            ConventionRegistry.Register(
+                "EnumStringConvention",
+                new ConventionPack { new EnumRepresentationConvention(BsonType.String) },
                 _ => true);
             var clientSettings = MongoClientSettings.FromConnectionString(Settings.Default.MongoServer);
             clientSettings.LinqProvider = LinqProvider.V3;
@@ -349,27 +359,30 @@ public class ViewTirage : NotificationObject, ICommand {
                 .GetCollection<BsonDocument>("comptes");
 
             await cl.InsertOneAsync(
-                new BsonDocument(new Dictionary<string, object> {
-                        {
-                            "_id",
-                            new {
-                                lang = "wpf", domain = Environment.GetEnvironmentVariable("USERDOMAIN"),
-                                date = DateTime.UtcNow
-                            }.ToBsonDocument()
-                        }
-                    })
+                new BsonDocument(
+                    new Dictionary<string, object>
+                {
+                {
+                    "_id",
+                    new
+                    {
+                    lang = "wpf",
+                    domain = Environment.GetEnvironmentVariable("USERDOMAIN"),
+                    date = DateTime.UtcNow
+                    }.ToBsonDocument()
+                }
+                })
                     .AddRange(Tirage.Data.ToBsonDocument()));
-        }
-        catch (Exception) {
+        } catch(Exception) {
             // ignored
         }
     }
 
     private void ExportFichier() {
         var (Ok, Path) = SaveFileName();
-        if (Ok) {
+        if(Ok) {
             FileInfo fi = new(Path);
-            if (fi.Exists)
+            if(fi.Exists)
                 fi.Delete();
 
             Action<Stream> ExportFunction = fi.Extension switch {
@@ -386,14 +399,10 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     public static void OpenDocument(string nom) {
-        Process.Start(new ProcessStartInfo {
-            UseShellExecute = true,
-            FileName = nom
-        });
+        Process.Start(new ProcessStartInfo { UseShellExecute = true, FileName = nom });
     }
 
     #region Action
-
     public async Task ClearAsync() {
         await Tirage.ClearAsync();
         ClearData();
@@ -410,7 +419,8 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     public async Task<CebStatus> ResolveAsync() {
-        if (IsBusy) return Tirage.Status;
+        if(IsBusy)
+            return Tirage.Status;
         IsBusy = true;
         Result = "⏰ Calcul en cours...";
         stopwatch.Reset();
@@ -433,11 +443,10 @@ public class ViewTirage : NotificationObject, ICommand {
         RaisePropertyChanged(nameof(IsComputed));
 
         ShowPopup();
-        if (Settings.Default.MongoDB && MongoDb)
+        if(Settings.Default.MongoDB && MongoDb)
             await SaveMongoDB();
 
         return Tirage.Status;
     }
-
     #endregion Action
 }

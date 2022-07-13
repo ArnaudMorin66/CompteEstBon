@@ -94,8 +94,9 @@ body {
             border: none;
             background-color: transparent;
         }
+
         & td .e-rowcell {
-            text-align:center;
+            text-align: center;
         }
     }
 }
@@ -231,15 +232,16 @@ body {
 }
 
 
-.a-toast  {   
+.a-toast {
     > .e-dlg-content, > .e-dlg-header-content, > .e-footer-content {
-        @extend  .bg-gradient;
+        @extend .bg-gradient;
         background: $primary;
         padding: 0px;
         margin: 0;
         border: none;
     }
 }
+
 .e-input {
     background-color: $bg-body;
 }

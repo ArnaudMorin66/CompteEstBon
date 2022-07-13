@@ -42,8 +42,7 @@
 			</div>
 			<div class="card-body">
 				<div class="row">
-					@foreach (var plq in tirage.Plaques)
-					{
+					@foreach (var plq in tirage.Plaques) {
 						<div class="col-md-2">
 							<SfComboBox TItem="int"
 									TValue="int"
@@ -81,8 +80,7 @@
 	<div class="col-md-3 card bg-transparent" style="border: none">
 		<div class="card-text bg-transparent" style="margin: 0;">
 			<div class="btn-group w-100" role="group" aria-label="resolve">
-				@switch (tirage.Status)
-				{
+				@switch (tirage.Status) {
 					case CebStatus.EnCours:
 						<button class="btn btn-info btn-block w-50">
 							<div>
@@ -203,8 +201,7 @@
 <div class="card text-center bg-primary bg-gradient border-secondary">
 	<div class="card-header">
 		<div class="'text-center'">
-			@switch (tirage.Status)
-			{
+			@switch (tirage.Status) {
 				case CebStatus.EnCours:
 					<div class="bg-white" role="alert">
 						<i class="fas fa-spinner fa-spin"></i>&nbsp;Patientez, calcul en cours&hellip;
@@ -240,14 +237,14 @@
 	</div>
 </div>
 <div class="card text-center bg-primary bg-gradient border-secondary">
-<div class="row card-header">
-	<div class="col">
-		<SfCheckBox @bind-Checked="Auto" Label="Calculer automatiquement"/>
+	<div class="row card-header">
+		<div class="col">
+			<SfCheckBox @bind-Checked="Auto" Label="Calculer automatiquement" />
+		</div>
+		<div class="col">
+			<SfCheckBox @bind-Checked="MongoDb" Label="Sauvegarder sous MongoDB" />
+		</div>
 	</div>
-	<div class="col">
-		<SfCheckBox @bind-Checked="MongoDb" Label="Sauvegarder sous MongoDB" />
-	</div>
-</div>
 </div>
 <CebToast @ref="toast" DueTime="10000"></CebToast>
 <CebFooter></CebFooter>
@@ -255,7 +252,7 @@
 @code {
 	CebTypeGrille TypeGrille { get; set; } = CebTypeGrille.Grille;
 	private bool _auto;
-	bool  Auto { 
+	bool Auto {
 		get => _auto;
 		set {
 			if (_auto == value) return;
@@ -264,7 +261,8 @@
 				await tirage.ClearAsync();
 				await InvokeAsync(StateHasChanged);
 			});
-		} }
+		}
+	}
 	bool MongoDb { get; set; }
 #pragma warning disable CS8618
 #pragma warning disable CS8602
@@ -272,56 +270,49 @@
 	public CebSolutions? Solutions { get; set; }
 	public static IEnumerable<int> ListePlaques = CebPlaque.AnyPlaques.Select(p => p);
 
-	protected override async Task OnInitializedAsync()
-	{
+	protected override async Task OnInitializedAsync() {
 		await base.OnInitializedAsync();
 		tirage.PropertyChanged += async (_, args) => {
 			if (!Auto || args.PropertyName != "Clear" || tirage.Status == CebStatus.EnCours) return;
 			await ResolveAsync();
 			await InvokeAsync(StateHasChanged);
 		};
+		Auto = setting.AutoCalcul;
+		MongoDb = setting.MongoDb;
 	}
 
-	async Task ResolveAsync()
-	{
+	async Task ResolveAsync() {
 		await tirage.ResolveAsync();
 		// await InvokeAsync(StateHasChanged);
 		if (tirage.Status is CebStatus.CompteApproche or CebStatus.CompteApproche) {
-			if (setting.MongoDb && MongoDb)
+			if (MongoDb)
 				await SaveMongoDb();
 			await toast.ShowAsync(tirage.Solutions[0]);
 		}
 	}
 
-	private async Task ShowSolutionAsync(CebBase? sol)
-	{
+	private async Task ShowSolutionAsync(CebBase? sol) {
 		await toast.ShowAsync(sol);
 	}
 
-	private async Task ExportExcelAsync()
-	{
+	private async Task ExportExcelAsync() {
 		await using var mstream = new MemoryStream();
 		tirage.ExportExcel(mstream);
 		await js.SaveAsAsync("ceb.xlsx", mstream.ToArray());
 	}
 
-	private async Task ExportWordAsync()
-	{
+	private async Task ExportWordAsync() {
 		await using var mstream = new MemoryStream();
 		tirage.ExportWord(mstream);
 		await js.SaveAsAsync("ceb.docx", mstream.ToArray());
 	}
 
-	private async Task SaveMongoDb()
-	{
-		try
-		{
-			// Configure the HTTP request pipeline.
-
+	private async Task SaveMongoDb() {
+		try {
 			ConventionRegistry.Register("EnumStringConvention",
 				new ConventionPack {
 					new EnumRepresentationConvention(BsonType.String)
-					},
+							},
 				_ => true);
 			var clientSettings = MongoClientSettings.FromConnectionString(setting.MongoDbConnectionString);
 			clientSettings.LinqProvider = LinqProvider.V3;
@@ -333,11 +324,9 @@
 			await cl.InsertOneAsync(
 				new BsonDocument(new Dictionary<string, object> {
 					{ "_id", new { lang = "blazor", domain = Environment.GetEnvironmentVariable("USERDOMAIN"), date = DateTime.UtcNow }.ToBsonDocument() }
-					})
+							})
 					.AddRange(tirage.Data.ToBsonDocument()));
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			Console.WriteLine(e);
 		}
 	}
