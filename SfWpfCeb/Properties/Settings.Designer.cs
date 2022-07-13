@@ -12,7 +12,7 @@ namespace CompteEstBon.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.1.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.3.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -37,20 +37,7 @@ namespace CompteEstBon.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("NTEwOTA3QDMxMzkyZTMzMmUzMEUzOUg4NlE0WUFIc2d1cFRqMVNBRmpObFNGQ0hPNWlJQ0VlRXEreUdqa" +
-            "UU9")]
-        public string SfLicence {
-            get {
-                return ((string)(this["SfLicence"]));
-            }
-            set {
-                this["SfLicence"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool MongoDB {
             get {
                 return ((bool)(this["MongoDB"]));
@@ -69,6 +56,32 @@ namespace CompteEstBon.Properties {
             }
             set {
                 this["MongoServer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("NjcyNzM3QDMyMzAyZTMyMmUzMFV2TGVNenhCUjJwZktkNVVJWjlJaWo4QlRRTVpjN0ZvSSswMjk5RWJ6U" +
+            "0k9;NRAiBiAaIQQuGjN/V0Z+Xk9EaFxEVmJLYVB3WmpQdldgdVRMZVVbQX9PIiBoS35RdEVkWXZfcndR" +
+            "Q2JUVUJw")]
+        public string SfLicence {
+            get {
+                return ((string)(this["SfLicence"]));
+            }
+            set {
+                this["SfLicence"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutoCalcul {
+            get {
+                return ((bool)(this["AutoCalcul"]));
+            }
+            set {
+                this["AutoCalcul"] = value;
             }
         }
     }

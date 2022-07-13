@@ -9,13 +9,9 @@ $grid-header-border-color: $bg-body;
 $font-family-sans-serif: 'Colibri', 'Segoe UI', sans-serif;
 $font-family: $font-family-sans-serif;
 
-@import "ej2/fabric-dark.scss";
+@import "ej2/fluent-dark.scss";
 $enable-gradients: true;
 @import "bootstrap/scss/bootstrap";
-
-
-
-
 
 html,
 body {
@@ -23,7 +19,7 @@ body {
     font-size: $font-size;
 }
 
-#solutions, #lsolutions {
+#solutions {
     .e-gridheader {
         visibility: collapse;
         border: none;
@@ -101,12 +97,6 @@ body {
     }
 }
 
-#lsolutions {
-    td:nth-child(even) {
-        @extend .e-altrow
-    }
-}
-
 .card-body,
 .card-text {
     background-color: $bg-body; //  lightslategray;
@@ -118,89 +108,6 @@ body {
     padding: 0%;
     height: 0.1rem;
 }
-
-
-.e-input-group {
-    &:not(.e-success):not(.e-warning):not(.e-error),
-    &.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error) {
-        border-color: $secondary;
-
-        & .e-disabled {
-            background-color: $gray-700;
-        }
-    }
-
-    &.e-control-wrapper input.e-input {
-        background-color: transparent;
-        text-align: center;
-        color: white;
-        font-size: $font-size;
-
-        & .e-disabled {
-            background-color: $gray-700;
-            color: white;
-        }
-    }
-
-
-    &.e-control-wrapper {
-        background-color: transparent; //  $primary; // $bg-body;
-        &.e-disabled {
-            background-color: $gray-700;
-            color: white;
-        }
-    }
-
-    & .e-input-group-icon, &.e-control-wrapper .e-input-group-icon {
-        background-color: $secondary;
-        color: white;
-        border: thin;
-
-        &.e-disabled {
-            background-color: $gray-700;
-            color: white;
-        }
-    }
-}
-
-
-.e-dropdownbase {
-    padding: 0;
-    margin: 0;
-    background-color: $bg-body;
-    border-color: $secondary;
-
-    .e-list-item {
-        background-color: $bg-body;
-        color: white;
-
-        &:active {
-            color: yellow;
-        }
-
-        &.e-item-focus {
-            background-color: $primary;
-            color: white;
-        }
-
-        &.e-item-focus:hover {
-            background-color: darkslategrey;
-            color: red;
-        }
-
-        &:hover {
-            background-color: $primary;
-            color: yellow;
-        }
-
-        &:focus {
-            background-color: $black;
-            color: greenyellow;
-        }
-    }
-}
-
-
 
 @keyframes resultat {
     from {
@@ -241,14 +148,14 @@ body {
         border: none;
     }
 }
-
+/*
 .e-input {
     background-color: $bg-body;
 }
-
+*/
 .centrer-element {
-    position: absolute; /* postulat de départ */
+    position: absolute;
     top: 50%;
-    left: 50%; /* à 50%/50% du parent référent */
-    transform: translate(-50%, -50%); /* décalage de 50% de sa propre taille */
+    left: 50%; 
+    transform: translate(-50%, -50%); 
 }

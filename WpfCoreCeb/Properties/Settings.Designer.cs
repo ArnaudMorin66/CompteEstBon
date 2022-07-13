@@ -12,7 +12,7 @@ namespace CompteEstBon.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.1.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.3.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,13 +25,25 @@ namespace CompteEstBon.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public string SolutionTimer {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoCalcul {
             get {
-                return ((string)(this["SolutionTimer"]));
+                return ((bool)(this["AutoCalcul"]));
             }
             set {
-                this["SolutionTimer"] = value;
+                this["AutoCalcul"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MongoDb {
+            get {
+                return ((bool)(this["MongoDb"]));
+            }
+            set {
+                this["MongoDb"] = value;
             }
         }
         
@@ -49,13 +61,15 @@ namespace CompteEstBon.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool MongoDB {
+        [global::System.Configuration.DefaultSettingValueAttribute("NjcyNzM3QDMyMzAyZTMyMmUzMFV2TGVNenhCUjJwZktkNVVJWjlJaWo4QlRRTVpjN0ZvSSswMjk5RWJ6U" +
+            "0k9;NRAiBiAaIQQuGjN/V0Z+Xk9EaFxEVmJLYVB3WmpQdldgdVRMZVVbQX9PIiBoS35RdEVkWXZfcndR" +
+            "Q2JUVUJw")]
+        public string SfLicence {
             get {
-                return ((bool)(this["MongoDB"]));
+                return ((string)(this["SfLicence"]));
             }
             set {
-                this["MongoDB"] = value;
+                this["SfLicence"] = value;
             }
         }
     }

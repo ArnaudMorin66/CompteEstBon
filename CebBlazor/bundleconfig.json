@@ -1,0 +1,14 @@
+[
+  {
+    "outputFileName": "wwwroot/exporter.min.js",
+    "inputFiles": [
+      "wwwroot/exporter.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css"
+    ]
+  }
+]

@@ -4,6 +4,10 @@
 @using MongoDB.Driver
 @using MongoDB.Driver.Linq
 @using System.IO;
+@using Syncfusion.Blazor.DropDowns
+@using Syncfusion.Blazor.Inputs
+@using Syncfusion.Blazor.Buttons
+@using CompteEstBon
 
 @* ReSharper disable  UnknownCssClass *@
 @* ReSharper disable CoercedEqualsUsing *@
@@ -25,7 +29,7 @@
 				<div class="d-flex justify-content-between">
 					<img src="favicon.ico" style="height: 1.5rem;">
 
-					<cite class="text-uppercase text-danger font-weight-bold text-wrap text-truncate ">Syncfusion - Compte&nbsp;est&nbsp;bon</cite>
+					<span class="text-uppercase text-danger font-weight-bold text-wrap text-truncate ">Syncfusion - Compte&nbsp;est&nbsp;bon</span>
 					<i class="text-white fas @(TypeGrille == CebTypeGrille.Liste ? "fa-ellipsis-v" : "fa-ellipsis-h") fa-2x"></i>
 				</div>
 			</button>
@@ -90,7 +94,6 @@
 								Patientez, calcul en cours&hellip;
 							</div>
 						</button>
-
 						break;
 					case CebStatus.CompteEstBon:
 						<button class="btn btn-success btn-block w-50"
@@ -149,7 +152,6 @@
 						</button>
 						break;
 				}
-
 			</div>
 			<div class="btn-toolbar w-100">
 				<div class="btn-group w-100" role="group" aria-label="Action">
@@ -163,7 +165,6 @@
 						<i class="fa fa-random"></i>
 						<div>Tirage</div>
 					</button>
-
 					<button id="Excel"
 							title="Export vers excel (ALT-X)"
 							class="btn btn-primary w-25 @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon  ? "" :"d-none")"
@@ -257,10 +258,14 @@
 		set {
 			if (_auto == value) return;
 			_auto = value;
-			Task.Run(async () => {
-				await tirage.ClearAsync();
-				await InvokeAsync(StateHasChanged);
-			});
+
+			if (_auto && tirage.Status == CebStatus.Valide)	{
+				Task.Run(async () =>
+				{
+					await tirage.ClearAsync();
+					await InvokeAsync(StateHasChanged);
+				});
+			}
 		}
 	}
 	bool MongoDb { get; set; }
@@ -284,7 +289,7 @@
 	async Task ResolveAsync() {
 		await tirage.ResolveAsync();
 		// await InvokeAsync(StateHasChanged);
-		if (tirage.Status is CebStatus.CompteApproche or CebStatus.CompteApproche) {
+		if (tirage.Status is CebStatus.CompteEstBon or   CebStatus.CompteApproche) {
 			if (MongoDb)
 				await SaveMongoDb();
 			await toast.ShowAsync(tirage.Solutions[0]);

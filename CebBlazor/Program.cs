@@ -15,9 +15,9 @@ svc.AddSyncfusionBlazor();
 #pragma warning disable CS8604
 svc.AddSingleton(
     new CebSetting {
-        MongoDb = bool.Parse(builder.Configuration["mongodb:actif"]),
+        MongoDb = bool.TryParse(builder.Configuration["mongodb:actif"], out var mdb) && mdb,
         MongoDbConnectionString = builder.Configuration["mongodb:server"],
-        AutoCalcul = bool.TryParse(builder.Configuration["AutoCalcul"], out bool res) ? res : false
+        AutoCalcul = bool.TryParse(builder.Configuration["AutoCalcul"], out var res) && res
     });
 svc.AddScoped<CebTirage>();
 SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["license"]);
@@ -27,8 +27,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
     app.UseDeveloperExceptionPage();
-}
-else {
+} else {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
@@ -47,8 +46,6 @@ await app.RunAsync();
 #pragma warning disable CRR0048
 public class CebSetting {
     public bool MongoDb { get; set; }
-
     public string? MongoDbConnectionString { get; set; }
-
     public bool AutoCalcul { get; set; }
 }

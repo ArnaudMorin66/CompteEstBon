@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Syncfusion.SfSkinManager;
+using Syncfusion.UI.Xaml.Grid;
+using Syncfusion.UI.Xaml.Grid.Helpers;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
-using Syncfusion.SfSkinManager;
-using Syncfusion.UI.Xaml.Grid;
-using Syncfusion.UI.Xaml.Grid.Helpers;
-using Syncfusion.Windows.Shared;
 
 namespace CompteEstBon {
 
@@ -31,11 +30,11 @@ namespace CompteEstBon {
             set {
                 var resource = Resources.MergedDictionaries.First(v => v.Source.OriginalString.Contains(_style));
                 _style = value;
-                
-                SfSkinManager.SetVisualStyle(this, (VisualStyles) Enum.Parse(typeof(VisualStyles), value));
+
+                SfSkinManager.SetVisualStyle(this, (VisualStyles)Enum.Parse(typeof(VisualStyles), value));
                 resource.Source =
                     new Uri($"pack://application:,,,/Syncfusion.Themes.{value}.WPF;component/Common/Brushes.xaml");
-                
+
             }
         }
 

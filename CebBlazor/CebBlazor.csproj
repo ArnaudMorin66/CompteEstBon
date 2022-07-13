@@ -19,6 +19,9 @@
     <ItemGroup>
       <TypeScriptCompile Remove="node_modules\**" />
     </ItemGroup>
+    <ItemGroup>
+      <Content Remove="bundleconfig.json" />
+    </ItemGroup>
    
     <ItemGroup>
         <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
@@ -31,6 +34,10 @@
     <ItemGroup>
         <Folder Include="wwwroot\css\" />
         <Folder Include="wwwroot\lib\fontawesome\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="bundleconfig.json" />
     </ItemGroup>
 
     <ItemGroup>

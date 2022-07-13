@@ -1,5 +1,8 @@
-﻿@page "/controls"
-@using Syncfusion.Blazor.Grids
+﻿@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Spinner
+@using CompteEstBon
+
+
 @using SelectionMode = Syncfusion.Blazor.Grids.SelectionMode
 @using SelectionType = Syncfusion.Blazor.Grids.SelectionType
 
@@ -14,11 +17,7 @@
 	<GridSelectionSettings Mode="SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
 	<GridTemplates>
 		<EmptyRecordTemplate>
-			@if (Status == CebStatus.EnCours)
-			{
-				<SfSpinner Size="80" Type="SpinnerType.Fabric" Visible="true"></SfSpinner>
-
-			}
+			<SfSpinner Size="80" Type="SpinnerType.Fluent" Visible="@(Status == CebStatus.EnCours)"></SfSpinner>
 		</EmptyRecordTemplate>
 	</GridTemplates>
 	@if (TypeGrille == CebTypeGrille.Grille)
@@ -59,8 +58,6 @@
 		</GridColumns>
 	}
 </SfGrid>
-@*}
-*@
 @code {
 
 #pragma warning disable CS8618

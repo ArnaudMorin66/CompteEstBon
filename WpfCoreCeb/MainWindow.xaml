@@ -47,9 +47,9 @@
             </DataTemplate>
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <s:Boolean x:Key="True">true</s:Boolean>
-            
-            <vw:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
-            <vw:BooleanToVisibilityConverterParam x:Key="BooleanToVisibilityConverterParam"/>
+
+            <vw:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <vw:BooleanToVisibilityConverterParam x:Key="BooleanToVisibilityConverterParam" />
         </ResourceDictionary>
     </Window.Resources>
     <Window.TaskbarItemInfo>
@@ -109,7 +109,7 @@
             CommandParameter="export"
             CommandTarget="{Binding ElementName=btnExport}"
             Modifiers="Ctrl" />
-        
+
     </Window.InputBindings>
     <Grid Background="{DynamicResource CebBackgroundBrush}">
         <Grid.RowDefinitions>
@@ -307,14 +307,14 @@
                     Content="-"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     Template="{DynamicResource CebRepeatButtonTemplate}" />
-                <TextBox 
+                <TextBox
                     x:Name="txtSearch"
                     Grid.Column="1"
                     AcceptsTab="True"
-                    GotFocus="txtSearch_GotFocus"
+                    GotFocus="TxtSearch_GotFocus"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     IsTabStop="True"
-                    LostFocus="txtSearch_LostFocus"
+                    LostFocus="TxtSearch_LostFocus"
                     PreviewTextInput="TxtSearch_OnPreviewTextInput"
                     Style="{StaticResource SearchControlStyle}"
                     TabIndex="6"
@@ -484,6 +484,24 @@
                     Visibility="{Binding Vertical, Converter={StaticResource BooleanToVisibilityConverterParam}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}" />
             </DataGrid.Columns>
         </DataGrid>
+        <ProgressBar
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="12"
+            Width="20"
+            Margin="0,20,0,20"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Panel.ZIndex="10"
+            Background="Transparent"
+            BorderBrush="Black"
+            BorderThickness="1"
+            Foreground="OrangeRed"
+            IsIndeterminate="True"
+            Maximum="100"
+            Minimum="0"
+            Orientation="Vertical"
+            Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverterParam}, ConverterParameter={StaticResource True}}" />
         <Popup
             Grid.Row="0"
             Grid.Column="0"
@@ -549,7 +567,7 @@
                             <ColumnDefinition />
                             <ColumnDefinition />
                             <ColumnDefinition />
-                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="128" />
                             <ColumnDefinition Width="128" />
                             <ColumnDefinition Width="32" />
                         </Grid.ColumnDefinitions>
@@ -565,15 +583,14 @@
                     FontSize="11"
                     Foreground="{StaticResource CebForegroundBrush}"
                     Text="{Binding Result}"
-                    TextAlignment="Center"
-                />
+                    TextAlignment="Center" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="2">
                 <TextBlock
                     x:Name="textBlock2"
                     Foreground="{StaticResource CebForegroundBrush}"
-                    Visibility="{Binding IsComputed, Converter={StaticResource BoolToVisibilityConverter}}"
-                    TextAlignment="Center" >
+                    TextAlignment="Center"
+                    Visibility="{Binding IsComputed, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Run Text="{Binding Count, Mode=OneWay}" />
                     <Run Text=" solutions" />
                 </TextBlock>
@@ -585,9 +602,9 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     Foreground="{StaticResource CebForegroundBrush}"
-                    Visibility="{Binding IsComputed, Converter={StaticResource BoolToVisibilityConverter}}"
                     Text="{Binding Duree.TotalSeconds, StringFormat=Durée {0:N3}}"
-                    TextAlignment="Center" />
+                    TextAlignment="Center"
+                    Visibility="{Binding IsComputed, Converter={StaticResource BoolToVisibilityConverter}}" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="4">
                 <ComboBox
@@ -599,24 +616,31 @@
                 Grid.Column="5"
                 Width="Auto"
                 HorizontalAlignment="Stretch">
-                <ProgressBar
-                    Width="100"
-                    HorizontalAlignment="Stretch"
-                    Background="{DynamicResource CebForegroundBrush}"
-                    Foreground="Yellow"
-                    IsIndeterminate="{Binding IsBusy, Mode=TwoWay}"
-                    Maximum="100"
-                    Minimum="0" />
-
+                <CheckBox
+                    x:Name="cbAuto"
+                    HorizontalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    Content="Auto"
+                    Foreground="White"
+                    IsChecked="{Binding Auto}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    IsTabStop="False"
+                    ToolTipService.ToolTip="Mode auto" />
             </StatusBarItem>
-            <StatusBarItem Grid.Column="6" Width="Auto" HorizontalAlignment="Stretch">
-                <CheckBox x:Name="cbAuto"
-                          Content="Auto"
-                          IsTabStop="False"
-                          IsChecked="{Binding Auto}"
-                          IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                          ToolTipService.ToolTip="Mode auto" Foreground="White" HorizontalContentAlignment="Center" HorizontalAlignment="Center">
-                </CheckBox>
+            <StatusBarItem
+                Grid.Column="6"
+                Width="Auto"
+                HorizontalAlignment="Stretch">
+                <CheckBox
+                    x:Name="cbMongoDb"
+                    HorizontalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    Content="MongoDB"
+                    Foreground="White"
+                    IsChecked="{Binding MongoDb}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    IsTabStop="False"
+                    ToolTipService.ToolTip="Mongo db" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="7">
                 <Button
@@ -624,7 +648,7 @@
                     Margin="0"
                     HorizontalAlignment="Center"
                     Background="{DynamicResource CebBackgroundBrush}"
-                    Click="btnMode_Click"
+                    Click="BtnMode_Click"
                     Content="{Binding ModeView}"
                     Style="{StaticResource ButtonWindowsStyle}"
                     Template="{DynamicResource CebButtonTemplate}" />
