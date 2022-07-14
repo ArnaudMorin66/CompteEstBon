@@ -18,7 +18,6 @@
 <div class="sticky-top">
 	<div class="btn-toolbar  justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
 		<div class="btn-group w-100" role="group" aria-label="First group">
-
 			<button class="btn btn-primary h-100 @(tirage.Status == CebStatus.EnCours ? "disabled" : "") @(tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon ? "enabled" : "")"
 					@onclick="() => TypeGrille = TypeGrille == CebTypeGrille.Grille ? CebTypeGrille.Liste : CebTypeGrille.Grille"
 					aria-disabled="true"
@@ -28,7 +27,6 @@
 					type="button">
 				<div class="d-flex justify-content-between">
 					<img src="favicon.ico" style="height: 1.5rem;">
-
 					<span class="text-uppercase text-danger font-weight-bold text-wrap text-truncate ">Syncfusion - Compte&nbsp;est&nbsp;bon</span>
 					<i class="text-white fas @(TypeGrille == CebTypeGrille.Liste ? "fa-ellipsis-v" : "fa-ellipsis-h") fa-2x"></i>
 				</div>
@@ -103,7 +101,7 @@
 						type="button"
 						accesskey="i">
 							<div>
-								<i class="text-dark far fa-thumbs-up"></i>
+								<i class="far fa-thumbs-up"></i>
 							</div>
 							<div class="animation">Compte&nbsp;est&nbsp;bon</div>
 						</button>
@@ -116,7 +114,7 @@
 						@onclick="tirage.ClearAsync"
 						accesskey="i">
 							<div>
-								<i class="text-danger far fa-thumbs-down"></i>
+								<i class="far fa-thumbs-down"></i>
 							</div>
 							<div class="animation">Compte&nbsp;approch&eacute;</div>
 						</button>

@@ -5,7 +5,9 @@
   "license": "MIT",
   "scripts": {
     "sass-debug": "sass scss/site.scss:wwwroot/css/site.css --load-path=node_modules/ --load-path=node_modules/@syncfusion/ --source-map -c",
-    "sass-release": "del wwwroot\\css\\site.* /Q & sass scss/site.scss:wwwroot/css/site.css --load-path=node_modules/ --load-path=node_modules/@syncfusion/ -c --no-source-map"
+    "sass-release": "del wwwroot\\css\\site.* /Q & sass scss/site.scss:wwwroot/css/site.css --load-path=node_modules/ --load-path=node_modules/@syncfusion/ -c --no-source-map",
+    "sass-watch-debug": "sass scss/site.scss:wwwroot/css/site.css --load-path=node_modules/ --load-path=node_modules/@syncfusion/ --source-map -c -w",
+    "sass-watch-release": "del wwwroot\\css\\site.* /Q & sass scss/site.scss:wwwroot/css/site.css --load-path=node_modules/ --load-path=node_modules/@syncfusion/ -c --no-source-map -w"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "6.1.1",
@@ -15,4 +17,5 @@
   "devDependencies": {
     "sass":  "latest"  
   }
+, "-vs-binding":{"ProjectOpened":["sass-watch-debug"]}
 }

@@ -12,7 +12,7 @@ var svc = builder.Services;
 svc.AddRazorPages();
 svc.AddServerSideBlazor();
 svc.AddSyncfusionBlazor();
-#pragma warning disable CS8604
+
 svc.AddSingleton(
     new CebSetting {
         MongoDb = bool.TryParse(builder.Configuration["mongodb:actif"], out var mdb) && mdb,

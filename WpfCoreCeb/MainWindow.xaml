@@ -246,7 +246,7 @@
                     Grid.Column="0"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     TabIndex="0"
-                    Text="{Binding Plaques[0], Mode=TwoWay}" />
+                    Text="{Binding  Plaques[0], Mode=TwoWay}" />
                 <ComboBox
                     x:Name="Plaque2"
                     Grid.Column="1"

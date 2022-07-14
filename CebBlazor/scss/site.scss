@@ -1,11 +1,10 @@
-$primary: #404040;
-$bg-body: #303030;
+$primary: darkslategray;
 
 $font-size: 1rem;
 
 $enable-shadows: true;
 $enable-responsive-font-sizes: true;
-$grid-header-border-color: $bg-body;
+$grid-header-border-color: $primary;
 $font-family-sans-serif: 'Colibri', 'Segoe UI', sans-serif;
 $font-family: $font-family-sans-serif;
 
@@ -15,7 +14,7 @@ $enable-gradients: true;
 
 html,
 body {
-    background-color: $bg-body;
+    background-color: $primary;
     font-size: $font-size;
 }
 
@@ -34,7 +33,7 @@ body {
     }
 
     .e-content {
-        background-color: $bg-body;
+        background-color: $primary;
         text-align: center;
         color: white;
         font-size: $font-size;
@@ -42,8 +41,8 @@ body {
 
 
     .e-emptyrow {
-        color: $bg-body;
-        background-color: $bg-body;
+        color: $primary;
+        background-color: $primary;
         margin: 0;
         padding: 0;
     }
@@ -76,7 +75,7 @@ body {
         }
 
         &:not(.e-altrow) > :not(.e-active) {
-            background-color: $bg-body;
+            background-color: $primary;
             color: yellow;
         }
 
@@ -99,7 +98,7 @@ body {
 
 .card-body,
 .card-text {
-    background-color: $bg-body; //  lightslategray;
+    background-color: $primary; //  lightslategray;
     color: black; // white;
 }
 
@@ -129,7 +128,7 @@ body {
 }
 
 .gradient {
-    background: radial-gradient($primary, $bg-body);
+    background: radial-gradient($primary, $primary);
     background-image: radial-gradient( #505050, $primary); // (rgb(48, 48, 48), rgb(73, 80, 87));
 }
 
@@ -150,7 +149,7 @@ body {
 }
 /*
 .e-input {
-    background-color: $bg-body;
+    background-color: $primary;
 }
 */
 .centrer-element {

@@ -11,8 +11,8 @@
     <SignAssembly>false</SignAssembly>
     <Version>10</Version>
     <AssemblyName>Wpf.Ceb.Core</AssemblyName>
-    <AssemblyVersion>1.0.8229.50</AssemblyVersion>
-    <FileVersion>1.0.8229.50</FileVersion>
+    <AssemblyVersion>1.0.8229.54</AssemblyVersion>
+    <FileVersion>1.0.8229.54</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
