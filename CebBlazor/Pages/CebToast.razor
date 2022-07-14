@@ -87,12 +87,12 @@
         DueTime = 5000;
     }
 
-    public async Task ShowAsync(CebBase? detail) {
+    public async Task ShowAsync(int index) {
         if (Visible) {
             Visible = false;
         }
         #pragma warning disable CS8601
-        Solution = detail?.ToString();
+        Solution = tirage.Solutions[index].ToString();
         Visible = true;
 
         await InvokeAsync(StateHasChanged);

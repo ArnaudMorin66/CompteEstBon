@@ -18,7 +18,7 @@
 <div class="sticky-top">
 	<div class="btn-toolbar  justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
 		<div class="btn-group w-100" role="group" aria-label="First group">
-			<button class="btn btn-primary h-100 @(tirage.Status == CebStatus.EnCours ? "disabled" : "") @(tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon ? "enabled" : "")"
+			<span class="btn btn-primary h-100 @(tirage.Status == CebStatus.EnCours ? "disabled" : "") @(tirage.Status != CebStatus.CompteApproche && tirage.Status != CebStatus.CompteEstBon ? "enabled" : "")"
 					@onclick="() => TypeGrille = TypeGrille == CebTypeGrille.Grille ? CebTypeGrille.Liste : CebTypeGrille.Grille"
 					aria-disabled="true"
 					title="@(TypeGrille == CebTypeGrille.Liste ? "Mode Liste" : "Mode Grille")"
@@ -30,7 +30,7 @@
 					<span class="text-uppercase text-danger font-weight-bold text-wrap text-truncate ">Syncfusion - Compte&nbsp;est&nbsp;bon</span>
 					<i class="text-white fas @(TypeGrille == CebTypeGrille.Liste ? "fa-ellipsis-v" : "fa-ellipsis-h") fa-2x"></i>
 				</div>
-			</button>
+			</span>
 		</div>
 
 	</div>
@@ -51,6 +51,7 @@
 									@bind-Value="plq.Value"
 									DataSource="@ListePlaques"
 									ShowClearButton="false"
+									AllowFiltering="true"
 									Enabled="tirage.Status != CebStatus.EnCours">
 							</SfComboBox>
 						</div>
@@ -193,9 +194,7 @@
 	</div>
 </div>
 <CebSolutions @ref="Solutions" TypeGrille="TypeGrille"
-			  ShowDetail="ShowSolutionAsync"
-			  Status="tirage.Status"
-			  Details="tirage.Solutions">
+			  ShowDetail="ShowSolutionAsync">
 </CebSolutions>
 <div class="card text-center bg-primary bg-gradient border-secondary">
 	<div class="card-header">
@@ -290,12 +289,12 @@
 		if (tirage.Status is CebStatus.CompteEstBon or   CebStatus.CompteApproche) {
 			if (MongoDb)
 				await SaveMongoDb();
-			await toast.ShowAsync(tirage.Solutions[0]);
+			await toast.ShowAsync(0);
 		}
 	}
 
-	private async Task ShowSolutionAsync(CebBase? sol) {
-		await toast.ShowAsync(sol);
+	private async Task ShowSolutionAsync(int index) {
+		await toast.ShowAsync(index);
 	}
 
 	private async Task ExportExcelAsync() {

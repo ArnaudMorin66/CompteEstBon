@@ -1,40 +1,47 @@
 ﻿@using Syncfusion.Blazor.Grids
 @using Syncfusion.Blazor.Spinner
 @using CompteEstBon
-
+@inject CebTirage tirage
 
 @using SelectionMode = Syncfusion.Blazor.Grids.SelectionMode
 @using SelectionType = Syncfusion.Blazor.Grids.SelectionType
 
-<SfGrid AllowExcelExport="true" AllowResizing="true"
-		AllowSelection="true" DataSource="@Details" EnableAltRow="true" GridLines="GridLine.Vertical"
-		Height="400"
-		ID="solutions" TValue="CebBase">
+<SfGrid AllowExcelExport="true" 
+	AllowResizing="true"
+	AllowSelection="true" 
+	DataSource="tirage.Solutions" 
+	EnableAltRow="true"
+	GridLines="GridLine.Vertical"
+	Height="400" 
+	class="g-solutions"
+	ID="solutions" 
+	TValue="CebBase">
 
 	<GridEvents OnRecordClick="ShowAsync"
 				TValue="CebBase">
 	</GridEvents>
-	<GridSelectionSettings Mode="SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
+	<GridSelectionSettings 
+		Mode="SelectionMode.Row" 
+		Type="SelectionType.Single"></GridSelectionSettings>
 	<GridTemplates>
 		<EmptyRecordTemplate>
-			<SfSpinner Size="80" Type="SpinnerType.Fluent" Visible="@(Status == CebStatus.EnCours)"></SfSpinner>
+			<SfSpinner Size="80" Type="SpinnerType.Fluent" Visible="@(tirage.Status == CebStatus.EnCours)"></SfSpinner>
 		</EmptyRecordTemplate>
 	</GridTemplates>
 	@if (TypeGrille == CebTypeGrille.Grille)
 	{
-		<GridColumns>
+		<GridColumns>{}
 
 			@for (var i = 0; i < 5; i++)
 			{
 				var j = i;
-				<GridColumn>
-					<Template>
+				<GridColumn TextAlign="TextAlign.Center" >
+					<Template Context="data" >
 						@{
-#pragma warning disable CS8602
-							var op = (context as CebBase).Operations;
+							var op = ((CebBase) data).Operations;
 							if (j < op.Count)
 							{
-								@op[j]
+											@op[j]
 							}
 						}
 
@@ -61,28 +68,17 @@
 @code {
 
 #pragma warning disable CS8618
-	// SfGrid<CebBase>? _details { get; set; }
-
 	[Parameter]
 	public CebTypeGrille TypeGrille { get; set; }
-	[Parameter]
-	public CebStatus Status { get; set; }
 
 	[Parameter]
-	public IEnumerable<CebBase> Details { get; set; }
-
-	[Parameter]
-	public EventCallback<CebBase> ShowDetail { get; set; }
+	public EventCallback<int> ShowDetail { get; set; }
 
 
-	protected override async Task OnInitializedAsync()
-	{
-		await base.OnInitializedAsync();
-	}
+	protected override async Task OnInitializedAsync() => await base.OnInitializedAsync();
+	
 
-	private async Task ShowAsync(RecordClickEventArgs<CebBase> ligne)
-	{
-		await ShowDetail.InvokeAsync(ligne.RowData);
-	}
+	private async Task ShowAsync(RecordClickEventArgs<CebBase> ligne) => 
+		await ShowDetail.InvokeAsync((int) ligne.RowIndex);
 
 }

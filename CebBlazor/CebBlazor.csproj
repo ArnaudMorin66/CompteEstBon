@@ -10,8 +10,8 @@
         <TypeScriptSourceMap>False</TypeScriptSourceMap>
        <TypeScriptNoEmitOnError>False</TypeScriptNoEmitOnError>
         <NoWarn>1701;1702;8002</NoWarn>
-        <AssemblyVersion>4.0.2.15784</AssemblyVersion>
-        <FileVersion>4.0.2.15784</FileVersion>
+        <AssemblyVersion>4.1.43.24565</AssemblyVersion>
+        <FileVersion>4.1.43.24565</FileVersion>
     </PropertyGroup>
     
     <ItemGroup>

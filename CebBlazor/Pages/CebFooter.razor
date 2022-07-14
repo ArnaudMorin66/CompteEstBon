@@ -4,24 +4,24 @@
 
 @* ReSharper disable  UnknownCssClass *@
 <div class="footer d-flex bg-gradient-dark justify-content-between align-items-center border border-secondary">
-    <span class="badge badge-pill badge-info">
-        ©️Arnaud Morin,&nbsp;Syncfusion,&nbsp;
-        @RuntimeInformation.FrameworkDescription,&nbsp;Version:@System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
-    </span>
-    <span class="badge badge-pill badge-info">@($"{datetime:dddd dd MMMM yyyy à HH:mm:ss}")</span>
+	<span class="badge badge-pill badge-info text-white">
+		©️Arnaud Morin,&nbsp;Syncfusion,&nbsp;
+		@RuntimeInformation.FrameworkDescription,&nbsp;Version:@System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
+	</span>
+	<span class="badge badge-pill badge-info text-white">@($"{datetime:dddd dd MMMM yyyy à HH:mm:ss}")</span>
 </div>
 
 @code {
-    private DateTime datetime;
-
-    protected override void OnInitialized() {
-        var timer = new Timer(1000);
-        timer.Elapsed += (_, e) => {
-            datetime = e.SignalTime;
-            InvokeAsync(StateHasChanged);
-        };
-        timer.AutoReset = true;
-        timer.Enabled = true;
-    }
+	private DateTime datetime;
+	protected override Task OnInitializedAsync() {
+		var timer = new Timer(1000);
+		timer.Elapsed += async (_, e) => {
+			datetime = e.SignalTime;
+			await InvokeAsync(StateHasChanged);
+		};
+		timer.AutoReset = true;
+		timer.Enabled = true;
+		return base.OnInitializedAsync();
+	}
 
 }
