@@ -12,31 +12,28 @@
             @* ReSharper disable once UnknownCssClass *@
             @{
                 string cls;
-                string title;
                 string icn;
                 string rsl;
                 switch (tirage.Status) {
                     case CebStatus.CompteEstBon:
-                        title = "bg-gradient-success text-white";
                         cls = "bg-success text-white";
                         icn = "fa-thumbs-up text-white";
                         rsl = "Compte est bon";
                         break;
                     case CebStatus.CompteApproche:
-                        title = "bg-gradient-warning text-dark";
-                        icn = "fa-thumbs-down text-danger";
-                        cls = "bg-warning text-dark";
+                        icn = "fa-thumbs-down text-white";
+                        cls = "bg-secondary text-white";
                         rsl = "Compte approché";
                         break;
                     default:
 
                         return;
                 }
-                <div class="text-center text-uppercase font-weight-bold @title">
+                
                     <div class="w-100 text-center @cls">
                         <i class="far @icn"></i>&nbsp;@rsl
                     </div>
-                </div>
+                
                 <div>&nbsp;</div>
                 <div class="text-center text-white">
                     <div>Trouvé(s):&nbsp;@tirage.Found</div>

@@ -6,62 +6,46 @@
 @using SelectionMode = Syncfusion.Blazor.Grids.SelectionMode
 @using SelectionType = Syncfusion.Blazor.Grids.SelectionType
 
-<SfGrid AllowExcelExport="true" 
-	AllowResizing="true"
-	AllowSelection="true" 
-	DataSource="tirage.Solutions" 
-	EnableAltRow="true"
-	GridLines="GridLine.Vertical"
-	Height="400" 
-	class="g-solutions"
-	ID="solutions" 
-	TValue="CebBase">
-
-	<GridEvents OnRecordClick="ShowAsync"
-				TValue="CebBase">
-	</GridEvents>
-	<GridSelectionSettings 
-		Mode="SelectionMode.Row" 
-		Type="SelectionType.Single"></GridSelectionSettings>
+<SfGrid AllowExcelExport="true"
+		AllowResizing="true"
+		AllowSelection="true"
+		DataSource="tirage.Solutions"
+		EnableAltRow="true"
+		GridLines="GridLine.Vertical"
+		Height="400"
+		ID="solutions"
+		TValue="CebBase">
+	<GridEvents OnRecordClick="ShowAsync" TValue="CebBase"></GridEvents>
+	<GridSelectionSettings Mode="SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
 	<GridTemplates>
 		<EmptyRecordTemplate>
 			<SfSpinner Size="80" Type="SpinnerType.Fluent" Visible="@(tirage.Status == CebStatus.EnCours)"></SfSpinner>
 		</EmptyRecordTemplate>
 	</GridTemplates>
-	@if (TypeGrille == CebTypeGrille.Grille)
-	{
-		<GridColumns>{}
-
-			@for (var i = 0; i < 5; i++)
-			{
+	@if (TypeGrille == CebTypeGrille.Grille) {
+		<GridColumns>
+			@for (var i = 0; i < 5; i++) {
 				var j = i;
-				<GridColumn TextAlign="TextAlign.Center" >
-					<Template Context="data" >
+				<GridColumn TextAlign="TextAlign.Center">
+					<Template Context="data">
 						@{
-							var op = ((CebBase) data).Operations;
+							var op = ((CebBase)data).Operations;
 							if (j < op.Count)
-							{
-											@op[j]
-							}
+								@op[j]
 						}
-
 					</Template>
 				</GridColumn>
 			}
 		</GridColumns>
-	}
-	else
-	{
+	} else {
 		<GridColumns>
 			<GridColumn TextAlign="TextAlign.Center">
 				<Template Context="data">
-					@foreach (var op in ((CebBase)data).Operations)
-					{
+					@foreach (var op in ((CebBase)data).Operations) {
 						<div>@op</div>
 					}
 				</Template>
 			</GridColumn>
-
 		</GridColumns>
 	}
 </SfGrid>
@@ -76,9 +60,9 @@
 
 
 	protected override async Task OnInitializedAsync() => await base.OnInitializedAsync();
-	
 
-	private async Task ShowAsync(RecordClickEventArgs<CebBase> ligne) => 
-		await ShowDetail.InvokeAsync((int) ligne.RowIndex);
+
+	private async Task ShowAsync(RecordClickEventArgs<CebBase> ligne) =>
+		await ShowDetail.InvokeAsync((int)ligne.RowIndex);
 
 }

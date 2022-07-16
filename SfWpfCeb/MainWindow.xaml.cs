@@ -15,13 +15,13 @@ namespace CompteEstBon {
     ///     Logique d'interaction pour MainWindow.xaml
     /// </summary>
     public partial class MainWindow {
-        private string _style = "MaterialDark";
+        private string _style = "FluentDark";
 
         public MainWindow() {
             InitializeComponent();
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr");
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
-            VisualStyle = "MaterialDark";
+            VisualStyle = _style;
         }
 
         public string DotnetVersion => $"Version: {System.Reflection.Assembly.GetExecutingAssembly().GetName().Version}, {RuntimeInformation.FrameworkDescription}";

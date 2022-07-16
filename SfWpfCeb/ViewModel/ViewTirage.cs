@@ -71,22 +71,24 @@ public class ViewTirage : NotificationObject, ICommand {
             Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
         };
 
-        Plaques.CollectionChanged += (_, e) => {
+        Plaques.CollectionChanged += async (_, e) => {
             if (e.Action != NotifyCollectionChangedAction.Replace)
                 return;
 
             var i = e.NewStartingIndex;
             Tirage.Plaques[i].Value = Plaques[i];
-
-            Task.Run(ClearAsync);
+            await Task.Run(ClearAsync);
+           
         };
 
         Tirage.PropertyChanged += (sender, args) => {
             switch (args.PropertyName) {
                 case "Clear":
 
-                    if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide)
+                    if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide) {
+                        
                         Task.Run(ResolveAsync);
+                    }
                     break;
                 case "Resolve":
                     break;
@@ -343,8 +345,12 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     public static (bool Ok, string Path) SaveFileName() {
-        var dialog = new SaveFileDialog();
-        (dialog.Filter, dialog.Title) = ("Excel (*.xlsx)| *.xlsx | Word (*.docx) | *.docx", "Export Excel-Word");
+        var dialog = new SaveFileDialog {
+            Title = "Export Excel-Word",
+            Filter = "Excel (*.xlsx)| *.xlsx | Word (*.docx) | *.docx",
+            DefaultExt = ".xlsx",
+            FileName = "*.xlsx"
+        };
         // ReSharper disable once PossibleInvalidOperationException
         return ((bool)dialog.ShowDialog(), dialog.FileName);
     }
@@ -410,8 +416,6 @@ public class ViewTirage : NotificationObject, ICommand {
     public async Task ClearAsync() {
         await Tirage.ClearAsync();
         ClearData();
-        //if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide)
-        //    await ResolveAsync();
     }
 
     public async Task RandomAsync() {
@@ -439,7 +443,7 @@ public class ViewTirage : NotificationObject, ICommand {
             _ => "Jeu du Compte Est Bon"
         };
         stopwatch.Stop();
-        Duree = stopwatch.Elapsed; // .FromSeconds( Tirage.Duree);
+        Duree = stopwatch.Elapsed; 
         Solution = Tirage.Solutions[0];
         Solutions = Tirage.Solutions;
         UpdateForeground();
@@ -447,7 +451,7 @@ public class ViewTirage : NotificationObject, ICommand {
         RaisePropertyChanged(nameof(IsComputed));
 
         ShowPopup();
-        if (Settings.Default.MongoDB && MongoDb)
+        if (MongoDb)
             await SaveMongoDB();
 
         return Tirage.Status;

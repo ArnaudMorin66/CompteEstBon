@@ -10,13 +10,22 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<base href="~/" />
 	<link href="css/site.css" rel="stylesheet" />
-
+	<script type="text/javascript">
+	   function saveAsFile(filename, bytesBase64) {
+			var link = document.createElement('a');
+			link.download = filename;
+			link.href = "data:application/octet-stream;base64," + bytesBase64;
+			document.body.appendChild(link); // Needed for Firefox
+			link.click();
+			document.body.removeChild(link);
+		}
+	</script>
 	<component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
 	<component type="typeof(App)" render-mode="ServerPrerendered" />
 	<script defer src="~/lib/fontawesome/all.min.js" data-auto-replace-svg="nest"></script>
-	<script src="~/exporter.min.js"></script>
+	
 	<script src="_content/Syncfusion.Blazor.Core/scripts/syncfusion-blazor.min.js" type="text/javascript"></script>
 	<script src="_framework/blazor.server.js"></script>
 </body>

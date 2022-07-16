@@ -14,7 +14,7 @@
     BorderThickness="0"
     FontSize="10"
     Icon="images/favicon.png"
-    skin:SfSkinManager.VisualStyle="MaterialDark"
+    skin:SfSkinManager.VisualStyle="FluentDark"
     Title="{Binding Titre}"
     TitleBarForeground="{DynamicResource TextForegroundBrush}"
     TitleTextAlignment="Center"
@@ -24,7 +24,7 @@
     <s:ChromelessWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Syncfusion.Themes.MaterialDark.WPF;component/Common/Brushes.xaml" />
+                <ResourceDictionary Source="/Syncfusion.Themes.FluentDark.WPF;component/Common/Brushes.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="TextForegroundBrush" Color="{Binding Foreground}" />
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -438,10 +438,11 @@
                     Foreground="{DynamicResource TextForegroundBrush}"
                     SelectedIndex="0"
                     Text="{Binding VisualStyle, ElementName=chromelessWindow, Mode=TwoWay}">
+                    <ComboBoxItem Content="FluentDark" />
                     <ComboBoxItem Content="MaterialDark" />
                     <ComboBoxItem Content="MaterialDarkBlue" />
                     <ComboBoxItem Content="Office2019Black" />
-                    <ComboBoxItem Content="FluentDark" />
+                    
                 </ComboBox>
             </StatusBarItem>
             <StatusBarItem Grid.Column="5" Background="Transparent">

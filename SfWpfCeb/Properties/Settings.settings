@@ -15,7 +15,7 @@
       <Value Profile="(Default)">NjcyNzM3QDMyMzAyZTMyMmUzMFV2TGVNenhCUjJwZktkNVVJWjlJaWo4QlRRTVpjN0ZvSSswMjk5RWJ6U0k9;NRAiBiAaIQQuGjN/V0Z+Xk9EaFxEVmJLYVB3WmpQdldgdVRMZVVbQX9PIiBoS35RdEVkWXZfcndRQ2JUVUJw</Value>
     </Setting>
     <Setting Name="AutoCalcul" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
 </SettingsFile>
