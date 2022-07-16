@@ -10,8 +10,8 @@
     <LangVersion>10.0</LangVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
-    <AssemblyVersion>4.0.1.15195</AssemblyVersion>
-    <FileVersion>4.0.1.15195</FileVersion>
+    <AssemblyVersion>4.0.2.18384</AssemblyVersion>
+    <FileVersion>4.0.2.18384</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

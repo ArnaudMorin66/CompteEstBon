@@ -196,11 +196,7 @@ namespace CompteEstBon {
 
         public void SetPlaques(params int[] plaq) {
             Status = CebStatus.Indefini;
-            foreach (var p in Plaques) {
-                p.Value = 0;
-            }
-            ;
-
+            foreach (var p in Plaques) p.Value = 0;
             foreach (var (p, i) in plaq.WithIndex().Where(elt => elt.Item2 < 6)) Plaques[i].Value = p;
             Clear();
         }
@@ -251,8 +247,7 @@ namespace CompteEstBon {
         public int Search {
             get => _search;
             set {
-                if (value == _search)
-                    return;
+                if (value == _search) return;
                 _search = value;
                 Clear();
             }

@@ -1,4 +1,4 @@
-$primary: #2b2a29; // darkslategray;
+$primary: #3b3a39;// #2b2a29; 
 // $secondary: #1b1a19; 
 
 $font-size: 1rem;
@@ -8,6 +8,15 @@ $enable-responsive-font-sizes: true;
 $grid-header-border-color: $primary;
 $font-family-sans-serif: 'Colibri', 'Segoe UI', sans-serif;
 $font-family: $font-family-sans-serif;
+// You probably already include the core styles
+@import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
+
+// You can include all the other styles the same as before
+@import "@fortawesome/fontawesome-free/scss/regular.scss";
+
+@import "@fortawesome/fontawesome-free/scss/solid.scss";
+@import "@fortawesome/fontawesome-free/scss/brands.scss";
+
 
 @import "ej2/bootstrap5-dark.scss";
 $enable-gradients: true;

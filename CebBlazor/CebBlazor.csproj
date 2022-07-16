@@ -12,13 +12,15 @@
         <NoWarn>1701;1702;8002</NoWarn>
         <AssemblyVersion>4.1.43.24565</AssemblyVersion>
         <FileVersion>4.1.43.24565</FileVersion>
+        <UserSecretsId>863459e9-e5ca-4fdd-813d-9a4f7efc30bc</UserSecretsId>
     </PropertyGroup>
     
     <ItemGroup>
+      <Compile Remove="wwwroot\lib\**" />
+      <Content Remove="wwwroot\lib\**" />
+      <EmbeddedResource Remove="wwwroot\lib\**" />
+      <None Remove="wwwroot\lib\**" />
       <TypeScriptCompile Remove="node_modules\**" />
-    </ItemGroup>
-    <ItemGroup>
-      <Content Remove="bundleconfig.json" />
     </ItemGroup>
    
     <ItemGroup>
@@ -31,11 +33,7 @@
 
     <ItemGroup>
         <Folder Include="wwwroot\css\" />
-        <Folder Include="wwwroot\lib\fontawesome\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Include="bundleconfig.json" />
+        <Folder Include="wwwroot\webfonts\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -43,6 +41,6 @@
         <ProjectReference Include="..\SFCebOffice\SFCebOffice.csproj" />
     </ItemGroup>
 
-    <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="https://appsemble.app/api.json" package_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+    <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="https://appsemble.app/api.json" libman_1json__JsonSchema="" package_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>
