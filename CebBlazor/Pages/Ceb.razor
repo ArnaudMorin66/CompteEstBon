@@ -103,10 +103,9 @@
 						</button>
 						break;
 					case CebStatus.CompteApproche:
-						<button class="btn btn-secondary"
+						<button class="btn btn-secondary text-wheat"
 						role="button"
 						type="button"
-						style="color:wheat"
 						title="Initialisation des résultats (ALT-I)"
 						@onclick="tirage.ClearAsync"
 						accesskey="i">
@@ -140,7 +139,6 @@
 				}
 			</div>
 			<div class="card-header btn-group w-100" role="group" aria-label="Action">
-
 				<button id="hasard"
 						class="btn btn-primary w-50 @(tirage.Status == CebStatus.EnCours ? "disabled" : "")"
 						accesskey="t"
@@ -193,7 +191,7 @@
 					</div>
 					break;
 				case CebStatus.CompteApproche:
-					<div class="bg-secondary" style="cursor: pointer; color: wheat" @onclick="tirage.ClearAsync">
+					<div class="bg-secondary text-wheat" style="cursor: pointer;" @onclick="tirage.ClearAsync">
 						<i class="fa-regular fa-thumbs-down"></i>&nbsp;
 						&nbsp;Compte approch&eacute;:&nbsp;@tirage.Found,&nbsp;&eacute;cart:&nbsp;@tirage.Diff,&nbsp;@tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.Duree:N3}")&nbsp;s
 					</div>

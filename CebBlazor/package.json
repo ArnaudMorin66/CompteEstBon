@@ -15,7 +15,7 @@
     "bootstrap": "5.2.0-beta1"
   },
   "devDependencies": {
-    "sass":  "1.53.0"  
-  }
-, "-vs-binding":{"ProjectOpened":["sass-watch-debug"]}
+    "sass": "1.53.0"
+  }, 
+  "-vs-binding":{"ProjectOpened":["sass-watch-debug"]}
 }

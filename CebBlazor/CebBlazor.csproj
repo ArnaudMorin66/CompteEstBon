@@ -41,6 +41,9 @@
         <ProjectReference Include="..\SFCebOffice\SFCebOffice.csproj" />
     </ItemGroup>
 
-    <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="https://appsemble.app/api.json" libman_1json__JsonSchema="" package_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
-
+    <ProjectExtensions>
+        <VisualStudio>
+            <UserProperties appsettings_1development_1json__JsonSchema="https://appsemble.app/api.json" libman_1json__JsonSchema="" package_1json__JsonSchema="" />
+        </VisualStudio>
+    </ProjectExtensions>
 </Project>
