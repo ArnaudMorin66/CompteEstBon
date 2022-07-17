@@ -16,8 +16,8 @@
                 string rsl;
                 switch (tirage.Status) {
                     case CebStatus.CompteEstBon:
-                        cls = "bg-success text-white";
-                        icn = "fa-thumbs-up text-white";
+                        cls = "bg-success text-black";
+                        icn = "fa-thumbs-up text-black";
                         rsl = "Compte est bon";
                         break;
                     case CebStatus.CompteApproche:
@@ -31,7 +31,7 @@
                 }
                 
                     <div class="w-100 text-center @cls">
-                        <i class="far @icn"></i>&nbsp;@rsl
+                        <i class="fa-regular @icn"></i>&nbsp;@rsl
                     </div>
                 
                 <div>&nbsp;</div>

@@ -19,10 +19,10 @@
 	<GridSelectionSettings Mode="SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
 	<GridTemplates>
 		<EmptyRecordTemplate>
-			<SfSpinner Size="80" Type="SpinnerType.Fluent" Visible="@(tirage.Status == CebStatus.EnCours)"></SfSpinner>
+			<i class="fa-solid fa-atom fa-pulse fa-6x text-info text-center @(tirage.Status == CebStatus.EnCours ? "visible" : "invisible")"></i>
 		</EmptyRecordTemplate>
 	</GridTemplates>
-	@if (TypeGrille == CebTypeGrille.Grille) {
+	@if (IsTableau) {
 		<GridColumns>
 			@for (var i = 0; i < 5; i++) {
 				var j = i;
@@ -30,8 +30,7 @@
 					<Template Context="data">
 						@{
 							var op = ((CebBase)data).Operations;
-							if (j < op.Count)
-								@op[j]
+							if (j < op.Count) @op[j]
 						}
 					</Template>
 				</GridColumn>
@@ -53,7 +52,7 @@
 
 #pragma warning disable CS8618
 	[Parameter]
-	public CebTypeGrille TypeGrille { get; set; }
+	public bool IsTableau { get; set; } = true;
 
 	[Parameter]
 	public EventCallback<int> ShowDetail { get; set; }

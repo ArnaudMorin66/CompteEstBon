@@ -3,12 +3,7 @@ using System.Linq;
 
 // ReSharper disable once CheckNamespace
 namespace CebBlazor.code {
-    public enum CebTypeGrille {
-        Grille,
-        Liste
-    }
-
-    public static class FileUtils {
+      public static class FileUtils {
         public static ValueTask<object> SaveAsAsync(this IJSRuntime js, string filename, byte[] data)
             => js.InvokeAsync<object>(
                 "saveAsFile",

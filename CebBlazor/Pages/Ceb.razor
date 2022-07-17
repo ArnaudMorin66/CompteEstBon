@@ -15,14 +15,24 @@
 @inject IJSRuntime js
 @inject CebSetting setting
 @inject CebTirage tirage
-<div class="sticky-top">
-	<div class="row border-1">
-		<div style="height: 1,5rem" class="col-1 text-start">
-		<img src="favicon.ico" height="32">
-		</div>
-		<div class="col w-100  text-center text-uppercase text-danger font-weight-bold text-wrap text-truncate ">Syncfusion - Compte&nbsp;est&nbsp;bon</div>
-		<div style="height: 1rem" class="col-1 text-end">
-			<img src="favicon.ico" height="32">
+
+<div class="card text-center border-secondary">
+	<div class="card-header bg-primary bg-gradient border-secondary">
+		<div class="row">
+			<div class="col-1 text-start">
+				<img src="favicon.ico" height="20">
+			</div>
+			<div class="col text-center text-uppercase text-danger font-weight-bold text-wrap text-truncate ">Syncfusion - Compte&nbsp;est&nbsp;bon</div>
+			<div class="col-1 text-end">
+				<button id="idVue2"
+						class="btn btn-primary"
+						title="Mode de vue"
+						role="button"
+						@onclick="() => IsTableau = !IsTableau"
+						type="button">
+					<i class="fa-solid fa-ellipsis@(IsTableau ? "":"-vertical") fa-2x"></i>
+				</button>
+			</div>
 		</div>
 	</div>
 </div>
@@ -30,7 +40,7 @@
 	<div class="col text-center">
 		<div class="card text-center border-secondary">
 			<div class="card-header bg-primary bg-gradient text-white">
-				<i class="fas fa-bars"></i>
+				<i class="fa-solid fa-bars"></i>
 				&nbsp;Plaques
 			</div>
 			<div class="card-body">
@@ -55,7 +65,7 @@
 	<div class="col-md-2">
 		<div class="card text-center border border-secondary">
 			<div class="card-header bg-primary bg-gradient text-white">
-				<i class="fas fa-search"></i>
+				<i class="fa-solid fa-search-plus"></i>
 				&nbsp;Trouver
 			</div>
 			<div class="card-body">
@@ -77,7 +87,7 @@
 				@switch (tirage.Status) {
 					case CebStatus.EnCours:
 						<button class="btn btn-info">
-							<i class="fas fa-spinner fa-spin"></i>
+							<i class="fa-solid fa-rotate fa-pulse"></i>
 							<span class="animation">Patientez&hellip;</span>
 						</button>
 						break;
@@ -88,7 +98,7 @@
 						role="button"
 						type="button"
 						accesskey="i">
-							<i class="far fa-thumbs-up"></i>
+							<i class="fa-regular fa-thumbs-up"></i>
 							<span class="animation">Compte&nbsp;est&nbsp;bon</span>
 						</button>
 						break;
@@ -100,7 +110,7 @@
 						title="Initialisation des résultats (ALT-I)"
 						@onclick="tirage.ClearAsync"
 						accesskey="i">
-							<i class="far fa-thumbs-down"></i>
+							<i class="fa-regular fa-thumbs-down"></i>
 							<span class="animation">Compte&nbsp;approch&eacute;</span>
 						</button>
 						break;
@@ -111,7 +121,7 @@
 						title="Tirage aléatoire (ALT-T)"
 						@onclick="tirage.RandomAsync"
 						accesskey="T">
-							<i class="fas fa-exclamation-triangle fa-spin"></i>
+							<i class="fa-solid fa-circle-exclamation fa-beat"></i>
 							<span class="animation">Invalide</span>
 						</button>
 						break;
@@ -123,7 +133,7 @@
 						@onclick="ResolveAsync"
 						type="button"
 						accesskey="V">
-							<i class="fas fa-bolt"></i>
+							<i class="fa-solid fa-bolt-lightning"></i>
 							<span>R&eacute;soudre</span>
 						</button>
 						break;
@@ -138,7 +148,7 @@
 						role="button"
 						type="button"
 						@onclick="tirage.RandomAsync">
-					<i class="fa fa-random"></i>
+					<i class="fa-solid fa-shuffle"></i>
 					<span>Tirage</span>
 				</button>
 				<button id="Excel"
@@ -148,7 +158,7 @@
 						@onclick="@ExportExcelAsync"
 						type="button"
 						accesskey="x">
-					<i class="fas fa-file-excel"></i>
+					<i class="fa-solid fa-file-excel"></i>
 					<span>Excel</span>
 				</button>
 				<button id="Word"
@@ -158,14 +168,14 @@
 						@onclick="@ExportWordAsync"
 						type="button"
 						accesskey="w">
-					<i class="fas fa-file-word"></i>
+					<i class="fa-solid fa-file-word"></i>
 					<span>Word</span>
 				</button>
 			</div>
 		</div>
 	</div>
 </div>
-<CebSolutions @ref="Solutions" TypeGrille="TypeGrille"
+<CebSolutions @ref="Solutions" IsTableau="IsTableau"
 			  ShowDetail="ShowSolutionAsync">
 </CebSolutions>
 <div class="card text-center bg-primary bg-gradient border-secondary">
@@ -173,24 +183,24 @@
 		<div class="'text-center'">
 			@switch (tirage.Status) {
 				case CebStatus.EnCours:
-					<div class="bg-white" role="alert">
-						<i class="fas fa-spinner fa-spin"></i>&nbsp;Patientez, calcul en cours&hellip;
+					<div class="bg-info" role="alert">
+						<i class="fa-solid fa-rotate fa-pulse"></i>&nbsp;Patientez, calcul en cours&hellip;
 					</div>
 					break;
 				case CebStatus.Invalide:
 					<div class="bg-danger" style="cursor: pointer;" @onclick="@tirage.RandomAsync">
-						<i class="fas fa-exclamation-triangle fa-spin"></i>&nbsp;Tirage invalide
+						<i class="fa-solid fa-circle-exclamation fa-beat"></i>&nbsp;Tirage invalide
 					</div>
 					break;
 				case CebStatus.CompteApproche:
 					<div class="bg-secondary" style="cursor: pointer; color: wheat" @onclick="tirage.ClearAsync">
-						<i class="text-secondary far fa-thumbs-down"></i>&nbsp;
+						<i class="fa-regular fa-thumbs-down"></i>&nbsp;
 						&nbsp;Compte approch&eacute;:&nbsp;@tirage.Found,&nbsp;&eacute;cart:&nbsp;@tirage.Diff,&nbsp;@tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.Duree:N3}")&nbsp;s
 					</div>
 					break;
 				case CebStatus.CompteEstBon:
-					<div class="bg-success text-white" style="cursor: pointer;" @onclick="@tirage.ClearAsync">
-						<i class="far fa-thumbs-up"></i>
+					<div class="bg-success text-black" style="cursor: pointer;" @onclick="@tirage.ClearAsync">
+						<i class="fa-regular fa-thumbs-up"></i>
 						&nbsp;Compte est bon,&nbsp;@(tirage.Count)&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.Duree:N3}")&nbsp;s
 
 					</div>
@@ -214,11 +224,10 @@
 			<button id="idVue"
 					class="btn btn-primary"
 					role="button"
-					@onclick="() => TypeGrille = TypeGrille == CebTypeGrille.Grille ? CebTypeGrille.Liste : CebTypeGrille.Grille"
+					@onclick="() => IsTableau = !IsTableau"
 					type="button">
-				<i class="fas fa-ellipsis-@(TypeGrille == CebTypeGrille.Grille ? "h":"v") fa-2x"></i>
-
-			</button>
+				<i class="fa-solid fa-ellipsis@(IsTableau ? "":"-vertical") fa-2x"></i>
+			</button>&nbsp;mode de vue
 
 		</div>
 	</div>
@@ -228,7 +237,7 @@
 
 @code {
 
-	public CebTypeGrille TypeGrille { get; set; } = CebTypeGrille.Grille;
+	public bool IsTableau { get; set; } = true;
 
 	private bool _auto;
 	bool Auto {
@@ -262,10 +271,6 @@
 		MongoDb = setting.MongoDb;
 	}
 
-	void ChangeTypeGrille() {
-		TypeGrille = TypeGrille == CebTypeGrille.Grille ? CebTypeGrille.Liste : CebTypeGrille.Grille;
-		InvokeAsync(StateHasChanged);
-	}
 	async Task ResolveAsync() {
 		await tirage.ResolveAsync();
 		// await InvokeAsync(StateHasChanged);
@@ -297,7 +302,7 @@
 			ConventionRegistry.Register("EnumStringConvention",
 				new ConventionPack {
 					new EnumRepresentationConvention(BsonType.String)
-																				},
+																							},
 				_ => true);
 			var clientSettings = MongoClientSettings.FromConnectionString(setting.MongoDbConnectionString);
 			clientSettings.LinqProvider = LinqProvider.V3;
@@ -309,7 +314,7 @@
 			await cl.InsertOneAsync(
 				new BsonDocument(new Dictionary<string, object> {
 					{ "_id", new { lang = "blazor", domain = Environment.GetEnvironmentVariable("USERDOMAIN"), date = DateTime.UtcNow }.ToBsonDocument() }
-																				})
+																							})
 					.AddRange(tirage.Data.ToBsonDocument()));
 		} catch (Exception e) {
 			Console.WriteLine(e);

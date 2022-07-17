@@ -273,3 +273,5 @@ obj
 package-lock.json
 package-lock.json
 /CebBlazor/wwwroot/css/site.css
+/CebBlazor/wwwroot/webfonts/*.woff2
+/CebBlazor/wwwroot/webfonts/*.ttf
