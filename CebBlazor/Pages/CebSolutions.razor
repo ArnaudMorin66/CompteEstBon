@@ -1,17 +1,14 @@
 ﻿@using Syncfusion.Blazor.Grids
 @using Syncfusion.Blazor.Spinner
 @using CompteEstBon
-@inject CebTirage tirage
-
 @using SelectionMode = Syncfusion.Blazor.Grids.SelectionMode
 @using SelectionType = Syncfusion.Blazor.Grids.SelectionType
 
-<SfGrid AllowExcelExport="true"
-		AllowResizing="true"
-		AllowSelection="true"
+@inject CebTirage tirage
+<SfGrid AllowSelection="true"
 		DataSource="tirage.Solutions"
 		EnableAltRow="true"
-		GridLines="GridLine.Vertical"
+		GridLines="GridLine.Horizontal"
 		Height="400"
 		ID="solutions"
 		TValue="CebBase">
@@ -19,10 +16,14 @@
 	<GridSelectionSettings Mode="SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
 	<GridTemplates>
 		<EmptyRecordTemplate>
-			<i class="fa-solid fa-atom fa-pulse fa-6x text-info text-center @(tirage.Status == CebStatus.EnCours ? "visible" : "invisible")"></i>
+			@if (tirage.Status == CebStatus.EnCours) {
+				<div class="position-absolute top-50 start-50 translate-middle">
+					<SfSpinner Visible=true Type="@SpinnerType.Fluent" Size="100" />
+				</div>
+			}
 		</EmptyRecordTemplate>
 	</GridTemplates>
-	@if (IsTableau) {
+	@if (VueTable) {
 		<GridColumns>
 			@for (var i = 0; i < 5; i++) {
 				var j = i;
@@ -30,7 +31,8 @@
 					<Template Context="data">
 						@{
 							var op = ((CebBase)data).Operations;
-							if (j < op.Count) @op[j]
+							if (j < op.Count)
+								@op[j]
 						}
 					</Template>
 				</GridColumn>
@@ -52,14 +54,10 @@
 
 #pragma warning disable CS8618
 	[Parameter]
-	public bool IsTableau { get; set; } = true;
+	public bool VueTable { get; set; } = true;
 
 	[Parameter]
 	public EventCallback<int> ShowDetail { get; set; }
-
-
-	protected override async Task OnInitializedAsync() => await base.OnInitializedAsync();
-
 
 	private async Task ShowAsync(RecordClickEventArgs<CebBase> ligne) =>
 		await ShowDetail.InvokeAsync((int)ligne.RowIndex);

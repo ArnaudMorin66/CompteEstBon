@@ -1,24 +1,17 @@
 $primary: #3b3a39;// #2b2a29; 
-// $secondary: #1b1a19; 
-
 $font-size: 1rem;
-
 $enable-shadows: true;
 $enable-responsive-font-sizes: true;
 $grid-header-border-color: $primary;
 $font-family-sans-serif: 'Colibri', 'Segoe UI', sans-serif;
 $font-family: $font-family-sans-serif;
-// You probably already include the core styles
-@import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
-
-// You can include all the other styles the same as before
-@import "@fortawesome/fontawesome-free/scss/regular.scss";
-
-@import "@fortawesome/fontawesome-free/scss/solid.scss";
-@import "@fortawesome/fontawesome-free/scss/brands.scss";
 
 
-@import "ej2/bootstrap5-dark.scss";
+@import "@fortawesome/fontawesome-free/scss/regular";
+@import "@fortawesome/fontawesome-free/scss/solid";
+@import "@fortawesome/fontawesome-free/scss/brands";
+@import "@fortawesome/fontawesome-free/scss/fontawesome";
+@import "ej2/bootstrap5-dark";
 $enable-gradients: true;
 @import "bootstrap/scss/bootstrap";
 
@@ -159,21 +152,14 @@ body {
     }
 }
 
-/*
-.e-input {
-    background-color: $primary;
-}
-*/
-.centrer-element {
-    position: absolute;
-    top: 50%;
-    left: 50%; 
-    transform: translate(-50%, -50%); 
-}
 .g-cell {
     text-align:center;
 }
 
 .text-wheat {
     color: wheat;
+}
+
+.cursor-wait {
+    cursor: wait;
 }

@@ -27,4 +27,4 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyKeyFile(@"arnaudmorin.snk")] 
+[assembly: AssemblyKeyFile(@"arnaudmorin.snk")]

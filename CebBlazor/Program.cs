@@ -33,9 +33,7 @@ SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["license"]);
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
-if(app.Environment.IsDevelopment()) {
-    app.UseDeveloperExceptionPage();
-} else {
+if(!app.Environment.IsDevelopment()) {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
@@ -46,5 +44,4 @@ app.UseRouting();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-#pragma warning disable CRR0029
 app.Run();

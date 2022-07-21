@@ -10,7 +10,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<base href="~/" />
 	<link rel="icon" type="image/x-icon" href="~/favicon.ico">
-	<link href="css/site.css" rel="stylesheet" />
+	<link href="css/site.min.css" rel="stylesheet" />
+
 	<script type="text/javascript">
 	   function saveAsFile(filename, bytesBase64) {
 			var link = document.createElement('a');
@@ -24,9 +25,7 @@
 	<component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
-	<component type="typeof(App)" render-mode="ServerPrerendered" />
-@*	<script defer src="~/lib/fontawesome/all.min.js" data-auto-replace-svg="Nest"></script>*@
-
+	<component type="typeof(App)" render-mode="ServerPrerendered" />	
 	<script src="_content/Syncfusion.Blazor.Core/scripts/syncfusion-blazor.min.js" type="text/javascript"></script>
 	<script src="_framework/blazor.server.js"></script>
 </body>

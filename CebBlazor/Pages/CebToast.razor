@@ -5,99 +5,89 @@
 
 @inject CebTirage tirage
 <SfDialog Width="480" @bind-Visible="@Visible" CssClass="a-toast" ShowCloseIcon="false"
-          ID="DlgToast">
-    <DialogAnimationSettings Effect="@DialogEffect.SlideBottom" Duration="400"></DialogAnimationSettings>
-    <DialogTemplates>
-        <Content>
-            @* ReSharper disable once UnknownCssClass *@
-            @{
-                string cls;
-                string icn;
-                string rsl;
-                switch (tirage.Status) {
-                    case CebStatus.CompteEstBon:
-                        cls = "bg-success text-black";
-                        icn = "fa-thumbs-up text-black";
-                        rsl = "Compte est bon";
-                        break;
-                    case CebStatus.CompteApproche:
-                        icn = "fa-thumbs-down text-wheat";
-                        cls = "bg-secondary text-wheat";
-                        rsl = "Compte approché";
-                        break;
-                    default:
+		  ID="DlgToast">
+	<DialogAnimationSettings 
+		Effect="@DialogEffect.SlideBottom" 
+		Duration="400">
+	</DialogAnimationSettings>
+	<DialogTemplates>
+		<Content>
+			@{
+				string cls;
+				string icn;
+				string rsl;
+				switch (tirage.Status) {
+					case CebStatus.CompteEstBon:
+						cls = "bg-success text-black";
+						icn = "fa-thumbs-up text-black";
+						rsl = "Compte est bon";
+						break;
+					case CebStatus.CompteApproche:
+						icn = "fa-thumbs-down text-wheat";
+						cls = "bg-secondary text-wheat";
+						rsl = "Compte approché";
+						break;
+					default:
+						return;
+				}
 
-                        return;
-                }
-                
-                    <div class="w-100 text-center @cls">
-                        <i class="fa-regular @icn"></i>&nbsp;@rsl
-                    </div>
-                
-                <div>&nbsp;</div>
-                <div class="text-center text-white">
-                    <div>Trouvé(s):&nbsp;@tirage.Found</div>
-                    @if (tirage.Diff != 0) {
-                        <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
-                    }
-                    <div>@tirage.Count&nbsp;solutions</div>
-                    <div>Durée:&nbsp;@($"{tirage.Duree:N3}")s</div>
-                </div>
-                <div>&nbsp;</div>
-                <div class="w-100 text-center  @cls">@Solution</div>
-            }
-        </Content>
-    </DialogTemplates>
+				<div class="w-100 text-center @cls">
+					<i class="fa-regular @icn"></i>&nbsp;@rsl
+				</div>
+
+				<div>&nbsp;</div>
+				<div class="text-center text-white">
+					<div>Trouvé(s):&nbsp;@tirage.Found</div>
+					@if (tirage.Diff != 0) {
+						<div>&Eacute;cart:&nbsp;@tirage.Diff</div>
+					}
+					<div>@tirage.Count&nbsp;solutions</div>
+					<div>Durée:&nbsp;@($"{tirage.Duree:N3}")s</div>
+				</div>
+				<div>&nbsp;</div>
+				<div class="w-100 text-center  @cls">@Solution</div>
+			}
+		</Content>
+	</DialogTemplates>
 </SfDialog>
-
 @code {
-    #pragma warning disable CS8618
-    protected Timer timer;
-    private bool _visible;
+#pragma warning disable CS8618
+	protected Timer timer;
+	private bool _visible;
+	public bool Visible {
+		get => _visible;
+		set {
+			if (value == _visible) return;
+			_visible = value;
+			if (_visible) {
+				timer = new(_ => { Visible = false; });
+				timer.Change(DueTime, 0);
+			} else {
+				timer.Dispose();
+				_visible = false;
+			}
+			InvokeAsync(StateHasChanged);
+		}
+	}
+	public string Solution { get; set; }
+	[Parameter]
+	public int DueTime { get; set; }
 
-    public bool Visible {
-        get => _visible;
-        set {
-            if (value != _visible) {
-                _visible = value;
+	protected override void OnInitialized() {
+		DueTime = 5000;
+	}
 
-                if (_visible) {
-                    timer = new Timer(_ => { Visible = false; });
-                    timer.Change(DueTime, 0);
-                }
-                else {
-                    timer.Dispose();
-                    _visible = false;
-                }
-                InvokeAsync(StateHasChanged);
-            }
-        }
-    }
+	public async Task ShowAsync(int index) {
+		if (Visible) Visible = false;
+#pragma warning disable CS8601
+		Solution = tirage.Solutions[index].ToString();
+		Visible = true;
+		await InvokeAsync(StateHasChanged);
+	}
 
-    public string Solution { get; set; }
-
-
-    [Parameter]
-    public int DueTime { get; set; }
-
-    protected override void OnInitialized() {
-        DueTime = 5000;
-    }
-
-    public async Task ShowAsync(int index) {
-        if (Visible) {
-            Visible = false;
-        }
-        #pragma warning disable CS8601
-        Solution = tirage.Solutions[index].ToString();
-        Visible = true;
-
-        await InvokeAsync(StateHasChanged);
-    }
-
-    public async Task HideAsync() {
-        Visible = false;
-        await InvokeAsync(StateHasChanged);
-    }
+	public async Task HideAsync() {
+		Visible = false;
+		await InvokeAsync(StateHasChanged);
+	}
 
 }

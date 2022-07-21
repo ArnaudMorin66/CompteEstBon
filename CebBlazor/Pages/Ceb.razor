@@ -7,10 +7,8 @@
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Inputs
 @using Syncfusion.Blazor.Buttons
+@using Syncfusion.Blazor.Spinner
 @using CompteEstBon
-
-@* ReSharper disable  UnknownCssClass *@
-@* ReSharper disable CoercedEqualsUsing *@
 
 @inject IJSRuntime js
 @inject CebSetting setting
@@ -25,12 +23,12 @@
 			<div class="col text-center text-uppercase text-danger font-weight-bold text-wrap text-truncate ">Syncfusion - Compte&nbsp;est&nbsp;bon</div>
 			<div class="col-1 text-end">
 				<button id="idVue2"
-						class="btn btn-primary"
-						title="Mode de vue"
+						class="btn btn-primary  border border-secondary w-50"
+						title="Type de vue"
 						role="button"
-						@onclick="() => IsTableau = !IsTableau"
+						@onclick="() => VueTable = !VueTable"
 						type="button">
-					<i class="fa-solid fa-ellipsis@(IsTableau ? "":"-vertical") fa-2x"></i>
+					<i class="fa-solid fa-ellipsis@(VueTable ? "":"-vertical") fa-2x"></i>
 				</button>
 			</div>
 		</div>
@@ -50,7 +48,7 @@
 							<SfComboBox TItem="int"
 									TValue="int"
 									@bind-Value="plq.Value"
-									DataSource="@ListePlaques"
+									DataSource="@CebPlaque.AnyPlaques"
 									ShowClearButton="false"
 									AllowFiltering="true"
 									Enabled="tirage.Status != CebStatus.EnCours">
@@ -81,24 +79,23 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-md-3  bg-transparent">
-		<div class="card bg-transparent border-secondary">
-			<div class="card-header btn-group w-100" role="group" aria-label="resolve">
+	<div class="col-3 m-2">
+		<div class="card text-center border-secondary bg-primary p-2">
+			<div class="btn-group w-100 border border-secondary" role="group" aria-label="resolve">
 				@switch (tirage.Status) {
 					case CebStatus.EnCours:
-						<button class="btn btn-info">
-							<i class="fa-solid fa-rotate fa-pulse"></i>
-							<span class="animation">Patientez&hellip;</span>
+						<button class="btn btn-info disabled cursor-wait" role="spinbutton" type="button">
+							<i class="fa-solid fa-circle-notch fa-spin-pulse fa-4"></i>
 						</button>
 						break;
 					case CebStatus.CompteEstBon:
 						<button class="btn btn-success"
 						@onclick="@tirage.ClearAsync"
-						title="Initialisation des résultats (ALT-I)"
+						title="Initialisation des résultats"
 						role="button"
 						type="button"
 						accesskey="i">
-							<i class="fa-regular fa-thumbs-up"></i>
+							<i class="fa-regular fa-thumbs-up fa-4"></i>
 							<span class="animation">Compte&nbsp;est&nbsp;bon</span>
 						</button>
 						break;
@@ -106,10 +103,10 @@
 						<button class="btn btn-secondary text-wheat"
 						role="button"
 						type="button"
-						title="Initialisation des résultats (ALT-I)"
+						title="Initialisation des résultats"
 						@onclick="tirage.ClearAsync"
 						accesskey="i">
-							<i class="fa-regular fa-thumbs-down"></i>
+							<i class="fa-regular fa-thumbs-down fa-4"></i>
 							<span class="animation">Compte&nbsp;approch&eacute;</span>
 						</button>
 						break;
@@ -117,90 +114,83 @@
 						<button class="btn btn-danger"
 						role="button"
 						type="button"
-						title="Tirage aléatoire (ALT-T)"
+						title="Tirage aléatoire"
 						@onclick="tirage.RandomAsync"
-						accesskey="T">
-							<i class="fa-solid fa-circle-exclamation fa-beat"></i>
-							<span class="animation">Invalide</span>
+						accesskey="i">
+							<i class="fa-solid fa-circle-exclamation fa-beat fa-4"></i>
 						</button>
 						break;
 					default:
 						<button id="resoudre"
-						title="Résolution du tirage (ALT-V)"
+						title="Résolution du tirage"
 						class="btn btn-primary"
 						role="button"
 						@onclick="ResolveAsync"
 						type="button"
-						accesskey="V">
-							<i class="fa-solid fa-bolt-lightning"></i>
-							<span>R&eacute;soudre</span>
+						accesskey="i">
+							<i class="fa-solid fa-play fa-4"></i>
 						</button>
 						break;
 				}
 			</div>
-			<div class="card-header btn-group w-100" role="group" aria-label="Action">
+			<div class="d-grid d-flex gap-1 justify-content-between" role="group" aria-label="Action">
 				<button id="hasard"
-						class="btn btn-primary w-50 @(tirage.Status == CebStatus.EnCours ? "disabled" : "")"
-						accesskey="t"
-						title="Tirage aléatoire (ALT-T)"
+						class="btn btn-primary border border-secondary w-100 @(tirage.Status == CebStatus.EnCours ? "disabled" : "")"
+						accesskey="h"
+						title="Tirage aléatoire"
 						role="button"
 						type="button"
 						@onclick="tirage.RandomAsync">
-					<i class="fa-solid fa-shuffle"></i>
-					<span>Tirage</span>
+					<i class="fa-solid fa-shuffle fa-4"></i>
 				</button>
+
 				<button id="Excel"
-						title="Export vers excel (ALT-X)"
-						class="btn btn-primary @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon  ? "" :"d-none")"
+						title="Export vers excel"
+						class="btn btn-primary border border-secondary w-25 @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon ? "":"disabled" )"
 						role="button"
 						@onclick="@ExportExcelAsync"
 						type="button"
 						accesskey="x">
-					<i class="fa-solid fa-file-excel"></i>
-					<span>Excel</span>
+					<i class="fa-solid fa-file-excel fa-8"></i>
 				</button>
 				<button id="Word"
-						title="Export vers Word (ALT-X)"
-						class="btn btn-primary @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon  ? "" :"d-none")"
+						title="Export vers Word"
+						class="btn btn-primary border border-secondary w-25  @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon ? "":"disabled" )"
 						role="button"
 						@onclick="@ExportWordAsync"
 						type="button"
 						accesskey="w">
-					<i class="fa-solid fa-file-word"></i>
-					<span>Word</span>
+					<i class="fa-solid fa-file-word fa-8"></i>
 				</button>
 			</div>
 		</div>
 	</div>
 </div>
-<CebSolutions @ref="Solutions" IsTableau="IsTableau"
-			  ShowDetail="ShowSolutionAsync">
-</CebSolutions>
+<CebSolutions VueTable="VueTable" ShowDetail="ShowSolutionAsync"></CebSolutions>
 <div class="card text-center bg-primary bg-gradient border-secondary">
 	<div class="card-header">
 		<div class="'text-center'">
 			@switch (tirage.Status) {
 				case CebStatus.EnCours:
-					<div class="bg-info" role="alert">
-						<i class="fa-solid fa-rotate fa-pulse"></i>&nbsp;Patientez, calcul en cours&hellip;
+					<div class="bg-info cursor-wait" role="alert">
+						<i class="fa-solid fa-circle-notch fa-spin-pulse fa-4"></i>
 					</div>
 					break;
 				case CebStatus.Invalide:
 					<div class="bg-danger" style="cursor: pointer;" @onclick="@tirage.RandomAsync">
-						<i class="fa-solid fa-circle-exclamation fa-beat"></i>&nbsp;Tirage invalide
+						<i class="fa-solid fa-circle-exclamation fa-beat fa-4"></i>&nbsp;Tirage invalide
 					</div>
 					break;
 				case CebStatus.CompteApproche:
 					<div class="bg-secondary text-wheat" style="cursor: pointer;" @onclick="tirage.ClearAsync">
-						<i class="fa-regular fa-thumbs-down"></i>&nbsp;
+						<i class="fa-regular fa-thumbs-down fa-4"></i>&nbsp;
 						&nbsp;Compte approch&eacute;:&nbsp;@tirage.Found,&nbsp;&eacute;cart:&nbsp;@tirage.Diff,&nbsp;@tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.Duree:N3}")&nbsp;s
 					</div>
 					break;
 				case CebStatus.CompteEstBon:
 					<div class="bg-success text-black" style="cursor: pointer;" @onclick="@tirage.ClearAsync">
-						<i class="fa-regular fa-thumbs-up"></i>
+						<i class="fa-regular fa-thumbs-up fa-4"></i>
 						&nbsp;Compte est bon,&nbsp;@(tirage.Count)&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.Duree:N3}")&nbsp;s
-
 					</div>
 					break;
 				default:
@@ -213,20 +203,21 @@
 <div class="card text-center bg-primary bg-gradient border-secondary">
 	<div class="row card-header">
 		<div class="col">
-			<SfCheckBox @bind-Checked="Auto" Label="Calculer automatiquement" />
+			<SfCheckBox @bind-Checked="Auto" Label="Calculer automatiquement" accesskey="a" />
 		</div>
 		<div class="col">
-			<SfCheckBox @bind-Checked="MongoDb" Label="Sauvegarder sous MongoDB" />
+			<SfCheckBox @bind-Checked="MongoDb" Label="Sauvegarder sous MongoDB" accesskey="m" />
 		</div>
 		<div class="col text-white">
 			<button id="idVue"
-					class="btn btn-primary"
+					class="btn btn-primary border border-secondary w-25"
 					role="button"
-					@onclick="() => IsTableau = !IsTableau"
+					@onclick="() => VueTable = !VueTable"
+					title="Type de vue"
+					accesskey="t"
 					type="button">
-				<i class="fa-solid fa-ellipsis@(IsTableau ? "":"-vertical") fa-2x"></i>
-			</button>&nbsp;mode de vue
-
+				<i class="fa-solid fa-ellipsis@(VueTable ? "":"-vertical") fa-2x"></i>
+			</button>
 		</div>
 	</div>
 </div>
@@ -235,7 +226,7 @@
 
 @code {
 
-	public bool IsTableau { get; set; } = true;
+	public bool VueTable { get; set; } = true;
 
 	private bool _auto;
 	bool Auto {
@@ -256,8 +247,8 @@
 #pragma warning disable CS8618
 #pragma warning disable CS8602
 	public CebToast? toast { get; set; }
-	public CebSolutions? Solutions { get; set; }
-	public static IEnumerable<int> ListePlaques = CebPlaque.AnyPlaques.Select(p => p);
+
+	//public CebSolutions? Solutions { get; set; }
 	protected override async Task OnInitializedAsync() {
 		await base.OnInitializedAsync();
 		tirage.PropertyChanged += async (_, args) => {
@@ -267,6 +258,8 @@
 		};
 		Auto = setting.AutoCalcul;
 		MongoDb = setting.MongoDb;
+
+		
 	}
 
 	async Task ResolveAsync() {
@@ -279,17 +272,17 @@
 		}
 	}
 
-	private async Task ShowSolutionAsync(int index) {
-		await toast.ShowAsync(index);
-	}
+	private async Task ShowSolutionAsync(int index) => await toast.ShowAsync(index);
 
 	private async Task ExportExcelAsync() {
+		if (!(tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
 		await using var mstream = new MemoryStream();
 		tirage.ExportExcel(mstream);
 		await js.SaveAsAsync("ceb.xlsx", mstream.ToArray());
 	}
 
 	private async Task ExportWordAsync() {
+		if (!(tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
 		await using var mstream = new MemoryStream();
 		tirage.ExportWord(mstream);
 		await js.SaveAsAsync("ceb.docx", mstream.ToArray());
@@ -300,7 +293,7 @@
 			ConventionRegistry.Register("EnumStringConvention",
 				new ConventionPack {
 					new EnumRepresentationConvention(BsonType.String)
-																							},
+																											},
 				_ => true);
 			var clientSettings = MongoClientSettings.FromConnectionString(setting.MongoDbConnectionString);
 			clientSettings.LinqProvider = LinqProvider.V3;
@@ -312,11 +305,10 @@
 			await cl.InsertOneAsync(
 				new BsonDocument(new Dictionary<string, object> {
 					{ "_id", new { lang = "blazor", domain = Environment.GetEnvironmentVariable("USERDOMAIN"), date = DateTime.UtcNow }.ToBsonDocument() }
-																							})
+																											})
 					.AddRange(tirage.Data.ToBsonDocument()));
 		} catch (Exception e) {
 			Console.WriteLine(e);
 		}
 	}
-
 }

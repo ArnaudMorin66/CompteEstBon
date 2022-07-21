@@ -23,14 +23,13 @@ namespace CompteEstBon {
 
 
     public sealed class CebTirage : INotifyPropertyChanged {
-
         private static readonly Random Rnd = System.Random.Shared;
         private int _search;
         private readonly List<CebBase> _solutions = new();
 
 
         public CebTirage() {
-            for (var i = 0; i < 6; i++) {
+            for(var i = 0; i < 6; i++) {
                 CebPlaque p = new();
                 p.PropertyChanging += PlaqueUpdated;
                 Plaques[i] = p;
@@ -45,10 +44,9 @@ namespace CompteEstBon {
         /// <param name="search"></param>
         /// <param name="plaques"></param>
         public CebTirage(int search, params int[] plaques) : this() {
-            if (plaques.Length < 6 || search == -1) {
+            if(plaques.Length < 6 || search == -1) {
                 Random();
-            }
-            else {
+            } else {
                 Status = CebStatus.EnCours;
                 foreach (var (p, i) in plaques.WithIndex().Where(elt => elt.Item2 < 6)) Plaques[i].Value = p;
                 Search = search;
@@ -75,22 +73,22 @@ namespace CompteEstBon {
             new PropertyChangedEventArgs(propertyName));
 
         private void PlaqueUpdated(object sender, PropertyChangingEventArgs args) {
-            if (Status is not CebStatus.EnCours and not CebStatus.Indefini)
+            if(Status is not CebStatus.EnCours and not CebStatus.Indefini)
                 Clear();
         }
 
         private void PushSolution(CebBase sol) {
             var diff = Abs(_search - sol.Value);
-            if (diff > Diff)
+            if(diff > Diff)
                 return;
 
-            if (diff < Diff) {
+            if(diff < Diff) {
                 Diff = diff;
                 _solutions.Clear();
                 Found.Reset();
             }
 
-            if (_solutions.Contains(sol))
+            if(_solutions.Contains(sol))
                 return;
 
             Found.Add(sol.Value);
@@ -102,7 +100,7 @@ namespace CompteEstBon {
             foreach (var (p, i) in liste.WithIndex()) {
                 PushSolution(p);
                 foreach (var (q, j) in liste.WithIndex().Where((_, ix) => ix > i))
-                    foreach (var oper in
+                    foreach(var oper in
                              CebOperation.AllOperations
                         .Select(operation => new CebOperation(p, operation, q))
                         .Where(o => o.Value != 0))
@@ -113,13 +111,13 @@ namespace CompteEstBon {
         private Stopwatch Watch { get; } = new();
 
         public CebData Clear() {
-            if (_solutions.Count != 0)
+            if(_solutions.Count != 0)
                 _solutions.Clear();
             Watch.Reset();
             Diff = int.MaxValue;
             Found.Reset();
             Valid();
-            NotifyPropertyChanged("Clear");
+            NotifyPropertyChanged(nameof(Clear));
             return Data;
         }
 
@@ -132,7 +130,7 @@ namespace CompteEstBon {
             Status = CebStatus.Indefini;
 
             var liste = new List<int>(CebPlaque.AllPlaques);
-            foreach (var p in Plaques) {
+            foreach(var p in Plaques) {
                 var n = Rnd.Next(0, liste.Count);
                 p.Value = liste[n];
                 liste.RemoveAt(n);
@@ -152,7 +150,7 @@ namespace CompteEstBon {
         /// </returns>
         public CebStatus Resolve() {
             _solutions.Clear();
-            if (Status != CebStatus.Invalide) {
+            if(Status != CebStatus.Invalide) {
                 Watch.Reset();
                 Watch.Start();
                 Status = CebStatus.EnCours;
@@ -162,7 +160,7 @@ namespace CompteEstBon {
                 Watch.Stop();
             }
 
-            NotifyPropertyChanged("Resolve");
+            NotifyPropertyChanged(nameof(Resolve));
             return Status;
         }
 
@@ -184,7 +182,7 @@ namespace CompteEstBon {
         ///
         /// </returns>
         public CebStatus ResolveWithParam(int search, params int[] plq) {
-            if (plq.Length != 6)
+            if(plq.Length != 6)
                 throw new ArgumentException("Nombre de plaques incorrecte");
             Status = CebStatus.Indefini;
             _search = search;
@@ -196,7 +194,8 @@ namespace CompteEstBon {
 
         public void SetPlaques(params int[] plaq) {
             Status = CebStatus.Indefini;
-            foreach (var p in Plaques) p.Value = 0;
+            foreach(var p in Plaques)
+                p.Value = 0;
             foreach (var (p, i) in plaq.WithIndex().Where(elt => elt.Item2 < 6)) Plaques[i].Value = p;
             Clear();
         }
@@ -218,12 +217,13 @@ namespace CompteEstBon {
         /// </summary>
         public int Count => _solutions.Count;
 
-        public CebData Data => new() {
+        public CebData Data => new()
+        {
             Search = Search,
             Plaques = Plaques.Select(p => p.Value).ToArray(),
             Status = Status,
             Diff = Diff,
-            Solutions = Solutions.Select(p => p.ToString()).ToArray(),
+            Solutions = Solutions?.Select(p => p.ToString()).ToArray(),
             Found = Found.ToString()
         };
 
@@ -247,18 +247,20 @@ namespace CompteEstBon {
         public int Search {
             get => _search;
             set {
-                if (value == _search) return;
+                if(value == _search)
+                    return;
                 _search = value;
                 Clear();
             }
         }
 
 
-        public List<CebBase> Solutions => Status is CebStatus.CompteApproche or CebStatus.CompteEstBon
+        public List<CebBase>? Solutions => Status is CebStatus.CompteApproche or CebStatus.CompteEstBon
             ? _solutions
-            : new List<CebBase>();
+            : null; // new List<CebBase>();
 
-        [JsonIgnore] public IEnumerable<string> SolutionsToString => _solutions.Select(s => s.ToString());
+
+        // [JsonIgnore] public IEnumerable<string> SolutionsToString => _solutions.Select(s => s.ToString());
 
 
         /// <summary>

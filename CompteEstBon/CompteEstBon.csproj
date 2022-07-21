@@ -7,11 +7,12 @@
     <ImplicitUsings>True</ImplicitUsings>
     <AssemblyName>CompteEstBon</AssemblyName>
     <RootNamespace>CompteEstBon</RootNamespace>
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>preview</LangVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
-    <AssemblyVersion>4.0.2.18384</AssemblyVersion>
-    <FileVersion>4.0.2.18384</FileVersion>
+    <AssemblyVersion>4.2.13.14572</AssemblyVersion>
+    <FileVersion>4.2.13.14572</FileVersion>
+    <Version>4.2.2.20090</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

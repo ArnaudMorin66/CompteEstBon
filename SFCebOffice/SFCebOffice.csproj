@@ -3,17 +3,18 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>CompteEstBon</RootNamespace>
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>preview</LangVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
-    <AssemblyVersion>4.0.2.29423</AssemblyVersion>
-    <FileVersion>4.0.2.29423</FileVersion>
+      <AssemblyVersion>4.2.4.14573</AssemblyVersion>
+      <FileVersion>4.2.4.14573</FileVersion>
+      <Version>4.2.2.20090</Version>
   </PropertyGroup>
 
 
    <ItemGroup>
-     <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="20.2.0.38" />
-     <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="20.2.0.38" />
+     <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="20.2.0.39" />
+     <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="20.2.0.39" />
    </ItemGroup>
 
 

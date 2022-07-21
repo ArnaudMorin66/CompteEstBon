@@ -1,15 +1,23 @@
-﻿using System.Text.Json.Serialization;
+﻿//-----------------------------------------------------------------------
+// <copyright file="CebDetail.cs" company="">
+//     Author:  
+//     Copyright (c) . All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+using System.Text.Json.Serialization;
 
 namespace CompteEstBon {
-   
- 
-
     public class CebDetail {
         public string Op1 { get; set; }
+
         public string Op2 { get; set; }
+
         public string Op3 { get; set; }
+
         public string Op4 { get; set; }
+
         public string Op5 { get; set; }
+
         public override string ToString() => string.Join(", ", Operations);
 
         [JsonIgnore]
@@ -27,12 +35,14 @@ namespace CompteEstBon {
         //}
         public (int gauche, char op, int droite) Decoup(int i) {
             var l = Op(i).Split();
-            if (int.TryParse(l[0], out var g)) return (0, '\0', 0);
+            if (int.TryParse(l[0], out var g))
+                return (0, '\0', 0);
             //if (this is CebPlaque) return (g, '\0', 0);
             return !int.TryParse(l[2], out var d) ? (0, '\0', 0) : (g, l[1][0], d);
         }
 
         public string Op(int i) => GetType().GetProperty($"Op{i + 1}")!.GetValue(this) as string;
+
         public void SetOp(int i, string value) => GetType().GetProperty($"Op{i + 1}")!.SetValue(this, value);
     }
 }
