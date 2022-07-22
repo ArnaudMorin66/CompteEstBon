@@ -13,30 +13,23 @@
 @inject IJSRuntime js
 @inject CebSetting setting
 @inject CebTirage tirage
-
-<div class="card text-center border-secondary">
-	<div class="card-header bg-primary bg-gradient border-secondary">
-		<div class="row">
-			<div class="col-1 text-start">
-				<img src="favicon.ico" height="20">
-			</div>
-			<div class="col text-center text-uppercase text-danger font-weight-bold text-wrap text-truncate ">Syncfusion - Compte&nbsp;est&nbsp;bon</div>
-			<div class="col-1 text-end">
-				<button id="idVue2"
-						class="btn btn-primary  border border-secondary w-50"
-						title="Type de vue"
-						role="button"
-						@onclick="() => VueTable = !VueTable"
-						type="button">
-					<i class="fa-solid fa-ellipsis@(VueTable ? "":"-vertical") fa-2x"></i>
-				</button>
-			</div>
-		</div>
+<div class="d-flex bg-gradient-primary justify-content-between align-items-center border border-secondary border-1 rounded p-2 mb-1">
+	<div>
+		<img src="favicon.ico" height="24">
 	</div>
+	<div class="text-center text-uppercase text-danger font-weight-bold text-wrap text-truncate ">Syncfusion - Compte&nbsp;est&nbsp;bon</div>
+	<button id="idVue2"
+			class="btn btn-primary btn-sm border-0" style="width: 5%"
+			title="Type de vue"
+			role="button"
+			@onclick="() => VueTable = !VueTable"
+			type="button">
+		<i class="fa-solid fa-ellipsis@(VueTable ? "":"-vertical") fa-4"></i>
+	</button>
 </div>
-<div class="row ">
+<div class="row">
 	<div class="col text-center">
-		<div class="card text-center border-secondary">
+		<div class="card text-center border-secondary m-1">
 			<div class="card-header bg-primary bg-gradient text-white">
 				<i class="fa-solid fa-bars"></i>
 				&nbsp;Plaques
@@ -60,7 +53,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-md-2">
+	<div class="col-2 m-1 ">
 		<div class="card text-center border border-secondary">
 			<div class="card-header bg-primary bg-gradient text-white">
 				<i class="fa-solid fa-search-plus"></i>
@@ -166,8 +159,11 @@
 		</div>
 	</div>
 </div>
+
+
 <CebSolutions VueTable="VueTable" ShowDetail="ShowSolutionAsync"></CebSolutions>
-<div class="card text-center bg-primary bg-gradient border-secondary">
+
+<div class="card text-center bg-primary bg-gradient border-secondary mt-1 mb-1">
 	<div class="card-header">
 		<div class="'text-center'">
 			@switch (tirage.Status) {
@@ -258,8 +254,6 @@
 		};
 		Auto = setting.AutoCalcul;
 		MongoDb = setting.MongoDb;
-
-		
 	}
 
 	async Task ResolveAsync() {
@@ -293,7 +287,7 @@
 			ConventionRegistry.Register("EnumStringConvention",
 				new ConventionPack {
 					new EnumRepresentationConvention(BsonType.String)
-																											},
+																															},
 				_ => true);
 			var clientSettings = MongoClientSettings.FromConnectionString(setting.MongoDbConnectionString);
 			clientSettings.LinqProvider = LinqProvider.V3;
@@ -305,7 +299,7 @@
 			await cl.InsertOneAsync(
 				new BsonDocument(new Dictionary<string, object> {
 					{ "_id", new { lang = "blazor", domain = Environment.GetEnvironmentVariable("USERDOMAIN"), date = DateTime.UtcNow }.ToBsonDocument() }
-																											})
+																															})
 					.AddRange(tirage.Data.ToBsonDocument()));
 		} catch (Exception e) {
 			Console.WriteLine(e);

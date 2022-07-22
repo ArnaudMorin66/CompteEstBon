@@ -11,8 +11,8 @@
        <TypeScriptNoEmitOnError>False</TypeScriptNoEmitOnError>
         <NoWarn>1701;1702;8002</NoWarn>
         <UserSecretsId>863459e9-e5ca-4fdd-813d-9a4f7efc30bc</UserSecretsId>
-        <AssemblyVersion>4.6.23.14574</AssemblyVersion>
-        <FileVersion>4.6.23.14574</FileVersion>
+        <AssemblyVersion>4.7.2.19950</AssemblyVersion>
+        <FileVersion>4.7.2.19950</FileVersion>
         <Version>4.2.2.20090</Version>
         <Copyright>©️Arnaud Morin</Copyright>
         <Authors>@Arnaud Morin</Authors>

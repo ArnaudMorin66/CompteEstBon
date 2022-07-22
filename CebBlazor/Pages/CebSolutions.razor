@@ -5,15 +5,14 @@
 @using SelectionType = Syncfusion.Blazor.Grids.SelectionType
 
 @inject CebTirage tirage
+<div class="border border-secondary border-1 rounded bg-primary mb-1 mt-1" style="height: 31rem">
 <SfGrid AllowSelection="true"
 		DataSource="tirage.Solutions"
 		EnableAltRow="true"
 		GridLines="GridLine.Horizontal"
-		Height="400"
 		ID="solutions"
 		TValue="CebBase">
 	<GridEvents OnRecordClick="ShowAsync" TValue="CebBase"></GridEvents>
-	<GridSelectionSettings Mode="SelectionMode.Row" Type="SelectionType.Single"></GridSelectionSettings>
 	<GridTemplates>
 		<EmptyRecordTemplate>
 			@if (tirage.Status == CebStatus.EnCours) {
@@ -32,7 +31,7 @@
 						@{
 							var op = ((CebBase)data).Operations;
 							if (j < op.Count)
-								@op[j]
+									@op[j]
 						}
 					</Template>
 				</GridColumn>
@@ -50,6 +49,7 @@
 		</GridColumns>
 	}
 </SfGrid>
+</div>
 @code {
 
 #pragma warning disable CS8618

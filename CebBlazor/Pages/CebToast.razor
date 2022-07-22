@@ -80,7 +80,7 @@
 	public async Task ShowAsync(int index) {
 		if (Visible) Visible = false;
 #pragma warning disable CS8601
-		Solution = tirage.Solutions[index].ToString();
+		Solution = tirage.Solutions?[index].ToString();
 		Visible = true;
 		await InvokeAsync(StateHasChanged);
 	}

@@ -24,22 +24,24 @@ body {
 #solutions {
     .e-gridheader {
         visibility: collapse;
-        border: none;
+        // border: none;
     }
 
-    &.e-grid, .e-table {
+   /* .e-grid, .e-table {
         border-spacing: 0px;
-        border-collapse: separate;
-        border-color: $secondary;
-        border-radius: 0;
+        // border-collapse: separate;
+        // border-color: transparent;
+        //border-radius: 0;
         border-width: 1pt;
     }
-
+*/
     .e-content {
+        // @extend .bg-gradient;
         background-color: $primary;
         text-align: center;
-        color: white;
+        // color: white;
         font-size: $font-size;
+        height: 30rem;
     }
 
 
@@ -98,8 +100,6 @@ body {
             text-align: center;
         }
     }
-
-   
 }
 .card-body,
 .card-text {
