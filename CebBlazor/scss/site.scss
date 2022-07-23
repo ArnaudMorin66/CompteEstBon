@@ -142,13 +142,12 @@ body {
 }
 .e-dialog {
     .e-dlg-content {
-        @extend .bg-gradient;
         background: $primary;
-        padding: 0px;
-        margin: 0;
-        border: 1px;
-        border-color: white;
-        border-radius: 2ex;
+        padding: 1px;
+        margin: 1px;
+        border-width: thick;
+        border-color: $secondary;
+        border-radius: 2pt;
     }
 }
 

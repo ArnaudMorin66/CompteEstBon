@@ -188,14 +188,14 @@
 		</div>
 	</div>
 </div>
-<div class="d-flex justify-content-between border border-secondary border-1 rounded p-2 mb-1">
+<div class="d-flex align-items-center justify-content-between border border-secondary border-1 rounded p-2 mb-1">
 	<SfCheckBox @bind-Checked="Auto" Label="Calculer automatiquement" accesskey="a"/>
 	<SfCheckBox @bind-Checked="MongoDb" Label="Sauvegarder sous MongoDB" accesskey="m"/>
 	<i class=" text-white fa-solid fa-ellipsis@(VueTable ? "" : "-vertical") fa-2x pointer"
 	   @onclick="() => VueTable = !VueTable">
 	</i>
 </div>
-<CebToast @ref="toast" DueTime="10000"></CebToast>
+<CebToast @ref="toast" DueTime="20000"></CebToast>
 <CebFooter></CebFooter>
 
 @code {
@@ -242,12 +242,12 @@
 		if (tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) {
 			if (MongoDb)
 				await SaveMongoDb();
-			await toast.ShowAsync(0);
+			await toast.ShowAsync(tirage.Solutions[0]);
 		}
 	}
 
-	private async Task ShowSolutionAsync(int index) {
-		await toast.ShowAsync(index);
+	private async Task ShowSolutionAsync(CebBase solution) {
+		await toast.ShowAsync(solution);
 	}
 
 	private async Task ExportExcelAsync() {

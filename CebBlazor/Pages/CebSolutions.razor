@@ -21,6 +21,7 @@
 		</GridTemplates>
 		@if (VueTable) {
 			<GridColumns>
+				
 				@for (var i = 0; i < 5; i++) {
 					var j = i;
 					<GridColumn TextAlign="TextAlign.Center">
@@ -56,10 +57,10 @@
 	public bool VueTable { get; set; } = true;
 
 	[Parameter]
-	public EventCallback<int> ShowDetail { get; set; }
+	public EventCallback<CebBase> ShowDetail { get; set; }
 
-	private async Task ShowAsync(RecordClickEventArgs<CebBase> ligne) {
-		await ShowDetail.InvokeAsync((int)ligne.RowIndex);
+	private async Task ShowAsync(RecordClickEventArgs<CebBase> data) {
+		await ShowDetail.InvokeAsync(data.RowData);
 	}
 
 }
