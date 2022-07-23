@@ -1,33 +1,26 @@
 ﻿@page "/"
+@using CompteEstBon
 @using MongoDB.Bson
 @using MongoDB.Bson.Serialization.Conventions
 @using MongoDB.Driver
 @using MongoDB.Driver.Linq
-@using System.IO;
+@using Syncfusion.Blazor.Buttons
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Inputs
-@using Syncfusion.Blazor.Buttons
-@using Syncfusion.Blazor.Spinner
-@using CompteEstBon
 
 @inject IJSRuntime js
 @inject CebSetting setting
 @inject CebTirage tirage
-<div class="d-flex bg-gradient-primary justify-content-between align-items-center border border-secondary border-1 rounded p-2 mb-1">
+<div class="d-flex justify-content-between align-items-center border border-secondary border-1 rounded p-2 mb-1">
 	<div>
-		<img src="favicon.ico" height="24">
+		<img src="favicon.ico" height="24" alt="">
 	</div>
-	<div class="text-center text-uppercase text-danger font-weight-bold text-wrap text-truncate ">Syncfusion - Compte&nbsp;est&nbsp;bon</div>
-	<button id="idVue2"
-			class="btn btn-primary btn-sm border-0" style="width: 5%"
-			title="Type de vue"
-			role="button"
-			@onclick="() => VueTable = !VueTable"
-			type="button">
-		<i class="fa-solid fa-ellipsis@(VueTable ? "":"-vertical") fa-4"></i>
-	</button>
+	<div class="text-center text-uppercase text-danger text-wrap text-truncate ">Syncfusion - Compte&nbsp;est&nbsp;bon</div>
+	<i class="text-white m-2 fa-solid fa-ellipsis@(VueTable ? "" : "-vertical") fa-2x pointer"
+	   @onclick="() => VueTable = !VueTable">
+	</i>
 </div>
-<div class="row">
+<div class="row" g-0>
 	<div class="col text-center">
 		<div class="card text-center border-secondary m-1">
 			<div class="card-header bg-primary bg-gradient text-white">
@@ -39,12 +32,12 @@
 					@foreach (var plq in tirage.Plaques) {
 						<div class="col-md-2">
 							<SfComboBox TItem="int"
-									TValue="int"
-									@bind-Value="plq.Value"
-									DataSource="@CebPlaque.AnyPlaques"
-									ShowClearButton="false"
-									AllowFiltering="true"
-									Enabled="tirage.Status != CebStatus.EnCours">
+							            TValue="int"
+							            @bind-Value="plq.Value"
+							            DataSource="@CebPlaque.AnyPlaques"
+							            ShowClearButton="false"
+							            AllowFiltering="true"
+							            Enabled="tirage.Status != CebStatus.EnCours">
 							</SfComboBox>
 						</div>
 					}
@@ -61,13 +54,13 @@
 			</div>
 			<div class="card-body">
 				<SfNumericTextBox @bind-Value="tirage.Search"
-								  Max="999"
-								  Min="100"
-								  CssClass="e-ceb"
-								  Format="N0"
-								  Step="1"
-								  TValue="int"
-								  Enabled="tirage.Status != CebStatus.EnCours">
+				                  Max="999"
+				                  Min="100"
+				                  CssClass="e-ceb"
+				                  Format="N0"
+				                  Step="1"
+				                  TValue="int"
+				                  Enabled="tirage.Status != CebStatus.EnCours">
 				</SfNumericTextBox>
 			</div>
 		</div>
@@ -83,44 +76,44 @@
 						break;
 					case CebStatus.CompteEstBon:
 						<button class="btn btn-success"
-						@onclick="@tirage.ClearAsync"
-						title="Initialisation des résultats"
-						role="button"
-						type="button"
-						accesskey="i">
+						        @onclick="@tirage.ClearAsync"
+						        title="Initialisation des résultats"
+						        role="button"
+						        type="button"
+						        accesskey="i">
 							<i class="fa-regular fa-thumbs-up fa-4"></i>
 							<span class="animation">Compte&nbsp;est&nbsp;bon</span>
 						</button>
 						break;
 					case CebStatus.CompteApproche:
 						<button class="btn btn-secondary text-wheat"
-						role="button"
-						type="button"
-						title="Initialisation des résultats"
-						@onclick="tirage.ClearAsync"
-						accesskey="i">
+						        role="button"
+						        type="button"
+						        title="Initialisation des résultats"
+						        @onclick="tirage.ClearAsync"
+						        accesskey="i">
 							<i class="fa-regular fa-thumbs-down fa-4"></i>
 							<span class="animation">Compte&nbsp;approch&eacute;</span>
 						</button>
 						break;
 					case CebStatus.Invalide:
 						<button class="btn btn-danger"
-						role="button"
-						type="button"
-						title="Tirage aléatoire"
-						@onclick="tirage.RandomAsync"
-						accesskey="i">
+						        role="button"
+						        type="button"
+						        title="Tirage aléatoire"
+						        @onclick="tirage.RandomAsync"
+						        accesskey="i">
 							<i class="fa-solid fa-circle-exclamation fa-beat fa-4"></i>
 						</button>
 						break;
 					default:
 						<button id="resoudre"
-						title="Résolution du tirage"
-						class="btn btn-primary"
-						role="button"
-						@onclick="ResolveAsync"
-						type="button"
-						accesskey="i">
+						        title="Résolution du tirage"
+						        class="btn btn-primary"
+						        role="button"
+						        @onclick="ResolveAsync"
+						        type="button"
+						        accesskey="i">
 							<i class="fa-solid fa-play fa-4"></i>
 						</button>
 						break;
@@ -128,31 +121,30 @@
 			</div>
 			<div class="d-grid d-flex gap-1 justify-content-between" role="group" aria-label="Action">
 				<button id="hasard"
-						class="btn btn-primary border border-secondary w-100 @(tirage.Status == CebStatus.EnCours ? "disabled" : "")"
-						accesskey="h"
-						title="Tirage aléatoire"
-						role="button"
-						type="button"
-						@onclick="tirage.RandomAsync">
+				        class="btn btn-primary border border-secondary w-100 @(tirage.Status == CebStatus.EnCours ? "disabled" : "")"
+				        accesskey="h"
+				        title="Tirage aléatoire"
+				        role="button"
+				        type="button"
+				        @onclick="tirage.RandomAsync">
 					<i class="fa-solid fa-shuffle fa-4"></i>
 				</button>
-
 				<button id="Excel"
-						title="Export vers excel"
-						class="btn btn-primary border border-secondary w-25 @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon ? "":"disabled" )"
-						role="button"
-						@onclick="@ExportExcelAsync"
-						type="button"
-						accesskey="x">
+				        title="Export vers excel"
+				        class="btn btn-primary border border-secondary w-25 @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon ? "" : "disabled")"
+				        role="button"
+				        @onclick="@ExportExcelAsync"
+				        type="button"
+				        accesskey="x">
 					<i class="fa-solid fa-file-excel fa-8"></i>
 				</button>
 				<button id="Word"
-						title="Export vers Word"
-						class="btn btn-primary border border-secondary w-25  @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon ? "":"disabled" )"
-						role="button"
-						@onclick="@ExportWordAsync"
-						type="button"
-						accesskey="w">
+				        title="Export vers Word"
+				        class="btn btn-primary border border-secondary w-25  @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon ? "" : "disabled")"
+				        role="button"
+				        @onclick="@ExportWordAsync"
+				        type="button"
+				        accesskey="w">
 					<i class="fa-solid fa-file-word fa-8"></i>
 				</button>
 			</div>
@@ -196,26 +188,12 @@
 		</div>
 	</div>
 </div>
-<div class="card text-center bg-primary bg-gradient border-secondary">
-	<div class="row card-header">
-		<div class="col">
-			<SfCheckBox @bind-Checked="Auto" Label="Calculer automatiquement" accesskey="a" />
-		</div>
-		<div class="col">
-			<SfCheckBox @bind-Checked="MongoDb" Label="Sauvegarder sous MongoDB" accesskey="m" />
-		</div>
-		<div class="col text-white">
-			<button id="idVue"
-					class="btn btn-primary border border-secondary w-25"
-					role="button"
-					@onclick="() => VueTable = !VueTable"
-					title="Type de vue"
-					accesskey="t"
-					type="button">
-				<i class="fa-solid fa-ellipsis@(VueTable ? "":"-vertical") fa-2x"></i>
-			</button>
-		</div>
-	</div>
+<div class="d-flex justify-content-between border border-secondary border-1 rounded p-2 mb-1">
+	<SfCheckBox @bind-Checked="Auto" Label="Calculer automatiquement" accesskey="a"/>
+	<SfCheckBox @bind-Checked="MongoDb" Label="Sauvegarder sous MongoDB" accesskey="m"/>
+	<i class=" text-white fa-solid fa-ellipsis@(VueTable ? "" : "-vertical") fa-2x pointer"
+	   @onclick="() => VueTable = !VueTable">
+	</i>
 </div>
 <CebToast @ref="toast" DueTime="10000"></CebToast>
 <CebFooter></CebFooter>
@@ -225,6 +203,7 @@
 	public bool VueTable { get; set; } = true;
 
 	private bool _auto;
+
 	bool Auto {
 		get => _auto;
 		set {
@@ -239,6 +218,7 @@
 			}
 		}
 	}
+
 	bool MongoDb { get; set; }
 #pragma warning disable CS8618
 #pragma warning disable CS8602
@@ -258,7 +238,7 @@
 
 	async Task ResolveAsync() {
 		await tirage.ResolveAsync();
-		// await InvokeAsync(StateHasChanged);
+	// await InvokeAsync(StateHasChanged);
 		if (tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) {
 			if (MongoDb)
 				await SaveMongoDb();
@@ -266,7 +246,9 @@
 		}
 	}
 
-	private async Task ShowSolutionAsync(int index) => await toast.ShowAsync(index);
+	private async Task ShowSolutionAsync(int index) {
+		await toast.ShowAsync(index);
+	}
 
 	private async Task ExportExcelAsync() {
 		if (!(tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
@@ -287,7 +269,7 @@
 			ConventionRegistry.Register("EnumStringConvention",
 				new ConventionPack {
 					new EnumRepresentationConvention(BsonType.String)
-																															},
+				},
 				_ => true);
 			var clientSettings = MongoClientSettings.FromConnectionString(setting.MongoDbConnectionString);
 			clientSettings.LinqProvider = LinqProvider.V3;
@@ -299,10 +281,12 @@
 			await cl.InsertOneAsync(
 				new BsonDocument(new Dictionary<string, object> {
 					{ "_id", new { lang = "blazor", domain = Environment.GetEnvironmentVariable("USERDOMAIN"), date = DateTime.UtcNow }.ToBsonDocument() }
-																															})
+				})
 					.AddRange(tirage.Data.ToBsonDocument()));
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			Console.WriteLine(e);
 		}
 	}
+
 }

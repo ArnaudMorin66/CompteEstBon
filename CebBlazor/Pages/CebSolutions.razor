@@ -1,55 +1,54 @@
-﻿@using Syncfusion.Blazor.Grids
+﻿@using CompteEstBon
+@using Syncfusion.Blazor.Grids
 @using Syncfusion.Blazor.Spinner
-@using CompteEstBon
-@using SelectionMode = Syncfusion.Blazor.Grids.SelectionMode
-@using SelectionType = Syncfusion.Blazor.Grids.SelectionType
-
 @inject CebTirage tirage
 <div class="border border-secondary border-1 rounded bg-primary mb-1 mt-1" style="height: 31rem">
-<SfGrid AllowSelection="true"
-		DataSource="tirage.Solutions"
-		EnableAltRow="true"
-		GridLines="GridLine.Horizontal"
-		ID="solutions"
-		TValue="CebBase">
-	<GridEvents OnRecordClick="ShowAsync" TValue="CebBase"></GridEvents>
-	<GridTemplates>
-		<EmptyRecordTemplate>
-			@if (tirage.Status == CebStatus.EnCours) {
-				<div class="position-absolute top-50 start-50 translate-middle">
-					<SfSpinner Visible=true Type="@SpinnerType.Fluent" Size="100" />
-				</div>
-			}
-		</EmptyRecordTemplate>
-	</GridTemplates>
-	@if (VueTable) {
-		<GridColumns>
-			@for (var i = 0; i < 5; i++) {
-				var j = i;
+	<SfGrid AllowSelection="true"
+	        DataSource="tirage.Solutions"
+	        EnableAltRow="true"
+	        GridLines="GridLine.Horizontal"
+	        ID="solutions"
+	        TValue="CebBase">
+		<GridEvents OnRecordClick="ShowAsync" TValue="CebBase"></GridEvents>
+		<GridTemplates>
+			<EmptyRecordTemplate>
+				@if (tirage.Status == CebStatus.EnCours) {
+					<div class="position-absolute top-50 start-50 translate-middle">
+						<SfSpinner Visible=true Type="@SpinnerType.Fluent" Size="100"/>
+					</div>
+				}
+			</EmptyRecordTemplate>
+		</GridTemplates>
+		@if (VueTable) {
+			<GridColumns>
+				@for (var i = 0; i < 5; i++) {
+					var j = i;
+					<GridColumn TextAlign="TextAlign.Center">
+						<Template Context="data">
+							@{
+								var op = ((CebBase)data).Operations;
+								if (j < op.Count)
+									@op[j]
+							}
+						</Template>
+					</GridColumn>
+				}
+			</GridColumns>
+		}
+		else {
+			<GridColumns>
 				<GridColumn TextAlign="TextAlign.Center">
 					<Template Context="data">
-						@{
-							var op = ((CebBase)data).Operations;
-							if (j < op.Count)
-									@op[j]
+						@foreach (var op in ((CebBase)data).Operations) {
+							<div>@op</div>
 						}
 					</Template>
 				</GridColumn>
-			}
-		</GridColumns>
-	} else {
-		<GridColumns>
-			<GridColumn TextAlign="TextAlign.Center">
-				<Template Context="data">
-					@foreach (var op in ((CebBase)data).Operations) {
-						<div>@op</div>
-					}
-				</Template>
-			</GridColumn>
-		</GridColumns>
-	}
-</SfGrid>
+			</GridColumns>
+		}
+	</SfGrid>
 </div>
+
 @code {
 
 #pragma warning disable CS8618
@@ -59,7 +58,8 @@
 	[Parameter]
 	public EventCallback<int> ShowDetail { get; set; }
 
-	private async Task ShowAsync(RecordClickEventArgs<CebBase> ligne) =>
+	private async Task ShowAsync(RecordClickEventArgs<CebBase> ligne) {
 		await ShowDetail.InvokeAsync((int)ligne.RowIndex);
+	}
 
 }

@@ -53,6 +53,7 @@ resharper_suggest_var_or_type_simple_types_highlighting = hint
 # ReSharper properties
 resharper_allow_comment_after_lbrace = true
 resharper_apply_auto_detected_rules = false
+resharper_apply_on_completion = true
 resharper_indent_nested_foreach_stmt = true
 resharper_indent_nested_for_stmt = true
 resharper_indent_nested_while_stmt = true

@@ -4,6 +4,7 @@
 //     Copyright (c) . All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+
 namespace CebBlazor.Code;
 
 public class CebSetting {

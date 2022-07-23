@@ -21,8 +21,7 @@ svc.AddServerSideBlazor();
 svc.AddSyncfusionBlazor();
 
 svc.AddSingleton(
-    new CebSetting
-    {
+    new CebSetting {
         MongoDb = bool.TryParse(builder.Configuration["mongodb:actif"], out var mdb) && mdb,
         MongoDbConnectionString = builder.Configuration["mongodb:server"],
         AutoCalcul = bool.TryParse(builder.Configuration["AutoCalcul"], out var res) && res
@@ -33,7 +32,7 @@ SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["license"]);
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
-if(!app.Environment.IsDevelopment()) {
+if (!app.Environment.IsDevelopment()) {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
@@ -43,5 +42,5 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
+app.MapFallbackToPage("/index");
 app.Run();

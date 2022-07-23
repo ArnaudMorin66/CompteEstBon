@@ -4,17 +4,25 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "sass-debug": "sass scss/site.scss:wwwroot/css/site.css -I node_modules/ -I node_modules/@syncfusion/ --source-map -c",
-    "sass-release": "sass scss/site.scss:scss/release/site.min.css --style=compressed -I node_modules/ -I node_modules/@syncfusion/ -c --no-source-map",
-    "sass-watch": "sass scss/site.scss:wwwroot/css/site.min.css --style=compressed -I node_modules/ -I node_modules/@syncfusion/ -c --no-source-map -w"
+    "sass-debug":
+      "sass scss/site.scss:wwwroot/css/site.css -I node_modules/ -I node_modules/@syncfusion/ --source-map -c",
+    "sass-release":
+      "sass scss/site.scss:scss/release/site.min.css --style=compressed -I node_modules/ -I node_modules/@syncfusion/ -c --no-source-map",
+    "sass-watch":
+      "sass scss/site.scss:wwwroot/css/site.min.css --style=compressed -I node_modules/ -I node_modules/@syncfusion/ -c --no-source-map -w"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "6.1.1",
     "@syncfusion/ej2": "20.2.39",
     "bootstrap": "5.2.0"
-   },
+  },
   "devDependencies": {
-    "sass": "1.53.0"
-  }, 
-  "-vs-binding":{"ProjectOpened":["sass-watch"]}
+    "sass": "1.53.0",
+    "stylelint-config-twbs-bootstrap": "^5.0.0"
+  },
+  "-vs-binding": {
+    "ProjectOpened": [
+      "sass-watch"
+    ]
+  }
 }

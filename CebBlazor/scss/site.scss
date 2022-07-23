@@ -5,14 +5,13 @@ $enable-responsive-font-sizes: true;
 $grid-header-border-color: $primary;
 $font-family-sans-serif: 'Colibri', 'Segoe UI', sans-serif;
 $font-family: $font-family-sans-serif;
-
+$enable-gradients: true;
 
 @import "@fortawesome/fontawesome-free/scss/regular";
 @import "@fortawesome/fontawesome-free/scss/solid";
 @import "@fortawesome/fontawesome-free/scss/brands";
 @import "@fortawesome/fontawesome-free/scss/fontawesome";
 @import "ej2/bootstrap5-dark";
-$enable-gradients: true;
 @import "bootstrap/scss/bootstrap";
 
 html,
@@ -27,14 +26,6 @@ body {
         // border: none;
     }
 
-   /* .e-grid, .e-table {
-        border-spacing: 0px;
-        // border-collapse: separate;
-        // border-color: transparent;
-        //border-radius: 0;
-        border-width: 1pt;
-    }
-*/
     .e-content {
         // @extend .bg-gradient;
         background-color: $primary;
@@ -43,7 +34,6 @@ body {
         font-size: $font-size;
         height: 30rem;
     }
-
 
     .e-emptyrow {
         color: $primary;
@@ -61,7 +51,6 @@ body {
         td.e-rowcell {
             font-size: $font-size;
         }
-
 
         td.e-active {
             background-color: $gray-800;
@@ -101,6 +90,7 @@ body {
         }
     }
 }
+
 .card-body,
 .card-text {
     background-color: $primary; //  lightslategray;
@@ -118,7 +108,6 @@ body {
         transform: translateX(50%);
         width: 50%;
     }
-
     to {
         transform: translateX(0);
         width: 100%;
@@ -151,6 +140,17 @@ body {
         border: none;
     }
 }
+.e-dialog {
+    .e-dlg-content {
+        @extend .bg-gradient;
+        background: $primary;
+        padding: 0px;
+        margin: 0;
+        border: 1px;
+        border-color: white;
+        border-radius: 2ex;
+    }
+}
 
 .g-cell {
     text-align:center;
@@ -162,4 +162,7 @@ body {
 
 .cursor-wait {
     cursor: wait;
+}
+i.pointer {
+    cursor:pointer;
 }

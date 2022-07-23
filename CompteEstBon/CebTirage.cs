@@ -135,7 +135,7 @@ namespace CompteEstBon {
                 p.Value = liste[n];
                 liste.RemoveAt(n);
             }
-            ;
+
             _search = Rnd.Next(100, 1000);
             return Clear();
         }
@@ -255,7 +255,7 @@ namespace CompteEstBon {
         }
 
 
-        public List<CebBase>? Solutions => Status is CebStatus.CompteApproche or CebStatus.CompteEstBon
+        public List<CebBase> Solutions => Status is CebStatus.CompteApproche or CebStatus.CompteEstBon
             ? _solutions
             : null; // new List<CebBase>();
 

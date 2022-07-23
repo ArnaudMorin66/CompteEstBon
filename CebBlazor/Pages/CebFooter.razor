@@ -1,7 +1,4 @@
-﻿@using System.Runtime.InteropServices
-@using System.Timers
-@using CompteEstBon
-
+﻿@using System.Timers
 <div class="footer d-flex bg-gradient-dark justify-content-between align-items-center border border-secondary">
 	<span class="badge badge-pill badge-info text-white">
 		@Util.Authors (@Util.CebBlazorVersion),&nbsp;Syncfusion&nbsp;@Util.SyncfusionVersion,&nbsp;@Util.DotNetVersion
@@ -11,7 +8,7 @@
 
 @code {
 	private DateTime datetime;
-	
+
 	protected override Task OnInitializedAsync() {
 		var timer = new Timer(1000);
 		timer.Elapsed += async (_, e) => {

@@ -3,25 +3,27 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
+        <IsPackable>true</IsPackable>
         <ImplicitUsings>enable</ImplicitUsings>
         <TypeScriptEnabled>false</TypeScriptEnabled>
         <TypeScriptCompileBlocked>false</TypeScriptCompileBlocked>
         <TypeScriptCompileOnSaveEnabled>False</TypeScriptCompileOnSaveEnabled>
         <TypeScriptSourceMap>False</TypeScriptSourceMap>
-       <TypeScriptNoEmitOnError>False</TypeScriptNoEmitOnError>
+        <TypeScriptNoEmitOnError>False</TypeScriptNoEmitOnError>
         <NoWarn>1701;1702;8002</NoWarn>
         <UserSecretsId>863459e9-e5ca-4fdd-813d-9a4f7efc30bc</UserSecretsId>
-        <AssemblyVersion>4.7.2.19950</AssemblyVersion>
-        <FileVersion>4.7.2.19950</FileVersion>
+        <AssemblyVersion>4.8.1.24887</AssemblyVersion>
+        <FileVersion>4.8.1.24887</FileVersion>
         <Version>4.2.2.20090</Version>
         <Copyright>©️Arnaud Morin</Copyright>
         <Authors>@Arnaud Morin</Authors>
+        <SignAssembly>False</SignAssembly>
     </PropertyGroup>
-    
+
     <ItemGroup>
-      <TypeScriptCompile Remove="node_modules\**" />
+        <TypeScriptCompile Remove="node_modules\**" />
     </ItemGroup>
-   
+
     <ItemGroup>
         <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
         <PackageReference Include="MongoDB.Driver" Version="2.17.0" />
@@ -31,8 +33,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="scss\debug\" />
-        <Folder Include="scss\release\" />
         <Folder Include="wwwroot\css\" />
         <Folder Include="wwwroot\js\fontawesome\" />
         <Folder Include="wwwroot\js\" />
@@ -46,7 +46,8 @@
 
     <ProjectExtensions>
         <VisualStudio>
-            <UserProperties appsettings_1development_1json__JsonSchema="https://appsemble.app/api.json" libman_1json__JsonSchema="" package_1json__JsonSchema="" />
+            <UserProperties appsettings_1development_1json__JsonSchema="https://appsemble.app/api.json"
+                            libman_1json__JsonSchema="" package_1json__JsonSchema="" />
         </VisualStudio>
     </ProjectExtensions>
 </Project>

@@ -1,63 +1,62 @@
 {
     "version": "2.0.0",
     "tasks": [
-        {
-            "label": "build",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/CebBlazor.csproj"
-            ],
-            "problemMatcher": "$tsc",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-            
-        },
-        {
-            "label": "publish",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "publish",
-                "${workspaceFolder}/CebBlazor.csproj"
-            ],
-            "problemMatcher": "$tsc"
-        },
-        {
-            "label": "publish-release",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "publish",
-                "${workspaceFolder}/CebBlazor.csproj",
-                "-c",
-                "Release"
-            ],
-            "problemMatcher": "$tsc"
-        },
-        {
-            "label": "watch",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "watch",
-                "run",
-                "${workspaceFolder}/CebBlazor.csproj"
-            ],
-            "problemMatcher": "$tsc"
-        },
-        {
-            "label": "sass",
-            "command": "yarn",
-            "type": "shell",
-            "args": [
-                "run",
-                "sass"
-            ],
-            "problemMatcher": "$node-sass"
+      {
+        "label": "build",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "build",
+          "${workspaceFolder}/CebBlazor.csproj"
+        ],
+        "problemMatcher": "$tsc",
+        "group": {
+          "kind": "build",
+          "isDefault": true
         }
+      },
+      {
+        "label": "publish",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "publish",
+          "${workspaceFolder}/CebBlazor.csproj"
+        ],
+        "problemMatcher": "$tsc"
+      },
+      {
+        "label": "publish-release",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "publish",
+          "${workspaceFolder}/CebBlazor.csproj",
+          "-c",
+          "Release"
+        ],
+        "problemMatcher": "$tsc"
+      },
+      {
+        "label": "dotnet-watch",
+        "command": "dotnet",
+        "type": "process",
+        "args": [
+          "watch",
+          "run",
+          "${workspaceFolder}/CebBlazor.csproj"
+        ],
+        "problemMatcher": "$tsc"
+      },
+      
+      {
+        "type": "npm",
+        "script": "sass-watch",
+        "path": "",
+        "group": "build",
+        "problemMatcher": [],
+        "label": "sass-watch",
+        "detail": "sass scss/site.scss:wwwroot/css/site.min.css --style=compressed -I node_modules/ -I node_modules/@syncfusion/ -c --no-source-map -w"
+      }
     ]
 }
