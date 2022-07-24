@@ -123,7 +123,7 @@ body {
 
 .gradient {
     background: radial-gradient($primary, $primary);
-    background-image: radial-gradient( #505050, $primary); // (rgb(48, 48, 48), rgb(73, 80, 87));
+    background-image: radial-gradient( #505050, $primary); 
 }
 
 .footer {
@@ -141,27 +141,32 @@ body {
     }
 }
 .e-dialog {
-    .e-dlg-content {
-        background: $primary;
-        padding: 1px;
-        margin: 1px;
-        border-width: thick;
+        background-color: transparent;
+        border-style: solid;
+        border-width: thin;
         border-color: $secondary;
-        border-radius: 2pt;
+        cursor: pointer;
+
+        .e-dlg-content {
+            @extend .rounded-1;
+            background: $primary;
+            padding: 1px;
+            margin: 1px;
+        }
     }
-}
 
-.g-cell {
-    text-align:center;
-}
+    .g-cell {
+        text-align: center;
+    }
 
-.text-wheat {
-    color: wheat;
-}
+    .text-wheat {
+        color: wheat;
+    }
 
-.cursor-wait {
-    cursor: wait;
-}
-i.pointer {
-    cursor:pointer;
-}
+    .cursor-wait {
+        cursor: wait;
+    }
+
+    .c-pointer {
+        cursor: pointer;
+    }

@@ -43,4 +43,4 @@ app.UseRouting();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/index");
-app.Run();
+await app.RunAsync();

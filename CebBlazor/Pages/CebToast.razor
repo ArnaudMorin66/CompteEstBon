@@ -1,8 +1,10 @@
 @using CompteEstBon
 @using Syncfusion.Blazor.Popups
+@using System.Timers
+@using Microsoft.AspNetCore.Routing.Constraints
 @inject CebTirage tirage
 <SfDialog Width="480" @bind-Visible="@Visible"
-          ShowCloseIcon="false"
+		  ShowCloseIcon="false"
 		  @onclick="() => Visible = !Visible"
 		  ID="DlgToast">
 	<DialogAnimationSettings
@@ -33,9 +35,8 @@
 				<div class="w-100 text-center @cls">
 					<i class="fa-regular @icn"></i>&nbsp;@rsl
 				</div>
-
-				<div>&nbsp;</div>
-				<div class="text-center text-white">
+				<div class="text-center text-white bg-gradient">
+					<div>&nbsp;</div>
 					<div>Trouvé(s):&nbsp;@tirage.Found</div>
 					@if (tirage.Diff != 0) {
 						<div>&Eacute;cart:&nbsp;@tirage.Diff</div>
@@ -60,7 +61,7 @@
 
 @code {
 #pragma warning disable CS8618
-	protected Timer? timer;
+	protected Timer timer = new();
 	private bool _visible;
 
 	public bool Visible {
@@ -68,31 +69,39 @@
 		set {
 			if (value == _visible) return;
 			_visible = value;
+			timer.Stop();
 			if (_visible) {
-				timer?.Dispose();
-				timer = new Timer(_ => { Visible = false; });
-				timer.Change(DueTime, 0);
-			}
-			else {
-				timer?.Dispose();
-				_visible = false;
+				timer.Start();
 			}
 			InvokeAsync(StateHasChanged);
 		}
 	}
 
 	public CebBase Solution { get; set; }
+	private int _duetime;
 
 	[Parameter]
-	public int DueTime { get; set; }
+	#pragma warning disable BL0007
+	public int DueTime { get=> _duetime;
+		set {
+	// ReSharper disable once CompareOfFloatsByEqualityOperator
+			if (_duetime == value) return;
+			_duetime = value;
+			timer.Interval = _duetime;
+			
+		}
+
+	}
 
 	protected override void OnInitialized() {
-		DueTime = 10000;
+		timer.Elapsed += (_, _) => Visible = false;
 	}
 
 	public async Task ShowAsync(CebBase ligne) {
-		if (Visible) Visible = false;
 #pragma warning disable CS8601
+		if (Visible) {
+			await InvokeAsync(() => Visible = false);
+		}
 		Solution = ligne;
 		Visible = true;
 		await InvokeAsync(StateHasChanged);

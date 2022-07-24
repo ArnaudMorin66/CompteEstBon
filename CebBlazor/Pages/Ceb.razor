@@ -2,21 +2,20 @@
 @using CompteEstBon
 @using MongoDB.Bson
 @using MongoDB.Bson.Serialization.Conventions
-@using MongoDB.Driver
+@using MongoDB.Driver 
 @using MongoDB.Driver.Linq
 @using Syncfusion.Blazor.Buttons
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Inputs
 
 @inject IJSRuntime js
-@inject CebSetting setting
+@inject CebSetting setting 
 @inject CebTirage tirage
-<div class="d-flex justify-content-between align-items-center border border-secondary border-1 rounded p-2 mb-1">
-	<div>
-		<img src="favicon.ico" height="24" alt="">
-	</div>
-	<div class="text-center text-uppercase text-danger text-wrap text-truncate ">Syncfusion - Compte&nbsp;est&nbsp;bon</div>
-	<i class="text-white m-2 fa-solid fa-ellipsis@(VueTable ? "" : "-vertical") fa-2x pointer"
+
+<div class="d-flex justify-content-between align-items-center border border-secondary border-1 rounded mb-1 shadow-lg">
+	<img src="favicon.ico" height="32" alt="" class="p-1">
+	<div class="text-center text-uppercase text-danger text-wrap text-truncate ">Compte&nbsp;est&nbsp;bon</div>
+	<i class="text-white m-2 fa-solid fa-ellipsis@(VueTable ? "":"-vertical") fa-2x c-pointer"
 	   @onclick="() => VueTable = !VueTable">
 	</i>
 </div>
@@ -24,8 +23,13 @@
 	<div class="col text-center">
 		<div class="card text-center border-secondary m-1">
 			<div class="card-header bg-primary bg-gradient text-white">
-				<i class="fa-solid fa-bars"></i>
-				&nbsp;Plaques
+				<div class="fa-solid">
+					<i class="fa-1"></i>
+					<i class="e-icons e-bullet-1 e-small"></i>
+					<i class="fa-2"></i>
+					<i class="e-icons e-bullet-1 e-small"></i>
+					<i class="fa-3"></i>
+				</div>
 			</div>
 			<div class="card-body">
 				<div class="row">
@@ -49,8 +53,11 @@
 	<div class="col-2 m-1 ">
 		<div class="card text-center border border-secondary">
 			<div class="card-header bg-primary bg-gradient text-white">
-				<i class="fa-solid fa-search-plus"></i>
-				&nbsp;Trouver
+				<div class="fa-solid">
+					<i class="fa-9"></i>
+					<i class="fa-8"></i>
+					<i class="fa-7"></i>
+				</div>
 			</div>
 			<div class="card-body">
 				<SfNumericTextBox @bind-Value="tirage.Search"
@@ -71,17 +78,17 @@
 				@switch (tirage.Status) {
 					case CebStatus.EnCours:
 						<button class="btn btn-info disabled cursor-wait" role="spinbutton" type="button">
-							<i class="fa-solid fa-circle-notch fa-spin-pulse fa-4"></i>
+							<i class="fa-solid e-icons e-repeat fa-spin-pulse"></i>
 						</button>
 						break;
 					case CebStatus.CompteEstBon:
 						<button class="btn btn-success"
-						        @onclick="@tirage.ClearAsync"
+						        @onclick="@ClearAsync"
 						        title="Initialisation des résultats"
 						        role="button"
 						        type="button"
 						        accesskey="i">
-							<i class="fa-regular fa-thumbs-up fa-4"></i>
+							<i class="fa-regular fa-thumbs-up"></i>
 							<span class="animation">Compte&nbsp;est&nbsp;bon</span>
 						</button>
 						break;
@@ -90,9 +97,9 @@
 						        role="button"
 						        type="button"
 						        title="Initialisation des résultats"
-						        @onclick="tirage.ClearAsync"
+						        @onclick="ClearAsync"
 						        accesskey="i">
-							<i class="fa-regular fa-thumbs-down fa-4"></i>
+							<i class="fa-regular fa-thumbs-down"></i>
 							<span class="animation">Compte&nbsp;approch&eacute;</span>
 						</button>
 						break;
@@ -101,9 +108,9 @@
 						        role="button"
 						        type="button"
 						        title="Tirage aléatoire"
-						        @onclick="tirage.RandomAsync"
+						        @onclick="RandomAsync"
 						        accesskey="i">
-							<i class="fa-solid fa-circle-exclamation fa-beat fa-4"></i>
+							<i class="fa-solid fa-circle-exclamation fa-beat"></i>
 						</button>
 						break;
 					default:
@@ -114,7 +121,7 @@
 						        @onclick="ResolveAsync"
 						        type="button"
 						        accesskey="i">
-							<i class="fa-solid fa-play fa-4"></i>
+							<i class="e-icons e-calculated-member" Title="Résoudre le compte"></i>
 						</button>
 						break;
 				}
@@ -126,8 +133,8 @@
 				        title="Tirage aléatoire"
 				        role="button"
 				        type="button"
-				        @onclick="tirage.RandomAsync">
-					<i class="fa-solid fa-shuffle fa-4"></i>
+				        @onclick="RandomAsync">
+					<i class="fa-solid fa-shuffle"></i>
 				</button>
 				<button id="Excel"
 				        title="Export vers excel"
@@ -136,7 +143,7 @@
 				        @onclick="@ExportExcelAsync"
 				        type="button"
 				        accesskey="x">
-					<i class="fa-solid fa-file-excel fa-8"></i>
+					<i class="fa-solid fa-file-excel"></i>
 				</button>
 				<button id="Word"
 				        title="Export vers Word"
@@ -145,7 +152,7 @@
 				        @onclick="@ExportWordAsync"
 				        type="button"
 				        accesskey="w">
-					<i class="fa-solid fa-file-word fa-8"></i>
+					<i class="fa-solid fa-file-word"></i>
 				</button>
 			</div>
 		</div>
@@ -161,23 +168,23 @@
 			@switch (tirage.Status) {
 				case CebStatus.EnCours:
 					<div class="bg-info cursor-wait" role="alert">
-						<i class="fa-solid fa-circle-notch fa-spin-pulse fa-4"></i>
+						<i class="e-icons e-repeat fa-solid fa-spin-pulse"></i>
 					</div>
 					break;
 				case CebStatus.Invalide:
-					<div class="bg-danger" style="cursor: pointer;" @onclick="@tirage.RandomAsync">
-						<i class="fa-solid fa-circle-exclamation fa-beat fa-4"></i>&nbsp;Tirage invalide
+					<div class="bg-danger" style="cursor: pointer;" @onclick="@RandomAsync">
+						<i class="fa-solid fa-circle-exclamation fa-beat"></i>&nbsp;Tirage invalide
 					</div>
 					break;
 				case CebStatus.CompteApproche:
-					<div class="bg-secondary text-wheat" style="cursor: pointer;" @onclick="tirage.ClearAsync">
-						<i class="fa-regular fa-thumbs-down fa-4"></i>&nbsp;
+					<div class="bg-secondary text-wheat" style="cursor: pointer;" @onclick="ClearAsync">
+						<i class="fa-regular fa-thumbs-down"></i>&nbsp;
 						&nbsp;Compte approch&eacute;:&nbsp;@tirage.Found,&nbsp;&eacute;cart:&nbsp;@tirage.Diff,&nbsp;@tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.Duree:N3}")&nbsp;s
 					</div>
 					break;
 				case CebStatus.CompteEstBon:
-					<div class="bg-success text-black" style="cursor: pointer;" @onclick="@tirage.ClearAsync">
-						<i class="fa-regular fa-thumbs-up fa-4"></i>
+					<div class="bg-success text-black" style="cursor: pointer;" @onclick="ClearAsync">
+						<i class="fa-regular fa-thumbs-up"></i>
 						&nbsp;Compte est bon,&nbsp;@(tirage.Count)&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.Duree:N3}")&nbsp;s
 					</div>
 					break;
@@ -191,12 +198,12 @@
 <div class="d-flex align-items-center justify-content-between border border-secondary border-1 rounded p-2 mb-1">
 	<SfCheckBox @bind-Checked="Auto" Label="Calculer automatiquement" accesskey="a"/>
 	<SfCheckBox @bind-Checked="MongoDb" Label="Sauvegarder sous MongoDB" accesskey="m"/>
-	<i class=" text-white fa-solid fa-ellipsis@(VueTable ? "" : "-vertical") fa-2x pointer"
+	<i class="text-white m-2 fa-solid fa-ellipsis@(VueTable ? "":"-vertical") fa-2x c-pointer"
 	   @onclick="() => VueTable = !VueTable">
 	</i>
 </div>
-<CebToast @ref="toast" DueTime="20000"></CebToast>
 <CebFooter></CebFooter>
+<CebToast @ref="toast" DueTime="10000"></CebToast>
 
 @code {
 
@@ -207,6 +214,7 @@
 	bool Auto {
 		get => _auto;
 		set {
+			
 			if (_auto == value) return;
 			_auto = value;
 
@@ -236,7 +244,18 @@
 		MongoDb = setting.MongoDb;
 	}
 
+	async Task RandomAsync() {
+		await toast.HideAsync();
+		await tirage.RandomAsync();
+	}
+
+	async Task ClearAsync() {
+		await toast.HideAsync();
+		await tirage.ClearAsync();
+	}
+
 	async Task ResolveAsync() {
+		await toast.HideAsync();
 		await tirage.ResolveAsync();
 	// await InvokeAsync(StateHasChanged);
 		if (tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) {
@@ -251,14 +270,14 @@
 	}
 
 	private async Task ExportExcelAsync() {
-		if (!(tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
+		if (tirage.Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
 		await using var mstream = new MemoryStream();
 		tirage.ExportExcel(mstream);
 		await js.SaveAsAsync("ceb.xlsx", mstream.ToArray());
 	}
 
 	private async Task ExportWordAsync() {
-		if (!(tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
+		if (tirage.Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
 		await using var mstream = new MemoryStream();
 		tirage.ExportWord(mstream);
 		await js.SaveAsAsync("ceb.docx", mstream.ToArray());

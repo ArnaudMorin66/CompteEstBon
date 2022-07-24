@@ -10,6 +10,7 @@
 	        ID="solutions"
 	        TValue="CebBase">
 		<GridEvents OnRecordClick="ShowAsync" TValue="CebBase"></GridEvents>
+		<GridSelectionSettings CellSelectionMode="CellSelectionMode.BoxWithBorder" Type="SelectionType.Single" ></GridSelectionSettings>
 		<GridTemplates>
 			<EmptyRecordTemplate>
 				@if (tirage.Status == CebStatus.EnCours) {
@@ -49,9 +50,8 @@
 		}
 	</SfGrid>
 </div>
-
 @code {
-
+	
 #pragma warning disable CS8618
 	[Parameter]
 	public bool VueTable { get; set; } = true;

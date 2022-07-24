@@ -10,9 +10,12 @@
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<base href="~/"/>
-	<link rel="icon" type="image/x-icon" href="~/favicon.ico">
+	<link rel="icon" type="image/x-icon" href="~/favicon.ico" />
 	<link href="css/site.min.css" rel="stylesheet"/>
-
+	@* ReSharper disable Html.PathError *@
+	<script src="_content/Syncfusion.Blazor.Core/scripts/syncfusion-blazor.min.js" async type="text/javascript"></script>
+	<script src="_framework/blazor.server.js" async type="text/javascript"></script>
+	@* ReSharper enable Html.PathError *@
 	<script type="text/javascript">
 		function saveAsFile(filename, bytesBase64) {
 			var link = document.createElement('a');
@@ -27,9 +30,6 @@
 </head>
 <body>
 <component type="typeof(App)" render-mode="ServerPrerendered"/>
-@* ReSharper disable Html.PathError *@
-<script src="_content/Syncfusion.Blazor.Core/scripts/syncfusion-blazor.min.js" type="text/javascript"></script>
-<script src="_framework/blazor.server.js"></script>
-@* ReSharper enable Html.PathError *@
+
 </body>
 </html>
