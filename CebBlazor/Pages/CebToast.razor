@@ -3,62 +3,63 @@
 @using System.Timers
 @using Microsoft.AspNetCore.Routing.Constraints
 @inject CebTirage tirage
-<SfDialog Width="480" @bind-Visible="@Visible"
-		  ShowCloseIcon="false"
-		  @onclick="() => Visible = !Visible"
-		  ID="DlgToast">
-	<DialogAnimationSettings
-		Effect="@DialogEffect.FadeZoom"
-		Duration="600">
-	</DialogAnimationSettings>
-	<DialogTemplates>
-		<Content>
-			@{
-				string cls;
-				string icn;
-				string rsl;
-				switch (tirage.Status) {
-					case CebStatus.CompteEstBon:
-						cls = "bg-success text-white border border-secondary";
-						icn = "fa-thumbs-up text-black";
-						rsl = "Compte est bon";
-						break;
-					case CebStatus.CompteApproche:
-						icn = "fa-thumbs-down text-wheat";
-						cls = "bg-secondary text-wheat border border-primary";
-						rsl = "Compte approché";
-						break;
-					default:
-						return;
-				}
-
-				<div class="w-100 text-center @cls">
-					<i class="fa-regular @icn"></i>&nbsp;@rsl
-				</div>
-				<div class="text-center text-white bg-gradient">
-					<div>&nbsp;</div>
-					<div>Trouvé(s):&nbsp;@tirage.Found</div>
-					@if (tirage.Diff != 0) {
-						<div>&Eacute;cart:&nbsp;@tirage.Diff</div>
+@if (Visible) {
+	<SfDialog Width="480" 
+	          ShowCloseIcon="false"
+	          @onclick="() => Visible = !Visible"
+	          ID="DlgToast">
+		<DialogAnimationSettings
+			Effect="@DialogEffect.FadeZoom"
+			Duration="600">
+		</DialogAnimationSettings>
+		<DialogTemplates>
+			<Content>
+				@{
+					string cls;
+					string icn;
+					string rsl;
+					switch (tirage.Status) {
+						case CebStatus.CompteEstBon:
+							cls = "bg-success border border-secondary ";
+							icn = "fa-thumbs-up";
+							rsl = "Compte est bon";
+							break;
+						case CebStatus.CompteApproche:
+							icn = "fa-thumbs-down text-wheat";
+							cls = "bg-secondary text-wheat border border-primary";
+							rsl = "Compte approché";
+							break;
+						default:
+							return;
 					}
-					<div>@tirage.Count&nbsp;solutions</div>
-					<div>Durée:&nbsp;@($"{tirage.Duree:N3}")s</div>
-				</div>
-				<div>&nbsp;</div>
-				<div class="w-100 text-center text-white bg-gradient ">
-					@{
-						<div class="separator bg-warning mb-2">&nbsp;</div>
-						foreach (var item in Solution.Operations) {
-							<div>@item</div>
-						}
+
+					<div class="w-100 text-center fs-3 fw-bold @cls">
+						<i class="fa-regular @icn"></i>&nbsp;@rsl
+					</div>
+					<div class="text-center text-white bg-gradient">
 						<div>&nbsp;</div>
-					}
-				</div>
-			}
-		</Content>
-	</DialogTemplates>
-</SfDialog>
-
+						<div>Trouvé:&nbsp;@tirage.Found</div>
+						@if (tirage.Diff != 0) {
+							<div>&Eacute;cart:&nbsp;@tirage.Diff</div>
+						}
+						<div>@tirage.Count&nbsp;solutions</div>
+						<div>Durée:&nbsp;@($"{tirage.Duree:N3}")s</div>
+					</div>
+					<div>&nbsp;</div>
+					<div class="w-100 text-center text-white bg-gradient ">
+						@{
+							<div class="separator bg-warning mb-2">&nbsp;</div>
+							foreach (var item in Solution.Operations) {
+								<div>@item</div>
+							}
+							<div>&nbsp;</div>
+						}
+					</div>
+				}
+			</Content>
+		</DialogTemplates>
+	</SfDialog>
+}
 @code {
 #pragma warning disable CS8618
 	protected Timer timer = new();
@@ -108,6 +109,7 @@
 	}
 
 	public async Task HideAsync() {
+		if (!Visible) return;
 		Visible = false;
 		await InvokeAsync(StateHasChanged);
 	}

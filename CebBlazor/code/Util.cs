@@ -15,11 +15,11 @@ namespace CebBlazor.Code;
 
 public static class Util {
     #pragma warning disable CRR0035
-    public static ValueTask<object> SaveAsAsync(this IJSRuntime js, string filename, byte[] data) {
+    public static ValueTask<object> SaveAsAsync(this IJSRuntime js, string filename, MemoryStream data) {
         return js.InvokeAsync<object>(
             "saveAsFile",
             filename,
-            Convert.ToBase64String(data));
+            Convert.ToBase64String(data.ToArray()));
     }
 
     public static string? SyncfusionVersion => typeof(SfBaseComponent).Assembly.GetName().Version?.ToString();

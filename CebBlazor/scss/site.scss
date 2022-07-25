@@ -6,15 +6,18 @@ $grid-header-border-color: $primary;
 $font-family-sans-serif: 'Colibri', 'Segoe UI', sans-serif;
 $font-family: $font-family-sans-serif;
 $enable-gradients: true;
-
 @import "@fortawesome/fontawesome-free/scss/regular";
 @import "@fortawesome/fontawesome-free/scss/solid";
 @import "@fortawesome/fontawesome-free/scss/brands";
 @import "@fortawesome/fontawesome-free/scss/fontawesome";
+/**/
+
 @import "ej2/bootstrap5-dark";
 @import "bootstrap/scss/bootstrap";
 
-html,
+/*
+    html,
+*/
 body {
     background-color: $primary;
     font-size: $font-size;
