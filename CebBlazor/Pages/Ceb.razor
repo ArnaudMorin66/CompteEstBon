@@ -4,7 +4,6 @@
 @using MongoDB.Bson.Serialization.Conventions
 @using MongoDB.Driver
 @using MongoDB.Driver.Linq
-@using Syncfusion.Blazor.Buttons
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Inputs
 
@@ -16,8 +15,8 @@
 	<img src="favicon.ico" height="32" alt="" class="p-1">
 	<div class="text-center text-uppercase text-danger text-wrap text-truncate ">Compte&nbsp;est&nbsp;bon</div>
 	<div>
-		<input class="btn-check" type="checkbox" id="vueVertical2" @bind-value="VueTable" checked accesskey="v">
-		<label class="btn btn-dark @(VueTable ? "text-white fw-bold" : "text-bg-primary")" for="vueVertical2">
+		<input class="btn-check" type="checkbox" id="vueVertical2" @bind-value="VueTable" checked accesskey="v" >
+		<label class="btn @(VueTable ? "btn-dark text-white":"btn-warning") border border-info border-1" for="vueVertical2" style="width: 7rem">
 			<i class="fa-solid fa-ellipsis@(VueTable ? "":"-vertical")"></i>
 		</label>
 	</div>
@@ -202,20 +201,20 @@
 		</div>
 	</div>
 </div>
-<div class="d-flex align-items-center justify-content-between border border-secondary border-1 rounded p-2 mb-1 text-white">
+<div class="d-flex  border border-secondary border-1 rounded p-2 mb-1 text-white">
 	<div>
 		<input class="btn-check" type="checkbox" id="autoCheckbox" @bind-value="Auto" autocomplete="off" accesskey="a">
-		<label class="btn btn-dark @(Auto ? "text-danger fw-bold" : "text-bg-primary")" for="autoCheckbox">Automatique</label>
+		<label class="btn  @(Auto ? "btn-warning" : "btn-dark text-white") border border-info border-1" for="autoCheckbox">Automatique</label>
 	</div>
 
 
 	<div>
 		<input class="btn-check" type="checkbox" id="mongoChecked" @bind-value="MongoDb" autocomplete="off" accesskey="m">
-		<label class="btn btn-dark @(MongoDb ? "text-danger fw-bold" : "text-bg-primary")" for="mongoChecked">MongoDB</label>
+		<label class="btn  @(MongoDb ? "btn-warning" : "btn-dark text-white") border border-info border-1" for="mongoChecked">MongoDB</label>
 	</div>
 	<div>
-		<input class="btn-check" type="checkbox" id="vueVertical" @bind-value="VueTable" checked accesskey="v">
-		<label class="btn btn-dark @(VueTable ? "text-white fw-bold" : "text-bg-primary")" for="vueVertical">
+		<input class="btn-check" type="checkbox" id="vueVertical" @bind-value="VueTable" autocomplete="off" accesskey="v">
+		<label class="btn @(VueTable ? "btn-prinary text-white" : "btn-warning") border border-info border-1" for="vueVertical" style="width: 7rem">
 			<i class="fa-solid fa-ellipsis@(VueTable ? "":"-vertical")"></i>
 		</label>
 	</div>

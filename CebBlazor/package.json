@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "sass-debug":
-      "sass scss/site.scss:wwwroot/css/debug/site.css -I node_modules/ -I node_modules/@syncfusion/ --source-map -c",
+      "sass scss/site.scss:scss/debug/site.css -I node_modules/ -I node_modules/@syncfusion/ --source-map -c",
     "sass-release":
       "sass scss/site.scss:scss/release/site.min.css --style=compressed -I node_modules/ -I node_modules/@syncfusion/ -c --no-source-map",
     "sass-watch":
