@@ -11,15 +11,27 @@
 @inject CebSetting setting
 @inject CebTirage tirage
 
-<div class="d-flex justify-content-between align-items-center border border-secondary border-1 rounded mb-1 shadow-lg">
+<div class="d-flex justify-content-between align-items-center border border-secondary border-1 rounded m-1 p-1 shadow-lg">
 	<img src="favicon.ico" height="32" alt="" class="p-1">
 	<div class="text-center text-uppercase text-danger text-wrap text-truncate ">Compte&nbsp;est&nbsp;bon</div>
-	<div>
-		<input class="btn-check" type="checkbox" id="vueVertical2" @bind-value="VueTable" checked accesskey="v" >
-		<label class="btn @(VueTable ? "btn-dark text-white":"btn-warning") border border-info border-1" for="vueVertical2" style="width: 7rem">
-			<i class="fa-solid fa-ellipsis@(VueTable ? "":"-vertical")"></i>
-		</label>
-	</div>
+	<nav aria-label="Page navigation" >
+		<ul class="pagination mb-2 pt-2 justify-content-center align-middle">
+			<li>
+				<input class="btn-check" type="checkbox" id="autoCheckbox" @bind-value="Auto" autocomplete="off" accesskey="a">
+				<label class="btn  @(Auto ? "btn-warning" : "btn-dark text-white") border border-info border-1" for="autoCheckbox">Automatique</label>
+			</li>
+			<li>
+				<input class="btn-check" type="checkbox" id="mongoChecked" @bind-value="MongoDb" autocomplete="off" accesskey="m">
+				<label class="btn  @(MongoDb ? "btn-warning" : "btn-dark text-white") border border-info border-1" for="mongoChecked">MongoDB</label>
+			</li>
+			<li>
+				<input class="btn-check" type="checkbox" id="vueVertical" @bind-value="VueTable" autocomplete="off" accesskey="v">
+				<label class="btn @(VueTable ? "btn-prinary text-white" : "btn-warning") border border-info border-1" for="vueVertical" style="width: 7rem">
+					<i class="fa-solid fa-ellipsis@(VueTable ? "":"-vertical")"></i>
+				</label>
+			</li>
+		</ul>
+	</nav>
 </div>
 <div class="row" g-0>
 	<div class="col text-center">
@@ -201,26 +213,24 @@
 		</div>
 	</div>
 </div>
-<div class="d-flex  border border-secondary border-1 rounded p-2 mb-1 text-white">
-	<div>
-		<input class="btn-check" type="checkbox" id="autoCheckbox" @bind-value="Auto" autocomplete="off" accesskey="a">
-		<label class="btn  @(Auto ? "btn-warning" : "btn-dark text-white") border border-info border-1" for="autoCheckbox">Automatique</label>
-	</div>
-
-
-	<div>
-		<input class="btn-check" type="checkbox" id="mongoChecked" @bind-value="MongoDb" autocomplete="off" accesskey="m">
-		<label class="btn  @(MongoDb ? "btn-warning" : "btn-dark text-white") border border-info border-1" for="mongoChecked">MongoDB</label>
-	</div>
-	<div>
-		<input class="btn-check" type="checkbox" id="vueVertical" @bind-value="VueTable" autocomplete="off" accesskey="v">
-		<label class="btn @(VueTable ? "btn-prinary text-white" : "btn-warning") border border-info border-1" for="vueVertical" style="width: 7rem">
-			<i class="fa-solid fa-ellipsis@(VueTable ? "":"-vertical")"></i>
-		</label>
-	</div>
-
-
-</div>
+@*<nav aria-label="Page navigation" class="border border-secondary border-1 rounded text-white">
+	<ul class="pagination mb-2 pt-2 justify-content-center align-middle">
+		<li>
+			<input class="btn-check" type="checkbox" id="autoCheckbox" @bind-value="Auto" autocomplete="off" accesskey="a">
+			<label class="btn  @(Auto ? "btn-warning" : "btn-dark text-white") border border-info border-1" for="autoCheckbox">Automatique</label>
+		</li>
+		<li>
+			<input class="btn-check" type="checkbox" id="mongoChecked" @bind-value="MongoDb" autocomplete="off" accesskey="m">
+			<label class="btn  @(MongoDb ? "btn-warning" : "btn-dark text-white") border border-info border-1" for="mongoChecked">MongoDB</label>
+		</li>
+		<li>
+			<input class="btn-check" type="checkbox" id="vueVertical" @bind-value="VueTable" autocomplete="off" accesskey="v">
+			<label class="btn @(VueTable ? "btn-prinary text-white" : "btn-warning") border border-info border-1" for="vueVertical" style="width: 7rem">
+				<i class="fa-solid fa-ellipsis@(VueTable ? "":"-vertical")"></i>
+			</label>
+		</li>
+	</ul>
+</nav>*@
 <CebFooter></CebFooter>
 <CebToast @ref="toast" DueTime="10000"></CebToast>
 
@@ -298,7 +308,7 @@
 			ConventionRegistry.Register("EnumStringConvention",
 				new ConventionPack {
 					new EnumRepresentationConvention(BsonType.String)
-						},
+							},
 				_ => true);
 			var clientSettings = MongoClientSettings.FromConnectionString(setting.MongoDbConnectionString);
 			clientSettings.LinqProvider = LinqProvider.V3;
@@ -310,7 +320,7 @@
 			await cl.InsertOneAsync(
 				new BsonDocument(new Dictionary<string, object> {
 					{ "_id", new { lang = "blazor", domain = Environment.GetEnvironmentVariable("USERDOMAIN"), date = DateTime.UtcNow }.ToBsonDocument() }
-						})
+							})
 					.AddRange(tirage.Data.ToBsonDocument()));
 		} catch (Exception e) {
 			Console.WriteLine(e);

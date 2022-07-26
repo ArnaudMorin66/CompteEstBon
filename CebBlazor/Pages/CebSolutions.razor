@@ -25,7 +25,6 @@
 		</GridTemplates>
 		@if (VueTable) {
 			<GridColumns>
-				
 				@for (var i = 0; i < 5; i++) {
 					var j = i;
 					<GridColumn TextAlign="TextAlign.Center">
@@ -54,10 +53,9 @@
 	</SfGrid>
 </div>
 @code {
-	
 #pragma warning disable CS8618
 	[Parameter]
-	public bool VueTable { get; set; } = true;
+	public bool VueTable { get; set; }
 
 	[Parameter]
 	public EventCallback<CebBase> ShowDetail { get; set; }
