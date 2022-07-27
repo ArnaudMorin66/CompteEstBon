@@ -2,11 +2,13 @@
 @using Syncfusion.Blazor.Grids
 @using Syncfusion.Blazor.Spinner
 @inject CebTirage tirage
-<div class="border border-secondary border-1 rounded bg-primary mb-1 mt-1" style="height: 31rem">
+<div class="border border-secondary border-1 rounded bg-primary mb-1 mt-1"  style="height: 31rem">
 	<SfGrid AllowSelection="true"
 	        DataSource="tirage.Solutions"
 	        EnableAltRow="true"
 	        GridLines="GridLine.Horizontal"
+	        Height="100%"
+			Width="100%"
 	        ID="solutions"
 	        TValue="CebBase">
 		<GridEvents

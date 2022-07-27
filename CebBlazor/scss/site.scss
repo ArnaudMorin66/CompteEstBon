@@ -3,23 +3,25 @@ $font-size: 1rem;
 $enable-shadows: true;
 $enable-responsive-font-sizes: true;
 $grid-header-border-color: $primary;
-$font-family-sans-serif: 'Colibri', 'Segoe UI', sans-serif;
-$font-family: $font-family-sans-serif;
+// $font-family-sans-serif: 'Segoe UI', 'Colibri', sans-serif;
+// $font-family: $font-family-sans-serif;
 $enable-gradients: true;
+
 @import "@fortawesome/fontawesome-free/scss/regular";
 @import "@fortawesome/fontawesome-free/scss/solid";
 @import "@fortawesome/fontawesome-free/scss/brands";
 @import "@fortawesome/fontawesome-free/scss/fontawesome";
-/**/
 
 @import "ej2/bootstrap5-dark";
 @import "bootstrap/scss/bootstrap";
+
+/**/
 
 /*
     html,
 */
 body {
-    background-color: $primary;
+    background: $primary;
     font-size: $font-size;
 }
 
@@ -35,7 +37,7 @@ body {
         text-align: center;
         // color: white;
         font-size: $font-size;
-        height: 30rem;
+        //height: 30rem;
     }
 
     .e-emptyrow {
