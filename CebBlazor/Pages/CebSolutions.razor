@@ -2,7 +2,7 @@
 @using Syncfusion.Blazor.Grids
 @using Syncfusion.Blazor.Spinner
 @inject CebTirage tirage
-<div class="border border-secondary border-1 rounded bg-primary mb-1 mt-1"  style="height: 31rem">
+<div class="border border-secondary border-1 rounded bg-primary mb-1 mt-1" style="height: 28rem;"  >
 	<SfGrid AllowSelection="true"
 	        DataSource="tirage.Solutions"
 	        EnableAltRow="true"
@@ -34,7 +34,7 @@
 							@{
 								var op = ((CebBase)data).Operations;
 								if (j < op.Count)
-									@op[j]
+										@op[j]
 							}
 						</Template>
 					</GridColumn>

@@ -14,7 +14,7 @@
 <div class="d-flex justify-content-between align-items-center border border-secondary border-1 rounded m-1 p-1 shadow-lg">
 	<img src="favicon.ico" height="32" alt="" class="p-1">
 	<div class="text-center text-uppercase text-danger text-wrap text-truncate ">Compte&nbsp;est&nbsp;bon</div>
-	<nav aria-label="Page navigation" >
+	<nav aria-label="Page navigation">
 		<ul class="pagination mb-2 pt-2 justify-content-center align-middle">
 			<li>
 				<input class="btn-check" type="checkbox" id="autoCheckbox" @bind-value="Auto" autocomplete="off" accesskey="a">
@@ -33,10 +33,10 @@
 		</ul>
 	</nav>
 </div>
-<div class="row" g-0>
-	<div class="col text-center">
+<div class="row">
+	<div class="col-md">
 		<div class="card text-center border-secondary m-1">
-			<div class="card-header bg-primary bg-gradient text-white">
+			<div class="card-text bg-primary bg-gradient text-white">
 				<div class="fa-regular">
 					<i class="fa-1"></i>
 					<i class="e-icons e-bullet-1 e-small"></i>
@@ -45,7 +45,7 @@
 					<i class="fa-3"></i>
 				</div>
 			</div>
-			<div class="card-body">
+			<div class="card-text p-2">
 				<div class="row">
 					@foreach (var plq in tirage.Plaques) {
 						<div class="col-md-2">
@@ -64,9 +64,9 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-2 m-1 ">
-		<div class="card text-center border border-secondary">
-			<div class="card-header bg-primary bg-gradient text-white">
+	<div class="col-md-2 text-center">
+		<div class="card text-center border border-secondary m-1">
+			<div class="card-text bg-primary bg-gradient text-white">
 				<div class="fa-regular">
 					<i class="e-icons e-bullet-1 e-small"></i>
 					<span>&nbsp;</span>
@@ -77,7 +77,7 @@
 					<i class="e-icons e-bullet-1 e-small"></i>
 				</div>
 			</div>
-			<div class="card-body">
+			<div class="card-text p-2">
 				<SfNumericTextBox @bind-Value="tirage.Search"
 								  Max="999"
 								  Min="100"
@@ -89,89 +89,94 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-3 m-2">
-		<div class="card text-center border-secondary bg-primary p-2">
-			<div class="btn-group w-100 border border-secondary" role="group" aria-label="resolve">
-				@switch (tirage.Status) {
-					case CebStatus.EnCours:
-						<button class="btn btn-info disabled cursor-wait" role="spinbutton" type="button">
-							<i class="fa-solid e-icons e-repeat fa-spin-pulse"></i>
-						</button>
-						break;
-					case CebStatus.CompteEstBon:
-						<button class="btn btn-success"
-						@onclick="@ClearAsync"
-						title="Initialisation des résultats"
-						role="button"
-						type="button"
-						accesskey="i">
-							<i class="fa-regular fa-thumbs-up"></i>
-							<span class="animation">Compte&nbsp;est&nbsp;bon</span>
-						</button>
-						break;
-					case CebStatus.CompteApproche:
-						<button class="btn btn-secondary text-wheat"
-						role="button"
-						type="button"
-						title="Initialisation des résultats"
-						@onclick="ClearAsync"
-						accesskey="i">
-							<i class="fa-regular fa-thumbs-down"></i>
-							<span class="animation">Compte&nbsp;approch&eacute;</span>
-						</button>
-						break;
-					case CebStatus.Invalide:
-						<button class="btn btn-danger"
-						role="button"
-						type="button"
-						title="Tirage aléatoire"
-						@onclick="RandomAsync"
-						accesskey="i">
-							<i class="fa-solid fa-circle-exclamation fa-beat"></i>
-						</button>
-						break;
-					default:
-						<button id="resoudre"
-						title="Résolution du tirage"
-						class="btn btn-primary"
-						role="button"
-						@onclick="ResolveAsync"
-						type="button"
-						accesskey="i">
-							<i class="e-icons e-calculated-member" Title="Résoudre le compte"></i>
-						</button>
-						break;
-				}
-			</div>
-			<div class="d-grid d-flex gap-1 justify-content-between" role="group" aria-label="Action">
-				<button id="hasard"
-						class="btn btn-primary border border-secondary w-100 @(tirage.Status == CebStatus.EnCours ? "disabled" : "")"
-						accesskey="h"
-						title="Tirage aléatoire"
-						role="button"
-						type="button"
-						@onclick="RandomAsync">
-					<i class="fa-solid fa-shuffle"></i>
-				</button>
-				<button id="Excel"
-						title="Export vers excel"
-						class="btn btn-primary border border-secondary w-25 @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon ? "" : "disabled")"
-						role="button"
-						@onclick="@(async ()=> await ExportAsync(TypeExport.Excel))"
-						type="button"
-						accesskey="x">
-					<i class="fa-regular fa-file-excel"></i>
-				</button>
-				<button id="Word"
-						title="Export vers Word"
-						class="btn btn-primary border border-secondary w-25  @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon ? "" : "disabled")"
-						role="button"
-						@onclick="@(async ()=> await ExportAsync(TypeExport.Word))"
-						type="button"
-						accesskey="w">
-					<i class="fa-regular fa-file-word"></i>
-				</button>
-			</div>
+</div>
+
+<div class="border border-secondary border-1 rounded m-1 p-1 shadow-lg">
+	<div class="row text-center border-secondary border-1 p-2">
+		<div class="col " aria-label="resolve">
+			@switch (tirage.Status) {
+				case CebStatus.EnCours:
+					<button class="btn btn-info disabled cursor-wait w-100" role="spinbutton" type="button">
+						<i class="fa-solid e-icons e-repeat fa-spin-pulse"></i>
+					</button>
+					break;
+				case CebStatus.CompteEstBon:
+					<button class="btn btn-success w-100"
+					@onclick="@ClearAsync"
+					title="Initialisation des résultats"
+					role="button"
+					type="button"
+					accesskey="i">
+						<i class="fa-regular fa-thumbs-up"></i>
+						<span class="animation">Compte&nbsp;est&nbsp;bon</span>
+					</button>
+					break;
+				case CebStatus.CompteApproche:
+					<button class="btn btn-secondary text-wheat w-100"
+					role="button"
+					type="button"
+					title="Initialisation des résultats"
+					@onclick="ClearAsync"
+					accesskey="i">
+						<i class="fa-regular fa-thumbs-down"></i>
+						<span class="animation">Compte&nbsp;approch&eacute;</span>
+					</button>
+					break;
+				case CebStatus.Invalide:
+					<button class="btn btn-danger w-100"
+					role="button"
+					type="button"
+					title="Tirage aléatoire"
+					@onclick="RandomAsync"
+					accesskey="i">
+						<i class="fa-solid fa-circle-exclamation fa-beat"></i>
+					</button>
+					break;
+				default:
+					<button id="resoudre"
+					title="Résolution du tirage"
+					class="btn btn-primary w-100"
+					role="button"
+					@onclick="ResolveAsync"
+					type="button"
+					accesskey="i">
+						<i class="e-icons e-calculated-member" Title="Résoudre le compte"></i>
+					</button>
+					break;
+			}
+		</div>
+		<div class="col-2">
+			<button id="hasard"
+					class="btn btn-primary border border-secondary w-100 @(tirage.Status == CebStatus.EnCours ? "disabled" : "")"
+					accesskey="h"
+					title="Tirage aléatoire"
+					role="button"
+					type="button"
+					@onclick="RandomAsync">
+				<i class="fa-solid fa-shuffle"></i>
+			</button>
+		</div>
+		<div class="col-1">
+			<button id="Excel"
+					title="Export vers excel"
+					class="btn btn-primary border w-100 border-secondary @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon ? "" : "disabled")"
+					role="button"
+					@onclick="@(async ()=> await ExportAsync(TypeExport.Excel))"
+					type="button"
+					accesskey="x">
+				<i class="fa-regular fa-file-excel"></i>
+			</button>
+		</div>
+		<div class="col-1">
+			<button id="Word"
+					title="Export vers Word"
+					class="btn btn-primary border border-secondary w-100  @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon ? "" : "disabled")"
+					role="button"
+					@onclick="@(async ()=> await ExportAsync(TypeExport.Word))"
+					type="button"
+					accesskey="w">
+				<i class="fa-regular fa-file-word"></i>
+			</button>
 		</div>
 	</div>
 </div>
@@ -304,7 +309,7 @@
 			ConventionRegistry.Register("EnumStringConvention",
 				new ConventionPack {
 					new EnumRepresentationConvention(BsonType.String)
-							},
+									},
 				_ => true);
 			var clientSettings = MongoClientSettings.FromConnectionString(setting.MongoDbConnectionString);
 			clientSettings.LinqProvider = LinqProvider.V3;
@@ -316,7 +321,7 @@
 			await cl.InsertOneAsync(
 				new BsonDocument(new Dictionary<string, object> {
 					{ "_id", new { lang = "blazor", domain = Environment.GetEnvironmentVariable("USERDOMAIN"), date = DateTime.UtcNow }.ToBsonDocument() }
-							})
+									})
 					.AddRange(tirage.Data.ToBsonDocument()));
 		} catch (Exception e) {
 			Console.WriteLine(e);
