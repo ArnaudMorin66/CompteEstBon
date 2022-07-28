@@ -68,12 +68,12 @@
 	</div>
 </div>
 
-<div class="border border-secondary border-1 rounded m-1 p-1 shadow-lg">
-	<div class="row text-center border-secondary border-1 p-2 g-0">
+<div class="border border-secondary border-1 rounded p-1 shadow-lg">
+	<div class="row text-center border-secondary border-1 g-0">
 		<div class="col" aria-label="resolve">
 			@switch (tirage.Status) {
 				case CebStatus.EnCours:
-					<button class="btn btn-info disabled cursor-wait w-100" role="spinbutton" type="button">
+					<button class="btn btn-info disabled cursor-wait w-100" role="button" type="button">
 						<i class="fa-solid e-icons e-repeat fa-spin-pulse"></i>
 					</button>
 					break;
@@ -157,15 +157,15 @@
 		</div>
 		<div class="col-md-3">
 			<div class="btn-group w-100" role="group">
-				<input class="btn-check" type="checkbox" id="autoCheckbox" @bind-value="Auto" autocomplete="off" accesskey="a">
+				<input class="btn-check" type="checkbox" id="autoCheckbox" @bind-value="Auto" accesskey="a">
 				<label class="btn  border   @(Auto ? "btn-warning border-dark" : "btn-dark border-warning text-white")  border-1" for="autoCheckbox">Automatique</label>
 
-				<input class="btn-check" type="checkbox" id="mongoChecked" @bind-value="MongoDb" autocomplete="off" accesskey="m">
+				<input class="btn-check" type="checkbox" id="mongoChecked" @bind-value="MongoDb" accesskey="m">
 				<label class="btn border   @(MongoDb ? "btn-warning border-dark" : "btn-dark border-warning text-white")  border-1" for="mongoChecked">MongoDB</label>
 				
-				<input class="btn-check" type="checkbox" id="vueVertical" @bind-value="VueTable" autocomplete="off" accesskey="v">
-				<label class="btn border  @(VueTable ? "border-warning btn-dark text-white" : "border-dark btn-warning")  border-1" for="vueVertical" style="width: 7rem">
-					<i class="fa-solid fa-ellipsis@(VueTable ? "" : "-vertical")"></i>
+				<input class="btn-check" type="checkbox" id="vueVertical" @bind-value="VueTable" checked accesskey="v">
+				<label class="btn border  @(VueTable ?   "border-warning btn-dark text-white" : "border-dark btn-warning")  border-1" for="vueVertical" style="width: 7rem">
+					<i class="fa-solid @(VueTable ? "fa-ellipsis" : "fa-ellipsis-vertical")"></i>
 				</label>
 			</div>
 		</div>
@@ -209,9 +209,8 @@
 <CebFooter></CebFooter>
 <CebToast @ref="toast" DueTime="10000"></CebToast>
 @code {
-
 	public bool VueTable { get; set; }
-
+	
 	private bool _auto;
 
 	bool Auto {
@@ -244,7 +243,8 @@
 		};
 		Auto = setting.AutoCalcul;
 		MongoDb = setting.MongoDb;
-		VueTable = true;
+		VueTable =true;
+		await InvokeAsync(StateHasChanged);
 	}
 
 	async Task RandomAsync() {

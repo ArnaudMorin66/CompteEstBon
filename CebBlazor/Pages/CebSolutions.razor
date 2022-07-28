@@ -1,6 +1,8 @@
 ﻿@using CompteEstBon
+@using Syncfusion.Blazor.Buttons
 @using Syncfusion.Blazor.Grids
 @using Syncfusion.Blazor.Spinner
+@using SelectionType = Syncfusion.Blazor.Grids.SelectionType
 @inject CebTirage tirage
 <div class="border border-secondary border-1 rounded bg-primary mb-1 mt-1" style="height: 32rem;"  >
 	<SfGrid AllowSelection="true"
@@ -55,10 +57,19 @@
 	</SfGrid>
 </div>
 @code {
+	
 #pragma warning disable CS8618
 	[Parameter]
 	public bool VueTable { get; set; }
 
+
+
 	[Parameter]
 	public EventCallback<CebBase> ShowDetail { get; set; }
+
+	protected override void OnInitialized() {
+		VueTable = true;
+		base.OnInitialized();
+	}
+
 }
