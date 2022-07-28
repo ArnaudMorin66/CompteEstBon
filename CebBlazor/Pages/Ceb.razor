@@ -10,30 +10,7 @@
 @inject IJSRuntime js
 @inject CebSetting setting
 @inject CebTirage tirage
-
-<div class="d-flex justify-content-between align-items-center border border-secondary border-1 rounded m-1 p-1 shadow-lg">
-	<img src="favicon.ico" height="32" alt="" class="p-1">
-	<div class="text-center text-uppercase text-danger text-wrap text-truncate ">Compte&nbsp;est&nbsp;bon</div>
-	<nav aria-label="Page navigation">
-		<ul class="pagination mb-2 pt-2 justify-content-center align-middle">
-			<li>
-				<input class="btn-check" type="checkbox" id="autoCheckbox" @bind-value="Auto" autocomplete="off" accesskey="a">
-				<label class="btn  border  @(Auto ? "btn-warning border-dark" : "btn-dark border-warning text-white")  border-1" for="autoCheckbox">Automatique</label>
-			</li>
-			<li>
-				<input class="btn-check" type="checkbox" id="mongoChecked" @bind-value="MongoDb" autocomplete="off" accesskey="m">
-				<label class="btn border  @(MongoDb ? "btn-warning border-dark" : "btn-dark border-warning text-white")  border-1" for="mongoChecked">MongoDB</label>
-			</li>
-			<li>
-				<input class="btn-check" type="checkbox" id="vueVertical" @bind-value="VueTable" autocomplete="off" accesskey="v">
-				<label class="btn border @(VueTable ? "border-warning btn-dark text-white" : "border-dark btn-warning")  border-1" for="vueVertical" style="width: 7rem">
-					<i class="fa-solid fa-ellipsis@(VueTable ? "":"-vertical")"></i>
-				</label>
-			</li>
-		</ul>
-	</nav>
-</div>
-<div class="row">
+<div class="row g-0">
 	<div class="col-md">
 		<div class="card text-center border-secondary m-1">
 			<div class="card-text bg-primary bg-gradient text-white">
@@ -46,7 +23,7 @@
 				</div>
 			</div>
 			<div class="card-text p-2">
-				<div class="row">
+				<div class="row g-0">
 					@foreach (var plq in tirage.Plaques) {
 						<div class="col-md-2">
 							<SfComboBox TItem="int"
@@ -92,8 +69,8 @@
 </div>
 
 <div class="border border-secondary border-1 rounded m-1 p-1 shadow-lg">
-	<div class="row text-center border-secondary border-1 p-2">
-		<div class="col " aria-label="resolve">
+	<div class="row text-center border-secondary border-1 p-2 g-0">
+		<div class="col" aria-label="resolve">
 			@switch (tirage.Status) {
 				case CebStatus.EnCours:
 					<button class="btn btn-info disabled cursor-wait w-100" role="spinbutton" type="button">
@@ -101,7 +78,7 @@
 					</button>
 					break;
 				case CebStatus.CompteEstBon:
-					<button class="btn btn-success w-100"
+					<button class="btn btn-success border border-secondary w-100"
 					@onclick="@ClearAsync"
 					title="Initialisation des résultats"
 					role="button"
@@ -112,7 +89,7 @@
 					</button>
 					break;
 				case CebStatus.CompteApproche:
-					<button class="btn btn-secondary text-wheat w-100"
+					<button class="btn btn-secondary text-wheat border border-secondary w-100"
 					role="button"
 					type="button"
 					title="Initialisation des résultats"
@@ -123,7 +100,7 @@
 					</button>
 					break;
 				case CebStatus.Invalide:
-					<button class="btn btn-danger w-100"
+					<button class="btn btn-danger border border-secondary w-100"
 					role="button"
 					type="button"
 					title="Tirage aléatoire"
@@ -135,7 +112,7 @@
 				default:
 					<button id="resoudre"
 					title="Résolution du tirage"
-					class="btn btn-primary w-100"
+					class="btn btn-primary border border-secondary w-100"
 					role="button"
 					@onclick="ResolveAsync"
 					type="button"
@@ -145,7 +122,7 @@
 					break;
 			}
 		</div>
-		<div class="col-2">
+		<div class="col-md-2">
 			<button id="hasard"
 					class="btn btn-primary border border-secondary w-100 @(tirage.Status == CebStatus.EnCours ? "disabled" : "")"
 					accesskey="h"
@@ -156,7 +133,7 @@
 				<i class="fa-solid fa-shuffle"></i>
 			</button>
 		</div>
-		<div class="col-1">
+		<div class="col-md-1">
 			<button id="Excel"
 					title="Export vers excel"
 					class="btn btn-primary border w-100 border-secondary @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon ? "" : "disabled")"
@@ -167,7 +144,7 @@
 				<i class="fa-regular fa-file-excel"></i>
 			</button>
 		</div>
-		<div class="col-1">
+		<div class="col-md-1">
 			<button id="Word"
 					title="Export vers Word"
 					class="btn btn-primary border border-secondary w-100  @(tirage.Status is CebStatus.CompteApproche or CebStatus.CompteEstBon ? "" : "disabled")"
@@ -178,9 +155,23 @@
 				<i class="fa-regular fa-file-word"></i>
 			</button>
 		</div>
+		<div class="col-md-3">
+			<div class="btn-group w-100" role="group">
+				<input class="btn-check" type="checkbox" id="autoCheckbox" @bind-value="Auto" autocomplete="off" accesskey="a">
+				<label class="btn  border   @(Auto ? "btn-warning border-dark" : "btn-dark border-warning text-white")  border-1" for="autoCheckbox">Automatique</label>
+
+				<input class="btn-check" type="checkbox" id="mongoChecked" @bind-value="MongoDb" autocomplete="off" accesskey="m">
+				<label class="btn border   @(MongoDb ? "btn-warning border-dark" : "btn-dark border-warning text-white")  border-1" for="mongoChecked">MongoDB</label>
+				
+				<input class="btn-check" type="checkbox" id="vueVertical" @bind-value="VueTable" autocomplete="off" accesskey="v">
+				<label class="btn border  @(VueTable ? "border-warning btn-dark text-white" : "border-dark btn-warning")  border-1" for="vueVertical" style="width: 7rem">
+					<i class="fa-solid fa-ellipsis@(VueTable ? "" : "-vertical")"></i>
+				</label>
+			</div>
+		</div>
 	</div>
 </div>
-<CebSolutions VueTable="VueTable" ShowDetail="async (solution) => await toast!.ShowAsync(solution)"></CebSolutions>
+<CebSolutions VueTable="VueTable" ShowDetail="async (solution) => await toast!.ShowAsync(solution, false)"></CebSolutions>
 <div class="card text-center bg-primary bg-gradient border-secondary mt-1 mb-1">
 	<div class="card-header">
 		<div class="'text-center'">
@@ -214,27 +205,9 @@
 		</div>
 	</div>
 </div>
-@*<nav aria-label="Page navigation" class="border border-secondary border-1 rounded text-white">
-	<ul class="pagination mb-2 pt-2 justify-content-center align-middle">
-		<li>
-			<input class="btn-check" type="checkbox" id="autoCheckbox" @bind-value="Auto" autocomplete="off" accesskey="a">
-			<label class="btn  @(Auto ? "btn-warning" : "btn-dark text-white") border border-info border-1" for="autoCheckbox">Automatique</label>
-		</li>
-		<li>
-			<input class="btn-check" type="checkbox" id="mongoChecked" @bind-value="MongoDb" autocomplete="off" accesskey="m">
-			<label class="btn  @(MongoDb ? "btn-warning" : "btn-dark text-white") border border-info border-1" for="mongoChecked">MongoDB</label>
-		</li>
-		<li>
-			<input class="btn-check" type="checkbox" id="vueVertical" @bind-value="VueTable" autocomplete="off" accesskey="v">
-			<label class="btn @(VueTable ? "btn-prinary text-white" : "btn-warning") border border-info border-1" for="vueVertical" style="width: 7rem">
-				<i class="fa-solid fa-ellipsis@(VueTable ? "":"-vertical")"></i>
-			</label>
-		</li>
-	</ul>
-</nav>*@
+
 <CebFooter></CebFooter>
 <CebToast @ref="toast" DueTime="10000"></CebToast>
-
 @code {
 
 	public bool VueTable { get; set; }
@@ -309,7 +282,7 @@
 			ConventionRegistry.Register("EnumStringConvention",
 				new ConventionPack {
 					new EnumRepresentationConvention(BsonType.String)
-									},
+											},
 				_ => true);
 			var clientSettings = MongoClientSettings.FromConnectionString(setting.MongoDbConnectionString);
 			clientSettings.LinqProvider = LinqProvider.V3;
@@ -321,7 +294,7 @@
 			await cl.InsertOneAsync(
 				new BsonDocument(new Dictionary<string, object> {
 					{ "_id", new { lang = "blazor", domain = Environment.GetEnvironmentVariable("USERDOMAIN"), date = DateTime.UtcNow }.ToBsonDocument() }
-									})
+											})
 					.AddRange(tirage.Data.ToBsonDocument()));
 		} catch (Exception e) {
 			Console.WriteLine(e);

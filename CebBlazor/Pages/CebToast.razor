@@ -6,7 +6,7 @@
 @if (Visible) {
 	<SfDialog Width="480" 
 	          ShowCloseIcon="false"
-	          @onclick="() => Visible = !Visible"
+	          @onclick="() => Visible = false"
 	          ID="DlgToast">
 		<DialogAnimationSettings
 			Effect="@DialogEffect.FadeZoom"
@@ -63,6 +63,7 @@
 @code {
 #pragma warning disable CS8618
 	protected Timer timer = new();
+	protected bool WithTimer { get; set; }
 	private bool _visible;
 
 	public bool Visible {
@@ -70,9 +71,11 @@
 		set {
 			if (value == _visible) return;
 			_visible = value;
-			timer.Stop();
-			if (_visible) {
-				timer.Start();
+			if (WithTimer) {
+				timer.Stop();
+				if (_visible) {
+					timer.Start();
+				}
 			}
 			InvokeAsync(StateHasChanged);
 		}
@@ -98,11 +101,12 @@
 		timer.Elapsed += (_, _) => Visible = false;
 	}
 
-	public async Task ShowAsync(CebBase ligne) {
+	public async Task ShowAsync(CebBase ligne, bool withTimer = true) {
 #pragma warning disable CS8601
 		if (Visible) {
 			await InvokeAsync(() => Visible = false);
 		}
+		WithTimer = withTimer;
 		Solution = ligne;
 		Visible = true;
 		await InvokeAsync(StateHasChanged);

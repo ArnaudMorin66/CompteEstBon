@@ -12,8 +12,8 @@
       "sass scss/site.scss:wwwroot/css/site.min.css --style=compressed -I node_modules/ -I node_modules/@syncfusion/ -c --no-source-map -w"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "6.1.1",
-    "@syncfusion/ej2": "20.2.39",
+    "@fortawesome/fontawesome-free": "6.1.2" ,
+    "@syncfusion/ej2": "20.2.40",
     "bootstrap": "5.2.0"
   },
   "devDependencies": {
