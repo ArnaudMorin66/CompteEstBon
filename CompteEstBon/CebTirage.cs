@@ -9,7 +9,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Text.Json.Serialization;
 using static System.Math;
 
 #endregion using
@@ -25,15 +24,12 @@ namespace CompteEstBon {
     public sealed class CebTirage : INotifyPropertyChanged {
         private static readonly Random Rnd = System.Random.Shared;
         private int _search;
-        private readonly List<CebBase> _solutions = new();
+        private readonly List<CebBase> _solutions = new(6);
+        private readonly int _nbPlaques;
 
-
-        public CebTirage() {
-            for(var i = 0; i < 6; i++) {
-                CebPlaque p = new();
-                p.PropertyChanging += PlaqueUpdated;
-                Plaques[i] = p;
-            }
+        public CebTirage(int nbPlaques=6) {
+            _nbPlaques = nbPlaques;
+            Plaques = new List<CebPlaque>();
             Random();
         }
 
@@ -44,9 +40,7 @@ namespace CompteEstBon {
         /// <param name="search"></param>
         /// <param name="plaques"></param>
         public CebTirage(int search, params int[] plaques) : this() {
-            if(plaques.Length < 6 || search == -1) {
-                Random();
-            } else {
+            if(plaques.Length >= 6 && search >= 0) {
                 Status = CebStatus.EnCours;
                 foreach (var (p, i) in plaques.WithIndex().Where(elt => elt.Item2 < 6)) Plaques[i].Value = p;
                 Search = search;
@@ -117,7 +111,7 @@ namespace CompteEstBon {
             Diff = int.MaxValue;
             Found.Reset();
             Valid();
-            NotifyPropertyChanged(nameof(Clear));
+            NotifyPropertyChanged();
             return Data;
         }
 
@@ -128,11 +122,14 @@ namespace CompteEstBon {
         /// </summary>
         public CebData Random() {
             Status = CebStatus.Indefini;
+            Plaques.Clear();
 
             var liste = new List<int>(CebPlaque.AllPlaques);
-            foreach(var p in Plaques) {
+            for (;Plaques.Count < _nbPlaques;) {
                 var n = Rnd.Next(0, liste.Count);
-                p.Value = liste[n];
+                var p = new CebPlaque(liste[n]);
+                p.PropertyChanging += PlaqueUpdated;
+                Plaques.Add(p);
                 liste.RemoveAt(n);
             }
 
@@ -160,7 +157,7 @@ namespace CompteEstBon {
                 Watch.Stop();
             }
 
-            NotifyPropertyChanged(nameof(Resolve));
+            NotifyPropertyChanged();
             return Status;
         }
 
@@ -239,7 +236,7 @@ namespace CompteEstBon {
         /// </summary>
         public CebFind Found { get; } = new();
 
-        public CebPlaque[] Plaques { get; } = new CebPlaque[6];
+        public List<CebPlaque> Plaques { get; private set; }
 
         /// <summary>
         /// nombre � chercher

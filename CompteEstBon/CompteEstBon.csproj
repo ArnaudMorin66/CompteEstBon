@@ -10,8 +10,8 @@
     <LangVersion>preview</LangVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
-    <AssemblyVersion>4.2.13.14572</AssemblyVersion>
-    <FileVersion>4.2.13.14572</FileVersion>
+    <AssemblyVersion>4.2.14.13475</AssemblyVersion>
+    <FileVersion>4.2.14.13476</FileVersion>
     <Version>4.2.2.20090</Version>
   </PropertyGroup>
 

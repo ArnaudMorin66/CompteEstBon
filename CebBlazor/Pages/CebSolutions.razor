@@ -4,60 +4,58 @@
 @using Syncfusion.Blazor.Spinner
 @using SelectionType = Syncfusion.Blazor.Grids.SelectionType
 @inject CebTirage tirage
-<div class="border border-secondary border-1 rounded bg-primary mb-1 mt-1" style="height: 32rem;"  >
+<div class="border border-secondary border-1 rounded bg-primary mb-1 mt-1" style="height: 32rem;">
 	<SfGrid AllowSelection="true"
-	        DataSource="tirage.Solutions"
-	        EnableAltRow="true"
-	        GridLines="GridLine.Horizontal"
-	        Height="100%"
+			DataSource="tirage.Solutions"
+			EnableAltRow="true"
+			GridLines="GridLine.Horizontal"
+			Height="100%"
 			Width="100%"
-	        ID="solutions"
-	        TValue="CebBase">
-		<GridEvents
-			OnRecordClick="async (data) => await ShowDetail.InvokeAsync(data.RowData)"
+			ID="solutions"
 			TValue="CebBase">
+		<GridEvents OnRecordClick="async (data) => await ShowDetail.InvokeAsync(data.RowData)"
+					TValue="CebBase">
 		</GridEvents>
-		<GridSelectionSettings CellSelectionMode="CellSelectionMode.BoxWithBorder" Type="SelectionType.Single" ></GridSelectionSettings>
+		<GridSelectionSettings CellSelectionMode="CellSelectionMode.BoxWithBorder" Type="SelectionType.Single"></GridSelectionSettings>
 		<GridTemplates>
 			<EmptyRecordTemplate>
 				@if (tirage.Status == CebStatus.EnCours) {
 					<div class="position-absolute top-50 start-50 translate-middle">
-						<SfSpinner Visible=true Type="@SpinnerType.Fluent" Size="100"/>
+						<SfSpinner Visible=true Type="@SpinnerType.Fluent" Size="100" />
 					</div>
 				}
 			</EmptyRecordTemplate>
 		</GridTemplates>
-		@if (VueTable) {
-			<GridColumns>
+		<GridColumns>
+			@if (VueTable) {
 				@for (var i = 0; i < 5; i++) {
 					var j = i;
 					<GridColumn TextAlign="TextAlign.Center">
 						<Template Context="data">
 							@{
 								var op = ((CebBase)data).Operations;
-								if (j < op.Count)
-										@op[j]
+								if (j < op.Count) @op[j]
 							}
 						</Template>
 					</GridColumn>
 				}
-			</GridColumns>
-		}
-		else {
-			<GridColumns>
+			} else {
 				<GridColumn TextAlign="TextAlign.Center">
 					<Template Context="data">
 						@foreach (var op in ((CebBase)data).Operations) {
-							<div>@op</div>
+							<div>
+								@op
+							</div>
 						}
 					</Template>
 				</GridColumn>
-			</GridColumns>
-		}
+
+			}
+		</GridColumns>
 	</SfGrid>
 </div>
 @code {
-	
+
 #pragma warning disable CS8618
 	[Parameter]
 	public bool VueTable { get; set; }

@@ -9,6 +9,7 @@
 
 using CebBlazor.Code;
 using CompteEstBon;
+using CebBlazor.Properties;
 using Syncfusion.Blazor;
 using Syncfusion.Licensing;
 
@@ -27,7 +28,7 @@ svc.AddSingleton(
         AutoCalcul = bool.TryParse(builder.Configuration["AutoCalcul"], out var res) && res
     });
 svc.AddScoped<CebTirage>();
-SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["license"]);
+SyncfusionLicenseProvider.RegisterLicense(licenseKey:Resources.Licence);
 
 
 var app = builder.Build();
