@@ -4,6 +4,7 @@
 @using MongoDB.Bson.Serialization.Conventions
 @using MongoDB.Driver
 @using MongoDB.Driver.Linq
+@using Syncfusion.Blazor.Buttons
 @using Syncfusion.Blazor.DropDowns
 @using Syncfusion.Blazor.Inputs
 
@@ -117,8 +118,8 @@
 		</div>
 	</div>
 </div>
-<CebSolutions VueTable="VueTable" ShowDetail="async (solution) => await toast!.ShowAsync(solution, false)"></CebSolutions>
-<div class="card text-center bg-primary bg-gradient border-secondary mt-1 mb-1">
+<CebSolutions  VueTable="VueTable" ShowDetail="async (solution) => await toast!.ShowAsync(solution, false)"></CebSolutions>
+<div id="statusx" class="card text-center bg-primary bg-gradient border-secondary mt-1 mb-1">
 	<div class="card-header">
 		<div class="'text-center'">
 			@switch (tirage.Status) {

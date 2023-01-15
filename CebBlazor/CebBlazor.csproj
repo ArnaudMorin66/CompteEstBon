@@ -26,10 +26,10 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
-        <PackageReference Include="MongoDB.Driver" Version="2.17.1" />
-        <PackageReference Include="Syncfusion.Blazor.Core" Version="20.3.0.49" />
-        <PackageReference Include="Syncfusion.Blazor.Grid" Version="20.3.0.49" />
-        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="20.3.0.49" />
+        <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
+        <PackageReference Include="Syncfusion.Blazor.Core" Version="20.4.0.43" />
+        <PackageReference Include="Syncfusion.Blazor.Grid" Version="20.4.0.43" />
+        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="20.4.0.43" />
     </ItemGroup>
 
     <ItemGroup>
@@ -41,7 +41,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
-        <ProjectReference Include="..\SFCebOffice\SFCebOffice.csproj" />
+        <ProjectReference Include="..\SFCebOffice\CebExport.csproj" />
     </ItemGroup>
 
     <ItemGroup>

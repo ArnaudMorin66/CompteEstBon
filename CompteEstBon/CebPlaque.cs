@@ -49,7 +49,6 @@ namespace CompteEstBon {
         public CebPlaque(int v = 0) {
             Operations.Add(v.ToString());
             Value = v;
-            
         }
 
 
@@ -60,11 +59,10 @@ namespace CompteEstBon {
         public override int Value {
             get => base.Value;
             set {
-                if (base.Value == value)
+                if(base.Value == value)
                     return;
-                var old = base.Value;
                 base.Value = value;
-                Operations[0]= value.ToString();
+                Operations[0] = value.ToString();
                 OnPropertyChanging(nameof(Value));
             }
         }

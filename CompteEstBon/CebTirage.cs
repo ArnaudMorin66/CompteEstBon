@@ -27,7 +27,7 @@ namespace CompteEstBon {
         private readonly List<CebBase> _solutions = new(6);
         private readonly int _nbPlaques;
 
-        public CebTirage(int nbPlaques=6) {
+        public CebTirage(int nbPlaques = 6) {
             _nbPlaques = nbPlaques;
             Plaques = new List<CebPlaque>();
             Random();
@@ -125,7 +125,7 @@ namespace CompteEstBon {
             Plaques.Clear();
 
             var liste = new List<int>(CebPlaque.AllPlaques);
-            for (;Plaques.Count < _nbPlaques;) {
+            for(; Plaques.Count < _nbPlaques; ) {
                 var n = Rnd.Next(0, liste.Count);
                 var p = new CebPlaque(liste[n]);
                 p.PropertyChanging += PlaqueUpdated;

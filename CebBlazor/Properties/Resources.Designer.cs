@@ -61,7 +61,7 @@ namespace CebBlazor.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Mgo+DSMBaFt/QHNqVVhkW1pFdEBBXHxAd1p/VWJYdVt5flBPcDwsT3RfQF9jQH1TdkdhXn1Zd3FXRQ==;Mgo+DSMBPh8sVXJ0S0V+XE9AcVRDX3xKf0x/TGpQb19xflBPallYVBYiSV9jS3xTf0ZjWX1cd3ZSTmlbUw==;ORg4AjUWIQA/Gnt2VVhjQlFaclhJXGFWfVJpTGpQdk5xdV9DaVZUTWY/P1ZhSXxRdkxgWX9ccnNXQWlUVUc=;NzI3MjYwQDMyMzAyZTMzMmUzME5FbDI4VUxvZThZNHhIcTMwUHJtTEx1ajdqS1d0ay9pMzJwSHRQSUlsNkU9;NzI3MjYxQDMyMzAyZTMzMmUzMEliRHZjV1F0Ymh0aTlXNGVVaWsrZWRsb3pvV2ZjTHo0aHZjeElHOWFkbm89;NRAiBiAaIQQuGjN/V0Z+X09EaFtFVmJLYVB3WmpQdldgdVRMZVVbQX9PIiBoS35RdEVqWn9ecnZSRGheVEF1;NzI3Mj [le reste de la chaîne a été tronqué]&quot;;.
+        ///   Recherche une chaîne localisée semblable à OTA4NjMwQDMyMzAyZTM0MmUzMEowQ2F0N1FZOWdobEtzY2lzZy9lMkZNK1pXU1lQSDVLUXIvVUhkSGQydjQ9.
         /// </summary>
         internal static string Licence {
             get {
