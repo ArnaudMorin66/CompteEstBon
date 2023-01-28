@@ -12,7 +12,6 @@ using System.Runtime.CompilerServices;
 using static System.Math;
 
 #endregion using
-#pragma warning disable CRRSP08
 namespace CompteEstBon {
     // test siur 
 

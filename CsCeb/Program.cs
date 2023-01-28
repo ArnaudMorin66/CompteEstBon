@@ -1,9 +1,10 @@
-﻿using CompteEstBon;
-using Microsoft.Extensions.Configuration;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Conventions;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
+﻿//-----------------------------------------------------------------------
+// <copyright file="Program.cs" company="">
+//     Author:  
+//     Copyright (c) . All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
 using System.CommandLine;
 using System.CommandLine.Rendering;
 using System.IO.Compression;
@@ -13,6 +14,12 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
+using CompteEstBon;
+using Microsoft.Extensions.Configuration;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using static System.Console;
 
 // ReSharper disable LocalizableElement
@@ -55,112 +62,108 @@ if (File.Exists(ConfigurationFile)) {
         }
 }
 
-RootCommand rootCommand = new() {
-    new Option<int>(new[] { "--search", "-s" }, "Nombre à chercher"),
-    new Option<int[]>(new[] { "--plaques", "-p" }, "Liste des plaques"),
+
+RootCommand rootCommand = new("Compte Est Bon") {
+    new Option<int>(new[] { "--trouve", "-t" }, "Nombre à chercher"),
+    new Option<int[]>(new[] { "--plaques", "-p" }, "Liste des plaques") { AllowMultipleArgumentsPerToken = true },
     new Option<bool>(new[] { "--json", "-j" }, "Export au format JSON"),
-    new Option<bool>(new[] { "--save", "-S" }, "Sauvegarder le Compte"),
-    new Option<bool>(new[] { "--mongodb", "-M" }, "Sauvegarder le Compte dans MongoDB"),
-    new Option<string>(new[] { "--server", "-B" }, "Nom du serveur MongoDB"),
-    new Option<FileInfo>(new[] { "--file", "-f" }, "Fichier"),
-    new Argument<int[]>("arguments", "Liste des plaques et nombre à chercher")
+    new Option<bool>(new[] { "--sauvegarde", "-s" }, "Sauvegarder le Compte"),
+    new Option<bool>(new[] { "--mongodb", "-m" }, "Sauvegarder le Compte dans MongoDB"),
+    new Option<string>(new[] { "--serveur", "-S" }, "Nom du serveur MongoDB"),
+    new Option<FileInfo>(new[] { "--fichier", "-f" }, "Fichier"),
+    new Argument<int[]>("arguments", "Plaques et nombre à trouver")
 };
-rootCommand.Description = "Compte est bon";
 
-await rootCommand.InvokeAsync(args);
+rootCommand.SetHandler(async context => {
+    var prs = context.ParseResult;
 
-var prs = rootCommand.Parse(args);
+    foreach (var option in rootCommand.Options)
+        if (prs.FindResultFor(option) is { } optionResult)
+            switch (option.Name.ToLower()) {
+                case "trouve":
+                    tirage.Search = optionResult.GetValueOrDefault<int>();
+                    break;
 
-if (prs.Errors.Any()) Environment.Exit(-1);
+                case "plaques":
+                    tirage.SetPlaques(optionResult.GetValueOrDefault<int[]>());
+                    break;
+
+                case "json":
+                    Json = optionResult.GetValueOrDefault<bool>();
+                    break;
+
+                case "fichier":
+                    fichier = optionResult.GetValueOrDefault<FileInfo>();
+                    break;
+
+                case "sauvegarde":
+                    Save = optionResult.GetValueOrDefault<bool>();
+                    break;
+
+                case "mongodb":
+                    SaveToMongoDb = optionResult.GetValueOrDefault<bool>();
+                    break;
+
+                case "serveur":
+                    MongoServer = optionResult.GetValueOrDefault<string>();
+                    break;
+
+                default:
+                    WriteLine(option.Name);
+                    ParametreInvalide();
+                    break;
+            }
 
 
-foreach (var option in rootCommand.Options.Where(p => prs.FindResultFor(p) != null))
-    switch (option.Name) {
-        case "search":
-            tirage.Search = prs.GetValueForOption((Option<int>)option);
-            break;
+    if (prs.FindResultFor(rootCommand.Arguments[0]) is { } argumentResult) {
+        var arguments = argumentResult.GetValueOrDefault<int[]>();
 
-        case "plaques":
-            tirage.SetPlaques(prs.GetValueForOption((Option<int[]>)option));
-            break;
+        if (arguments.Length > 7) ParametreInvalide();
 
-        case "json":
-            Json = prs.GetValueForOption((Option<bool>)option);
-            break;
+        if (arguments[0] > 100) {
+            tirage.Search = arguments[0];
+            arguments = arguments.AsSpan(1).ToArray();
+            // arguments = arguments.Where((_, i) => i > 0).ToArray();
+        }
+        else if (arguments.Length == 7 && arguments[6] > 100) {
+            tirage.Search = arguments[6];
+            arguments = arguments.AsSpan(..6).ToArray(); //.Where((_, i) => i < 6).ToArray();
+        }
 
-        case "file":
-            fichier = prs.GetValueForOption((Option<FileInfo>)option);
-            break;
-
-        case "version":
-        case "help":
-            Environment.Exit(0);
-            break;
-
-        case "save":
-            Save = prs.GetValueForOption((Option<bool>)option);
-            break;
-
-        case "mongodb":
-            SaveToMongoDb = prs.GetValueForOption((Option<bool>)option);
-            break;
-
-        case "server":
-            MongoServer = prs.GetValueForOption((Option<string>)option);
-            break;
-
-        default:
-            Environment.Exit(-1);
-            break;
+        switch (arguments.Length) {
+            case 6:
+                tirage.SetPlaques(arguments);
+                break;
+            case > 0:
+                ParametreInvalide();
+                break;
+        }
     }
 
-var arguments = prs.GetValueForArgument((Argument<int[]>)rootCommand.Arguments.First(p => p.Name == "arguments"));
-if (arguments.Length > 0) {
-    if (arguments[0] == 0 && arguments.Length == 1) {
-        WriteLine("Paramètre invalide".Red());
-        Environment.Exit(-1);
-    }
-
-    if (arguments[0] > 100) {
-        tirage.Search = arguments[0];
-        arguments = arguments.Where((_, i) => i > 0).ToArray();
-    }
-
-    if (arguments.Length > 0) {
-        tirage.SetPlaques(arguments);
-        if (arguments.Length > 6 && arguments[6] >= 100) tirage.Search = arguments[6];
-    }
-}
-
-
-if (Json) {
-    await tirage.ResolveAsync();
-    WriteLine(JsonSerializer.Serialize(tirage.Data, JsonOptions()));
-}
-else {
-    WriteLine('\n');
-    WriteLine("*** Le Compte est bon ***".Red());
-    WriteLine();
-    Write("Tirage:\t".Yellow());
-    Write("Plaques: ".LightYellow());
-    foreach (var plaque in tirage.Plaques) Write($@"{plaque} ");
-    Write("Recherche: ".LightYellow());
-    Write(tirage.Search);
-
-    WriteLine();
-    var result = await tirage.ResolveAsync();
-
-
-    WriteLine();
-
-    if (tirage.Status == CebStatus.Invalide) {
-        WriteLine("Tirage invalide".Red());
+    if (Json) {
+        tirage.Resolve();
+        WriteLine(JsonSerializer.Serialize(tirage.Data, JsonOptions()));
     }
     else {
+        WriteLine('\n');
+        WriteLine("*** Le Compte est bon ***".Red());
+        WriteLine();
+        Write("Tirage:\t".Yellow());
+        Write("Plaques: ".LightYellow());
+        foreach (var plaque in tirage.Plaques) Write($@"{plaque} ");
+        Write("Recherche: ".LightYellow());
+        Write(tirage.Search);
+
+        WriteLine();
+        var result = tirage.Resolve();
+
+        WriteLine();
+
+        if (tirage.Status == CebStatus.Invalide) ParametreInvalide();
+
         var txtStatus = result == CebStatus.CompteEstBon ? result.Green() : result.Magenta();
         Write(txtStatus);
-        if (result == CebStatus.CompteApproche)
-            Write($": {tirage.Found}");
+        if (result == CebStatus.CompteApproche) Write($": {tirage.Found}");
 
         Write($", {"nombre de solutions:".LightYellow()} {tirage.Solutions.Count}");
         WriteLine($", {"Durée du calcul:".LightYellow()} {tirage.Duree:F3} s");
@@ -168,30 +171,32 @@ else {
         WriteLine();
 
         foreach (var (i, solution) in tirage.Solutions.Select((v, i) => (i, v))) {
-            var count = $"{i + 1,4}/{tirage.Count,4} ({solution.Rank}):".Cyan();
-            WriteLine($"{txtStatus} {count} {solution}");
+            var count = $"{i + 1:0000}/{tirage.Count:0000} ({solution.Rank}):".ColorForeground(
+                tirage.Status == CebStatus.CompteEstBon ? Ansi.Color.Foreground.Green : Ansi.Color.Foreground.Magenta);
+            WriteLine($"{count} {solution.LightYellow()}");
         }
+
+        WriteLine();
     }
 
-    WriteLine();
-}
+    if (SaveToMongoDb && MongoServer != string.Empty) await SaveMongoDB();
 
-if (SaveToMongoDb && MongoServer != string.Empty)
-    await SaveMongoDB();
+    if (Save == false) Environment.Exit(0);
 
-if (Save == false)
-    Environment.Exit(0);
+    if (fichier != null && Save)
+        switch (fichier.Extension) {
+            case ".zip":
+                SaveZip();
+                break;
 
-if (fichier != null && Save)
-    switch (fichier.Extension) {
-        case ".zip":
-            SaveZip();
-            break;
+            default:
+                SaveJson();
+                break;
+        }
+});
 
-        default:
-            SaveJson();
-            break;
-    }
+await rootCommand.InvokeAsync(args);
+WriteLine();
 
 void SaveJson() {
     using Stream stream = fichier.Create();
@@ -200,8 +205,8 @@ void SaveJson() {
 
 void SaveZip() {
     using var archive = ZipFile.Open(fichier.FullName, ZipArchiveMode.Update, Encoding.UTF8);
-    var num = new[] { 0 }.Concat(archive.Entries
-            .Select(p => int.TryParse(p.Name[..p.Name.LastIndexOf('.')], out var result) ? result : 0))
+    var num = new[] { 0 }.Concat(
+            archive.Entries.Select(p => int.TryParse(p.Name[..p.Name.LastIndexOf('.')], out var result) ? result : 0))
         .Max();
     SaveStream(archive, $"{++num:000000}.json", JsonSaveStream);
     SaveStream(archive, $"{++num:000000}.xml", XmlSaveStream);
@@ -231,18 +236,15 @@ void XmlSaveStream(Stream stream) {
 JsonSerializerOptions JsonOptions() =>
     new() {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        Converters = {
-            new JsonStringEnumConverter()
-        },
+        Converters = { new JsonStringEnumConverter() },
         WriteIndented = false
     };
 
 async Task SaveMongoDB() {
     try {
-        ConventionRegistry.Register("EnumStringConvention",
-            new ConventionPack {
-                new EnumRepresentationConvention(BsonType.String)
-            },
+        ConventionRegistry.Register(
+            "EnumStringConvention",
+            new ConventionPack { new EnumRepresentationConvention(BsonType.String) },
             _ => true);
         var clientSettings = MongoClientSettings.FromConnectionString(MongoServer);
         clientSettings.LinqProvider = LinqProvider.V3;
@@ -250,17 +252,18 @@ async Task SaveMongoDB() {
         var cl = new MongoClient(clientSettings)
             .GetDatabase("ceb")
             .GetCollection<BsonDocument>("comptes");
-
         await cl.InsertOneAsync(
-            new BsonDocument(new Dictionary<string, object> {
-                    {
-                        "_id",
-                        new {
-                            lang = "c#", domain = Environment.GetEnvironmentVariable("USERDOMAIN"),
-                            date = DateTime.UtcNow
-                        }.ToBsonDocument()
-                    }
-                })
+            new BsonDocument(
+                    new Dictionary<string, object> {
+                        {
+                            "_id",
+                            new {
+                                lang = "c#", domain = Environment.GetEnvironmentVariable("USERDOMAIN"),
+                                date = DateTime.UtcNow
+                            }.ToBsonDocument(
+                            )
+                        }
+                    })
                 .AddRange(tirage.Data.ToBsonDocument()));
     }
     catch (Exception e) {
@@ -268,9 +271,14 @@ async Task SaveMongoDB() {
     }
 }
 
+void ParametreInvalide() {
+    WriteLine("Paramètre invalide".Red());
+    Environment.Exit(-1);
+}
+
 internal static class Colorizer {
-    public static string ColorForeground(this object texte, AnsiControlCode foreground) =>
-        $"{foreground}{texte}{Ansi.Color.Foreground.Default}";
+    public static string ColorForeground(this object texte, AnsiControlCode bground, AnsiControlCode eground = null) =>
+        $"{bground}{texte}{eground ?? Ansi.Color.Foreground.Default}";
 
     public static string Red(this object texte) => texte.ColorForeground(Ansi.Color.Foreground.Red);
 

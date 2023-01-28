@@ -11,6 +11,6 @@ namespace CompteEstBon {
         public int? Diff { get; set; }
         [XmlArray]
         [XmlArrayItem("Solution")]
-        public String[] Solutions { get; set; }
+        public string[] Solutions { get; set; }
     }
 }

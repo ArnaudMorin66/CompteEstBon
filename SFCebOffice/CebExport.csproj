@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <RootNamespace>CompteEstBon</RootNamespace>
+    <LangVersion>preview</LangVersion>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
+      <AssemblyVersion>4.2.8.10362</AssemblyVersion>
+      <FileVersion>4.2.8.10362</FileVersion>
+      <Version>4.2.2.20090</Version>
+  </PropertyGroup>
+
+
+   <ItemGroup>
+     <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="20.4.0.44" />
+     <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="20.4.0.44" />
+   </ItemGroup>
+
+
+   <ItemGroup>
+     <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
+   </ItemGroup>
+
+</Project>

@@ -1,26 +1,31 @@
+//-----------------------------------------------------------------------
+// <copyright file="CebOperation.cs" company="">
+//     Author:  
+//     Copyright (c) . All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 namespace CompteEstBon {
-
-    /// <inheritdoc />
+    /// <inheritdoc/>
     /// /// /// ///
     /// <summary>
-    ///     Classe op�ration
+    /// Classe op�ration
     /// </summary>
 
     public sealed class CebOperation : CebBase {
         public static readonly string AllOperations = "x+-/";
 
         /// <summary>
-        ///     Constructor op�ration (g op d)
+        /// Constructor op�ration (g op d)
         /// </summary>
-        /// <param name="g"> </param>
+        /// <param name="g"></param>
         /// <param
         ///     name="op">
+        ///
         /// </param>
-        /// <param name="d"> </param>
+        /// <param name="d"></param>
         public CebOperation(CebBase g, char op, CebBase d) {
-            if (g.Value < d.Value) {
+            if (g < d)
                 (g, d) = (d, g);
-            }
             Value = op switch {
                 '+' => g.Value + d.Value,
                 '-' => g.Value - d.Value,
@@ -28,25 +33,23 @@ namespace CompteEstBon {
                 '/' => d.Value <= 1 || g.Value % d.Value != 0 ? 0 : g.Value / d.Value,
                 _ => 0
             };
-            if (Value == 0) return;
-            Add(g, op, d);
-        }
-        public void AddOperation(string value) => Operations.Add(value);
-
-        public override bool IsValid => Value > 0;
-
-        private void Add(CebBase ceb) {
-            if (ceb is CebPlaque) return;
-            foreach (var o in ceb.Operations) {
-                AddOperation(o);
-            }
-
+            if (Value != 0)
+                AddOperations(g, op, d);
         }
 
-        private void Add(CebBase gauche, char op, CebBase droite) {
-            Add(gauche);
-            Add(droite);
+        private void AddOperation(string value) => Operations.Add(value);
+
+        private void AddOperation(CebBase ceb) {
+            if (ceb is  CebOperation)
+                Operations.AddRange(ceb.Operations);
+        }
+
+        private void AddOperations(CebBase gauche, char op, CebBase droite) {
+            AddOperation(gauche);
+            AddOperation(droite);
             AddOperation($"{gauche.Value} {op} {droite.Value} = {Value}");
         }
+
+        public override bool IsValid => Value > 0;
     }
 }
