@@ -34,7 +34,9 @@ var SaveToMongoDb = false;
 FileInfo fichier = null;
 CebTirage tirage = new();
 
-
+WriteLine('\n');
+WriteLine("*** Le Compte est bon ***".Red());
+WriteLine();
 ConfigurationBuilder builder = new();
 if (File.Exists(ConfigurationFile)) {
     builder.AddJsonFile(ConfigurationFile);
@@ -63,7 +65,7 @@ if (File.Exists(ConfigurationFile)) {
 }
 
 
-RootCommand rootCommand = new("Compte Est Bon") {
+var rootCommand = new RootCommand("Compte Est Bon") {
     new Option<int>(new[] { "--trouve", "-t" }, "Nombre à chercher"),
     new Option<int[]>(new[] { "--plaques", "-p" }, "Liste des plaques") { AllowMultipleArgumentsPerToken = true },
     new Option<bool>(new[] { "--json", "-j" }, "Export au format JSON"),
@@ -109,8 +111,7 @@ rootCommand.SetHandler(async context => {
                     break;
 
                 default:
-                    WriteLine(option.Name);
-                    ParametreInvalide();
+                    AbortProgramme($"Argument {option.Name} invalide");
                     break;
             }
 
@@ -118,26 +119,21 @@ rootCommand.SetHandler(async context => {
     if (prs.FindResultFor(rootCommand.Arguments[0]) is { } argumentResult) {
         var arguments = argumentResult.GetValueOrDefault<int[]>();
 
-        if (arguments.Length > 7) ParametreInvalide();
+        if (arguments.Length > 7) AbortProgramme("Nombre d'arguments invalide");
 
         if (arguments[0] > 100) {
             tirage.Search = arguments[0];
-            arguments = arguments.AsSpan(1).ToArray();
-            // arguments = arguments.Where((_, i) => i > 0).ToArray();
+            arguments = arguments[1..]; 
+            
         }
         else if (arguments.Length == 7 && arguments[6] > 100) {
             tirage.Search = arguments[6];
-            arguments = arguments.AsSpan(..6).ToArray(); //.Where((_, i) => i < 6).ToArray();
+            arguments = arguments[..6]; 
         }
 
-        switch (arguments.Length) {
-            case 6:
-                tirage.SetPlaques(arguments);
-                break;
-            case > 0:
-                ParametreInvalide();
-                break;
-        }
+        if (arguments.Length == 6)
+            tirage.SetPlaques(arguments);
+        else if (arguments.Length > 0) AbortProgramme("Arguments invalide");
     }
 
     if (Json) {
@@ -145,9 +141,7 @@ rootCommand.SetHandler(async context => {
         WriteLine(JsonSerializer.Serialize(tirage.Data, JsonOptions()));
     }
     else {
-        WriteLine('\n');
-        WriteLine("*** Le Compte est bon ***".Red());
-        WriteLine();
+       
         Write("Tirage:\t".Yellow());
         Write("Plaques: ".LightYellow());
         foreach (var plaque in tirage.Plaques) Write($@"{plaque} ");
@@ -159,7 +153,7 @@ rootCommand.SetHandler(async context => {
 
         WriteLine();
 
-        if (tirage.Status == CebStatus.Invalide) ParametreInvalide();
+        if (tirage.Status == CebStatus.Invalide) AbortProgramme("Tirage  invalide");
 
         var txtStatus = result == CebStatus.CompteEstBon ? result.Green() : result.Magenta();
         Write(txtStatus);
@@ -171,9 +165,9 @@ rootCommand.SetHandler(async context => {
         WriteLine();
 
         foreach (var (i, solution) in tirage.Solutions.Select((v, i) => (i, v))) {
-            var count = $"{i + 1:0000}/{tirage.Count:0000} ({solution.Rank}):".ColorForeground(
+            var count = $"{i + 1:0000}".ColorForeground(
                 tirage.Status == CebStatus.CompteEstBon ? Ansi.Color.Foreground.Green : Ansi.Color.Foreground.Magenta);
-            WriteLine($"{count} {solution.LightYellow()}");
+            WriteLine($"{solution.Rank} - {count}: {solution.LightYellow()}");
         }
 
         WriteLine();
@@ -184,22 +178,21 @@ rootCommand.SetHandler(async context => {
     if (Save == false) Environment.Exit(0);
 
     if (fichier != null && Save)
-        switch (fichier.Extension) {
-            case ".zip":
-                SaveZip();
-                break;
-
-            default:
-                SaveJson();
-                break;
-        }
+        if (fichier.Extension == ".zip")
+            SaveZip();
+        else
+            SaveJson();
 });
 
 await rootCommand.InvokeAsync(args);
 WriteLine();
 
+void AbortProgramme(string message) {
+    WriteLine($"{"Erreur: ".Red()}{message}".LightYellow());
+    Environment.Exit(-1);
+}
 void SaveJson() {
-    using Stream stream = fichier.Create();
+    using var stream = fichier.Create();
     JsonSaveStream(stream);
 }
 
@@ -218,9 +211,7 @@ void SaveStream(ZipArchive archive, string nom, Action<Stream> action) {
     stream.Close();
 }
 
-void JsonSaveStream(Stream stream) {
-    JsonSerializer.Serialize(stream, tirage.Data, JsonOptions());
-}
+void JsonSaveStream(Stream stream) => JsonSerializer.Serialize(stream, tirage.Data, JsonOptions());
 
 void XmlSaveStream(Stream stream) {
     XmlSerializer mySerializer = new(typeof(CebData));
@@ -228,8 +219,7 @@ void XmlSaveStream(Stream stream) {
         mySerializer.Serialize(stream, tirage.Data);
     }
     catch (SerializationException) {
-        WriteLine("Erreur serialisation");
-        throw;
+        AbortProgramme("Erreur serialisation");
     }
 }
 
@@ -266,15 +256,11 @@ async Task SaveMongoDB() {
                     })
                 .AddRange(tirage.Data.ToBsonDocument()));
     }
-    catch (Exception e) {
-        WriteLine(e);
+    catch (Exception) {
+        AbortProgramme("Erreur de sauvegarde sous MongoDb ");
     }
 }
 
-void ParametreInvalide() {
-    WriteLine("Paramètre invalide".Red());
-    Environment.Exit(-1);
-}
 
 internal static class Colorizer {
     public static string ColorForeground(this object texte, AnsiControlCode bground, AnsiControlCode eground = null) =>

@@ -48,11 +48,7 @@ public sealed class CebPlaque : CebBase, INotifyPropertyChanging {
 
     public event PropertyChangingEventHandler PropertyChanging;
 
-    private void OnPropertyChanging(string propertyName) {
-        PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
-    }
+    private void OnPropertyChanging(string propertyName) => PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
 
-    public static implicit operator int(CebPlaque p) {
-        return p.Value;
-    }
+    public static implicit operator int(CebPlaque p) => p.Value;
 }

@@ -23,22 +23,15 @@ namespace CompteEstBon {
         [JsonIgnore]
         public IEnumerable<string> Operations {
             get {
-                for (var i = 0; i < 5 && Op(i) != null; i++) {
+                for (var i = 0; i < 5 && Op(i) != null; i++)
                     yield return Op(i);
-                }
             }
         }
 
-        //public string this[int i] {
-        //    get => GetType().GetProperty($"Op{i + 1}").GetValue(this) as string;
-        //    set => GetType().GetProperty($"Op{i + 1}").SetValue(this, value);
-        //}
-        public (int gauche, char op, int droite) Decoup(int i) {
+        public (int gauche, char op, int droite) Split(int i) {
             var l = Op(i).Split();
-            if (int.TryParse(l[0], out var g))
-                return (0, '\0', 0);
-            //if (this is CebPlaque) return (g, '\0', 0);
-            return !int.TryParse(l[2], out var d) ? (0, '\0', 0) : (g, l[1][0], d);
+            return int.TryParse(l[0], out var g) ? (0, '\0', 0) :
+                !int.TryParse(l[2], out var d) ? (0, '\0', 0) : (g, l[1][0], d);
         }
 
         public string Op(int i) => GetType().GetProperty($"Op{i + 1}")!.GetValue(this) as string;
