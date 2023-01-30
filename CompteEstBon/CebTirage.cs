@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 // Plage Compte est bon
 #region using
+
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -13,17 +14,15 @@ using static System.Math;
 
 #endregion using
 namespace CompteEstBon {
-    // test siur 
-
     /// <summary>
     /// Gestion tirage Compte est bon
     /// </summary>
 
-
     public sealed class CebTirage : INotifyPropertyChanged {
         private static readonly Random Rnd = System.Random.Shared;
         private int _search;
-        private readonly List<CebBase> _solutions = new(6);
+        private readonly List<CebBase> _solutions = new();
+        public List<CebBase>? Solutions { get; private set; }
         private readonly int _nbPlaques;
 
         public CebTirage(int nbPlaques = 6) {
@@ -31,7 +30,7 @@ namespace CompteEstBon {
             Plaques = new List<CebPlaque>();
             Random();
         }
-
+      
 
         /// <summary>
         /// Constructeur Tirage du Compte est bon
@@ -41,7 +40,7 @@ namespace CompteEstBon {
         public CebTirage(int search, params int[] plaques) : this() {
             if(plaques.Length >= 6 && search >= 0) {
                 Status = CebStatus.EnCours;
-                foreach (var (p, i) in plaques.WithIndex().Where(elt => elt.Item2 < 6)) Plaques[i].Value = p;
+                SetPlaques(plaques);
                 Search = search;
             }
 
@@ -70,7 +69,7 @@ namespace CompteEstBon {
                 Clear();
         }
 
-        private void PushSolution(CebBase sol) {
+        private void InsertSolution(CebBase sol) {
             var diff = Abs(_search - sol.Value);
             if(diff > Diff)
                 return;
@@ -91,39 +90,37 @@ namespace CompteEstBon {
         private void Resolve(IEnumerable<CebBase> liste) {
             // ReSharper disable PossibleMultipleEnumeration
             foreach (var (p, i) in liste.WithIndex()) {
-                PushSolution(p);
+                InsertSolution(p);
                 foreach (var (q, j) in liste.WithIndex().Where((_, ix) => ix > i))
-                    foreach(var oper in
-                             CebOperation.AllOperations
-                        .Select(operation => new CebOperation(p, operation, q))
-                        .Where(o => o.Value != 0))
+                    foreach(var oper in CebOperation.AllOperations.Select(
+                                    operation => new CebOperation(p, operation, q)).Where(o => o.Value != 0))
                         Resolve(new[] { oper }.Concat(liste.Where((_, k) => k != i && k != j)));
             }
         }
 
         private Stopwatch Watch { get; } = new();
 
-        public CebData Clear() {
-            if(_solutions.Count != 0)
-                _solutions.Clear();
+        public CebStatus Clear() {
+            Solutions = null;
+            _solutions.Clear();
             Watch.Reset();
             Diff = int.MaxValue;
             Found.Reset();
             Valid();
             NotifyPropertyChanged();
-            return Data;
+            return Status;
         }
 
-        public async Task<CebData> ClearAsync() => await Task.Run(Clear);
+        public async Task<CebStatus> ClearAsync() => await Task.Run(Clear);
 
         /// <summary>
         /// Select the value and the plaque's list
         /// </summary>
-        public CebData Random() {
+        public CebStatus Random() {
             Status = CebStatus.Indefini;
             Plaques.Clear();
 
-            var liste = new List<int>(CebPlaque.AllPlaques);
+            var liste = CebPlaque.AllPlaques.ToList();
             for(; Plaques.Count < _nbPlaques; ) {
                 var n = Rnd.Next(0, liste.Count);
                 var p = new CebPlaque(liste[n]);
@@ -131,12 +128,11 @@ namespace CompteEstBon {
                 Plaques.Add(p);
                 liste.RemoveAt(n);
             }
-
             _search = Rnd.Next(100, 1000);
             return Clear();
         }
 
-        public async Task<CebData> RandomAsync() => await Task.Run(Random);
+        public async Task<CebStatus> RandomAsync() => await Task.Run(Random);
 
         /// <summary>
         /// resolution
@@ -150,12 +146,12 @@ namespace CompteEstBon {
                 Watch.Reset();
                 Watch.Start();
                 Status = CebStatus.EnCours;
-                Resolve(Plaques.ToList<CebBase>());
+                Resolve(Plaques);
                 _solutions.Sort((p, q) => p.Compare(q));
                 Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
+                Solutions =  _solutions;
                 Watch.Stop();
             }
-
             NotifyPropertyChanged();
             return Status;
         }
@@ -178,27 +174,26 @@ namespace CompteEstBon {
         ///
         /// </returns>
         public CebStatus ResolveWithParam(int search, params int[] plq) {
-            if(plq.Length != 6)
+            if(plq.Length != _nbPlaques)
                 throw new ArgumentException("Nombre de plaques incorrecte");
             Status = CebStatus.Indefini;
             _search = search;
-            foreach (var (p, i) in plq.WithIndex().Where((_, i) => i < 6))
-                Plaques[i].Value = p;
-            Valid();
+            SetPlaques(plq);
             return Resolve();
         }
 
+       
         public void SetPlaques(params int[] plaq) {
+            if (plaq.Length != _nbPlaques)
+                throw new ArgumentException("Nombre de plaques incorrecte");
             Status = CebStatus.Indefini;
-            foreach(var p in Plaques)
-                p.Value = 0;
             foreach (var (p, i) in plaq.WithIndex().Where(elt => elt.Item2 < 6)) Plaques[i].Value = p;
             Clear();
         }
-
-        public string Solution(int no = 0) => _solutions.Count == 0 || no < 0 || no >= _solutions.Count
+        public void SetPlaques(IList<int> pq) => SetPlaques(pq.ToArray());
+        public string Solution(int no = 0) => (Solutions is null) || Solutions.Count == 0 || no < 0 || no >= Solutions.Count
             ? string.Empty
-            : _solutions[no].ToString();
+            : Solutions[no].ToString();
 
         /// <summary>
         /// Valid
@@ -211,17 +206,17 @@ namespace CompteEstBon {
         /// <summary>
         /// Nombre de solutions
         /// </summary>
-        public int Count => _solutions.Count;
+        public int Count => Solutions?.Count ?? 0;
 
-        public CebData Data => new()
-        {
-            Search = Search,
-            Plaques = Plaques.Select(p => p.Value).ToArray(),
-            Status = Status,
-            Diff = Diff,
-            Solutions = Solutions?.Select(p => p.ToString()).ToArray(),
-            Found = Found.ToString()
-        };
+        public CebData Result =>
+            new() {
+                Search = Search,
+                Plaques = Plaques.Select(p => p.Value).ToArray(),
+                Status = Status.ToString(),
+                Diff = Diff,
+                Solutions = Solutions?.Select(p=> p.ToString()).ToArray() ?? Array.Empty<string>(),
+                Found = Found.ToString()
+            };
 
         /// <summary>
         /// Ecart
@@ -235,7 +230,7 @@ namespace CompteEstBon {
         /// </summary>
         public CebFind Found { get; } = new();
 
-        public List<CebPlaque> Plaques { get; private set; }
+        public List<CebPlaque> Plaques { get; }
 
         /// <summary>
         /// nombre � chercher
@@ -243,20 +238,14 @@ namespace CompteEstBon {
         public int Search {
             get => _search;
             set {
-                if(value == _search)
-                    return;
+                if(value == _search) return;
                 _search = value;
                 Clear();
             }
         }
 
 
-        public List<CebBase> Solutions => Status is CebStatus.CompteApproche or CebStatus.CompteEstBon
-            ? _solutions
-            : null; // new List<CebBase>();
-
-
-        // [JsonIgnore] public IEnumerable<string> SolutionsToString => _solutions.Select(s => s.ToString());
+        // public List<CebBase> Solutions { get; private set; }
 
 
         /// <summary>

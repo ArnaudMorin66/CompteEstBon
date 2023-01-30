@@ -1,11 +1,5 @@
 ﻿#region
-using CompteEstBon.Properties;
-using Microsoft.Win32;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Conventions;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
-using Syncfusion.Windows.Shared;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,7 +11,16 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using CompteEstBon.Properties;
+using Microsoft.Win32;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+using Syncfusion.Windows.Shared;
+
 //using Syncfusion.Drawing;
+
 #endregion
 
 // ReSharper disable once CheckNamespace
@@ -39,6 +42,8 @@ public class ViewTirage : NotificationObject, ICommand {
 
     // ⁞…
     private char _modeView = '…';
+
+    private bool _mongodb;
     private bool _popup;
 
     private string _result = "Résoudre";
@@ -53,10 +58,9 @@ public class ViewTirage : NotificationObject, ICommand {
     public Stopwatch stopwatch;
 
     /// <summary>
-    /// Initialisation
+    ///     Initialisation
     /// </summary>
     /// <returns>
-    ///
     /// </returns>
     public ViewTirage() {
         stopwatch = new Stopwatch();
@@ -78,17 +82,13 @@ public class ViewTirage : NotificationObject, ICommand {
             var i = e.NewStartingIndex;
             Tirage.Plaques[i].Value = Plaques[i];
             await Task.Run(ClearAsync);
-           
         };
 
-        Tirage.PropertyChanged += (sender, args) => {
+        Tirage.PropertyChanged += (_, args) => {
             switch (args.PropertyName) {
                 case "Clear":
 
-                    if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide) {
-                        
-                        Task.Run(ResolveAsync);
-                    }
+                    if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide) Task.Run(ResolveAsync);
                     break;
                 case "Resolve":
                     break;
@@ -193,13 +193,9 @@ public class ViewTirage : NotificationObject, ICommand {
                 return;
             _auto = value;
             RaisePropertyChanged(nameof(Auto));
-            if (_auto && Tirage.Status == CebStatus.Valide) {
-                Task.Run(ClearAsync);
-            }
+            if (_auto && Tirage.Status == CebStatus.Valide) Task.Run(ClearAsync);
         }
     }
-
-    private bool _mongodb;
 
     public bool MongoDb {
         get => _mongodb;
@@ -254,7 +250,7 @@ public class ViewTirage : NotificationObject, ICommand {
         remove => CommandManager.RequerySuggested -= value;
     }
 
-    public bool CanExecute(object parameter) { return true; }
+    public bool CanExecute(object parameter) => true;
 
     public async void Execute(object parameter) {
         var cmd = (parameter as string)?.ToLower();
@@ -319,10 +315,8 @@ public class ViewTirage : NotificationObject, ICommand {
         foreach (var (p, i) in Tirage.Plaques.WithIndex())
             Plaques[i] = p.Value;
         RaisePropertyChanged(nameof(Search));
-        //Task.Run(ClearAsync);
         _isUpdating = false;
         ClearData();
-
     }
 
     private void UpdateForeground() {
@@ -338,10 +332,9 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     public void ShowPopup(int index = 0) {
-        if (index >= 0 && index < Tirage.Solutions.Count) {
-            Solution = Tirage.Solutions[index];
-            Popup = true;
-        }
+        if (index < 0 || index >= Tirage.Count) return;
+        Solution = Tirage.Solutions![index];
+        Popup = true;
     }
 
     public static (bool Ok, string Path) SaveFileName() {
@@ -370,49 +363,47 @@ public class ViewTirage : NotificationObject, ICommand {
 
             await cl.InsertOneAsync(
                 new BsonDocument(
-                    new Dictionary<string, object>
-                {
-                {
-                    "_id",
-                    new
-                    {
-                    lang = "wpf",
-                    domain = Environment.GetEnvironmentVariable("USERDOMAIN"),
-                    date = DateTime.UtcNow
-                    }.ToBsonDocument()
-                }
-                })
-                    .AddRange(Tirage.Data.ToBsonDocument()));
-        } catch (Exception) {
+                    new Dictionary<string, object> {
+                        {
+                            "_id",
+                            new {
+                                lang = "wpf",
+                                domain = Environment.GetEnvironmentVariable("USERDOMAIN"),
+                                date = DateTime.UtcNow
+                            }.ToBsonDocument()
+                        }
+                    }).AddRange(Tirage.Result.ToBsonDocument()));
+        }
+        catch (Exception) {
             // ignored
         }
     }
 
     private void ExportFichier() {
         var (Ok, Path) = SaveFileName();
-        if (Ok) {
-            FileInfo fi = new(Path);
-            if (fi.Exists)
-                fi.Delete();
+        if (!Ok) return;
+        FileInfo fi = new(Path);
+        if (fi.Exists)
+            fi.Delete();
 
-            Action<Stream> ExportFunction = fi.Extension switch {
-                ".xlsx" => Tirage.ExportExcel,
-                ".docx" => Tirage.ExportWord,
-                _ => throw new NotImplementedException()
-            };
-            FileStream stream = new(Path!, FileMode.CreateNew);
-            ExportFunction(stream);
-            stream.Flush();
-            stream.Close();
-            OpenDocument(Path);
-        }
+        Action<Stream> ExportFunction = fi.Extension switch {
+            ".xlsx" => Tirage.ExportExcel,
+            ".docx" => Tirage.ExportWord,
+            _ => throw new NotImplementedException()
+        };
+        FileStream stream = new(Path!, FileMode.CreateNew);
+        ExportFunction(stream);
+        stream.Flush();
+        stream.Close();
+        OpenDocument(Path);
     }
 
-    public static void OpenDocument(string nom) {
+    public static void OpenDocument(string nom) =>
         Process.Start(new ProcessStartInfo { UseShellExecute = true, FileName = nom });
-    }
+    
 
     #region Action
+
     public async Task ClearAsync() {
         await Tirage.ClearAsync();
         ClearData();
@@ -443,8 +434,8 @@ public class ViewTirage : NotificationObject, ICommand {
             _ => "Jeu du Compte Est Bon"
         };
         stopwatch.Stop();
-        Duree = stopwatch.Elapsed; 
-        Solution = Tirage.Solutions[0];
+        Duree = stopwatch.Elapsed;
+        Solution = Tirage.Solutions![0];
         Solutions = Tirage.Solutions;
         UpdateForeground();
         IsBusy = false;
@@ -456,5 +447,6 @@ public class ViewTirage : NotificationObject, ICommand {
 
         return Tirage.Status;
     }
+
     #endregion Action
 }

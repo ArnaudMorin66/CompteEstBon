@@ -256,7 +256,7 @@
 				new BsonDocument(new Dictionary<string, object> {
 					{ "_id", new { lang = "blazor", domain = Environment.GetEnvironmentVariable("USERDOMAIN"), date = DateTime.UtcNow }.ToBsonDocument() }
 											})
-					.AddRange(tirage.Data.ToBsonDocument()));
+					.AddRange(tirage.Result.ToBsonDocument()));
 		} catch (Exception e) {
 			Console.WriteLine(e);
 		}

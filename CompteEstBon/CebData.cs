@@ -6,7 +6,7 @@ namespace CompteEstBon {
         [XmlArray()]
         [XmlArrayItem("Plaque")]
         public int[] Plaques { get; set; }
-        public CebStatus? Status { get; set; }
+        public string? Status { get; set; }
         public string Found { get; set; }
         public int? Diff { get; set; }
         [XmlArray]

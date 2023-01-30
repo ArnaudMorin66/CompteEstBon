@@ -13,6 +13,7 @@
     <AssemblyVersion>4.2.14.13475</AssemblyVersion>
     <FileVersion>4.2.14.13476</FileVersion>
     <Version>4.2.2.20090</Version>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

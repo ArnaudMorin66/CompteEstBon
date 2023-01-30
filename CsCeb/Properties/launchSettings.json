@@ -29,7 +29,7 @@
     },
     "parametres": {
       "commandName": "Project",
-      "commandLineArgs": "3 3 5 6 7 10 852"
+      "commandLineArgs": "-j -f exemple.json -m"
     }
   }
 }

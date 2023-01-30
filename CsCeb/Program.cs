@@ -17,6 +17,7 @@ using System.Xml.Serialization;
 using CompteEstBon;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -26,17 +27,27 @@ using static System.Console;
 
 
 var Json = false;
+var Jsonx = false;
 var Save = false;
 var ConfigurationFile =
     @$"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Ceb\config.json";
 var MongoServer = string.Empty;
 var SaveToMongoDb = false;
 FileInfo fichier = null;
-CebTirage tirage = new();
+
+JsonSerializerOptions JsonOptions = new() {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        Converters = { new JsonStringEnumConverter() },
+        WriteIndented = false
+    };
+
+var tirage = new CebTirage();
 
 WriteLine('\n');
+
 WriteLine("*** Le Compte est bon ***".Red());
 WriteLine();
+
 ConfigurationBuilder builder = new();
 if (File.Exists(ConfigurationFile)) {
     builder.AddJsonFile(ConfigurationFile);
@@ -54,12 +65,9 @@ if (File.Exists(ConfigurationFile)) {
                 MongoServer = child.Value;
                 break;
             case "PLATFORM":
-                foreach (var plt in child.GetChildren())
-                    if (plt["os"] == "win32") {
-                        fichier = new FileInfo(plt["ZipFile"]);
-                        break;
-                    }
-
+                var elt = child.GetChildren()
+                    .FirstOrDefault(it => it.Key == Environment.OSVersion.Platform.ToString());
+                if (elt != null) fichier = new FileInfo(elt["ZipFile"] ?? string.Empty);
                 break;
         }
 }
@@ -69,6 +77,7 @@ var rootCommand = new RootCommand("Compte Est Bon") {
     new Option<int>(new[] { "--trouve", "-t" }, "Nombre à chercher"),
     new Option<int[]>(new[] { "--plaques", "-p" }, "Liste des plaques") { AllowMultipleArgumentsPerToken = true },
     new Option<bool>(new[] { "--json", "-j" }, "Export au format JSON"),
+    new Option<bool>(new[] { "--jsonx", "-J" }, "Export au format JSON et quitte"),
     new Option<bool>(new[] { "--sauvegarde", "-s" }, "Sauvegarder le Compte"),
     new Option<bool>(new[] { "--mongodb", "-m" }, "Sauvegarder le Compte dans MongoDB"),
     new Option<string>(new[] { "--serveur", "-S" }, "Nom du serveur MongoDB"),
@@ -91,7 +100,7 @@ rootCommand.SetHandler(async context => {
                     break;
 
                 case "json":
-                    Json = optionResult.GetValueOrDefault<bool>();
+                    (Json, Jsonx) = (optionResult.GetValueOrDefault<bool>(), false);
                     break;
 
                 case "fichier":
@@ -109,6 +118,9 @@ rootCommand.SetHandler(async context => {
                 case "serveur":
                     MongoServer = optionResult.GetValueOrDefault<string>();
                     break;
+                case "jsonx":
+                    (Json, Jsonx) = ( optionResult.GetValueOrDefault<bool>(), true);
+                    break;
 
                 default:
                     AbortProgramme($"Argument {option.Name} invalide");
@@ -123,74 +135,84 @@ rootCommand.SetHandler(async context => {
 
         if (arguments[0] > 100) {
             tirage.Search = arguments[0];
-            arguments = arguments[1..]; 
-            
+            arguments = arguments[1..];
         }
         else if (arguments.Length == 7 && arguments[6] > 100) {
             tirage.Search = arguments[6];
-            arguments = arguments[..6]; 
+            arguments = arguments[..6];
         }
 
-        if (arguments.Length == 6)
+        //if (arguments.Length == 6)
             tirage.SetPlaques(arguments);
-        else if (arguments.Length > 0) AbortProgramme("Arguments invalide");
+        //else if (arguments.Length > 0) AbortProgramme("Arguments invalide");
     }
 
+    await runAsync();
+});
+
+await rootCommand.InvokeAsync(args);
+WriteLine();
+
+
+async Task runAsync() {
+    var result = await tirage.ResolveAsync();
     if (Json) {
-        tirage.Resolve();
-        WriteLine(JsonSerializer.Serialize(tirage.Data, JsonOptions()));
-    }
-    else {
-       
-        Write("Tirage:\t".Yellow());
-        Write("Plaques: ".LightYellow());
-        foreach (var plaque in tirage.Plaques) Write($@"{plaque} ");
-        Write("Recherche: ".LightYellow());
-        Write(tirage.Search);
-
-        WriteLine();
-        var result = tirage.Resolve();
-
-        WriteLine();
-
-        if (tirage.Status == CebStatus.Invalide) AbortProgramme("Tirage  invalide");
-
-        var txtStatus = result == CebStatus.CompteEstBon ? result.Green() : result.Magenta();
-        Write(txtStatus);
-        if (result == CebStatus.CompteApproche) Write($": {tirage.Found}");
-
-        Write($", {"nombre de solutions:".LightYellow()} {tirage.Solutions.Count}");
-        WriteLine($", {"Durée du calcul:".LightYellow()} {tirage.Duree:F3} s");
-
-        WriteLine();
-
-        foreach (var (i, solution) in tirage.Solutions.Select((v, i) => (i, v))) {
-            var count = $"{i + 1:0000}".ColorForeground(
-                tirage.Status == CebStatus.CompteEstBon ? Ansi.Color.Foreground.Green : Ansi.Color.Foreground.Magenta);
-            WriteLine($"{solution.Rank} - {count}: {solution.LightYellow()}");
-        }
-
+        WriteLine( JsonSerializer.Serialize<CebData>(tirage.Result, JsonOptions));
+        if (Jsonx) Environment.Exit(0);
         WriteLine();
     }
+
+    Write("Tirage:\t".Yellow());
+    Write("Plaques: ".LightYellow());
+    foreach (var plaque in tirage.Plaques) Write($@"{plaque} ");
+    Write("Recherche: ".LightYellow());
+    Write(tirage.Search);
+    WriteLine();
+    WriteLine();
+
+    if (tirage.Status == CebStatus.Invalide) AbortProgramme("Tirage  invalide");
+
+    var txtStatus = result == CebStatus.CompteEstBon ? result.Green() : result.Magenta();
+    Write(txtStatus);
+    if (result == CebStatus.CompteApproche) Write($": {tirage.Found}");
+
+    Write($", {"nombre de solutions:".LightYellow()} {tirage.Solutions.Count}");
+    WriteLine($", {"Durée du calcul:".LightYellow()} {tirage.Duree:F3} s");
+
+    WriteLine();
+
+    foreach (var (i, solution) in tirage.Solutions.Select((v, i) => (i, v))) {
+        var count = $"{i + 1:0000}".ColorForeground(
+            tirage.Status == CebStatus.CompteEstBon ? Ansi.Color.Foreground.Green : Ansi.Color.Foreground.Magenta);
+        WriteLine($"{solution.Rank} - {count}: {solution.LightYellow()}");
+    }
+
+    WriteLine();
+
 
     if (SaveToMongoDb && MongoServer != string.Empty) await SaveMongoDB();
 
     if (Save == false) Environment.Exit(0);
 
     if (fichier != null && Save)
-        if (fichier.Extension == ".zip")
-            SaveZip();
-        else
-            SaveJson();
-});
-
-await rootCommand.InvokeAsync(args);
-WriteLine();
+        switch (fichier.Extension) {
+            case ".zip":
+                SaveZip();
+                break;
+            case ".json":
+                SaveJson();
+                break;
+            default:
+                AbortProgramme("Erreur de fichier");
+                break;
+        }
+}
 
 void AbortProgramme(string message) {
     WriteLine($"{"Erreur: ".Red()}{message}".LightYellow());
     Environment.Exit(-1);
 }
+
 void SaveJson() {
     using var stream = fichier.Create();
     JsonSaveStream(stream);
@@ -210,25 +232,19 @@ void SaveStream(ZipArchive archive, string nom, Action<Stream> action) {
     action(stream);
     stream.Close();
 }
+void JsonSaveStream(Stream stream) => JsonSerializer.Serialize(stream, tirage.Result, JsonOptions);
 
-void JsonSaveStream(Stream stream) => JsonSerializer.Serialize(stream, tirage.Data, JsonOptions());
 
 void XmlSaveStream(Stream stream) {
     XmlSerializer mySerializer = new(typeof(CebData));
     try {
-        mySerializer.Serialize(stream, tirage.Data);
+        mySerializer.Serialize(stream, tirage.Result);
     }
     catch (SerializationException) {
         AbortProgramme("Erreur serialisation");
     }
 }
 
-JsonSerializerOptions JsonOptions() =>
-    new() {
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        Converters = { new JsonStringEnumConverter() },
-        WriteIndented = false
-    };
 
 async Task SaveMongoDB() {
     try {
@@ -242,6 +258,7 @@ async Task SaveMongoDB() {
         var cl = new MongoClient(clientSettings)
             .GetDatabase("ceb")
             .GetCollection<BsonDocument>("comptes");
+        
         await cl.InsertOneAsync(
             new BsonDocument(
                     new Dictionary<string, object> {
@@ -254,7 +271,7 @@ async Task SaveMongoDB() {
                             )
                         }
                     })
-                .AddRange(tirage.Data.ToBsonDocument()));
+                .AddRange(tirage.Result.ToBsonDocument()));
     }
     catch (Exception) {
         AbortProgramme("Erreur de sauvegarde sous MongoDb ");
