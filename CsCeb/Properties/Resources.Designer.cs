@@ -61,11 +61,11 @@ namespace CompteEstBon.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à C:\Users\arnaud\Downloads\Ceb.zip.
+        ///   Recherche une chaîne localisée semblable à NRAiBiAaIQQuGjN/V0Z+WE9EaFtKVmJLYVB3WmpQdldgdVRMZVVbQX9PIiBoS35RdUVhWX5eeHFTR2dYWUd1.
         /// </summary>
-        internal static string Zip {
+        internal static string sflicence {
             get {
-                return ResourceManager.GetString("Zip", resourceCulture);
+                return ResourceManager.GetString("sflicence", resourceCulture);
             }
         }
     }

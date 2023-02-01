@@ -4,6 +4,9 @@
 //     Copyright (c) . All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+
+using System.Diagnostics;
+
 namespace CompteEstBon {
     /// <inheritdoc/>
     /// /// /// ///
@@ -24,7 +27,7 @@ namespace CompteEstBon {
         /// </param>
         /// <param name="d"></param>
         public CebOperation(CebBase g, char op, CebBase d) {
-            if (g < d)
+            if (g.Value < d.Value)
                 (g, d) = (d, g);
             Value = op switch {
                 '+' => g.Value + d.Value,
@@ -40,8 +43,9 @@ namespace CompteEstBon {
         private void AddOperation(string value) => Operations.Add(value);
 
         private void AddOperation(CebBase ceb) {
-            if (ceb is  CebOperation)
+            if (ceb is  CebOperation) {
                 Operations.AddRange(ceb.Operations);
+            }
         }
 
         private void AddOperations(CebBase gauche, char op, CebBase droite) {

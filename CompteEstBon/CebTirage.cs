@@ -8,7 +8,6 @@
 #region using
 
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using static System.Math;
 
@@ -23,12 +22,13 @@ namespace CompteEstBon {
         private int _search;
         private readonly List<CebBase> _solutions = new();
         public List<CebBase>? Solutions { get; private set; }
-        private readonly int _nbPlaques;
+        private int NbPlaques { get; set; }
 
         public CebTirage(int nbPlaques = 6) {
-            _nbPlaques = nbPlaques;
+            NbPlaques = nbPlaques;
             Plaques = new List<CebPlaque>();
             Random();
+            // CebPlaque.ChangedPlaque = PlaqueUpdated;
         }
       
 
@@ -64,24 +64,26 @@ namespace CompteEstBon {
             this,
             new PropertyChangedEventArgs(propertyName));
 
-        private void PlaqueUpdated(object sender, PropertyChangingEventArgs args) {
-            if(Status is not CebStatus.EnCours and not CebStatus.Indefini)
-                Clear();
+        private void PlaqueUpdated(object sender, PropertyChangedEventArgs args) {
+            if (Status is CebStatus.EnCours or CebStatus.Indefini) return;
+            Clear();
         }
 
         private void InsertSolution(CebBase sol) {
             var diff = Abs(_search - sol.Value);
-            if(diff > Diff)
-                return;
-
-            if(diff < Diff) {
-                Diff = diff;
-                _solutions.Clear();
-                Found.Reset();
+            switch (diff - Diff) {
+                case 0: {
+                    if (_solutions.Contains(sol)) return;
+                    break;
+                }
+                case < 0:
+                    Diff = diff;
+                    _solutions.Clear();
+                    Found.Reset();
+                    break;
+                default:
+                    return;
             }
-
-            if(_solutions.Contains(sol))
-                return;
 
             Found.Add(sol.Value);
             _solutions.Add(sol);
@@ -94,18 +96,20 @@ namespace CompteEstBon {
                 foreach (var (q, j) in liste.WithIndex().Where((_, ix) => ix > i))
                     foreach(var oper in CebOperation.AllOperations.Select(
                                     operation => new CebOperation(p, operation, q)).Where(o => o.Value != 0))
-                        Resolve(new[] { oper }.Concat(liste.Where((_, k) => k != i && k != j)));
+                        Resolve(new[] { oper }.Concat(liste.Where((_, k) =>  k != i && k != j)));
             }
         }
 
-        private Stopwatch Watch { get; } = new();
+        // private Stopwatch Watch { get; } = new();
 
         public CebStatus Clear() {
             Solutions = null;
             _solutions.Clear();
-            Watch.Reset();
+            Duree = 0;
+           // Watch.Reset();
             Diff = int.MaxValue;
             Found.Reset();
+            Status = CebStatus.Indefini;
             Valid();
             NotifyPropertyChanged();
             return Status;
@@ -121,13 +125,15 @@ namespace CompteEstBon {
             Plaques.Clear();
 
             var liste = CebPlaque.AllPlaques.ToList();
-            for(; Plaques.Count < _nbPlaques; ) {
+            while(Plaques.Count < NbPlaques) {
                 var n = Rnd.Next(0, liste.Count);
-                var p = new CebPlaque(liste[n]);
-                p.PropertyChanging += PlaqueUpdated;
-                Plaques.Add(p);
+                var pq = new CebPlaque(liste[n]);
+                pq.PropertyChanged += PlaqueUpdated;
+                
+                Plaques.Add(pq);
                 liste.RemoveAt(n);
             }
+
             _search = Rnd.Next(100, 1000);
             return Clear();
         }
@@ -143,14 +149,13 @@ namespace CompteEstBon {
         public CebStatus Resolve() {
             _solutions.Clear();
             if(Status != CebStatus.Invalide) {
-                Watch.Reset();
-                Watch.Start();
+                var debut = DateTime.Now;
                 Status = CebStatus.EnCours;
                 Resolve(Plaques);
                 _solutions.Sort((p, q) => p.Compare(q));
                 Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
                 Solutions =  _solutions;
-                Watch.Stop();
+                Duree = (DateTime.Now - debut).TotalSeconds;
             }
             NotifyPropertyChanged();
             return Status;
@@ -174,7 +179,7 @@ namespace CompteEstBon {
         ///
         /// </returns>
         public CebStatus ResolveWithParam(int search, params int[] plq) {
-            if(plq.Length != _nbPlaques)
+            if(plq.Length != NbPlaques)
                 throw new ArgumentException("Nombre de plaques incorrecte");
             Status = CebStatus.Indefini;
             _search = search;
@@ -184,21 +189,23 @@ namespace CompteEstBon {
 
        
         public void SetPlaques(params int[] plaq) {
-            if (plaq.Length != _nbPlaques)
+            if (plaq.Length != NbPlaques)
                 throw new ArgumentException("Nombre de plaques incorrecte");
             Status = CebStatus.Indefini;
             foreach (var (p, i) in plaq.WithIndex().Where(elt => elt.Item2 < 6)) Plaques[i].Value = p;
             Clear();
         }
         public void SetPlaques(IList<int> pq) => SetPlaques(pq.ToArray());
-        public string Solution(int no = 0) => (Solutions is null) || Solutions.Count == 0 || no < 0 || no >= Solutions.Count
+        public string FirstSolution => Solution();
+        public string Solution(int no = 0 ) => Count == 0 || no  < 0 || no >=  Count
             ? string.Empty
-            : Solutions[no].ToString();
+            : Solutions!.ElementAt(no).ToString();
 
         /// <summary>
         /// Valid
         /// </summary>
         public CebStatus Valid() {
+            if (Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) return Status;
             Status = IsSearchValid() && IsPlaquesValid() ? CebStatus.Valide : CebStatus.Invalide;
             return Status;
         }
@@ -223,7 +230,8 @@ namespace CompteEstBon {
         /// </summary>
         public int Diff { get; private set; } = int.MaxValue;
 
-        public double Duree => Watch.Elapsed.TotalSeconds;
+        public double Duree { get; private set; }
+        
 
         /// <summary>
         /// Return the find values

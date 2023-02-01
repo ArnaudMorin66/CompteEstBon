@@ -5,25 +5,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.CommandLine;
-using System.CommandLine.Rendering;
-using System.IO.Compression;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Xml.Serialization;
 using CompteEstBon;
 using Microsoft.Extensions.Configuration;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Conventions;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
+using System.CommandLine;
+using System.CommandLine.Rendering;
 using static System.Console;
-
-// ReSharper disable LocalizableElement
 
 
 var Json = false;
@@ -33,27 +19,21 @@ var ConfigurationFile =
     @$"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Ceb\config.json";
 var MongoServer = string.Empty;
 var SaveToMongoDb = false;
-FileInfo fichier = null;
+List<FileInfo> fichiers = new();
+var sflicence = CompteEstBon.Properties.Resources.sflicence;
 
-JsonSerializerOptions JsonOptions = new() {
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        Converters = { new JsonStringEnumConverter() },
-        WriteIndented = false
-    };
 
 var tirage = new CebTirage();
-
 WriteLine('\n');
-
 WriteLine("*** Le Compte est bon ***".Red());
 WriteLine();
 
 ConfigurationBuilder builder = new();
-if (File.Exists(ConfigurationFile)) {
+if(File.Exists(ConfigurationFile)) {
     builder.AddJsonFile(ConfigurationFile);
     var jbuild = builder.Build();
 
-    foreach (var child in jbuild.GetChildren())
+    foreach (var child in jbuild.GetChildren()) {
         switch (child.Path.ToUpper()) {
             case "SAVE":
                 Save = bool.TryParse(child.Value, out var v) && v;
@@ -65,15 +45,20 @@ if (File.Exists(ConfigurationFile)) {
                 MongoServer = child.Value;
                 break;
             case "PLATFORM":
-                var elt = child.GetChildren()
-                    .FirstOrDefault(it => it.Key == Environment.OSVersion.Platform.ToString());
-                if (elt != null) fichier = new FileInfo(elt["ZipFile"] ?? string.Empty);
+                var elt = child.GetChildren().FirstOrDefault(it => it.Key == Environment.OSVersion.Platform.ToString());
+                if (elt != null)
+                    fichiers.Add(new FileInfo(elt["ZipFile"]!)); 
+                break;
+            case "SFLICENCE":
+                sflicence = child.Value;
                 break;
         }
+    }
 }
 
 
-var rootCommand = new RootCommand("Compte Est Bon") {
+var rootCommand = new RootCommand("Compte Est Bon")
+{
     new Option<int>(new[] { "--trouve", "-t" }, "Nombre à chercher"),
     new Option<int[]>(new[] { "--plaques", "-p" }, "Liste des plaques") { AllowMultipleArgumentsPerToken = true },
     new Option<bool>(new[] { "--json", "-j" }, "Export au format JSON"),
@@ -81,220 +66,143 @@ var rootCommand = new RootCommand("Compte Est Bon") {
     new Option<bool>(new[] { "--sauvegarde", "-s" }, "Sauvegarder le Compte"),
     new Option<bool>(new[] { "--mongodb", "-m" }, "Sauvegarder le Compte dans MongoDB"),
     new Option<string>(new[] { "--serveur", "-S" }, "Nom du serveur MongoDB"),
-    new Option<FileInfo>(new[] { "--fichier", "-f" }, "Fichier"),
+    new Option<FileInfo[]>(new[] { "--fichiers", "-f" }, "Liste des fichiers"){ AllowMultipleArgumentsPerToken = true },
     new Argument<int[]>("arguments", "Plaques et nombre à trouver")
 };
+try {
+    rootCommand.SetHandler(
+        async context => {
+            var prs = context.ParseResult;
+            try {
+                foreach(var option in rootCommand.Options)
+                    if(prs.FindResultFor(option) is { } optionResult)
+                        switch(option.Name.ToLower()) {
+                            case "trouve":
+                                tirage.Search = optionResult.GetValueOrDefault<int>();
+                                break;
 
-rootCommand.SetHandler(async context => {
-    var prs = context.ParseResult;
+                            case "plaques":
+                                tirage.SetPlaques(optionResult.GetValueOrDefault<int[]>());
+                                break;
 
-    foreach (var option in rootCommand.Options)
-        if (prs.FindResultFor(option) is { } optionResult)
-            switch (option.Name.ToLower()) {
-                case "trouve":
-                    tirage.Search = optionResult.GetValueOrDefault<int>();
-                    break;
+                            case "json":
+                                (Json, Jsonx) = (optionResult.GetValueOrDefault<bool>(), false);
+                                break;
 
-                case "plaques":
-                    tirage.SetPlaques(optionResult.GetValueOrDefault<int[]>());
-                    break;
+                            case "fichiers":
+                                fichiers.Clear();
+                                fichiers.AddRange(optionResult.GetValueOrDefault<FileInfo[]>());
+                                Save = true;
+                                break;
 
-                case "json":
-                    (Json, Jsonx) = (optionResult.GetValueOrDefault<bool>(), false);
-                    break;
+                            case "sauvegarde":
+                                Save = optionResult.GetValueOrDefault<bool>();
+                                break;
 
-                case "fichier":
-                    fichier = optionResult.GetValueOrDefault<FileInfo>();
-                    break;
+                            case "mongodb":
+                                SaveToMongoDb = optionResult.GetValueOrDefault<bool>();
+                                break;
 
-                case "sauvegarde":
-                    Save = optionResult.GetValueOrDefault<bool>();
-                    break;
+                            case "serveur":
+                                MongoServer = optionResult.GetValueOrDefault<string>();
+                                break;
+                            case "jsonx":
+                                (Json, Jsonx) = (optionResult.GetValueOrDefault<bool>(), true);
+                                break;
 
-                case "mongodb":
-                    SaveToMongoDb = optionResult.GetValueOrDefault<bool>();
-                    break;
+                            default:
+                                throw new Exception($"Argument {option.Name} invalide");
+                        }
 
-                case "serveur":
-                    MongoServer = optionResult.GetValueOrDefault<string>();
-                    break;
-                case "jsonx":
-                    (Json, Jsonx) = ( optionResult.GetValueOrDefault<bool>(), true);
-                    break;
 
-                default:
-                    AbortProgramme($"Argument {option.Name} invalide");
-                    break;
+                if(prs.FindResultFor(rootCommand.Arguments[0]) is { } argumentResult) {
+                    var arguments = argumentResult.GetValueOrDefault<int[]>();
+
+                    // if (arguments.Length > 7) throw new Exception("Nombre d'arguments invalide");
+
+                    if(arguments[0] > 100) {
+                        tirage.Search = arguments[0];
+                        arguments = arguments[1..];
+                    } else if(arguments.Length >= 7 && arguments[6] > 100) {
+                        tirage.Search = arguments[6];
+                        arguments = arguments[..6];
+                    }
+                    if(arguments.Length > 0)
+                        tirage.SetPlaques(arguments);
+                }
+
+
+                await runAsync().ConfigureAwait(false);
+            } catch(Exception e) {
+                abort(e);
             }
+        });
 
+    await rootCommand.InvokeAsync(args).ConfigureAwait(false);
+} catch(Exception ex) {
+    abort(ex);
+}
 
-    if (prs.FindResultFor(rootCommand.Arguments[0]) is { } argumentResult) {
-        var arguments = argumentResult.GetValueOrDefault<int[]>();
-
-        if (arguments.Length > 7) AbortProgramme("Nombre d'arguments invalide");
-
-        if (arguments[0] > 100) {
-            tirage.Search = arguments[0];
-            arguments = arguments[1..];
-        }
-        else if (arguments.Length == 7 && arguments[6] > 100) {
-            tirage.Search = arguments[6];
-            arguments = arguments[..6];
-        }
-
-        //if (arguments.Length == 6)
-            tirage.SetPlaques(arguments);
-        //else if (arguments.Length > 0) AbortProgramme("Arguments invalide");
-    }
-
-    await runAsync();
-});
-
-await rootCommand.InvokeAsync(args);
 WriteLine();
 
+void abort(Exception ex) {
+    WriteLine();
+    WriteLine(@"*********** Erreur ***********");
+    WriteLine();
+    WriteLine($@"Source : ${ex.Source}");
+    WriteLine();
+    WriteLine($@"{ex.Message.Red()}");
+    WriteLine();
+    WriteLine(@"*****************************");
+    WriteLine();
+    Environment.Exit(-1);
+}
 
 async Task runAsync() {
-    var result = await tirage.ResolveAsync();
-    if (Json) {
-        WriteLine( JsonSerializer.Serialize<CebData>(tirage.Result, JsonOptions));
-        if (Jsonx) Environment.Exit(0);
+    await tirage.ResolveAsync().ConfigureAwait(false);
+    if(Json) {
+        tirage.WriteJson();
+        if(Jsonx)
+            Environment.Exit(0);
         WriteLine();
     }
 
     Write("Tirage:\t".Yellow());
     Write("Plaques: ".LightYellow());
-    foreach (var plaque in tirage.Plaques) Write($@"{plaque} ");
+    foreach(var plaque in tirage.Plaques)
+        Write($@"{plaque} ");
     Write("Recherche: ".LightYellow());
-    Write(tirage.Search);
-    WriteLine();
+    WriteLine(tirage.Search);
     WriteLine();
 
-    if (tirage.Status == CebStatus.Invalide) AbortProgramme("Tirage  invalide");
+    if(tirage.Status == CebStatus.Invalide)
+        throw new Exception("Tirage  invalide");
 
-    var txtStatus = result == CebStatus.CompteEstBon ? result.Green() : result.Magenta();
+
+    var txtStatus = tirage.Status.ToString().ToUpper();
+    txtStatus = tirage.Status == CebStatus.CompteEstBon ? txtStatus.Green() : txtStatus.Magenta();
     Write(txtStatus);
-    if (result == CebStatus.CompteApproche) Write($": {tirage.Found}");
+    if(tirage.Status == CebStatus.CompteApproche)
+        Write($@": {tirage.Found}");
 
-    Write($", {"nombre de solutions:".LightYellow()} {tirage.Solutions.Count}");
-    WriteLine($", {"Durée du calcul:".LightYellow()} {tirage.Duree:F3} s");
+    Write($@", {"nombre de solutions:".LightYellow()} {tirage.Solutions!.Count}");
+    WriteLine($@", {"Durée du calcul:".LightYellow()} {tirage.Duree:F3} s");
 
     WriteLine();
 
     foreach (var (i, solution) in tirage.Solutions.Select((v, i) => (i, v))) {
         var count = $"{i + 1:0000}".ColorForeground(
             tirage.Status == CebStatus.CompteEstBon ? Ansi.Color.Foreground.Green : Ansi.Color.Foreground.Magenta);
-        WriteLine($"{solution.Rank} - {count}: {solution.LightYellow()}");
+        WriteLine($@"{solution.Rank} - {count}: {solution.LightYellow()}");
     }
 
     WriteLine();
 
-
-    if (SaveToMongoDb && MongoServer != string.Empty) await SaveMongoDB();
-
-    if (Save == false) Environment.Exit(0);
-
-    if (fichier != null && Save)
-        switch (fichier.Extension) {
-            case ".zip":
-                SaveZip();
-                break;
-            case ".json":
-                SaveJson();
-                break;
-            default:
-                AbortProgramme("Erreur de fichier");
-                break;
-        }
-}
-
-void AbortProgramme(string message) {
-    WriteLine($"{"Erreur: ".Red()}{message}".LightYellow());
-    Environment.Exit(-1);
-}
-
-void SaveJson() {
-    using var stream = fichier.Create();
-    JsonSaveStream(stream);
-}
-
-void SaveZip() {
-    using var archive = ZipFile.Open(fichier.FullName, ZipArchiveMode.Update, Encoding.UTF8);
-    var num = new[] { 0 }.Concat(
-            archive.Entries.Select(p => int.TryParse(p.Name[..p.Name.LastIndexOf('.')], out var result) ? result : 0))
-        .Max();
-    SaveStream(archive, $"{++num:000000}.json", JsonSaveStream);
-    SaveStream(archive, $"{++num:000000}.xml", XmlSaveStream);
-}
-
-void SaveStream(ZipArchive archive, string nom, Action<Stream> action) {
-    var stream = archive.CreateEntry(nom, CompressionLevel.SmallestSize).Open();
-    action(stream);
-    stream.Close();
-}
-void JsonSaveStream(Stream stream) => JsonSerializer.Serialize(stream, tirage.Result, JsonOptions);
-
-
-void XmlSaveStream(Stream stream) {
-    XmlSerializer mySerializer = new(typeof(CebData));
-    try {
-        mySerializer.Serialize(stream, tirage.Result);
+    if(Save) {
+        SfCebOffice.RegisterLicense(sflicence);
+        if (SaveToMongoDb && MongoServer != string.Empty)
+            await tirage.SerializeTirageMongoAsync(MongoServer).ConfigureAwait(false);
+        if(fichiers != null)
+            tirage.SerializeFichiers(fichiers);
     }
-    catch (SerializationException) {
-        AbortProgramme("Erreur serialisation");
-    }
-}
-
-
-async Task SaveMongoDB() {
-    try {
-        ConventionRegistry.Register(
-            "EnumStringConvention",
-            new ConventionPack { new EnumRepresentationConvention(BsonType.String) },
-            _ => true);
-        var clientSettings = MongoClientSettings.FromConnectionString(MongoServer);
-        clientSettings.LinqProvider = LinqProvider.V3;
-
-        var cl = new MongoClient(clientSettings)
-            .GetDatabase("ceb")
-            .GetCollection<BsonDocument>("comptes");
-        
-        await cl.InsertOneAsync(
-            new BsonDocument(
-                    new Dictionary<string, object> {
-                        {
-                            "_id",
-                            new {
-                                lang = "c#", domain = Environment.GetEnvironmentVariable("USERDOMAIN"),
-                                date = DateTime.UtcNow
-                            }.ToBsonDocument(
-                            )
-                        }
-                    })
-                .AddRange(tirage.Result.ToBsonDocument()));
-    }
-    catch (Exception) {
-        AbortProgramme("Erreur de sauvegarde sous MongoDb ");
-    }
-}
-
-
-internal static class Colorizer {
-    public static string ColorForeground(this object texte, AnsiControlCode bground, AnsiControlCode eground = null) =>
-        $"{bground}{texte}{eground ?? Ansi.Color.Foreground.Default}";
-
-    public static string Red(this object texte) => texte.ColorForeground(Ansi.Color.Foreground.Red);
-
-    public static string LightYellow(this object texte) => texte.ColorForeground(Ansi.Color.Foreground.LightYellow);
-
-    public static string Cyan(this object texte) => texte.ColorForeground(Ansi.Color.Foreground.Cyan);
-
-
-    public static string Green(this object texte) => texte.ColorForeground(Ansi.Color.Foreground.Green);
-
-    public static string Magenta(this object texte) => texte.ColorForeground(Ansi.Color.Foreground.Magenta);
-
-    public static string Yellow(this object texte) => texte.ColorForeground(Ansi.Color.Foreground.Yellow);
-
-    public static string Blue(this object texte) => texte.ColorForeground(Ansi.Color.Foreground.Blue);
 }

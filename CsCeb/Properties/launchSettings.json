@@ -29,7 +29,7 @@
     },
     "parametres": {
       "commandName": "Project",
-      "commandLineArgs": "-j -f exemple.json -m"
+      "commandLineArgs": "-f ceb.xlsx ceb.xml ceb.zip ceb.json ceb.docx"
     }
   }
 }

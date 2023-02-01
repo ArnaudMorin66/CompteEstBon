@@ -54,7 +54,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
-    <ProjectReference Include="..\SFCebOffice\SFCebOffice.csproj" />
+    <ProjectReference Include="..\SFCebOffice\CebExport.csproj" />
   </ItemGroup>
 
   <ItemGroup>
