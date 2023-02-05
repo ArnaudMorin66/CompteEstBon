@@ -14,10 +14,10 @@ namespace CompteEstBon {
         public App() { }
 
         private static string FindLicenseKey() {
-            string path = "SyncfusionLicense.txt";
-            string text = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            var path = "SyncfusionLicense.txt";
+            var text = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
             while(!string.IsNullOrEmpty(text)) {
-                string path2 = Path.Combine(text, path);
+                var path2 = Path.Combine(text, path);
                 if(File.Exists(path2)) {
                     return File.ReadAllText(path2, Encoding.UTF8);
                 }
@@ -42,7 +42,7 @@ namespace CompteEstBon {
                 .OverrideMetadata(
                     typeof(FrameworkElement),
                     new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
-            SfCebOffice.RegisterLicense(FindLicenseKey());
+            ExportOffice.RegisterLicense(FindLicenseKey());
             base.OnStartup(e);
         }
     }

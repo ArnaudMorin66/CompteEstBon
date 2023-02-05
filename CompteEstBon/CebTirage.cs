@@ -189,9 +189,14 @@ namespace CompteEstBon {
 
        
         public void SetPlaques(params int[] plaq) {
-            if (plaq.Length != NbPlaques)
-                throw new ArgumentException("Nombre de plaques incorrecte");
             Status = CebStatus.Indefini;
+            if (plaq.Length != NbPlaques) {
+                foreach (var plaque in Plaques) {
+                    plaque.Value = 0;
+                }
+                Clear();
+                return;
+            }
             foreach (var (p, i) in plaq.WithIndex().Where(elt => elt.Item2 < 6)) Plaques[i].Value = p;
             Clear();
         }

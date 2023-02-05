@@ -12,7 +12,7 @@ namespace CompteEstBon {
     public partial class App : Application {
         public App() {
             SyncfusionLicenseProvider.RegisterLicense(CompteEstBon.Properties.Settings.Default.SfLicence);
-            SfCebOffice.RegisterLicense(CompteEstBon.Properties.Settings.Default.SfLicence);
+            ExportOffice.RegisterLicense(CompteEstBon.Properties.Settings.Default.SfLicence);
             SfSkinManager.ApplyStylesOnApplication = true;
         }
     }

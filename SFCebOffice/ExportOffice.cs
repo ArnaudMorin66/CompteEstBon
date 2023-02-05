@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="SfCebOffice.cs" company="">
+// <copyright file="ExportOffice.cs" company="">
 //     Author:  
 //     Copyright (c) . All rights reserved.
 // </copyright>
@@ -16,13 +16,13 @@ using Syncfusion.XlsIO;
 namespace CompteEstBon; 
 //
 
-public static class SfCebOffice {
-    public static void RegisterLicense(string licensefile) {
-        if (!string.IsNullOrEmpty(licensefile)) SyncfusionLicenseProvider.RegisterLicense(licensefile);
+public static class ExportOffice {
+    public static void RegisterLicense(string license) {
+        if (!string.IsNullOrEmpty(license)) SyncfusionLicenseProvider.RegisterLicense(license);
     }
 
 
-    public static void ExportExcel(this CebTirage tirage, Stream stream) {
+    public static void ToExcel(this CebTirage tirage, Stream stream) {
         using ExcelEngine engine = new();
 
         var application = engine.Excel;
@@ -47,7 +47,6 @@ public static class SfCebOffice {
         rg.CellStyle.Font.Color = ExcelKnownColors.White;
         if (tirage.Status == CebStatus.CompteEstBon) {
             res = "Compte est bon";
-
             rg.CellStyle.ColorIndex = ExcelKnownColors.Green;
         }
         else {
@@ -73,7 +72,7 @@ public static class SfCebOffice {
     }
 
 
-    public static void ExportWord(this CebTirage tirage, Stream stream) {
+    public static void ToWord(this CebTirage tirage, Stream stream) {
         WordDocument wd = new();
         var sect = wd.AddSection() as WSection;
         var dotm =

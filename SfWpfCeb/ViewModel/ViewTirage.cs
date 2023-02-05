@@ -387,8 +387,8 @@ public class ViewTirage : NotificationObject, ICommand {
             fi.Delete();
 
         Action<Stream> ExportFunction = fi.Extension switch {
-            ".xlsx" => Tirage.ExportExcel,
-            ".docx" => Tirage.ExportWord,
+            ".xlsx" => Tirage.ToExcel,
+            ".docx" => Tirage.ToWord,
             _ => throw new NotImplementedException()
         };
         FileStream stream = new(Path!, FileMode.CreateNew);

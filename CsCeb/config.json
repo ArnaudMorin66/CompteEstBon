@@ -1,5 +1,8 @@
 {
-  "Ceb": {
-    "ZipFile": "C:\\Users\\arnaud\\AppData\\Local\\Ceb\\Ceb.zip"
-  }
+  "save": false,
+  "mongodb": false,
+  "mongodbserver": "mongodb://127.0.0.1:27017",
+  "pickfile": true,
+  "xmlfile": true,
+  "zipfile": ".\\ceb.zip"
 }

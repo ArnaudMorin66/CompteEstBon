@@ -18,7 +18,7 @@ public sealed class CebPlaque : CebBase, INotifyPropertyChanged {
         1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25
     };
 
-    public static readonly IEnumerable<int> AnyPlaques = new SortedSet<int>(AllPlaques);
+    public static readonly IEnumerable<int> DistinctPlaques = AllPlaques.Distinct();// new SortedSet<int>(AllPlaques);
 
 
     public CebPlaque(int v = 0) {
@@ -41,11 +41,11 @@ public sealed class CebPlaque : CebBase, INotifyPropertyChanged {
                 return;
             base.Value = value;
             Operations[0] = value.ToString();
-            OnPropertyChanged(nameof(Value));
+            OnPropertyChanged();
         }
     }
 
-    [JsonIgnore] public override bool IsValid => AnyPlaques.Contains(Value);
+    [JsonIgnore] public override bool IsValid => DistinctPlaques.Contains(Value);
 
     public static implicit operator int(CebPlaque p) => p.Value;
 

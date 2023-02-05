@@ -4,9 +4,6 @@
 @using MongoDB.Bson.Serialization.Conventions
 @using MongoDB.Driver
 @using MongoDB.Driver.Linq
-@using Syncfusion.Blazor.Buttons
-@using Syncfusion.Blazor.DropDowns
-@using Syncfusion.Blazor.Inputs
 
 <div class="row g-0">
 	<div class="col-md">
@@ -231,7 +228,7 @@
 	private async Task ExportAsync(TypeExport export) {
 		if (tirage.Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
 		var filename = "CompteEstBon." + (export == TypeExport.Excel ? "xlsx" : "docx");
-		Action<MemoryStream> exportStream = export == TypeExport.Excel ? tirage.ExportExcel : tirage.ExportWord;
+		Action<MemoryStream> exportStream = export == TypeExport.Excel ? tirage.ToExcel : tirage.ToWord;
 
 		await using var mstream = new MemoryStream();
 		exportStream(mstream);

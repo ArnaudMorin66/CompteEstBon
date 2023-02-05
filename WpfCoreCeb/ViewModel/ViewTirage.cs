@@ -47,7 +47,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     //private IEnumerable<CebBase> _solutions;
     private IEnumerable<CebDetail> _solutions;
 
-    private string _theme = "DarkSlateGray";
+    private string _theme = "Black";
     private string _titre = "Le compte est bon";
     private bool _vertical;
 
@@ -86,7 +86,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
                 Task.Run(ResolveAsync);
         };
 
-        Background = ThemeColors["DarkSlateGray"];
+        Background = ThemeColors["Black"];
         Auto = Settings.Default.AutoCalcul;
         // MongoDB = Settings.Default.MongoDb;
         _isUpdating = false;
@@ -308,7 +308,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 
     private async Task ExportAsync() {
         IsBusy = true;
-        await Task.Run(() => ExportFichier());
+        await Task.Run(ExportFichier);
         IsBusy = false;
     }
 
@@ -428,7 +428,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
                 new ConventionPack {
                     new EnumRepresentationConvention(BsonType.String)
                 },
-                t => true);
+                _ => true);
             var clientSettings = MongoClientSettings.FromConnectionString(Settings.Default.MongoServer);
             clientSettings.LinqProvider = LinqProvider.V3;
 
@@ -471,8 +471,8 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
             fi.Delete();
 
         Action<Stream> ExportFunction = fi.Extension switch {
-            ".xlsx" => Tirage.ExportExcel,
-            ".docx" => Tirage.ExportWord,
+            ".xlsx" => Tirage.ToExcel,
+            ".docx" => Tirage.ToWord,
             _ => throw new NotImplementedException()
         };
         var stream = new FileStream(Path!, FileMode.CreateNew);

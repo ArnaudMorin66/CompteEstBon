@@ -488,19 +488,20 @@
             Grid.Row="3"
             Grid.Column="0"
             Grid.ColumnSpan="12"
-            Width="20"
+            
             Margin="0,20,0,20"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Panel.ZIndex="10"
+            Height="10"
             Background="Transparent"
             BorderBrush="Black"
             BorderThickness="1"
-            Foreground="OrangeRed"
+            Foreground="YellowGreen"
             IsIndeterminate="True"
             Maximum="100"
             Minimum="0"
-            Orientation="Vertical"
+            Orientation="Horizontal"
             Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverterParam}, ConverterParameter={StaticResource True}}" />
         <Popup
             Grid.Row="0"
