@@ -102,7 +102,7 @@ public class ViewTirage : NotificationObject, ICommand {
         dateDispatcher.Start();
     }
 
-    public static IEnumerable<int> ListePlaques => CebPlaque.AnyPlaques;
+    public static IEnumerable<int> ListePlaques => CebPlaque.DistinctPlaques;
 
     public CebTirage Tirage { get; } = new();
 

@@ -18,7 +18,7 @@ public sealed class CebPlaque : CebBase, INotifyPropertyChanged {
         1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 25
     };
 
-    public static readonly IEnumerable<int> DistinctPlaques = AllPlaques.Distinct();// new SortedSet<int>(AllPlaques);
+    public static readonly IEnumerable<int> DistinctPlaques = AllPlaques.Distinct();
 
 
     public CebPlaque(int v = 0) {
@@ -55,7 +55,7 @@ public sealed class CebPlaque : CebBase, INotifyPropertyChanged {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
+    public bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;
         field = value;
         OnPropertyChanged(propertyName);

@@ -23,12 +23,11 @@ var TelechargementFolder = $@"{Environment.GetFolderPath(Environment.SpecialFold
 
 var MongoServer = string.Empty;
 var SaveToMongoDb = false;
-List<FileInfo> exports = new();
+var exports = new List<FileInfo>();
 var sflicence = Resources.sflicence;
 FileInfo zipfile = null;
-
-
 var tirage = new CebTirage();
+
 WriteLine('\n');
 WriteLine("*** Le Compte est bon ***".Red());
 WriteLine();
@@ -61,7 +60,8 @@ if (File.Exists(ConfigurationFile)) {
 
 var rootCommand = new RootCommand("Compte Est Bon") {
     new Option<int>(new[] { "--trouve", "-t" }, "Nombre à chercher"),
-    new Option<List<int>>(new[] { "--plaques", "-p" }, "Liste des plaques") { AllowMultipleArgumentsPerToken = true },
+    new Option<List<int>>(new[] { "--plaques", "-p" }, "Liste des plaques") 
+        { AllowMultipleArgumentsPerToken = true },
     new Option<bool>(new[] { "--json", "-j" }, "Export au format JSON"),
     new Option<bool>(new[] { "--jsonx", "-J" }, "Export au format JSON et quitte"),
     new Option<bool>(new[] { "--sauvegarde", "-s" }, "Sauvegarder le Compte"),
@@ -120,13 +120,13 @@ try {
                                 break;
 
                             default:
-                                throw new Exception($"Argument {option.Name} invalide");
+                                throw new ArgumentException($"Argument {option.Name} invalide");
                         }
 
-
-                if (prs.FindResultFor(rootCommand.Arguments[0]) is { } argumentResult) {
+                foreach (var argument in rootCommand.Arguments) {
+                    if (prs.FindResultFor(argument) is not { } argumentResult) continue;
                     var arguments = argumentResult.GetValueOrDefault<List<int>>();
-
+                    if (arguments.Count <= 0) continue;
                     if (arguments[0] > 100) {
                         tirage.Search = arguments[0];
                         arguments.RemoveAt(0);
@@ -139,7 +139,7 @@ try {
                     if (arguments.Count > 0)
                         tirage.SetPlaques(arguments);
                 }
-                
+
                 await runAsync();
             }
             catch (Exception e) {
