@@ -29,7 +29,11 @@
     },
     "parametres": {
       "commandName": "Project",
-      "commandLineArgs": "585 5 5 4 4 3 3 -f ceb.xml -a"
+      "commandLineArgs": "585 5 5 4 4 3 3 -f ceb.xml ceb.xlsx -a"
+    },
+    "Erreur option": {
+      "commandName": "Project",
+      "commandLineArgs": "-imposs kop --rez -%%"
     }
   }
 }

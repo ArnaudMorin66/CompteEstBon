@@ -135,21 +135,21 @@ public static class Utilitaires {
     public static void OpenDocument(string nom) =>
         Process.Start(new ProcessStartInfo { UseShellExecute = true, FileName = nom });
 
-    public static string ColorForeground(this object texte, AnsiControlCode bground, AnsiControlCode eground = null) =>
+    public static string TextControlCode(this object texte, AnsiControlCode bground, AnsiControlCode eground = null) =>
         $"{bground}{texte}{eground ?? Ansi.Color.Foreground.Default}";
 
-    public static string Red(this object texte) => texte.ColorForeground(Ansi.Color.Foreground.Red);
+    public static string Red(this object texte) => texte.TextControlCode(Ansi.Color.Foreground.Red);
 
-    public static string LightYellow(this object texte) => texte.ColorForeground(Ansi.Color.Foreground.LightYellow);
+    public static string LightYellow(this object texte) => texte.TextControlCode(Ansi.Color.Foreground.LightYellow);
 
-    public static string Cyan(this object texte) => texte.ColorForeground(Ansi.Color.Foreground.Cyan);
+    public static string Cyan(this object texte) => texte.TextControlCode(Ansi.Color.Foreground.Cyan);
 
 
-    public static string Green(this object texte) => texte.ColorForeground(Ansi.Color.Foreground.Green);
+    public static string Green(this object texte) => texte.TextControlCode(Ansi.Color.Foreground.Green);
 
-    public static string Magenta(this object texte) => texte.ColorForeground(Ansi.Color.Foreground.Magenta);
+    public static string Magenta(this object texte) => texte.TextControlCode(Ansi.Color.Foreground.Magenta);
 
-    public static string Yellow(this object texte) => texte.ColorForeground(Ansi.Color.Foreground.Yellow);
+    public static string Yellow(this object texte) => texte.TextControlCode(Ansi.Color.Foreground.Yellow);
 
-    public static string Blue(this object texte) => texte.ColorForeground(Ansi.Color.Foreground.Blue);
+    public static string Blue(this object texte) => texte.TextControlCode(Ansi.Color.Foreground.Blue);
 }

@@ -59,8 +59,8 @@ if (File.Exists(ConfigurationFile)) {
 
 
 var rootCommand = new RootCommand("Compte Est Bon") {
-    new Option<int>(new[] { "--trouve", "-t" }, "Nombre à chercher"),
-    new Option<List<int>>(new[] { "--plaques", "-p" }, "Liste des plaques") 
+    new Option<int>(new[] { "--trouve", "-t" }, "Nombre à chercher (entre 100 et 999)"),
+    new Option<List<int>>(new[] { "--plaques", "-p" }, "Liste des plaques (6)")
         { AllowMultipleArgumentsPerToken = true },
     new Option<bool>(new[] { "--json", "-j" }, "Export au format JSON"),
     new Option<bool>(new[] { "--jsonx", "-J" }, "Export au format JSON et quitte"),
@@ -69,59 +69,65 @@ var rootCommand = new RootCommand("Compte Est Bon") {
     new Option<string>(new[] { "--serveur", "-S" }, "Nom du serveur MongoDB"),
     new Option<List<string>>(new[] { "--export", "-x", "-f" }, "Exporter resultats")
         { AllowMultipleArgumentsPerToken = true },
-    new Option<bool>(new[] { "-afficher", "-a" }, "Afficher les fichiers exportés"),
-    new Argument<List<int>>("arguments", "Plaques et nombre à trouver")
+    new Option<bool>(new[] { "--afficher", "-a" }, "Afficher les fichiers exportés"),
+    new Argument<List<int>>("arguments", "Plaques (6) et nombre à trouver (entre 100 et 999)")
 };
+
+
 try {
     rootCommand.SetHandler(
         async context => {
             var prs = context.ParseResult;
+            if (prs.UnparsedTokens.Count > 0) {
+                abort(new ArgumentException($"Option(s) {string.Join(",", prs.UnparsedTokens)} invalide(s)"), -2);
+            }
+
             try {
-                foreach (var option in rootCommand.Options)
-                    if (prs.FindResultFor(option) is { } optionResult)
-                        switch (option.Name.ToLower()) {
-                            case "trouve":
-                                tirage.Search = optionResult.GetValueOrDefault<int>();
-                                break;
+                foreach (var option in rootCommand.Options) {
+                    if (prs.FindResultFor(option) is not { } optionResult) 
+                        continue;
+                    switch (option.Name.ToLower()) {
+                        case "trouve":
+                            tirage.Search = optionResult.GetValueOrDefault<int>();
+                            break;
 
-                            case "plaques":
-                                tirage.SetPlaques(optionResult.GetValueOrDefault<List<int>>());
-                                break;
+                        case "plaques":
+                            tirage.SetPlaques(optionResult.GetValueOrDefault<List<int>>());
+                            break;
 
-                            case "json":
-                                (Json, Jsonx) = (optionResult.GetValueOrDefault<bool>(), false);
-                                break;
+                        case "json":
+                            (Json, Jsonx) = (optionResult.GetValueOrDefault<bool>(), false);
+                            break;
 
-                            case "export":
-                                exports.AddRange(optionResult.GetValueOrDefault<List<string>>()
-                                    .Select(FichierToFileInfo));
-                                Save = true;
-                                break;
+                        case "export":
+                            exports.AddRange(optionResult.GetValueOrDefault<List<string>>()
+                                .Select(FichierToFileInfo));
+                            Save = true;
+                            break;
 
-                            case "sauvegarde":
-                                Save = optionResult.GetValueOrDefault<bool>();
-                                break;
+                        case "sauvegarde":
+                            Save = optionResult.GetValueOrDefault<bool>();
+                            break;
 
-                            case "mongodb":
-                                SaveToMongoDb = optionResult.GetValueOrDefault<bool>();
-                                Save = true;
-                                break;
+                        case "mongodb":
+                            SaveToMongoDb = optionResult.GetValueOrDefault<bool>();
+                            Save = true;
+                            break;
 
-                            case "serveur":
-                                MongoServer = optionResult.GetValueOrDefault<string>();
-                                break;
+                        case "serveur":
+                            MongoServer = optionResult.GetValueOrDefault<string>();
+                            break;
 
-                            case "jsonx":
-                                (Json, Jsonx) = (optionResult.GetValueOrDefault<bool>(), true);
-                                break;
+                        case "jsonx":
+                            (Json, Jsonx) = (optionResult.GetValueOrDefault<bool>(), true);
+                            break;
 
-                            case "afficher":
-                                Afficher = optionResult.GetValueOrDefault<bool>();
-                                break;
+                        case "afficher":
+                            Afficher = optionResult.GetValueOrDefault<bool>();
+                            break;
 
-                            default:
-                                throw new ArgumentException($"Argument {option.Name} invalide");
-                        }
+                    }
+                }
 
                 foreach (var argument in rootCommand.Arguments) {
                     if (prs.FindResultFor(argument) is not { } argumentResult) continue;
@@ -148,6 +154,7 @@ try {
         });
 
     await rootCommand.InvokeAsync(args);
+   
 }
 catch (Exception ex) {
     abort(ex);
@@ -155,21 +162,21 @@ catch (Exception ex) {
 
 WriteLine();
 
-void abort(Exception ex) {
+void abort(Exception ex, int retour=-1) {
     WriteLine();
     WriteLine(@"+-----------------------------+");
     WriteLine(@"|          Erreur             |");
     WriteLine(@"+-----------------------------+");
     WriteLine();
-    WriteLine($@"{ex.Source}, {ex.GetType()} => {ex.Message.Red()}");
+    WriteLine($@"{ex.Source?? "ceb"}, {ex.GetType()} => {ex.Message.Red()}");
     WriteLine();
-    WriteLine(@"+-----------------------------+");
+    WriteLine($@"{"AIDE".TextControlCode(Ansi.Text.UnderlinedOn, Ansi.Text.UnderlinedOff)} :");
     WriteLine();
-    Environment.Exit(-1);
+    rootCommand.Invoke("-h");
+    Environment.Exit(retour);
 }
 
 async Task runAsync() {
-
     await tirage.ResolveAsync();
     if (Json) {
         tirage.WriteJson();
@@ -180,15 +187,16 @@ async Task runAsync() {
 
     Write("Tirage:\t".Yellow());
     Write("Plaques: ".LightYellow());
+
     foreach (var plaque in tirage.Plaques)
         Write($@"{plaque} ");
-    Write("Recherche: ".LightYellow());
+
+    Write(", Recherche: ".LightYellow());
     WriteLine(tirage.Search);
     WriteLine();
 
     if (tirage.Status == CebStatus.Invalide)
         throw new ArgumentException("Tirage  invalide");
-
 
     var txtStatus = tirage.Status.ToString().ToUpper();
     txtStatus = tirage.Status == CebStatus.CompteEstBon ? txtStatus.Green() : txtStatus.Magenta();
@@ -202,7 +210,7 @@ async Task runAsync() {
     WriteLine();
 
     foreach (var (i, solution) in tirage.Solutions.Select((v, i) => (i, v))) {
-        var count = $"{i + 1:0000}".ColorForeground(
+        var count = $"{i + 1:0000}".TextControlCode(
             tirage.Status == CebStatus.CompteEstBon ? Ansi.Color.Foreground.Green : Ansi.Color.Foreground.Magenta);
         WriteLine($@"{solution.Rank}: {count} => {solution.LightYellow()}");
     }
