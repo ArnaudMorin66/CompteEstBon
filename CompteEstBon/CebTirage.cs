@@ -20,12 +20,12 @@ namespace CompteEstBon;
 ///     Gestion tirage Compte est bon
 /// </summary>
 public sealed class CebTirage : INotifyPropertyChanged {
+    public static int NbPlaques { get; set; } = 6;
     private static readonly Random Rnd = System.Random.Shared;
     private readonly List<CebBase> _solutions = new();
     private int _search;
 
-    public CebTirage(int nbPlaques = 6) {
-        NbPlaques = nbPlaques;
+    public CebTirage() {
         Plaques = new List<CebPlaque>();
         Random();
     }
@@ -36,14 +36,13 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// </summary>
     /// <param name="search"></param>
     /// <param name="plaques"></param>
-    public CebTirage(int nb , int search, params int[] plaques) : this(nb) {
+    public CebTirage(int search, params int[] plaques) : this() {
         if (plaques.Length != 0) SetPlaques(plaques);
         Search = search;
         Clear();
     }
 
     public List<CebBase>? Solutions { get; private set; }
-    private int NbPlaques { get; }
 
     public event PropertyChangedEventHandler PropertyChanged;
 
