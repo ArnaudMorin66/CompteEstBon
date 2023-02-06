@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // <copyright file="CebTirage.cs" company="">
-//     Author:  
+//     Author:  Arnaud Morin
 //     Copyright (c) . All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
