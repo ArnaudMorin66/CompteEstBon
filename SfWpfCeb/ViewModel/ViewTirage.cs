@@ -55,7 +55,6 @@ public class ViewTirage : NotificationObject, ICommand {
 
     private bool _vertical;
     public DispatcherTimer dateDispatcher;
-    public Stopwatch stopwatch;
 
     /// <summary>
     ///     Initialisation
@@ -63,12 +62,10 @@ public class ViewTirage : NotificationObject, ICommand {
     /// <returns>
     /// </returns>
     public ViewTirage() {
-        stopwatch = new Stopwatch();
-
         dateDispatcher = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(Settings.Default.SolutionTimer) };
         dateDispatcher.Tick += (_, _) => {
-            if (stopwatch.IsRunning)
-                Duree = stopwatch.Elapsed;
+            // if (stopwatch.IsRunning)
+            //    Duree = stopwatch.Elapsed;
 
             if (Popup && NotifyWatch.Elapsed > SolutionTimer)
                 Popup = false;
@@ -293,11 +290,11 @@ public class ViewTirage : NotificationObject, ICommand {
     private void ClearData() {
         if (_isUpdating)
             return;
-        if (!IsBusy) {
-            stopwatch.Reset();
-            Duree = stopwatch.Elapsed;
-        }
-
+        //if (!IsBusy) {
+        //    stopwatch.Reset();
+        //    Duree = stopwatch.Elapsed;
+        //}
+        Duree = TimeSpan.Zero;
         _isUpdating = true;
         Solution = null;
         Solutions = null;
@@ -410,20 +407,15 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     public async Task RandomAsync() {
-        //IsBusy = true;
         await Tirage.RandomAsync();
         UpdateData();
-        //if (!Auto)
-        //    IsBusy = false;
     }
 
     public async Task<CebStatus> ResolveAsync() {
-        if (IsBusy)
-            return Tirage.Status;
+        if (IsBusy) return Tirage.Status;
         IsBusy = true;
         Result = "⏰ Calcul en cours...";
-        stopwatch.Reset();
-        stopwatch.Start();
+        
         Foreground = Colors.Aqua;
 
         await Tirage.ResolveAsync();
@@ -433,8 +425,8 @@ public class ViewTirage : NotificationObject, ICommand {
             CebStatus.Invalide => "🤬 Tirage invalide",
             _ => "Jeu du Compte Est Bon"
         };
-        stopwatch.Stop();
-        Duree = stopwatch.Elapsed;
+        
+        Duree = Tirage.Duree;
         Solution = Tirage.Solutions![0];
         Solutions = Tirage.Solutions;
         UpdateForeground();

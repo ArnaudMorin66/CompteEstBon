@@ -54,7 +54,7 @@ public static class ExportOffice {
             rg.CellStyle.ColorIndex = ExcelKnownColors.Orange;
         }
 
-        res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.Duree:N3} ";
+        res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.Duree.TotalSeconds:F3} ";
 
         rg.Value2 = res;
         rg.HorizontalAlignment = ExcelHAlign.HAlignCenter;
@@ -127,7 +127,7 @@ public static class ExportOffice {
             tcolor = Color.Black;
         }
 
-        res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.Duree:N3} ";
+        res += $": {tirage.Found}, Nombre de solutions: {tirage.Count}, Duree: {tirage.Duree.TotalSeconds:F3} ";
         pg = sect.AddParagraph();
         var tx = pg.AppendText(res);
         tx.CharacterFormat.TextColor = tcolor;

@@ -5,8 +5,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Diagnostics;
-
 namespace CompteEstBon {
     /// <inheritdoc/>
     /// /// /// ///

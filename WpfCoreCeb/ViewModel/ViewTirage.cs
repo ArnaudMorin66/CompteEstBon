@@ -142,7 +142,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     }
 
     public CebTirage Tirage { get; set; } = new();
-    public static IEnumerable<int> ListePlaques { get; } = CebPlaque.AnyPlaques;
+    public static IEnumerable<int> ListePlaques { get; } = CebPlaque.DistinctPlaques;
 
     public ObservableCollection<int> Plaques { get; } =
         new() { 0, 0, 0, 0, 0, 0 };
@@ -406,7 +406,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
             _ => "Le Compte est Bon"
         };
         stopwatch.Stop();
-        Duree = TimeSpan.FromSeconds(Tirage.Duree);
+        Duree = Tirage.Duree;
         UpdateForeground();
 
         Solution = Tirage.Solutions![0];

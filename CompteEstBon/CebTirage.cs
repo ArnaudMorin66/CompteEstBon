@@ -22,9 +22,8 @@ namespace CompteEstBon;
 public sealed class CebTirage : INotifyPropertyChanged {
     public static int NbPlaques { get; set; } = 6;
     private static readonly Random Rnd = System.Random.Shared;
-    private readonly List<CebBase> _solutions = new();
-    private int _search;
-
+    
+    
     public CebTirage() {
         Plaques = new List<CebPlaque>();
         Random();
@@ -41,7 +40,8 @@ public sealed class CebTirage : INotifyPropertyChanged {
         Search = search;
         Clear();
     }
-
+    
+    private readonly List<CebBase> _solutions = new();
     public List<CebBase>? Solutions { get; private set; }
 
     public event PropertyChangedEventHandler PropertyChanged;
@@ -101,7 +101,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     public CebStatus Clear() {
         Solutions = null;
         _solutions.Clear();
-        Duree = 0;
+        Duree = TimeSpan.Zero;
         Diff = int.MaxValue;
         Found.Reset();
         Status = CebStatus.Indefini;
@@ -127,7 +127,6 @@ public sealed class CebTirage : INotifyPropertyChanged {
             Plaques.Add(pq);
             liste.RemoveAt(n);
         }
-
         _search = Rnd.Next(100, 1000);
         return Clear();
     }
@@ -148,7 +147,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
             _solutions.Sort((p, q) => p.Compare(q));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
             Solutions = _solutions;
-            Duree = (DateTime.Now - debut).TotalSeconds;
+            Duree = (DateTime.Now - debut);
         }
 
         NotifyPropertyChanged();
@@ -227,7 +226,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// </summary>
     public int Diff { get; private set; } = int.MaxValue;
 
-    public double Duree { get; private set; }
+    public TimeSpan Duree { get; private set; }
 
 
     /// <summary>
@@ -235,8 +234,12 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// </summary>
     public CebFind Found { get; } = new();
 
+    /// <summary>
+    ///  Liste des plaques
+    /// </summary>
     public List<CebPlaque> Plaques { get; }
 
+    private int _search;
     /// <summary>
     ///     nombre � chercher
     /// </summary>

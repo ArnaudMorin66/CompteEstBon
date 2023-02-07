@@ -17,10 +17,8 @@ var Json = false;
 var Jsonx = false;
 var Save = false;
 var Afficher = false;
-
 var ConfigurationFile = @$"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Ceb\config.json";
 var TelechargementFolder = $@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\Downloads";
-
 var MongoServer = string.Empty;
 var SaveToMongoDb = false;
 var exports = new List<FileInfo>();
@@ -29,7 +27,8 @@ FileInfo zipfile = null;
 var tirage = new CebTirage();
 
 WriteLine('\n');
-WriteLine("*** Le Compte est bon ***".Red());
+WriteLine("*** LE COMPTE EST BON ***".Red());
+
 WriteLine();
 
 ConfigurationBuilder builder = new();
@@ -182,30 +181,28 @@ async Task runAsync() {
         tirage.WriteJson();
         if (Jsonx)
             Environment.Exit(0);
-        WriteLine();
     }
 
-    Write("Tirage:\t".Yellow());
-    Write("Plaques: ".LightYellow());
+    Write("Plaques:".LightYellow());
 
     foreach (var plaque in tirage.Plaques)
-        Write($@"{plaque} ");
-
+        Write($@" {plaque}");
+    
     Write(", Recherche: ".LightYellow());
     WriteLine(tirage.Search);
     WriteLine();
-
+  
     if (tirage.Status == CebStatus.Invalide)
         throw new ArgumentException("Tirage  invalide");
 
-    var txtStatus = tirage.Status.ToString().ToUpper();
+    var txtStatus = tirage.Status == CebStatus.CompteEstBon ? "COMPTE EST BON" : "COMPTE APPROCHÉ";
     txtStatus = tirage.Status == CebStatus.CompteEstBon ? txtStatus.Green() : txtStatus.Magenta();
     Write(txtStatus);
     if (tirage.Status == CebStatus.CompteApproche)
         Write($@": {tirage.Found}");
 
     Write($@", {"nombre de solutions:".LightYellow()} {tirage.Solutions!.Count}");
-    WriteLine($@", {"Durée du calcul:".LightYellow()} {tirage.Duree:F3} s");
+    WriteLine($@", {"durée du calcul:".LightYellow()} {tirage.Duree.TotalSeconds:F3} s");
 
     WriteLine();
 

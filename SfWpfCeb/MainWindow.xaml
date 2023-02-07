@@ -383,7 +383,6 @@
             Panel.ZIndex="10"
             AnimationType="SlicedCircle"
             Foreground="{DynamicResource TextForegroundBrush}"
-            Header="{Binding Duree.TotalSeconds, Mode=OneWay, StringFormat=Durée: {0:N3}}"
             IsBusy="{Binding IsBusy}"
             Name="Wait" />
         <StatusBar
