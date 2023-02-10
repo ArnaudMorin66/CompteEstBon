@@ -6,6 +6,9 @@ namespace CompteEstBon;
 ///  
 
 public enum CebStatus:short {
+    /// <summary>
+    /// 
+    /// </summary>
     Indefini = 0,
     CompteEstBon = 1,
     CompteApproche = 2,

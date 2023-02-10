@@ -4,7 +4,12 @@
 
 namespace CompteEstBon {
     public static class CebUtils {
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="self"></param>
+        /// <returns></returns>
         public static IEnumerable<(T, int)> WithIndex<T>(this IEnumerable<T> self) => self.Select((value, index) => (value, index));
         /// <summary>
         /// Teste si une valeur est entre les 2 valeurs spécifiées (bornes inclues)

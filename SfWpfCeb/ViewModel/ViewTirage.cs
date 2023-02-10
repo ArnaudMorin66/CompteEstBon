@@ -428,7 +428,7 @@ public class ViewTirage : NotificationObject, ICommand {
         
         Duree = Tirage.Duree;
         Solution = Tirage.Solutions![0];
-        Solutions = Tirage.Solutions;
+        Solutions = Tirage.Solutions; 
         UpdateForeground();
         IsBusy = false;
         RaisePropertyChanged(nameof(IsComputed));

@@ -13,6 +13,9 @@ namespace CompteEstBon {
     /// </summary>
 
     public sealed class CebOperation : CebBase {
+        /// <summary>
+        /// 
+        /// </summary>
         public static readonly string AllOperations = "x+-/";
 
         /// <summary>
@@ -37,21 +40,34 @@ namespace CompteEstBon {
             if (Value != 0)
                 AddOperations(g, op, d);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
         private void AddOperation(string value) => Operations.Add(value);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ceb"></param>
         private void AddOperation(CebBase ceb) {
             if (ceb is  CebOperation) {
                 Operations.AddRange(ceb.Operations);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="gauche"></param>
+        /// <param name="op"></param>
+        /// <param name="droite"></param>
         private void AddOperations(CebBase gauche, char op, CebBase droite) {
             AddOperation(gauche);
             AddOperation(droite);
             AddOperation($"{gauche.Value} {op} {droite.Value} = {Value}");
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override bool IsValid => Value > 0;
     }
 }

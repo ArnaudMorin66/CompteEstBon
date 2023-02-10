@@ -6,8 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:CompteEstBon"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
-    xmlns:resources="clr-namespace:Syncfusion.Windows.Shared;assembly=Syncfusion.Shared.WPF"
     xmlns:s="http://schemas.syncfusion.com/wpf"
     xmlns:skin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
     mc:Ignorable="d"
@@ -31,19 +29,24 @@
             <local:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <DataTemplate x:Key="listboxOperations">
                 <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
+
                 <ListBox
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
-                    ItemsSource="{Binding Operations}"
                     KeyboardNavigation.DirectionalNavigation="Continue"
+                    ItemsSource="{Binding Operations}"
                     PreviewMouseWheel="ListBox_PreviewMouseWheel"
+                    BorderThickness="0,0,0,0.1"
+                    BorderBrush="White"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Style="{DynamicResource TextCellGrid}" Text="{Binding}" />
                         </DataTemplate>
                     </ListBox.ItemTemplate>
+                    
                 </ListBox>
+               
             </DataTemplate>
 
 
@@ -179,6 +182,8 @@
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
                     IsEditable="True"
+                    BorderThickness="0,0,0,0.1"
+                    BorderBrush="White"
                     ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
                     TabIndex="0"
                     Text="{Binding Plaques[0], Mode=TwoWay}" />
@@ -188,6 +193,8 @@
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
                     IsEditable="True"
+                    BorderThickness="0,0,0,0.1"
+                    BorderBrush="White"
                     ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
                     TabIndex="1"
                     Text="{Binding Plaques[1], Mode=TwoWay}" />
@@ -197,6 +204,8 @@
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
                     IsEditable="True"
+                    BorderThickness="0,0,0,0.1"
+                    BorderBrush="White"
                     ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
                     TabIndex="2"
                     Text="{Binding Plaques[2], Mode=TwoWay}" />
@@ -206,6 +215,8 @@
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
                     IsEditable="True"
+                    BorderThickness="0,0,0,0.1"
+                    BorderBrush="White"
                     ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
                     TabIndex="3"
                     Text="{Binding Plaques[3], Mode=TwoWay}" />
@@ -215,6 +226,8 @@
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
                     IsEditable="True"
+                    BorderThickness="0,0,0,0.1"
+                    BorderBrush="White"
                     ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
                     TabIndex="4"
                     Text="{Binding Plaques[4], Mode=TwoWay}" />
@@ -224,6 +237,8 @@
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
                     IsEditable="True"
+                    BorderThickness="0,0,0,0.1"
+                    BorderBrush="White"
                     ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
                     TabIndex="5"
                     Text="{Binding Plaques[5], Mode=TwoWay}" />
@@ -247,6 +262,8 @@
             VerticalContentAlignment="Stretch"
             Value="{Binding Search, Mode=TwoWay}"
             IsTabStop="True"
+            BorderThickness="0,0,0,0.1"
+            BorderBrush="White"
             MaxValidation="OnLostFocus"
             MaxValue="999"
             MinValidation="OnLostFocus"
@@ -260,9 +277,10 @@
             Grid.Row="0"
             Grid.Column="8"
             Grid.ColumnSpan="2"
-            BorderThickness="1"
             Command="{Binding}"
             CommandParameter="resolve"
+            BorderThickness="0,0,0,0.1"
+            BorderBrush="White"
             Foreground="{Binding Foreground}"
             IsTabStop="True"
             TabIndex="7"
@@ -286,7 +304,8 @@
             x:Name="btnHasard"
             Grid.Row="1"
             Grid.Column="8"
-            BorderThickness="1"
+            BorderThickness="0,0,0,0.1"
+            BorderBrush="White"
             Command="{Binding}"
             CommandParameter="random"
             IsTabStop="True"
@@ -311,7 +330,8 @@
             x:Name="btnExport"
             Grid.Row="1"
             Grid.Column="9"
-            BorderThickness="1"
+            BorderThickness="0,0,0,0.1"
+            BorderBrush="White"
             Command="{Binding}"
             CommandParameter="export"
             IsTabStop="True"

@@ -29,21 +29,23 @@
             </ResourceDictionary.MergedDictionaries>
             <DataTemplate x:Key="ListeViewOperations">
                 <ListBox
+                    HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
                     Background="{DynamicResource CebBackgroundBrush}"
-                    BorderBrush="Black"
-                    BorderThickness="0,0,0,1"
+                    BorderBrush="White"
+                    BorderThickness="0,0,0,0.5"
                     Foreground="{DynamicResource CebForegroundBrush}"
                     KeyboardNavigation.DirectionalNavigation="Continue"
-                    PreviewMouseWheel="ListView_PreviewMouseWheel">
-                    <ListBoxItem Content="{Binding Op1}" />
-                    <ListBoxItem Content="{Binding Op2}" />
-                    <ListBoxItem Content="{Binding Op3}" />
-                    <ListBoxItem Content="{Binding Op4}" />
-                    <ListBoxItem Content="{Binding Op5}" />
+                    PreviewMouseWheel="ListView_PreviewMouseWheel"
+                    ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                    ItemsSource="{Binding Operations}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{DynamicResource TextCellGrid}" Text="{Binding}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
 
                 </ListBox>
-
             </DataTemplate>
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <s:Boolean x:Key="True">true</s:Boolean>
@@ -337,7 +339,8 @@
             Height="30"
             VerticalAlignment="Top"
             Background="{DynamicResource CebBackgroundBrush}"
-            BorderThickness="0"
+            BorderThickness="0.2"
+            BorderBrush="Yellow"
             Command="{Binding}"
             CommandParameter="resolve"
             FontWeight="Bold"
@@ -368,7 +371,8 @@
             Grid.Column="9"
             Margin="0"
             Background="{DynamicResource CebBackgroundBrush}"
-            BorderThickness="0"
+            BorderThickness="0.2"
+            BorderBrush="Yellow"
             Command="{Binding}"
             CommandParameter="random"
             Foreground="White"
@@ -396,7 +400,8 @@
             Grid.Column="10"
             Grid.ColumnSpan="2"
             Background="{DynamicResource CebBackgroundBrush}"
-            BorderThickness="0"
+            BorderThickness="0.2"
+            BorderBrush="Yellow"
             Command="{Binding}"
             CommandParameter="export"
             IsEnabled="{Binding IsComputed}"
@@ -444,35 +449,35 @@
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Op1}"
+                    Binding="{Binding Operations[0],IsAsync=True, Mode=OneWay}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 1"
                     IsReadOnly="True"
                     Visibility="{Binding Vertical, Converter={StaticResource BooleanToVisibilityConverterParam}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Op2}"
+                    Binding="{Binding Operations[1], IsAsync=True, Mode=OneWay}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 2"
                     IsReadOnly="True"
                     Visibility="{Binding Vertical, Converter={StaticResource BooleanToVisibilityConverterParam}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Op3}"
+                    Binding="{Binding Operations[2],IsAsync=True, Mode=OneWay}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 3"
                     IsReadOnly="True"
                     Visibility="{Binding Vertical, Converter={StaticResource BooleanToVisibilityConverterParam}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Op4}"
+                    Binding="{Binding Operations[3], Mode=OneWay, IsAsync=True}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 4"
                     IsReadOnly="True"
                     Visibility="{Binding Vertical, Converter={StaticResource BooleanToVisibilityConverterParam}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn
                     Width="*"
-                    Binding="{Binding Op5}"
+                    Binding="{Binding Operations[4], Mode=OneWay, IsAsync=True}"
                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                     Header="Opération 5"
                     IsReadOnly="True"
@@ -493,7 +498,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Panel.ZIndex="10"
-            Height="10"
+            Height="20"
             Background="Transparent"
             BorderBrush="Black"
             BorderThickness="1"
@@ -502,56 +507,55 @@
             Maximum="100"
             Minimum="0"
             Orientation="Horizontal"
-            Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverterParam}, ConverterParameter={StaticResource True}}" />
+            Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverterParam}, ConverterParameter={StaticResource True}}" Opacity="0.495" />
         <Popup
             Grid.Row="0"
             Grid.Column="0"
             Width="400"
-            Height="120"
+            Height="80"
             IsOpen="{Binding Popup}"
             Placement="Center"
             PlacementTarget="{Binding ElementName=SolutionsData}">
-            <StackPanel
-                HorizontalAlignment="Stretch"
-                Background="{DynamicResource CebBackgroundBrush}"
-                Orientation="Vertical">
+            <StackPanel HorizontalAlignment="Stretch"
+                        Background="CadetBlue"
+                        Orientation="Vertical">
                 <Label
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center"
-                    HorizontalContentAlignment="Center"
-                    Background="DarkSlateGray"
-                    Content="{Binding Result}"
-                    FontSize="11"
-                    FontWeight="ExtraBlack"
-                    Foreground="{DynamicResource CebForegroundBrush}" />
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontSize="11"
-                    FontWeight="ExtraBlack"
-                    Foreground="Yellow"
-                    Text="{Binding Solution}" />
-                <Separator Background="Transparent" />
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontSize="11"
-                    FontWeight="Medium"
-                    Foreground="White"
-                    TextAlignment="Center">
-                    <Run Text="Nombre de solutions: " />
-                    <Run Text="{Binding Count, Mode=OneWay}" />
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Center"
+                       HorizontalContentAlignment="Center"
+                       Background="DarkSlateGray"
+                       Content="{Binding Result}"
+                       FontSize="11"
+                       FontWeight="ExtraBlack"
+                       Foreground="{DynamicResource CebForegroundBrush}" />
+                <TextBlock 
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="11"
+                            FontWeight="ExtraBlack"
+                            Foreground="Yellow"
+                            Text="{Binding Solution}" />
+                <TextBlock 
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="11"
+                            FontWeight="Medium"
+                            Foreground="White"
+                            TextAlignment="Center">
+                            <Run Text="Nombre de solutions: " />
+                            <Run Text="{Binding Count, Mode=OneWay}" />
                 </TextBlock>
-                <TextBlock
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontSize="11"
-                    FontWeight="Medium"
-                    Foreground="White"
-                    Text="{Binding Duree.TotalSeconds, StringFormat=Durée {0:N3}}"
-                    TextAlignment="Center" />
+                <TextBlock 
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="11"
+                            FontWeight="Medium"
+                            Foreground="White"
+                            Text="{Binding Duree.TotalSeconds, StringFormat=Durée {0:N3}}"
+                            TextAlignment="Center" />
             </StackPanel>
         </Popup>
+
         <StatusBar
             Grid.Row="4"
             Grid.Column="0"
@@ -599,7 +603,6 @@
             <StatusBarItem Grid.Column="3">
                 <TextBlock
                     x:Name="textBlock3"
-                    Grid.Column="3"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     Foreground="{StaticResource CebForegroundBrush}"

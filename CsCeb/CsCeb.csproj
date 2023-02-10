@@ -9,8 +9,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>ceb</AssemblyName>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-    <GenerateDocumentationFile>False</GenerateDocumentationFile>
-    <Version>3.2023.207.637</Version>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Version>3.2023.210.649</Version>
     <IncrementVersionOnBuild>3.yyyy.Mdd.Hmm</IncrementVersionOnBuild>
   </PropertyGroup>
 

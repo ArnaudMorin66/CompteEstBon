@@ -45,7 +45,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     public CebBase _solution;
 
     //private IEnumerable<CebBase> _solutions;
-    private IEnumerable<CebDetail> _solutions;
+    private IEnumerable<CebBase> _solutions;
 
     private string _theme = "Black";
     private string _titre = "Le compte est bon";
@@ -180,7 +180,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         }
     }
 
-    public IEnumerable<CebDetail> Solutions {
+    public IEnumerable<CebBase> Solutions {
         get => _solutions;
         set {
             _solutions = value;
@@ -410,8 +410,8 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         UpdateForeground();
 
         Solution = Tirage.Solutions![0];
-        // Solutions = Tirage.Solutions;
-        Solutions = Tirage.Solutions.Select(CebDetail.FromCebBase);
+        
+        Solutions = Tirage.Solutions; // .Select(CebDetail.FromCebBase);
         if (MongoDb)
             await SaveToMongoDB();
         IsBusy = false;

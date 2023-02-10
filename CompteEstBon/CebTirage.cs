@@ -20,10 +20,13 @@ namespace CompteEstBon;
 ///     Gestion tirage Compte est bon
 /// </summary>
 public sealed class CebTirage : INotifyPropertyChanged {
-    public static int NbPlaques { get; set; } = 6;
     private static readonly Random Rnd = System.Random.Shared;
-    
-    
+
+    private readonly List<CebBase> _solutions = new();
+
+    /// <summary>
+    /// 
+    /// </summary>
     public CebTirage() {
         Plaques = new List<CebPlaque>();
         Random();
@@ -40,14 +43,24 @@ public sealed class CebTirage : INotifyPropertyChanged {
         Search = search;
         Clear();
     }
-    
-    private readonly List<CebBase> _solutions = new();
+    /// <summary>
+    /// 
+    /// </summary>
+    public static int NbPlaques { get; set; } = 6;
+    /// <summary>
+    /// 
+    /// </summary>
     public List<CebBase>? Solutions { get; private set; }
-
+    /// <summary>
+    /// 
+    /// </summary>
     public event PropertyChangedEventHandler PropertyChanged;
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     private bool IsPlaquesValid() => Plaques.All(
-        p => p.IsValid && Plaques.Count(q => q.Value == p.Value) <= CebPlaque.AllPlaques.Count(i => i == p.Value));
+        p => p.IsValid && Plaques.Count(q => q.Value == p.Value) <= CebPlaque.ListePlaques.Count(i => i == p.Value));
 
     /// <summary>
     ///     Valid the search value
@@ -55,16 +68,79 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <returns>
     /// </returns>
     private bool IsSearchValid() => _search is > 99 and < 1000;
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="propertyName"></param>
     private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(
         this,
         new PropertyChangedEventArgs(propertyName));
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="args"></param>
     private void PlaqueUpdated(object sender, PropertyChangedEventArgs args) {
         if (Status is CebStatus.EnCours or CebStatus.Indefini) return;
         Clear();
     }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public CebStatus Resolve() {
+        _solutions.Clear();
+        Solutions = null;
+        if (Status != CebStatus.Invalide) {
+            var debut = DateTime.Now;
+            Status = CebStatus.EnCours;
+            Resolve(Plaques);
+            _solutions.Sort((p, q) => p.CompareRank(q));
+            Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
+            Solutions = _solutions;
+            Duree = DateTime.Now - debut;
+        }
 
+        NotifyPropertyChanged();
+        return Status;
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public async Task<CebStatus> ResolveAsync() => await Task.Run(Resolve);
+
+
+    /// <summary>
+    ///     resolution du compte
+    /// </summary>
+    /// <param name="search">
+    ///     Valeur à rechercher
+    /// </param>
+    /// <param name="plq">
+    ///     Liste des plaques
+    /// </param>
+    /// <returns>
+    /// </returns>
+    public CebStatus ResolveWithParam(int search, params int[] plq) {
+        Status = CebStatus.Indefini;
+        _search = search;
+        SetPlaques(plq);
+        return Resolve();
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="search"></param>
+    /// <param name="plq"></param>
+    /// <returns></returns>
+    public async Task<CebStatus> ResolveAsync(int search, params int[] plq) => await Task.Run(
+        () => ResolveWithParam(search, plq));
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="sol"></param>
     private void InsertSolution(CebBase sol) {
         var diff = Abs(_search - sol.Value);
         switch (diff - Diff) {
@@ -84,20 +160,24 @@ public sealed class CebTirage : INotifyPropertyChanged {
         Found.Add(sol.Value);
         _solutions.Add(sol);
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="liste"></param>
     private void Resolve(IEnumerable<CebBase> liste) {
         // ReSharper disable PossibleMultipleEnumeration
         foreach (var (p, i) in liste.WithIndex()) {
             InsertSolution(p);
-            foreach (var (q, j) in liste.WithIndex().Where((_, ix) => ix > i))
-                foreach (var oper in CebOperation.AllOperations.Select(
-                             operation => new CebOperation(p, operation, q)).Where(o => o.Value != 0))
-                    Resolve(new[] { oper }.Concat(liste.Where((_, k) => k != i && k != j)));
+            foreach (var (q, j) in liste.WithIndex().Where((_, j) => j > i))
+                foreach (var oper in CebOperation.AllOperations.Select(operation => 
+                                 new CebOperation(p, operation, q)).Where(o => o.Value != 0))
+                    Resolve(new[] { oper }.Concat(liste.Where((_, k) => k  != i && k != j)));
         }
     }
-
-    // private Stopwatch Watch { get; } = new();
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public CebStatus Clear() {
         Solutions = null;
         _solutions.Clear();
@@ -109,7 +189,10 @@ public sealed class CebTirage : INotifyPropertyChanged {
         NotifyPropertyChanged();
         return Status;
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public async Task<CebStatus> ClearAsync() => await Task.Run(Clear);
 
     /// <summary>
@@ -119,7 +202,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
         Status = CebStatus.Indefini;
         Plaques.Clear();
 
-        var liste = new List<int>(CebPlaque.AllPlaques);
+        var liste = new List<int>(CebPlaque.ListePlaques);
         while (Plaques.Count < NbPlaques) {
             var n = Rnd.Next(0, liste.Count);
             var pq = new CebPlaque(liste[n]);
@@ -127,10 +210,14 @@ public sealed class CebTirage : INotifyPropertyChanged {
             Plaques.Add(pq);
             liste.RemoveAt(n);
         }
+
         _search = Rnd.Next(100, 1000);
         return Clear();
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     public async Task<CebStatus> RandomAsync() => await Task.Run(Random);
 
     /// <summary>
@@ -138,46 +225,6 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// </summary>
     /// <returns>
     /// </returns>
-    public CebStatus Resolve() {
-        _solutions.Clear();
-        if (Status != CebStatus.Invalide) {
-            var debut = DateTime.Now;
-            Status = CebStatus.EnCours;
-            Resolve(Plaques);
-            _solutions.Sort((p, q) => p.Compare(q));
-            Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
-            Solutions = _solutions;
-            Duree = (DateTime.Now - debut);
-        }
-
-        NotifyPropertyChanged();
-        return Status;
-    }
-
-    public async Task<CebStatus> ResolveAsync() => await Task.Run(Resolve);
-
-    public async Task<CebStatus> ResolveAsync(int search, params int[] plq) => await Task.Run(
-        () => ResolveWithParam(search, plq));
-
-    /// <summary>
-    ///     resolution du compte
-    /// </summary>
-    /// <param name="search">
-    ///     Valeur � rechercher
-    /// </param>
-    /// <param name="plq">
-    ///     Liste des plaques
-    /// </param>
-    /// <returns>
-    /// </returns>
-    public CebStatus ResolveWithParam(int search, params int[] plq) {
-        Status = CebStatus.Indefini;
-        _search = search;
-        SetPlaques(plq);
-        return Resolve();
-    }
-
-
     public void SetPlaques(params int[] plaq) {
         Status = CebStatus.Indefini;
         if (plaq.Length != NbPlaques) {
@@ -189,13 +236,21 @@ public sealed class CebTirage : INotifyPropertyChanged {
         foreach (var (p, i) in plaq.WithIndex().Where(elt => elt.Item2 < 6)) Plaques[i].Value = p;
         Clear();
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="pq"></param>
     public void SetPlaques(IList<int> pq) => SetPlaques(pq.ToArray());
+    /// <summary>
+    /// 
+    /// </summary>
     public string FirstSolution => Solution();
-
-    public string Solution(int no = 0) => Count == 0 || no < 0 || no >= Count
-        ? string.Empty
-        : Solutions![no].ToString();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="no"></param>
+    /// <returns></returns>
+    public string? Solution(int no = 0) => no >= 0 && no < Count ? Solutions![no].ToString() : null;
 
     /// <summary>
     ///     Valid
@@ -210,14 +265,16 @@ public sealed class CebTirage : INotifyPropertyChanged {
     ///     Nombre de solutions
     /// </summary>
     public int Count => Solutions?.Count ?? 0;
-
+    /// <summary>
+    /// 
+    /// </summary>
     public CebData Result =>
         new() {
             Search = Search,
             Plaques = Plaques.Select(p => p.Value).ToArray(),
             Status = Status.ToString(),
             Diff = Diff,
-            Solutions = Solutions?.Select(p => p.ToString()).ToArray() ?? Array.Empty<string>(),
+            Solutions = Solutions?.Select(p => p.ToString()),
             Found = Found.ToString()
         };
 
@@ -225,7 +282,9 @@ public sealed class CebTirage : INotifyPropertyChanged {
     ///     Ecart
     /// </summary>
     public int Diff { get; private set; } = int.MaxValue;
-
+    /// <summary>
+    /// 
+    /// </summary>
     public TimeSpan Duree { get; private set; }
 
 
@@ -235,11 +294,12 @@ public sealed class CebTirage : INotifyPropertyChanged {
     public CebFind Found { get; } = new();
 
     /// <summary>
-    ///  Liste des plaques
+    ///     Liste des plaques
     /// </summary>
     public List<CebPlaque> Plaques { get; }
 
     private int _search;
+
     /// <summary>
     ///     nombre � chercher
     /// </summary>
@@ -251,9 +311,6 @@ public sealed class CebTirage : INotifyPropertyChanged {
             Clear();
         }
     }
-
-
-    // public List<CebBase> Solutions { get; private set; }
 
 
     /// <summary>

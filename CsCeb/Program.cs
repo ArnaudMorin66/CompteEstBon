@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System.CommandLine;
+using System.CommandLine.Invocation;
 using System.CommandLine.Rendering;
 using CompteEstBon;
 using CompteEstBon.Properties;
@@ -17,8 +18,8 @@ var Json = false;
 var Jsonx = false;
 var Save = false;
 var Afficher = false;
+var Wait = false;
 var ConfigurationFile = @$"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Ceb\config.json";
-var TelechargementFolder = $@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\Downloads";
 var MongoServer = string.Empty;
 var SaveToMongoDb = false;
 var exports = new List<FileInfo>();
@@ -48,7 +49,7 @@ if (File.Exists(ConfigurationFile)) {
                 MongoServer = child.Value;
                 break;
             case "ZIPFILE":
-                zipfile = FichierToFileInfo(child.Value!);
+                zipfile = child.Value.FileInfo(); //  ToFileInfo(child.Value!);
                 break;
             case "SFLICENCE":
                 sflicence = child.Value;
@@ -69,114 +70,84 @@ var rootCommand = new RootCommand("Compte Est Bon") {
     new Option<List<string>>(new[] { "--export", "-x", "-f" }, "Exporter resultats")
         { AllowMultipleArgumentsPerToken = true },
     new Option<bool>(new[] { "--afficher", "-a" }, "Afficher les fichiers exportés"),
+    new Option<bool>(new[] { "--wait", "-w" }, "Attendre touche"),
     new Argument<List<int>>("arguments", "Plaques (6) et nombre à trouver (entre 100 et 999)")
 };
 
 
-try {
-    rootCommand.SetHandler(
-        async context => {
-            var prs = context.ParseResult;
-            if (prs.UnparsedTokens.Count > 0) {
-                abort(new ArgumentException($"Option(s) {string.Join(",", prs.UnparsedTokens)} invalide(s)"), -2);
+void handler(InvocationContext context) {
+    var prs = context.ParseResult;
+    if (prs.UnparsedTokens.Count > 0) abort(new ArgumentException($"Option(s) {string.Join(",", prs.UnparsedTokens)} invalide(s)"), -2);
+
+    try {
+        foreach (var option in rootCommand.Options) {
+            if (prs.FindResultFor(option) is not { } optionResult) continue;
+            switch (option.Name.ToLower()) {
+                case "trouve":
+                    tirage.Search = optionResult.GetValueOrDefault<int>();
+                    break;
+
+                case "plaques":
+                    tirage.SetPlaques(optionResult.GetValueOrDefault<List<int>>());
+                    break;
+
+                case "json":
+                    (Json, Jsonx) = (optionResult.GetValueOrDefault<bool>(), false);
+                    break;
+
+                case "export":
+                    exports.AddRange(optionResult.GetValueOrDefault<List<string>>()
+                        .Select(CebStatic.FileInfo));
+                    Save = true;
+                    break;
+
+                case "sauvegarde":
+                    Save = optionResult.GetValueOrDefault<bool>();
+                    break;
+
+                case "mongodb":
+                    SaveToMongoDb = optionResult.GetValueOrDefault<bool>();
+                    Save = true;
+                    break;
+
+                case "serveur":
+                    MongoServer = optionResult.GetValueOrDefault<string>();
+                    break;
+
+                case "jsonx":
+                    (Json, Jsonx) = (optionResult.GetValueOrDefault<bool>(), true);
+                    break;
+
+                case "afficher":
+                    Afficher = optionResult.GetValueOrDefault<bool>();
+                    break;
+                case "wait":
+                    Wait = optionResult.GetValueOrDefault<bool>();
+                    break;
+            }
+        }
+
+        foreach (var argument in rootCommand.Arguments) {
+            if (prs.FindResultFor(argument) is not { } argumentResult) continue;
+            var arguments = argumentResult.GetValueOrDefault<List<int>>();
+            if (arguments.Count <= 0) continue;
+            if (arguments[0] > 100) {
+                tirage.Search = arguments[0];
+                arguments.RemoveAt(0);
+            } else if (arguments.Count >= 7 && arguments[6] >= 100) {
+                tirage.Search = arguments[6];
+                arguments.RemoveAt(6);
             }
 
-            try {
-                foreach (var option in rootCommand.Options) {
-                    if (prs.FindResultFor(option) is not { } optionResult) 
-                        continue;
-                    switch (option.Name.ToLower()) {
-                        case "trouve":
-                            tirage.Search = optionResult.GetValueOrDefault<int>();
-                            break;
-
-                        case "plaques":
-                            tirage.SetPlaques(optionResult.GetValueOrDefault<List<int>>());
-                            break;
-
-                        case "json":
-                            (Json, Jsonx) = (optionResult.GetValueOrDefault<bool>(), false);
-                            break;
-
-                        case "export":
-                            exports.AddRange(optionResult.GetValueOrDefault<List<string>>()
-                                .Select(FichierToFileInfo));
-                            Save = true;
-                            break;
-
-                        case "sauvegarde":
-                            Save = optionResult.GetValueOrDefault<bool>();
-                            break;
-
-                        case "mongodb":
-                            SaveToMongoDb = optionResult.GetValueOrDefault<bool>();
-                            Save = true;
-                            break;
-
-                        case "serveur":
-                            MongoServer = optionResult.GetValueOrDefault<string>();
-                            break;
-
-                        case "jsonx":
-                            (Json, Jsonx) = (optionResult.GetValueOrDefault<bool>(), true);
-                            break;
-
-                        case "afficher":
-                            Afficher = optionResult.GetValueOrDefault<bool>();
-                            break;
-
-                    }
-                }
-
-                foreach (var argument in rootCommand.Arguments) {
-                    if (prs.FindResultFor(argument) is not { } argumentResult) continue;
-                    var arguments = argumentResult.GetValueOrDefault<List<int>>();
-                    if (arguments.Count <= 0) continue;
-                    if (arguments[0] > 100) {
-                        tirage.Search = arguments[0];
-                        arguments.RemoveAt(0);
-                    }
-                    else if (arguments.Count >= 7 && arguments[6] >= 100) {
-                        tirage.Search = arguments[6];
-                        arguments.RemoveAt(6);
-                    }
-
-                    if (arguments.Count > 0)
-                        tirage.SetPlaques(arguments);
-                }
-
-                await runAsync();
-            }
-            catch (Exception e) {
-                abort(e);
-            }
-        });
-
-    await rootCommand.InvokeAsync(args);
-   
-}
-catch (Exception ex) {
-    abort(ex);
-}
-
-WriteLine();
-
-void abort(Exception ex, int retour=-1) {
-    WriteLine();
-    WriteLine(@"+-----------------------------+");
-    WriteLine(@"|          Erreur             |");
-    WriteLine(@"+-----------------------------+");
-    WriteLine();
-    WriteLine($@"{ex.Source?? "ceb"}, {ex.GetType()} => {ex.Message.Red()}");
-    WriteLine();
-    WriteLine($@"{"AIDE".TextControlCode(Ansi.Text.UnderlinedOn, Ansi.Text.UnderlinedOff)} :");
-    WriteLine();
-    rootCommand.Invoke("-h");
-    Environment.Exit(retour);
+            if (arguments.Count > 0) tirage.SetPlaques(arguments);
+        }
+    } catch (Exception e) {
+        abort(e);
+    }
 }
 
 async Task runAsync() {
-    await tirage.ResolveAsync();
+    tirage.Resolve();
     if (Json) {
         tirage.WriteJson();
         if (Jsonx)
@@ -187,11 +158,11 @@ async Task runAsync() {
 
     foreach (var plaque in tirage.Plaques)
         Write($@" {plaque}");
-    
+
     Write(", Recherche: ".LightYellow());
     WriteLine(tirage.Search);
     WriteLine();
-  
+
     if (tirage.Status == CebStatus.Invalide)
         throw new ArgumentException("Tirage  invalide");
 
@@ -218,7 +189,7 @@ async Task runAsync() {
         if (zipfile != null && exports.Any(p => p.Extension == ".zip")) exports.Add(zipfile);
         ExportOffice.RegisterLicense(sflicence);
         if (SaveToMongoDb && MongoServer != string.Empty)
-            await tirage.SerializeTirageMongoAsync(MongoServer);
+            await tirage.SerializeMongoAsync(MongoServer);
         tirage.SerializeFichiers(exports);
 
         if (Afficher)
@@ -227,5 +198,51 @@ async Task runAsync() {
     }
 }
 
-FileInfo FichierToFileInfo(string fichier) =>
-    new(fichier.IndexOfAny(new[] { '\\', '/' }) < 0 ? $"{TelechargementFolder}\\{fichier}" : fichier);
+
+void abort(Exception ex, int retour = -1) {
+    WriteLine(Ansi.Color.Foreground.LightYellow.EscapeSequence+Ansi.Color.Background.Red.EscapeSequence);
+
+    WriteLine(@"+-----------------------------+");
+    WriteLine(@"|          Erreur             |");
+    WriteLine(@"+-----------------------------+");
+    WriteLine(Ansi.Color.Foreground.Default.EscapeSequence +Ansi.Color.Background.Default.EscapeSequence);
+    WriteLine($@"{ex.GetType()}: {ex.Message.Red()}");
+    WriteLine();
+    WriteLine($@"{"AIDE".TextControlCode(Ansi.Text.UnderlinedOn, Ansi.Text.UnderlinedOff)} :");
+    WriteLine();
+    rootCommand.Invoke("-h");
+    Environment.Exit(retour);
+}
+
+try {
+    rootCommand.SetHandler(handler);
+    rootCommand.Invoke(args);
+    await runAsync();
+} catch (Exception ex) {
+    abort(ex);
+}
+
+WriteLine();
+if (Wait) {
+    Write(@"Appuyez sur une touche pour terminer...");
+    ReadKey();
+}
+#pragma warning disable CA1050
+/// <summary>
+/// 
+/// </summary>
+public static class CebStatic {
+    /// <summary>
+    /// 
+    /// </summary>
+    public static readonly string TelechargementFolder =
+        $@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\Downloads";
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fichier"></param>
+    /// <returns></returns>
+    public static FileInfo FileInfo(this string fichier) =>
+        new(fichier.IndexOfAny(new[] { '\\', '/' }) < 0 ? $"{TelechargementFolder}\\{fichier}" : fichier);
+}
+#pragma warning restore CA1050

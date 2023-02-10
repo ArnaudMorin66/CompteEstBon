@@ -22,6 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewModel\CebDetail.cs" />
     <Compile Remove="ViewModel\CebStatusConverter.cs" />
     <Compile Remove="ViewModel\InverseVisibilityConverter.cs" />
     <Compile Remove="ViewModel\StringVisibilityConverter.cs" />
