@@ -5,6 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 // Plage Compte est bon
+#pragma warning disable CS1591
 
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -75,18 +76,5 @@ public sealed class CebPlaque : CebBase, INotifyPropertyChanged {
     private void OnPropertyChanged([CallerMemberName] string propertyName = null) {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="field"></param>
-    /// <param name="value"></param>
-    /// <param name="propertyName"></param>
-    /// <returns></returns>
-    public bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
-    }
+
 }

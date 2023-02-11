@@ -29,7 +29,6 @@
             <local:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <DataTemplate x:Key="listboxOperations">
                 <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
-
                 <ListBox
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"

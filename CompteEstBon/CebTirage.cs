@@ -28,7 +28,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// 
     /// </summary>
     public CebTirage() {
-        Plaques = new List<CebPlaque>();
+        Plaques = new CebPlaque[NbPlaques];
         Random();
     }
 
@@ -50,7 +50,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <summary>
     /// 
     /// </summary>
-    public List<CebBase>? Solutions { get; private set; }
+    public CebBase[]? Solutions { get; private set; }
     /// <summary>
     /// 
     /// </summary>
@@ -95,9 +95,9 @@ public sealed class CebTirage : INotifyPropertyChanged {
             var debut = DateTime.Now;
             Status = CebStatus.EnCours;
             Resolve(Plaques);
-            _solutions.Sort((p, q) => p.CompareRank(q));
+            //_solutions.Sort((p, q) => p.CompareRank(q));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
-            Solutions = _solutions;
+            Solutions = _solutions.OrderBy(b=> b.Rank).ToArray();
             Duree = DateTime.Now - debut;
         }
 
@@ -200,14 +200,11 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// </summary>
     public CebStatus Random() {
         Status = CebStatus.Indefini;
-        Plaques.Clear();
-
         var liste = new List<int>(CebPlaque.ListePlaques);
-        while (Plaques.Count < NbPlaques) {
+        for (var i = 0; i < NbPlaques; i++) {
             var n = Rnd.Next(0, liste.Count);
-            var pq = new CebPlaque(liste[n]);
-            pq.PropertyChanged += PlaqueUpdated;
-            Plaques.Add(pq);
+            Plaques[i] = new CebPlaque(liste[n]);
+            Plaques[i].PropertyChanged += PlaqueUpdated;
             liste.RemoveAt(n);
         }
 
@@ -233,7 +230,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
             return;
         }
 
-        foreach (var (p, i) in plaq.WithIndex().Where(elt => elt.Item2 < 6)) Plaques[i].Value = p;
+        foreach (var (p, i) in plaq.WithIndex()) Plaques[i].Value = p;
         Clear();
     }
     /// <summary>
@@ -264,14 +261,14 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <summary>
     ///     Nombre de solutions
     /// </summary>
-    public int Count => Solutions?.Count ?? 0;
+    public int Count => Solutions?.Length ?? 0;
     /// <summary>
     /// 
     /// </summary>
     public CebData Result =>
         new() {
             Search = Search,
-            Plaques = Plaques.Select(p => p.Value).ToArray(),
+            Plaques = Plaques.Select(p=> p.Value).ToArray(),
             Status = Status.ToString(),
             Diff = Diff,
             Solutions = Solutions?.Select(p => p.ToString()),
@@ -296,7 +293,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <summary>
     ///     Liste des plaques
     /// </summary>
-    public List<CebPlaque> Plaques { get; }
+    public CebPlaque[] Plaques { get; }
 
     private int _search;
 

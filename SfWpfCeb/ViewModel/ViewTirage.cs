@@ -64,9 +64,6 @@ public class ViewTirage : NotificationObject, ICommand {
     public ViewTirage() {
         dateDispatcher = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(Settings.Default.SolutionTimer) };
         dateDispatcher.Tick += (_, _) => {
-            // if (stopwatch.IsRunning)
-            //    Duree = stopwatch.Elapsed;
-
             if (Popup && NotifyWatch.Elapsed > SolutionTimer)
                 Popup = false;
             Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
@@ -290,10 +287,6 @@ public class ViewTirage : NotificationObject, ICommand {
     private void ClearData() {
         if (_isUpdating)
             return;
-        //if (!IsBusy) {
-        //    stopwatch.Reset();
-        //    Duree = stopwatch.Elapsed;
-        //}
         Duree = TimeSpan.Zero;
         _isUpdating = true;
         Solution = null;
@@ -330,7 +323,7 @@ public class ViewTirage : NotificationObject, ICommand {
 
     public void ShowPopup(int index = 0) {
         if (index < 0 || index >= Tirage.Count) return;
-        Solution = Tirage.Solutions![index];
+        Solution = Tirage.Solutions!.ElementAt(index);
         Popup = true;
     }
 

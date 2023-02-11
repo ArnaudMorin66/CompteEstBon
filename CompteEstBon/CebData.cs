@@ -10,7 +10,8 @@ public record struct CebData {
     /// <summary>
     /// 
     /// </summary>
-    [XmlArray] [XmlArrayItem("Plaque")] public int[] Plaques { get; set; }
+    [XmlArray, XmlArrayItem("Plaque")] 
+    public int[] Plaques { get; set; }
     /// <summary>
     /// 
     /// </summary>
@@ -26,5 +27,6 @@ public record struct CebData {
     /// <summary>
     /// 
     /// </summary>
-    [XmlArray] [XmlArrayItem("Solution")] public IEnumerable<string>? Solutions { get; set; }
+    [XmlArray,XmlArrayItem("Solution")] 
+    public IEnumerable<string>? Solutions { get; set; }
 }

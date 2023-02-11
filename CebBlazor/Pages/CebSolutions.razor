@@ -29,7 +29,7 @@
 				<GridColumn TextAlign="TextAlign.Center">
 					<Template Context="data">
 						@{
-							var operations = (data as CebBase).Operations;
+							var operations = (data as CebBase)!.Operations;
 							@if (VueTable) {
 								if (_i < operations.Count) @operations[_i]
 							}

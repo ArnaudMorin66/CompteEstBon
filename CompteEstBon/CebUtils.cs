@@ -1,7 +1,4 @@
-﻿#region using
-
-#endregion using
-
+﻿#pragma warning disable CS1591
 namespace CompteEstBon {
     public static class CebUtils {
         /// <summary>

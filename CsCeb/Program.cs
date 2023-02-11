@@ -172,12 +172,12 @@ async Task runAsync() {
     if (tirage.Status == CebStatus.CompteApproche)
         Write($@": {tirage.Found}");
 
-    Write($@", {"nombre de solutions:".LightYellow()} {tirage.Solutions!.Count}");
+    Write($@", {"nombre de solutions:".LightYellow()} {tirage.Count}");
     WriteLine($@", {"durée du calcul:".LightYellow()} {tirage.Duree.TotalSeconds:F3} s");
 
     WriteLine();
 
-    foreach (var (i, solution) in tirage.Solutions.Select((v, i) => (i, v))) {
+    foreach (var (i, solution) in tirage.Solutions!.Select((v, i) => (i, v))) {
         var count = $"{i + 1:0000}".TextControlCode(
             tirage.Status == CebStatus.CompteEstBon ? Ansi.Color.Foreground.Green : Ansi.Color.Foreground.Magenta);
         WriteLine($@"{solution.Rank}: {count} => {solution.LightYellow()}");

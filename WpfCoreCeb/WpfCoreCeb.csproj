@@ -6,11 +6,11 @@
     <Version>10</Version>
     <UseWPF>true</UseWPF>
     <RootNamespace>CompteEstBon</RootNamespace>
-    <StartupObject></StartupObject>
+    <StartupObject>CompteEstBon.App</StartupObject>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
     <SignAssembly>false</SignAssembly>
     <Version>10</Version>
-    <AssemblyName>Wpf.Ceb.Core</AssemblyName>
+    <AssemblyName>WpfCeb</AssemblyName>
     <AssemblyVersion>1.0.8230.61</AssemblyVersion>
     <FileVersion>1.0.8230.61</FileVersion>
   </PropertyGroup>

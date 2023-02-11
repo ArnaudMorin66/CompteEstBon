@@ -5,6 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 // Plage Compte est bon
+#pragma warning disable CS1591
 
 using System.Text.Json.Serialization;
 
@@ -51,12 +52,6 @@ namespace CompteEstBon {
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public int CompareRank(CebBase target) => Rank - target.Rank;
-        /// <summary>
-        /// 
-        /// </summary>
         protected CebBase() => Operations = new List<string>();
        /// <summary>
        /// 
@@ -64,7 +59,7 @@ namespace CompteEstBon {
         public CebDetail Detail {
             get {
                 CebDetail detail = new();
-                foreach (var (operation, i) in this.Operations.WithIndex()) detail[i] = operation;
+                foreach (var (operation, i) in Operations.WithIndex()) detail[i] = operation;
                 return detail;
             }
         }

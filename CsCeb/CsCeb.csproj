@@ -10,7 +10,7 @@
     <AssemblyName>ceb</AssemblyName>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>3.2023.210.649</Version>
+    <Version>3.2023.211.851</Version>
     <IncrementVersionOnBuild>3.yyyy.Mdd.Hmm</IncrementVersionOnBuild>
   </PropertyGroup>
 

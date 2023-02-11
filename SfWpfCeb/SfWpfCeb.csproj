@@ -8,7 +8,7 @@
     <RootNamespace>CompteEstBon</RootNamespace>
     <StartupObject>CompteEstBon.App</StartupObject>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
-    <AssemblyName>Wpf.Ceb.Syncfusion</AssemblyName>
+    <AssemblyName>WpfCeb</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>

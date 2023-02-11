@@ -47,12 +47,12 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     //private IEnumerable<CebBase> _solutions;
     private IEnumerable<CebBase> _solutions;
 
-    private string _theme = "Black";
+    private string _theme = "Sombre";
     private string _titre = "Le compte est bon";
     private bool _vertical;
 
     public DispatcherTimer dateDispatcher;
-    public Stopwatch stopwatch;
+    // public Stopwatch stopwatch;
 
     /// <summary>
     ///     Initialisation
@@ -61,13 +61,13 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     /// </returns>
     public ViewTirage() {
         Solutions = null;
-        stopwatch = new Stopwatch();
+        // stopwatch = new Stopwatch();
 
         dateDispatcher = new DispatcherTimer {
             Interval = TimeSpan.FromMilliseconds(10)
         };
         dateDispatcher.Tick += (_, _) => {
-            if (stopwatch.IsRunning) Duree = stopwatch.Elapsed;
+         //   if (stopwatch.IsRunning) Duree = stopwatch.Elapsed;
             if (Popup && NotifyWatch.Elapsed > SolutionTimer)
                 Popup = false;
             Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
@@ -86,9 +86,8 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
                 Task.Run(ResolveAsync);
         };
 
-        Background = ThemeColors["Black"];
+        Background = ThemeColors["Sombre"];
         Auto = Settings.Default.AutoCalcul;
-        // MongoDB = Settings.Default.MongoDb;
         _isUpdating = false;
         UpdateData();
 
@@ -128,7 +127,8 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         ["Green"] = Colors.Green,
         ["Red"] = Colors.Red,
         ["Yellow"] = Colors.Yellow,
-        ["Navy"] = Colors.Navy
+        ["Navy"] = Colors.Navy,
+        ["Sombre"] = Color.FromRgb(40,40,40)
     };
 
     public string Theme {
@@ -323,21 +323,16 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         };
     }
 
-    private void NotifiedChanged([CallerMemberName] string propertyName = "") {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+    private void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     private void ClearData() {
         if (_isUpdating)
             return;
-        if (!IsBusy) {
-            stopwatch.Reset();
-            Duree = stopwatch.Elapsed;
-        }
-
         _isUpdating = true;
         Solution = null;
         Solutions = null;
+        Duree = TimeSpan.Zero;
+
         UpdateForeground();
         Result = Tirage.Status != CebStatus.Invalide ? "Jeu du Compte Est Bon" : "Tirage invalide";
         Popup = false;
@@ -358,8 +353,8 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     }
 
     public void ShowNotify(int index = 0) {
-        if (index >= 0 && Tirage.Solutions!.Any() && index < Tirage.Solutions.Count) {
-            Solution = Tirage.Solutions[index];
+        if (index >= 0 && Tirage.Solutions!.Any() && index < Tirage.Count) {
+            Solution = Tirage.Solutions.ElementAt(index);
             Popup = true;
         }
     }
@@ -396,8 +391,6 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     public async Task ResolveAsync() {
         IsBusy = true;
         Result = "Calcul...";
-
-        stopwatch.Start();
         await Tirage.ResolveAsync();
         Result = Tirage.Status switch {
             CebStatus.CompteEstBon => "😊 Compte est bon",
@@ -405,7 +398,6 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
             CebStatus.Invalide => "Tirage invalide",
             _ => "Le Compte est Bon"
         };
-        stopwatch.Stop();
         Duree = Tirage.Duree;
         UpdateForeground();
 

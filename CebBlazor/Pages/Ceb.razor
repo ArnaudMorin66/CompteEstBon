@@ -220,7 +220,7 @@
 		if (tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) {
 			if (MongoDb)
 				await SaveMongoDb();
-			await toast.ShowAsync(tirage.Solutions[0]);
+			await toast.ShowAsync(tirage.Solutions![0]);
 		}
 	}
 
