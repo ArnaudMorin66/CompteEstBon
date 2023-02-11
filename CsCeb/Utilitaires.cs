@@ -6,7 +6,6 @@
 //-----------------------------------------------------------------------
 
 using System.CommandLine.Rendering;
-using System.Diagnostics;
 using System.IO.Compression;
 using System.Runtime.Serialization;
 using System.Text;
@@ -186,12 +185,7 @@ public static class Utilitaires {
             }
         }
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="nom"></param>
-    public static void OpenDocument(string nom) =>
-        Process.Start(new ProcessStartInfo { UseShellExecute = true, FileName = nom });
+    
     /// <summary>
     /// 
     /// </summary>

@@ -7,6 +7,7 @@
 
 using System;
 using System.IO;
+using arnaud.morin.outils;
 using Syncfusion.DocIO;
 using Syncfusion.DocIO.DLS;
 using Syncfusion.Drawing;

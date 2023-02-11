@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon", "..\CompteEs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CebExport", "..\SFCebOffice\CebExport.csproj", "{73889D4D-E78F-4FE3-BED7-8BEFD46B8075}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Outils", "..\Outils\Outils.csproj", "{A21B7DC4-750A-45F6-A80F-6B483DD82614}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{73889D4D-E78F-4FE3-BED7-8BEFD46B8075}.Release|x64.Build.0 = Release|Any CPU
 		{73889D4D-E78F-4FE3-BED7-8BEFD46B8075}.Release|x86.ActiveCfg = Release|Any CPU
 		{73889D4D-E78F-4FE3-BED7-8BEFD46B8075}.Release|x86.Build.0 = Release|Any CPU
+		{A21B7DC4-750A-45F6-A80F-6B483DD82614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A21B7DC4-750A-45F6-A80F-6B483DD82614}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A21B7DC4-750A-45F6-A80F-6B483DD82614}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A21B7DC4-750A-45F6-A80F-6B483DD82614}.Debug|x64.Build.0 = Debug|Any CPU
+		{A21B7DC4-750A-45F6-A80F-6B483DD82614}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A21B7DC4-750A-45F6-A80F-6B483DD82614}.Debug|x86.Build.0 = Debug|Any CPU
+		{A21B7DC4-750A-45F6-A80F-6B483DD82614}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A21B7DC4-750A-45F6-A80F-6B483DD82614}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A21B7DC4-750A-45F6-A80F-6B483DD82614}.Release|x64.ActiveCfg = Release|Any CPU
+		{A21B7DC4-750A-45F6-A80F-6B483DD82614}.Release|x64.Build.0 = Release|Any CPU
+		{A21B7DC4-750A-45F6-A80F-6B483DD82614}.Release|x86.ActiveCfg = Release|Any CPU
+		{A21B7DC4-750A-45F6-A80F-6B483DD82614}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

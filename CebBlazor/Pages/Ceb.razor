@@ -138,7 +138,7 @@
 				case CebStatus.CompteEstBon:
 					<div class="bg-success text-black" style="cursor: pointer;" @onclick="ClearAsync" accesskey="i">
 						<i class="fa-regular fa-thumbs-up"></i>
-						&nbsp;Compte est bon,&nbsp;@(tirage.Count)&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.Duree.TotalSeconds:F3}")&nbsp;s
+						&nbsp;Compte est bon,&nbsp;@(tirage.Count)&nbsp;solutions&nbsp;en&nbsp;@($"{tirage.Duree.TotalSeconds:F3}")&nbsp;s
 					</div>
 					break;
 				default:
@@ -189,7 +189,6 @@
 #pragma warning disable CS8602
 	public CebToast? toast { get; set; }
 
-	//public CebSolutions? Solutions { get; set; }
 	protected override async Task OnInitializedAsync() {
 		await base.OnInitializedAsync();
 		tirage.PropertyChanged += async (_, args) => {

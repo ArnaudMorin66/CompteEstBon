@@ -1,8 +1,11 @@
-$primary: #3b3a39; // #2b2a29;
+//$primary: #3b3a39; 
+$primary: #1f2428;
 $font-size: 1rem;
 $enable-shadows: true;
 $enable-responsive-font-sizes: true;
-$grid-header-border-color: $primary;
+//$grid-header-border-color: $primary;
+$enable-dark-mode: true;
+
 // $font-family-sans-serif: 'Segoe UI', 'Colibri', sans-serif;
 // $font-family: $font-family-sans-serif;
 $enable-gradients: true;
@@ -15,13 +18,9 @@ $enable-gradients: true;
 @import "ej2/bootstrap5-dark";
 @import "bootstrap/scss/bootstrap";
 
-/**/
 
-/*
-    html,
-*/
 body {
-    background: $primary;
+    background: $dark;
     font-size: $font-size;
 }
 

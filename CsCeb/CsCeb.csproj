@@ -10,7 +10,7 @@
     <AssemblyName>ceb</AssemblyName>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>3.2023.211.851</Version>
+    <Version>3.2023.211.1714</Version>
     <IncrementVersionOnBuild>3.yyyy.Mdd.Hmm</IncrementVersionOnBuild>
   </PropertyGroup>
 
@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
+    <ProjectReference Include="..\Outils\arnaud.morin.outils.csproj" />
     <ProjectReference Include="..\SFCebOffice\CebExport.csproj" />
   </ItemGroup>
 

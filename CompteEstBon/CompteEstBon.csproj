@@ -33,5 +33,9 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Outils\arnaud.morin.outils.csproj" />
+  </ItemGroup>
+
 
 </Project>

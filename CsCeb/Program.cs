@@ -11,6 +11,7 @@ using System.CommandLine.Rendering;
 using CompteEstBon;
 using CompteEstBon.Properties;
 using Microsoft.Extensions.Configuration;
+using arnaud.morin.outils;
 using static System.Console;
 
 
@@ -26,7 +27,6 @@ var exports = new List<FileInfo>();
 var sflicence = Resources.sflicence;
 FileInfo zipfile = null;
 var tirage = new CebTirage();
-
 WriteLine('\n');
 WriteLine("*** LE COMPTE EST BON ***".Red());
 
@@ -49,7 +49,7 @@ if (File.Exists(ConfigurationFile)) {
                 MongoServer = child.Value;
                 break;
             case "ZIPFILE":
-                zipfile = child.Value.FileInfo(); //  ToFileInfo(child.Value!);
+                zipfile = child.Value.FileInfo(); 
                 break;
             case "SFLICENCE":
                 sflicence = child.Value;
@@ -76,12 +76,12 @@ var rootCommand = new RootCommand("Compte Est Bon") {
 
 
 void handler(InvocationContext context) {
-    var prs = context.ParseResult;
-    if (prs.UnparsedTokens.Count > 0) abort(new ArgumentException($"Option(s) {string.Join(",", prs.UnparsedTokens)} invalide(s)"), -2);
+    var parseResult = context.ParseResult;
+    if (parseResult.UnparsedTokens.Count > 0) abort(new ArgumentException($"Option(s) {string.Join(",", parseResult.UnparsedTokens)} invalide(s)"), -2);
 
     try {
         foreach (var option in rootCommand.Options) {
-            if (prs.FindResultFor(option) is not { } optionResult) continue;
+            if (parseResult.FindResultFor(option) is not { } optionResult) continue;
             switch (option.Name.ToLower()) {
                 case "trouve":
                     tirage.Search = optionResult.GetValueOrDefault<int>();
@@ -128,7 +128,7 @@ void handler(InvocationContext context) {
         }
 
         foreach (var argument in rootCommand.Arguments) {
-            if (prs.FindResultFor(argument) is not { } argumentResult) continue;
+            if (parseResult.FindResultFor(argument) is not { } argumentResult) continue;
             var arguments = argumentResult.GetValueOrDefault<List<int>>();
             if (arguments.Count <= 0) continue;
             if (arguments[0] > 100) {
@@ -173,11 +173,12 @@ async Task runAsync() {
         Write($@": {tirage.Found}");
 
     Write($@", {"nombre de solutions:".LightYellow()} {tirage.Count}");
+    if (tirage.Status == CebStatus.CompteApproche) Write($@", {"écart:".LightYellow()} {tirage.Diff}");
     WriteLine($@", {"durée du calcul:".LightYellow()} {tirage.Duree.TotalSeconds:F3} s");
 
     WriteLine();
 
-    foreach (var (i, solution) in tirage.Solutions!.Select((v, i) => (i, v))) {
+    foreach (var ( solution, i) in tirage.Solutions!.WithIndex()) {
         var count = $"{i + 1:0000}".TextControlCode(
             tirage.Status == CebStatus.CompteEstBon ? Ansi.Color.Foreground.Green : Ansi.Color.Foreground.Magenta);
         WriteLine($@"{solution.Rank}: {count} => {solution.LightYellow()}");
@@ -194,7 +195,7 @@ async Task runAsync() {
 
         if (Afficher)
             foreach (var export in exports)
-                Utilitaires.OpenDocument(export.FullName);
+                Outils.OpenDocument(export.FullName);
     }
 }
 

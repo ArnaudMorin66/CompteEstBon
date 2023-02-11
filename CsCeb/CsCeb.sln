@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon", "..\CompteEs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CebExport", "..\SFCebOffice\CebExport.csproj", "{E3CCE2B3-FCC9-49CE-A51C-5003C118CB76}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "arnaud.morin.outils", "..\Outils\arnaud.morin.outils.csproj", "{3EBD9838-452B-47D0-8CC6-334BFBFAE0D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{E3CCE2B3-FCC9-49CE-A51C-5003C118CB76}.Release|x64.Build.0 = Release|Any CPU
 		{E3CCE2B3-FCC9-49CE-A51C-5003C118CB76}.Release|x86.ActiveCfg = Release|Any CPU
 		{E3CCE2B3-FCC9-49CE-A51C-5003C118CB76}.Release|x86.Build.0 = Release|Any CPU
+		{3EBD9838-452B-47D0-8CC6-334BFBFAE0D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EBD9838-452B-47D0-8CC6-334BFBFAE0D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EBD9838-452B-47D0-8CC6-334BFBFAE0D3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3EBD9838-452B-47D0-8CC6-334BFBFAE0D3}.Debug|x64.Build.0 = Debug|Any CPU
+		{3EBD9838-452B-47D0-8CC6-334BFBFAE0D3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3EBD9838-452B-47D0-8CC6-334BFBFAE0D3}.Debug|x86.Build.0 = Debug|Any CPU
+		{3EBD9838-452B-47D0-8CC6-334BFBFAE0D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EBD9838-452B-47D0-8CC6-334BFBFAE0D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EBD9838-452B-47D0-8CC6-334BFBFAE0D3}.Release|x64.ActiveCfg = Release|Any CPU
+		{3EBD9838-452B-47D0-8CC6-334BFBFAE0D3}.Release|x64.Build.0 = Release|Any CPU
+		{3EBD9838-452B-47D0-8CC6-334BFBFAE0D3}.Release|x86.ActiveCfg = Release|Any CPU
+		{3EBD9838-452B-47D0-8CC6-334BFBFAE0D3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

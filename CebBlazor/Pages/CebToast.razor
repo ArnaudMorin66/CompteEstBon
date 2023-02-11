@@ -37,13 +37,12 @@
 						<i class="fa-regular @icn"></i>&nbsp;@rsl
 					</div>
 					<div class="text-center text-white bg-gradient">
-						<div>&nbsp;</div>
-						<div>Trouvé:&nbsp;@tirage.Found</div>
+						<div style="height:10pt"></div>
+						<div>Trouv&eacute;&nbsp;@tirage.Found</div>
 						@if (tirage.Diff != 0) {
 							<div>&Eacute;cart:&nbsp;@tirage.Diff</div>
 						}
-						<div>@tirage.Count&nbsp;solutions</div>
-						<div>Durée:&nbsp;@($"{tirage.Duree.TotalSeconds:F3}")s</div>
+						<div>@tirage.Count&nbsp;solutions&nbsp;en&nbsp;@($"{tirage.Duree.TotalSeconds:F3}") s</div>
 					</div>
 					<div>&nbsp;</div>
 					<div class="w-100 text-center text-white bg-gradient ">
@@ -54,6 +53,9 @@
 							}
 							<div>&nbsp;</div>
 						}
+					</div>
+					<div class="w-100 text-center fs-5 text-uppercase fw-bold @cls">
+						&nbsp;
 					</div>
 				}
 			</Content>

@@ -8,6 +8,7 @@
 #pragma warning disable CS1591
 
 using System.Text.Json.Serialization;
+using arnaud.morin.outils;
 
 namespace CompteEstBon {
     ///

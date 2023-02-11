@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using arnaud.morin.outils;
 using CompteEstBon.Properties;
 using Microsoft.Win32;
 using MongoDB.Bson;
@@ -385,11 +386,10 @@ public class ViewTirage : NotificationObject, ICommand {
         ExportFunction(stream);
         stream.Flush();
         stream.Close();
-        OpenDocument(Path);
+        Outils.OpenDocument(Path);
     }
 
-    public static void OpenDocument(string nom) =>
-        Process.Start(new ProcessStartInfo { UseShellExecute = true, FileName = nom });
+   
     
 
     #region Action
