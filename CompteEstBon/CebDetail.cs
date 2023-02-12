@@ -22,6 +22,7 @@ public record CebDetail {
     public string Op5 { get; set; } = null;
 
     [JsonIgnore]
+
     public IEnumerable<string> Operations {
         get {
             yield return Op1;

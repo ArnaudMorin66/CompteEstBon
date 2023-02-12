@@ -193,49 +193,49 @@ public static class Utilitaires {
     /// <param name="bground"></param>
     /// <param name="eground"></param>
     /// <returns></returns>
-    public static string TextControlCode(this object texte, AnsiControlCode bground, AnsiControlCode eground = null) =>
+    public static string ControlCode(this object texte, AnsiControlCode bground, AnsiControlCode eground = null) =>
         $"{bground}{texte}{eground ?? Ansi.Color.Foreground.Default}";
     /// <summary>
     /// 
     /// </summary>
     /// <param name="texte"></param>
     /// <returns></returns>
-    public static string Red(this object texte) => texte.TextControlCode(Ansi.Color.Foreground.Red);
+    public static string Red(this object texte) => texte.ControlCode(Ansi.Color.Foreground.Red);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="texte"></param>
     /// <returns></returns>
-    public static string LightYellow(this object texte) => texte.TextControlCode(Ansi.Color.Foreground.LightYellow);
+    public static string LightYellow(this object texte) => texte.ControlCode(Ansi.Color.Foreground.LightYellow);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="texte"></param>
     /// <returns></returns>
-    public static string Cyan(this object texte) => texte.TextControlCode(Ansi.Color.Foreground.Cyan);
+    public static string Cyan(this object texte) => texte.ControlCode(Ansi.Color.Foreground.Cyan);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="texte"></param>
     /// <returns></returns>
 
-    public static string Green(this object texte) => texte.TextControlCode(Ansi.Color.Foreground.Green);
+    public static string Green(this object texte) => texte.ControlCode(Ansi.Color.Foreground.Green);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="texte"></param>
     /// <returns></returns>
-    public static string Magenta(this object texte) => texte.TextControlCode(Ansi.Color.Foreground.Magenta);
+    public static string Magenta(this object texte) => texte.ControlCode(Ansi.Color.Foreground.Magenta);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="texte"></param>
     /// <returns></returns>
-    public static string Yellow(this object texte) => texte.TextControlCode(Ansi.Color.Foreground.Yellow);
+    public static string Yellow(this object texte) => texte.ControlCode(Ansi.Color.Foreground.Yellow);
     /// <summary>
     /// 
     /// </summary>
     /// <param name="texte"></param>
     /// <returns></returns>
-    public static string Blue(this object texte) => texte.TextControlCode(Ansi.Color.Foreground.Blue);
+    public static string Blue(this object texte) => texte.ControlCode(Ansi.Color.Foreground.Blue);
 }

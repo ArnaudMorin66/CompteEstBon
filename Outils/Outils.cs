@@ -38,4 +38,6 @@ public static class Outils {
     /// <param name="nom"></param>
     public static void OpenDocument(string nom) =>
         Process.Start(new ProcessStartInfo { UseShellExecute = true, FileName = nom });
+
+   
 }

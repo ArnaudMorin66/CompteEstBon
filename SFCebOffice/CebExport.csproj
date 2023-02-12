@@ -9,6 +9,9 @@
         <AssemblyVersion>4.2.8.10362</AssemblyVersion>
         <FileVersion>4.2.8.10362</FileVersion>
         <Version>4.2.2.20090</Version>
+        <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+        <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+        <EnableNETAnalyzers>False</EnableNETAnalyzers>
     </PropertyGroup>
 
 

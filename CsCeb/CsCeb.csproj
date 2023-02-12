@@ -8,10 +8,13 @@
     <LangVersion>preview</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyName>ceb</AssemblyName>
-    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>3.2023.211.1714</Version>
+    <Version>3.2023.212.1003</Version>
     <IncrementVersionOnBuild>3.yyyy.Mdd.Hmm</IncrementVersionOnBuild>
+    <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+    <EnableNETAnalyzers>False</EnableNETAnalyzers>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -26,11 +26,12 @@ public sealed class CebTirage : INotifyPropertyChanged {
     private readonly List<CebBase> _solutions = new();
 
     /// <summary>
-    /// 
+    ///
+    /// <param name="nplaques">Nombre de plaques du tirage</param>
     /// </summary>
-    public CebTirage(int nombreDePlaques = 6) {
-        NombreDePlaques = nombreDePlaques;
-        Plaques = new CebPlaque[NombreDePlaques];
+    public CebTirage(int nplaques = 6) {
+        Nplaques = nplaques;
+        Plaques = new CebPlaque[Nplaques];
         Random();
     }
 
@@ -40,7 +41,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// </summary>
     /// <param name="search"></param>
     /// <param name="plaques"></param>
-    public CebTirage(int nombreDePlaques, int search, params int[] plaques) : this(nombreDePlaques) {
+    public CebTirage(int nplaques, int search, params int[] plaques) : this(nplaques) {
         if (plaques.Length != 0) SetPlaques(plaques);
         Search = search;
         Clear();
@@ -48,7 +49,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <summary>
     /// 
     /// </summary>
-    public int NombreDePlaques { get; private set; }
+    public int Nplaques { get; private set; }
     /// <summary>
     /// 
     /// </summary>
@@ -97,7 +98,6 @@ public sealed class CebTirage : INotifyPropertyChanged {
             var debut = DateTime.Now;
             Status = CebStatus.EnCours;
             Resolve(Plaques);
-            //_solutions.Sort((p, q) => p.CompareRank(q));
             Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
             Solutions = _solutions.OrderBy(b=> b.Rank).ToArray();
             Duree = DateTime.Now - debut;
@@ -146,6 +146,8 @@ public sealed class CebTirage : INotifyPropertyChanged {
     private void InsertSolution(CebBase sol) {
         var diff = Abs(_search - sol.Value);
         switch (diff - Diff) {
+            case > 0:
+                return;
             case 0: {
                 if (_solutions.Contains(sol)) return;
                 break;
@@ -155,8 +157,6 @@ public sealed class CebTirage : INotifyPropertyChanged {
                 _solutions.Clear();
                 Found.Reset();
                 break;
-            default:
-                return;
         }
 
         Found.Add(sol.Value);
@@ -173,7 +173,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
             foreach (var (q, j) in liste.WithIndex().Where((_, j) => j > i))
                 foreach (var oper in CebOperation.AllOperations.Select(operation => 
                                  new CebOperation(p, operation, q)).Where(o => o.Value != 0))
-                    Resolve(new[] { oper }.Concat(liste.Where((_, k) => k  != i && k != j)));
+                    Resolve(liste.Where((_, k) => k  != i && k != j).Concat(new[]{ oper}));
         }
     }
     /// <summary>
@@ -203,7 +203,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     public CebStatus Random() {
         Status = CebStatus.Indefini;
         var liste = new List<int>(CebPlaque.ListePlaques);
-        for (var i = 0; i < NombreDePlaques; i++) {
+        for (var i = 0; i < Nplaques; i++) {
             var n = Rnd.Next(0, liste.Count);
             Plaques[i] = new CebPlaque(liste[n]);
             Plaques[i].PropertyChanged += PlaqueUpdated;
@@ -226,7 +226,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// </returns>
     public void SetPlaques(params int[] plaq) {
         Status = CebStatus.Indefini;
-        if (plaq.Length != NombreDePlaques) {
+        if (plaq.Length != Nplaques) {
             foreach (var plaque in Plaques) plaque.Value = 0;
             Clear();
             return;
@@ -250,7 +250,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// </summary>
     /// <param name="no"></param>
     /// <returns></returns>
-    public string? Solution(int no = 0) => no >= 0 && no < Count ? Solutions![no].ToString() : null;
+    public string? Solution(int no = 0) => no >= 0 && no < Solutions?.Length ? Solutions![no].ToString() : null;
 
     /// <summary>
     ///     Valid
@@ -322,6 +322,10 @@ public sealed class CebTirage : INotifyPropertyChanged {
     ///     The status.
     /// </value>
     public CebStatus Status { get; private set; } = CebStatus.Indefini;
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="i"></param>
+    /// <returns></returns>
     public CebBase? this[int i] => Solutions?[i];
 }

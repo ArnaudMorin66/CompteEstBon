@@ -6,6 +6,11 @@
     <Nullable>enable</Nullable>
     <AssemblyName>arnaud.morin.outils</AssemblyName>
     <RootNamespace>arnaud.morin.outils</RootNamespace>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>C:\Users\arnaud\Source\CompteEstBon\CompteEstBon\arnaudmorin.snk</AssemblyOriginatorKeyFile>
+    <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+    <EnableNETAnalyzers>False</EnableNETAnalyzers>
   </PropertyGroup>
 
 </Project>
