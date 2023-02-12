@@ -70,7 +70,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// </summary>
     /// <returns>
     /// </returns>
-    private bool IsSearchValid() => _search is > 99 and < 1000;
+    private bool IsSearchValid() => _search.Between(100,999);
     /// <summary>
     /// 
     /// </summary>

@@ -25,11 +25,11 @@ namespace CompteEstBon;
 /// <summary>
 /// 
 /// </summary>
-public static class Utilitaires {
+public static class CebUtilitaires {
     /// <summary>
     /// 
     /// </summary>
-    private static readonly Dictionary<string, Action<CebTirage, FileInfo>> listeFormats = new() {
+    private static readonly Dictionary<string, Action<CebTirage, FileInfo>> ListeFormats = new() {
         [".zip"] = SaveZip,
         [".json"] = SaveJson,
         [".xml"] = SaveXml,
@@ -177,7 +177,7 @@ public static class Utilitaires {
     public static void SerializeFichiers(this CebTirage tirage, List<FileInfo> fichiers) {
         foreach (var fichier in fichiers) {
             WriteLine($@"Exporter vers {fichier.FullName}".Cyan());
-            if (listeFormats.TryGetValue(fichier.Extension, out var exportFichier)) {
+            if (ListeFormats.TryGetValue(fichier.Extension, out var exportFichier)) {
                 exportFichier(tirage, fichier);
             }
             else {
