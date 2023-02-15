@@ -4,119 +4,118 @@
 @using Microsoft.AspNetCore.Routing.Constraints
 @inject CebTirage tirage
 @if (Visible) {
-	<SfDialog Width="480"
-			  ShowCloseIcon="false"
-		  AllowDragging="true"
-		  @onclick="() => Visible = false"
-		  ID="DlgToast">
-		<DialogAnimationSettings Effect="@DialogEffect.FadeZoom"
-							 Duration="600">
-		</DialogAnimationSettings>
-		<DialogTemplates>
-			<Content>
-				<header>
-					<div class="w-100 text-center fs-5 text-uppercase fw-bold @cls">
-						<i class="fa-regular @icn"></i>&nbsp;@rsl
-					</div>
-				</header>
-				<div class="text-center text-white bg-gradient">
-					<div style="height:10pt"></div>
-					<div>Trouv&eacute;&nbsp;@tirage.Found</div>
-					@if (tirage.Diff != 0) {
-						<div>&Eacute;cart:&nbsp;@tirage.Diff</div>
-					}
-					<div>@tirage.Count&nbsp;solutions&nbsp;en&nbsp;@($"{tirage.Duree.TotalSeconds:F3}") s</div>
-				</div>
-				<div>&nbsp;</div>
-				<div class="w-100 text-center text-white bg-gradient ">
-					@{
-						<div class="separator bg-warning mb-2">&nbsp;</div>
-						foreach (var item in Solution.Operations) {
-							<div>@item</div>
-						}
-						<div>&nbsp;</div>
-					}
-				</div>
-				<footer class="w-100">
-					<div class="w-100 text-center fs-5 text-uppercase fw-bold @cls">
-						&nbsp;
-					</div>
-				</footer>
-			</Content>
-		</DialogTemplates>
-	</SfDialog>
+    <SfDialog Width="480"
+              ShowCloseIcon="false"
+          AllowDragging="true"
+          @onclick="() => Visible = false"
+          ID="DlgToast">
+        <DialogAnimationSettings Effect="@DialogEffect.FadeZoom"
+                             Duration="600">
+        </DialogAnimationSettings>
+        <DialogTemplates>
+            <Header>
+                <div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @cls">
+                    <i class="fa-regular @icn"></i>&nbsp;@rsl
+                </div>
+            </Header>
+            <Content>
+                <div class="w-100 text-center text-white">
+                    <div>Trouv&eacute;&nbsp;@tirage.Found</div>
+                    @if (tirage.Diff != 0) {
+                        <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
+                    }
+                    <div>@tirage.Count&nbsp;solutions&nbsp;en&nbsp;@($"{tirage.Duree.TotalSeconds:F3}") s</div>
+                </div>
+                <div>&nbsp;</div>
+                <div class="w-100 text-center text-white bg-gradient ">
+                    @{
+                        <div class="separator bg-warning mb-2">&nbsp;</div>
+                        foreach (var item in Solution.Operations) {
+                            <div>@item</div>
+                        }
+                        <div>&nbsp;</div>
+                    }
+                </div>
+            </Content>
+            <FooterTemplate>
+                <div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @cls">
+                    <i class="fa-regular @icn"></i>&nbsp;@rsl
+                </div>
+            </FooterTemplate>
+        </DialogTemplates>
+    </SfDialog>
 }
 @code {
 #pragma warning disable CS8618
-	protected Timer timer = new();
-	protected bool WithTimer { get; set; }
-	private bool _visible;
+    protected Timer timer = new();
+    protected bool WithTimer { get; set; }
+    private bool _visible;
 
-	public bool Visible {
-		get => _visible;
-		set {
-			if (value == _visible) return;
-			_visible = value;
-			if (WithTimer) {
-				timer.Stop();
-				if (_visible) {
-					timer.Start();
-				}
-			}
-			InvokeAsync(StateHasChanged);
-		}
-	}
+    public bool Visible {
+        get => _visible;
+        set {
+            if (value == _visible) return;
+            _visible = value;
+            if (WithTimer) {
+                timer.Stop();
+                if (_visible) {
+                    timer.Start();
+                }
+            }
+            InvokeAsync(StateHasChanged);
+        }
+    }
 
-	public CebBase Solution { get; set; }
-	private int _duetime;
+    public CebBase Solution { get; set; }
+    private int _duetime;
 
-	[Parameter]
+    [Parameter]
 #pragma warning disable BL0007
-	public int DueTime {
-		get => _duetime;
-		set {
-			// ReSharper disable once CompareOfFloatsByEqualityOperator
-			if (_duetime == value) return;
-			_duetime = value;
-			timer.Interval = _duetime;
+    public int DueTime {
+        get => _duetime;
+        set {
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (_duetime == value) return;
+            _duetime = value;
+            timer.Interval = _duetime;
 
-		}
+        }
 
-	}
-	string cls;
-	string icn;
-	string rsl;
-	protected override void OnInitialized() {
-		timer.Elapsed += (_, _) => Visible = false;
-	}
+    }
+    string cls;
+    string icn;
+    string rsl;
+    protected override void OnInitialized() {
+        timer.Elapsed += (_, _) => Visible = false;
+    }
 
-	public async Task ShowAsync(CebBase ligne, bool withTimer = true) {
+    public async Task ShowAsync(CebBase ligne, bool withTimer = true) {
 #pragma warning disable CS8601
-		switch (tirage.Status) {
-			case CebStatus.CompteEstBon:
-				cls = "bg-success";
-				icn = "fa-thumbs-up";
-				rsl = "Compte est bon";
-				break;
-			case CebStatus.CompteApproche:
-				icn = "fa-thumbs-down text-wheat";
-				cls = "bg-secondary text-wheat";
-				rsl = "Compte approché";
-				break;
-		}
-		if (Visible) {
-			await InvokeAsync(() => Visible = false);
-		}
-		WithTimer = withTimer;
-		Solution = ligne;
-		Visible = true;
-		await InvokeAsync(StateHasChanged);
-	}
+        switch (tirage.Status) {
+            case CebStatus.CompteEstBon:
+                cls = "bg-success";
+                icn = "fa-thumbs-up";
+                rsl = "Compte est bon";
+                break;
+            case CebStatus.CompteApproche:
+                icn = "fa-thumbs-down text-wheat";
+                cls = "bg-secondary text-wheat";
+                rsl = "Compte approché";
+                break;
+        }
+        if (Visible) {
+            await InvokeAsync(() => Visible = false);
+        }
+        WithTimer = withTimer;
+        Solution = ligne;
+        Visible = true;
+        await InvokeAsync(StateHasChanged);
+    }
 
-	public async Task HideAsync() {
-		if (!Visible) return;
-		Visible = false;
-		await InvokeAsync(StateHasChanged);
-	}
+    public async Task HideAsync() {
+        if (!Visible) return;
+        Visible = false;
+        await InvokeAsync(StateHasChanged);
+    }
 
 }

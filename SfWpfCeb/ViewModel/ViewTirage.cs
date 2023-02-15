@@ -14,10 +14,6 @@ using System.Windows.Threading;
 using arnaud.morin.outils;
 using CompteEstBon.Properties;
 using Microsoft.Win32;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Conventions;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 using Syncfusion.Windows.Shared;
 
 //using Syncfusion.Drawing;
@@ -331,7 +327,8 @@ public class ViewTirage : NotificationObject, ICommand {
     public static (bool Ok, string Path) SaveFileName() {
         var dialog = new SaveFileDialog {
             Title = "Export Excel-Word",
-            Filter = "Excel (*.xlsx)| *.xlsx | Word (*.docx) | *.docx",
+            Filter = "Excel (*.xlsx)| *.xlsx | Word (*.docx) | *.docx | Json (*.json) | *.json | XML (*.xml) | *.xml ",
+            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
             DefaultExt = ".xlsx",
             FileName = "*.xlsx"
         };
@@ -339,53 +336,29 @@ public class ViewTirage : NotificationObject, ICommand {
         return ((bool)dialog.ShowDialog(), dialog.FileName);
     }
 
-    private async Task SaveMongoDB() {
-        try {
-            ConventionRegistry.Register(
-                "EnumStringConvention",
-                new ConventionPack { new EnumRepresentationConvention(BsonType.String) },
-                _ => true);
-            var clientSettings = MongoClientSettings.FromConnectionString(Settings.Default.MongoServer);
-            clientSettings.LinqProvider = LinqProvider.V3;
-
-            var cl = new MongoClient(clientSettings)
-                .GetDatabase("ceb")
-                .GetCollection<BsonDocument>("comptes");
-
-            await cl.InsertOneAsync(
-                new BsonDocument(
-                    new Dictionary<string, object> {
-                        {
-                            "_id",
-                            new {
-                                lang = "wpf",
-                                domain = Environment.GetEnvironmentVariable("USERDOMAIN"),
-                                date = DateTime.UtcNow
-                            }.ToBsonDocument()
-                        }
-                    }).AddRange(Tirage.Result.ToBsonDocument()));
-        }
-        catch (Exception) {
-            // ignored
-        }
-    }
-
+    
     private void ExportFichier() {
         var (Ok, Path) = SaveFileName();
         if (!Ok) return;
         FileInfo fi = new(Path);
-        if (fi.Exists)
+        if (fi.Exists)  
             fi.Delete();
-
-        Action<Stream> ExportFunction = fi.Extension switch {
-            ".xlsx" => Tirage.ToExcel,
-            ".docx" => Tirage.ToWord,
-            _ => throw new NotImplementedException()
-        };
-        FileStream stream = new(Path!, FileMode.CreateNew);
-        ExportFunction(stream);
-        stream.Flush();
-        stream.Close();
+        switch (fi.Extension)  {
+            case ".xlsx":
+                Tirage.SaveXlsx(fi);
+                break;
+            case ".docx":
+                Tirage.SaveDocx(fi);
+                break;
+            case ".json":
+                Tirage.SaveJson(fi);
+                break;
+            case ".xml":
+                Tirage.SaveXml(fi);
+                break;
+            default:
+                return;
+        }
         Outils.OpenDocument(Path);
     }
 
@@ -425,10 +398,9 @@ public class ViewTirage : NotificationObject, ICommand {
         UpdateForeground();
         IsBusy = false;
         RaisePropertyChanged(nameof(IsComputed));
-
         ShowPopup();
         if (MongoDb)
-            await SaveMongoDB();
+            Tirage.SerializeMongo(Settings.Default.MongoServer, "SfWpf");
 
         return Tirage.Status;
     }

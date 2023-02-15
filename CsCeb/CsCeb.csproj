@@ -10,7 +10,7 @@
     <AssemblyName>ceb</AssemblyName>
     <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>3.2023.212.1705</Version>
+    <Version>3.2023.215.835</Version>
     <IncrementVersionOnBuild>3.yyyy.Mdd.Hmm</IncrementVersionOnBuild>
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
@@ -31,7 +31,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Microsoft.NETCore.Platforms" Version="7.0.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
     <PackageReference Include="System.CommandLine.Rendering" Version="0.4.0-alpha.22272.1" />
   </ItemGroup>
 

@@ -1,97 +1,91 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
-    <Version>10</Version>
-    <UseWPF>true</UseWPF>
-    <RootNamespace>CompteEstBon</RootNamespace>
-    <StartupObject>CompteEstBon.App</StartupObject>
-    <ApplicationIcon>favicon.ico</ApplicationIcon>
-    <SignAssembly>false</SignAssembly>
-    <Version>10</Version>
-    <AssemblyName>WpfCeb</AssemblyName>
-    <AssemblyVersion>1.0.8230.61</AssemblyVersion>
-    <FileVersion>1.0.8230.61</FileVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <Version>10</Version>
+        <UseWPF>true</UseWPF>
+        <RootNamespace>CompteEstBon</RootNamespace>
+        <StartupObject>CompteEstBon.App</StartupObject>
+        <ApplicationIcon>favicon.ico</ApplicationIcon>
+        <SignAssembly>false</SignAssembly>
+        <Version>10</Version>
+        <AssemblyName>WpfCeb</AssemblyName>
+        <AssemblyVersion>1.0.8230.61</AssemblyVersion>
+        <FileVersion>1.0.8230.61</FileVersion>
+    </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;TRACE,DOTNET</DefineConstants>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <WarningLevel>3</WarningLevel>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DefineConstants>TRACE;TRACE,DOTNET</DefineConstants>
+        <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+        <WarningLevel>3</WarningLevel>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="ViewModel\CebDetail.cs" />
-    <Compile Remove="ViewModel\CebStatusConverter.cs" />
-    <Compile Remove="ViewModel\InverseVisibilityConverter.cs" />
-    <Compile Remove="ViewModel\StringVisibilityConverter.cs" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <None Remove="favicon.ico" />
-    <None Remove="Images\excel.png" />
-    <None Remove="Images\giphy.gif" />
-    <None Remove="Images\random.png" />
-    <None Remove="Images\resolve.png" />
-    <None Remove="Images\word.png" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="ViewModel\CebDetail.cs" />
+        <Compile Remove="ViewModel\CebStatusConverter.cs" />
+        <Compile Remove="ViewModel\InverseVisibilityConverter.cs" />
+        <Compile Remove="ViewModel\StringVisibilityConverter.cs" />
+    </ItemGroup>
 
 
-  <ItemGroup>
-    <Compile Include="..\CebOffice\NativeMethods.cs" Link="ViewModel\NativeMethods.cs" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="favicon.ico" />
+        <None Remove="Images\excel.png" />
+        <None Remove="Images\giphy.gif" />
+        <None Remove="Images\random.png" />
+        <None Remove="Images\resolve.png" />
+        <None Remove="Images\word.png" />
+    </ItemGroup>
 
 
-  <ItemGroup>
-    <PackageReference Include="MongoDB.Driver" Version="2.16.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\CebOffice\NativeMethods.cs" Link="ViewModel\NativeMethods.cs" />
+    </ItemGroup>
 
+    <ItemGroup>
+        <Resource Include="Images\giphy.gif" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="Images\giphy.gif" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
+        <ProjectReference Include="..\SFCebOffice\CebExport.csproj" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
-    <ProjectReference Include="..\SFCebOffice\CebExport.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <Resource Include="favicon.ico" />
+        <Resource Include="Images\excel.png" />
+        <Resource Include="Images\random.png" />
+        <Resource Include="Images\resolve.png" />
+        <Resource Include="Images\word.png" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="favicon.ico" />
-    <Resource Include="Images\excel.png" />
-    <Resource Include="Images\random.png" />
-    <Resource Include="Images\resolve.png" />
-    <Resource Include="Images\word.png" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Properties\Settings.Designer.cs">
+            <DesignTimeSharedInput>True</DesignTimeSharedInput>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Settings.settings</DependentUpon>
+        </Compile>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="Properties\Settings.settings">
+            <Generator>SettingsSingleFileGenerator</Generator>
+            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+        </None>
+        <None Update="SyncfusionLicense.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Update="SyncfusionLicense.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="CebComboBox.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="CebDictionary.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
+    <ItemGroup>
+        <Page Update="CebComboBox.xaml">
+            <SubType>Designer</SubType>
+        </Page>
+        <Page Update="CebDictionary.xaml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <SubType>Designer</SubType>
+        </Page>
+    </ItemGroup>
 
 </Project>

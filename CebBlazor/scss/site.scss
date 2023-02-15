@@ -23,6 +23,9 @@ body {
     background: $dark;
     font-size: $font-size;
 }
+.e-input, .e-popup {
+    text-align:center;
+}
 
 #solutions {
     .e-gridheader {
@@ -138,18 +141,8 @@ body {
     height: 2rem;
 }
 
-.a-toast {
-    > .e-dlg-content, > .e-dlg-header-content, > .e-footer-content {
-        @extend .bg-gradient;
-        background: $primary;
-        padding: 0px;
-        margin: 0;
-        border: none;
-    }
-}
-
 .e-dialog {
-    background-color: transparent;
+    background-color: $primary;
     border-style: solid;
     border-width: thin;
     border-color: $secondary;
@@ -157,9 +150,27 @@ body {
 
     .e-dlg-content {
         @extend .rounded-1;
-        background: $primary;
-        padding: 1px;
-        margin: 1px;
+        //background: $primary;
+        padding: 0px;
+        margin: 0px;
+        width: 100%;
+    }
+
+    .e-dlg-header-content {
+        width: 100%;
+        padding: 0px;
+        margin: 0px;
+
+        .e-dlg-header {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    .e-footer-content {
+        width: 100%;
+        padding: 0px;
+        margin: 0px;
     }
 }
 

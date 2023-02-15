@@ -10,13 +10,13 @@ using Syncfusion.Blazor;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-// ReSharper disable once CheckNamespace
 namespace CebBlazor.Code;
 
 public static class Util {
-    public static ValueTask<object> SaveAsAsync(this IJSRuntime js, string filename, MemoryStream data) {
-        return js.InvokeAsync<object>("saveAsFile", filename, Convert.ToBase64String(data.ToArray()));
-    }
+    public static ValueTask<object> SaveAsAsync(this IJSRuntime js, string filename, MemoryStream data) => js.InvokeAsync<object>(
+        "saveAsFile",
+        filename,
+        Convert.ToBase64String(data.ToArray()));
 
     public static string? SyncfusionVersion => typeof(SfBaseComponent).Assembly.GetName().Version?.ToString();
 

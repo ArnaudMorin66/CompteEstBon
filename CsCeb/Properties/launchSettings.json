@@ -29,7 +29,7 @@
     },
     "parametres": {
       "commandName": "Project",
-      "commandLineArgs": "-w"
+      "commandLineArgs": "-f ceb.xlsx -a -m"
     },
     "Erreur option": {
       "commandName": "Project",

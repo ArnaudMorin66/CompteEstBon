@@ -16,10 +16,7 @@ using System.Windows.Threading;
 using arnaud.morin.outils;
 using CompteEstBon.Properties;
 using Microsoft.Win32;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Conventions;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
+
 
 #endregion
 
@@ -406,7 +403,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         
         Solutions = Tirage.Solutions; // .Select(CebDetail.FromCebBase);
         if (MongoDb)
-            await SaveToMongoDB();
+            Tirage.SerializeMongo(Settings.Default.MongoServer, "Wpf");
         IsBusy = false;
 
         ShowNotify();
@@ -415,42 +412,11 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         NotifiedChanged(nameof(IsComputed));
     }
 
-    public async Task SaveToMongoDB() {
-        try {
-            ConventionRegistry.Register("EnumStringConvention",
-                new ConventionPack {
-                    new EnumRepresentationConvention(BsonType.String)
-                },
-                _ => true);
-            var clientSettings = MongoClientSettings.FromConnectionString(Settings.Default.MongoServer);
-            clientSettings.LinqProvider = LinqProvider.V3;
-
-            var cl = new MongoClient(clientSettings)
-                .GetDatabase("ceb")
-                .GetCollection<BsonDocument>("comptes");
-
-            await cl.InsertOneAsync(
-                new BsonDocument(new Dictionary<string, object> {
-                        {
-                            "_id",
-                            new {
-                                lang = "wpf", domain = Environment.GetEnvironmentVariable("USERDOMAIN"),
-                                date = DateTime.UtcNow
-                            }.ToBsonDocument()
-                        }
-                    })
-                    .AddRange(Tirage.Result.ToBsonDocument()));
-        }
-        catch (Exception) {
-            // ignored
-        }
-    }
-
     public static (bool select, string name) FileSaveName() {
         SaveFileDialog dialog = new() {
             DefaultExt = ".xlsx"
         };
-        (dialog.Filter, dialog.Title) = ("Document Excel|*.xlsx|Document Word|*.docx", "Export Excel-Word");
+        (dialog.Filter, dialog.Title) = ("Document Excel|*.xlsx|Document Word|*.docx| Document Json| *.json| Document XML|*.xml", "Export Excel-Word");
         dialog.InitialDirectory = Environment.SpecialFolder.UserProfile + "\\Downloads";
         // ReSharper disable once PossibleInvalidOperationException
         return (bool)dialog.ShowDialog() ? (true, dialog.FileName) : (false, null);
@@ -462,16 +428,20 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         FileInfo fi = new(Path);
         if (fi.Exists)
             fi.Delete();
-
-        Action<Stream> ExportFunction = fi.Extension switch {
-            ".xlsx" => Tirage.ToExcel,
-            ".docx" => Tirage.ToWord,
-            _ => throw new NotImplementedException()
-        };
-        var stream = new FileStream(Path!, FileMode.CreateNew);
-        ExportFunction(stream);
-        stream.Flush();
-        stream.Close();
+        switch (fi.Extension) {
+            case ".xlsx":
+                Tirage.SaveXlsx(fi);
+                break;
+            case ".docx":
+                Tirage.SaveDocx(fi);
+                break;
+            case ".json":
+                Tirage.SaveJson(fi);
+                break;
+            case ".xml":
+                Tirage.SaveXml(fi);
+                break;
+        }
         Outils.OpenDocument(Path);
     }
 

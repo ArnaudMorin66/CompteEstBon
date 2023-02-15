@@ -32,8 +32,8 @@ namespace CompteEstBon {
             var hMenu = NativeMethods.GetSystemMenu(hWnd, false);
             var location = elt.PointToScreen(Mouse.GetPosition(elt));
             var cmd = NativeMethods.TrackPopupMenu(hMenu, 0x100,
-                (int)location.X, (int)location.Y, 0, hWnd, IntPtr.Zero);
-            if (cmd > 0) NativeMethods.SendMessage(hWnd, 0x112, (IntPtr)cmd, IntPtr.Zero);
+                (int)location.X, (int)location.Y, 0, hWnd, nint.Zero);
+            if (cmd > 0) NativeMethods.SendMessage(hWnd, 0x112, (nint)cmd, nint.Zero);
         }
 
         private void ListView_PreviewMouseWheel(object sender, MouseWheelEventArgs e) {

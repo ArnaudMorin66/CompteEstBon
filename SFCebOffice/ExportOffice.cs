@@ -23,7 +23,7 @@ public static class ExportOffice {
     }
 
 
-    public static void ToExcel(this CebTirage tirage, Stream stream) {
+    public static void ExcelSaveStream(this CebTirage tirage, Stream stream) {
         using ExcelEngine engine = new();
 
         var application = engine.Excel;
@@ -73,7 +73,7 @@ public static class ExportOffice {
     }
 
 
-    public static void ToWord(this CebTirage tirage, Stream stream) {
+    public static void WordSaveStream(this CebTirage tirage, Stream stream) {
         WordDocument wd = new();
         var sect = wd.AddSection() as WSection;
         var dotm =

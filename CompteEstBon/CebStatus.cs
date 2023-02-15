@@ -1,14 +1,20 @@
+//-----------------------------------------------------------------------
+// <copyright file="CebStatus.cs" company="">
+//     Author:  
+//     Copyright (c) . All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 #pragma warning disable CS1591
 namespace CompteEstBon;
 
 /// <summary>
-///     status du tirage
+/// status du tirage
 /// </summary>
 ///  
 
-public enum CebStatus:short {
+public enum CebStatus : short {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     Indefini = 0,
     CompteEstBon = 1,
