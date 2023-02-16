@@ -485,7 +485,7 @@
             </StatusBarItem>
             <StatusBarItem Grid.Column="7" Background="Transparent">
                 <Button
-                    Click="btnMode_Click"
+                    Click="BtnMode_Click"
                     Content="{Binding ModeView}"
                     IsTabStop="False"
                     ToolTipService.ToolTip="Vue grille ou liste" />

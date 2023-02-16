@@ -176,11 +176,9 @@ void Run() {
     if(tirage.Status == CebStatus.Invalide)
         throw new ArgumentException("Tirage  invalide");
 
-    message = (tirage.Status == CebStatus.CompteEstBon
-            ? $"{Ansi.Color.Foreground.Green.EscapeSequence}Compte est bon"
-            : $"{Ansi.Color.Foreground.Magenta.EscapeSequence}Compte approché:") +
-        Ansi.Color.Foreground.Default.EscapeSequence +
-        $" {tirage.Found}";
+    message = tirage.Status == CebStatus.CompteEstBon
+        ? $"{Ansi.Color.Foreground.Green.EscapeSequence}Compte est bon{Ansi.Color.Foreground.Default.EscapeSequence}"
+        : $"{Ansi.Color.Foreground.Magenta.EscapeSequence}Compte approché:{Ansi.Color.Foreground.Default.EscapeSequence} {tirage.Found}";
     WriteLine(message);
     WriteLine();
 
@@ -197,7 +195,7 @@ void Run() {
         var count = $"{i + 1:0000}".ControlCode(
             tirage.Status == CebStatus.CompteEstBon ? Ansi.Color.Foreground.Green : Ansi.Color.Foreground.Magenta);
         WriteLine($@"{solution.Rank}: {count} => {solution.LightYellow()}");
-	}
+    }
 
     WriteLine();
 

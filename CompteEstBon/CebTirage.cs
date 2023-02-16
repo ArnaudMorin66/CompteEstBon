@@ -105,7 +105,10 @@ public sealed class CebTirage : INotifyPropertyChanged {
         Status = CebStatus.EnCours;
         Resolve(Plaques);
         Status = Diff == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
-        Solutions = _solutions.OrderBy(b => b.Rank).ThenBy(b => b.Value).ToArray();
+        Solutions = _solutions
+            .OrderBy(b => b.Rank)
+            .ThenBy(b => b.Value)
+            .ToArray();
         Duree = DateTime.Now - debut;
         NotifyPropertyChanged();
         return Status;
@@ -163,11 +166,8 @@ public sealed class CebTirage : INotifyPropertyChanged {
             case < 0:
                 Diff = diff;
                 _solutions.Clear();
-                Found.Reset();
                 break;
         }
-
-        Found.Add(sol.Value);
         _solutions.Add(sol);
     }
 
@@ -195,7 +195,6 @@ public sealed class CebTirage : INotifyPropertyChanged {
         _solutions.Clear();
         Duree = TimeSpan.Zero;
         Diff = int.MaxValue;
-        Found.Reset();
         Status = CebStatus.Indefini;
         Valid();
         NotifyPropertyChanged();
@@ -293,7 +292,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
         Status = Status.ToString(),
         Diff = Diff,
         Solutions = Solutions?.Select(p => p.ToString()).ToArray(),
-        Found = Found.ToString()
+        Found = Found
     };
 
     /// <summary>
@@ -310,7 +309,22 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <summary>
     /// Return the find values
     /// </summary>
-    public CebFind Found { get; } = new();
+    public string? Found {
+        get {
+            switch(Status) {
+                case CebStatus.CompteEstBon:
+                    return Search.ToString();
+                case CebStatus.CompteApproche:
+                    var mn = Solutions.Min(p => p.Value);
+                    var mx = Solutions.Max(p => p.Value);
+                    if(mn == mx)
+                        return mx.ToString();
+                    return $"{mn} et {mx}";
+            }
+            return string.Empty;
+        }
+    }
+
 
     /// <summary>
     /// Liste des plaques
