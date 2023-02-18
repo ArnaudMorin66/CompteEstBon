@@ -82,24 +82,16 @@
     string cls;
     string icn;
     string rsl;
-    protected override void OnInitialized() {
-        timer.Elapsed += (_, _) => Visible = false;
-    }
+    protected override void OnInitialized() => timer.Elapsed += (_, _) => Visible = false;
 
     public async Task ShowAsync(CebBase ligne, bool withTimer = true) {
-#pragma warning disable CS8601
-        switch (tirage.Status) {
-            case CebStatus.CompteEstBon:
-                cls = "bg-success text-white";
-                icn = "fa-thumbs-up";
-                rsl = "Le compte est bon";
-                break;
-            case CebStatus.CompteApproche:
-                icn = "fa-thumbs-down text-wheat";
-                cls = "bg-secondary text-wheat";
-                rsl = "Compte approché";
-                break;
-        }
+// #pragma warning disable CS8601
+        (cls, icn, rsl) = tirage.Status switch {
+            CebStatus.CompteEstBon => ("bg-success text-white", "fa-thumbs-up", "Le compte est bon"),
+            CebStatus.CompteApproche => ("bg-secondary text-wheat", "fa-thumbs-down text-wheat", "Compte approché"),
+            _ => (string.Empty, string.Empty, string.Empty)
+        };
+        
         if (Visible) {
             await InvokeAsync(() => Visible = false);
         }

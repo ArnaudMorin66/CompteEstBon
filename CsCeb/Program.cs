@@ -4,16 +4,17 @@
 //     Copyright (c) . All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+using System.CommandLine;
+
+using System.CommandLine.Invocation;
+using System.CommandLine.Rendering;
+
 using arnaud.morin.outils;
 
 using CompteEstBon;
 using CompteEstBon.Properties;
 
 using Microsoft.Extensions.Configuration;
-
-using System.CommandLine;
-using System.CommandLine.Invocation;
-using System.CommandLine.Rendering;
 
 using static System.Console;
 
@@ -30,10 +31,6 @@ var exports = new List<FileInfo>();
 var sflicence = Resources.sflicence;
 FileInfo zipfile = null;
 var tirage = new CebTirage();
-WriteLine('\n');
-WriteLine("*** LE COMPTE EST BON ***".Center(WindowWidth).Red());
-
-WriteLine();
 
 if(File.Exists(configurationFile)) {
     var configs = new ConfigurationBuilder().AddJsonFile(configurationFile).Build();
@@ -157,6 +154,10 @@ void Handler(InvocationContext context) {
 }
 
 void Run() {
+    if(!jsonx) {
+        WriteLine("*** LE COMPTE EST BON ***".Center(WindowWidth).Red());
+        WriteLine();
+    }
     tirage.Resolve();
     if(json) {
         WriteLine(tirage.WriteJson());
@@ -216,16 +217,17 @@ void Run() {
 
 
 void Abort(Exception ex, int retour = -1) {
-    WriteLine($"{Ansi.Color.Foreground.White.EscapeSequence}{Ansi.Color.Background.Red.EscapeSequence}");
-
+    SetOut(Console.Error);
+    Write($"{Ansi.Color.Foreground.White.EscapeSequence}{Ansi.Color.Background.Red.EscapeSequence}");
     WriteLine(@"+-----------------------------+".Center(WindowWidth));
     WriteLine(@"|          Erreur             |".Center(WindowWidth));
     WriteLine(@"+-----------------------------+".Center(WindowWidth));
-    WriteLine($"{Ansi.Color.Foreground.Default.EscapeSequence}{Ansi.Color.Background.Default.EscapeSequence}");
+    Write($"{Ansi.Color.Foreground.Default.EscapeSequence}{Ansi.Color.Background.Default.EscapeSequence}");
     WriteLine($@"{ex.GetType()}: {ex.Message.Red()}".Center(WindowWidth));
     WriteLine();
     WriteLine($@"{"AIDE".ControlCode(Ansi.Text.UnderlinedOn, Ansi.Text.UnderlinedOff)} :");
     WriteLine();
+
     rootCommand.Invoke("-h");
     Environment.Exit(retour);
 }

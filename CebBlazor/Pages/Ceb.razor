@@ -61,7 +61,6 @@
         </div>
     </div>
 </div>
-
 <div class="border border-secondary border-1 rounded p-1 shadow-lg">
     <div class="row text-center border-secondary border-1 g-0">
         <div class="col-md">
@@ -106,15 +105,15 @@
                 <input class="btn-check" type="checkbox" id="mongoChecked" @bind-value="MongoDb" accesskey="m">
                 <label class="btn border   @(MongoDb ? "btn-warning border-dark" : "btn-dark border-warning text-white")  border-1" for="mongoChecked">MongoDB</label>
 
-                <input class="btn-check" type="checkbox" id="vueVertical" @bind-value="VueTable" checked accesskey="v">
-                <label class="btn border  @(VueTable ? "border-warning btn-dark text-white" : "border-dark btn-warning")  border-1" for="vueVertical" style="width: 7rem">
-                    <i class="fa-solid @(VueTable ? "fa-ellipsis" : "fa-ellipsis-vertical")"></i>
+                <input class="btn-check" type="checkbox" id="vueVertical" @bind-value="VueGrille" checked accesskey="v">
+                <label class="btn border  @(VueGrille ? "border-warning btn-dark text-white" : "border-dark btn-warning")  border-1" for="vueVertical" style="width: 7rem">
+                    <i class="fa-solid @(VueGrille ? "fa-ellipsis" : "fa-ellipsis-vertical")"></i>
                 </label>
             </div>
         </div>
     </div>
 </div>
-<CebSolutions  VueTable="VueTable" ShowDetail="async (solution) => await toast!.ShowAsync(solution, false)"></CebSolutions>
+<CebSolutions  VueGrille="VueGrille" ShowDetail="async (solution) => await toast!.ShowAsync(solution, false)"></CebSolutions>
 <div id="statusx" class="card text-center bg-primary bg-gradient border-secondary mt-1 mb-1">
     <div class="card-header">
         <div class="'text-center'">
@@ -150,7 +149,6 @@
         </div>
     </div>
 </div>
-
 <CebFooter></CebFooter>
 <CebToast @ref="toast" DueTime="10000"></CebToast>
 
@@ -166,7 +164,7 @@
     private IJSRuntime js { get; set; }
 #pragma warning restore CS8618
 
-    public bool VueTable { get; set; }
+    public bool VueGrille { get; set; }
     
     private bool _auto;
 
@@ -199,7 +197,7 @@
         };
         Auto = setting.AutoCalcul;
         MongoDb = setting.MongoDb;
-        VueTable =true;
+        VueGrille =true;
         await InvokeAsync(StateHasChanged);
     }
 
