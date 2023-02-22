@@ -21,6 +21,67 @@ public record CebDetail {
     /// <returns></returns>
     public string this[int i] { get => Op(i); set => SetOp(i, value); }
 
+
+    public override string ToString() => string.Join(", ", Operations);
+
+    /// <summary>
+    /// Opération 1
+    /// </summary>
+    public string Op1 { get; set; } = null;
+
+    /// <summary>
+    /// Opération 2
+    /// </summary>
+    public string Op2 { get; set; } = null;
+
+    /// <summary>
+    /// Opération 2
+    /// </summary>
+    public string Op3 { get; set; } = null;
+
+    /// <summary>
+    /// Opération 4
+    /// </summary>
+    public string Op4 { get; set; } = null;
+
+    /// <summary>
+    /// Opération 5
+    /// </summary>
+    public string Op5 { get; set; } = null;
+
+    /// <summary>
+    /// Operations énumérable
+    /// </summary>
+    [JsonIgnore]
+
+    public IEnumerable<string> Operations {
+        get {
+            for(int i = 0; i < 5; i++) {
+                if(Op(i) is null)
+                    yield break;
+                yield return Op(i);
+            }
+            //yield return Op1;
+
+            //if(Op2 is null)
+            //    yield break;
+            //yield return Op2;
+
+
+            //if(Op3 is null)
+            //    yield break;
+            //yield return Op3;
+
+            //if(Op4 is null)
+            //    yield break;
+            //yield return Op4;
+
+            //if(Op5 is null)
+            //    yield break;
+            //yield return Op5;
+        }
+    }
+
     /// <summary>
     ///
     /// </summary>
@@ -34,50 +95,4 @@ public record CebDetail {
     /// <param name="i"></param>
     /// <param name="value"></param>
     public void SetOp(int i, string value) => GetType().GetProperty($"Op{i + 1}")!.SetValue(this, value);
-
-    public override string ToString() => string.Join(", ", Operations);
-
-    /// <summary>
-    ///
-    /// </summary>
-    public string Op1 { get; set; } = null;
-
-    /// <summary>
-    ///
-    /// </summary>
-    public string Op2 { get; set; } = null;
-
-    public string Op3 { get; set; } = null;
-
-    public string Op4 { get; set; } = null;
-
-    public string Op5 { get; set; } = null;
-
-    /// <summary>
-    ///
-    /// </summary>
-    [JsonIgnore]
-
-    public IEnumerable<string> Operations {
-        get {
-            yield return Op1;
-
-            if(Op2 is null)
-                yield break;
-            yield return Op2;
-
-
-            if(Op3 is null)
-                yield break;
-            yield return Op3;
-
-            if(Op4 is null)
-                yield break;
-            yield return Op4;
-
-            if(Op5 is null)
-                yield break;
-            yield return Op5;
-        }
-    }
 }

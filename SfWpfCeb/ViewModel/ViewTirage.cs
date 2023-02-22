@@ -1,5 +1,10 @@
-﻿#region
-
+﻿//-----------------------------------------------------------------------
+// <copyright file="ViewTirage.cs" company="">
+//     Author:  
+//     Copyright (c) . All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+#region
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,7 +22,6 @@ using Microsoft.Win32;
 using Syncfusion.Windows.Shared;
 
 //using Syncfusion.Drawing;
-
 #endregion
 
 // ReSharper disable once CheckNamespace
@@ -54,37 +58,31 @@ public class ViewTirage : NotificationObject, ICommand {
     public DispatcherTimer dateDispatcher;
 
     /// <summary>
-    ///     Initialisation
+    /// Initialisation
     /// </summary>
     /// <returns>
+    ///
     /// </returns>
     public ViewTirage() {
         dateDispatcher = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(Settings.Default.SolutionTimer) };
         dateDispatcher.Tick += (_, _) => {
-            if (Popup && NotifyWatch.Elapsed > SolutionTimer)
+            if(Popup && NotifyWatch.Elapsed > SolutionTimer)
                 Popup = false;
             Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
         };
 
         Plaques.CollectionChanged += async (_, e) => {
-            if (e.Action != NotifyCollectionChangedAction.Replace)
+            if(e.Action != NotifyCollectionChangedAction.Replace && IsBusy)
                 return;
 
             var i = e.NewStartingIndex;
             Tirage.Plaques[i].Value = Plaques[i];
-            await Task.Run(ClearAsync);
+            await ClearAsync();
+            if(Auto)
+                await ResolveAsync();
         };
 
-        Tirage.PropertyChanged += (_, args) => {
-            switch (args.PropertyName) {
-                case "Clear":
 
-                    if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide) Task.Run(ResolveAsync);
-                    break;
-                case "Resolve":
-                    break;
-            }
-        };
         Auto = Settings.Default.AutoCalcul;
         MongoDb = Settings.Default.MongoDB;
         _isUpdating = false;
@@ -147,7 +145,12 @@ public class ViewTirage : NotificationObject, ICommand {
         set {
             Tirage.Search = value;
             RaisePropertyChanged(nameof(Search));
-            Task.Run(ClearAsync);
+            Task.Run(
+                async () => {
+                    await ClearAsync();
+                    if(Auto)
+                        await ResolveAsync();
+                });
         }
     }
 
@@ -162,7 +165,7 @@ public class ViewTirage : NotificationObject, ICommand {
     public string Result {
         get => _result;
         set {
-            if (value == _result)
+            if(value == _result)
                 return;
             _result = value;
             RaisePropertyChanged(nameof(Result));
@@ -180,18 +183,24 @@ public class ViewTirage : NotificationObject, ICommand {
     public bool Auto {
         get => _auto;
         set {
-            if (_auto == value)
+            if(_auto == value)
                 return;
             _auto = value;
             RaisePropertyChanged(nameof(Auto));
-            if (_auto && Tirage.Status == CebStatus.Valide) Task.Run(ClearAsync);
+            if(Tirage.Status == CebStatus.Valide)
+                Task.Run(
+                    async () => {
+                        await ClearAsync();
+                        if(_auto)
+                            await ResolveAsync();
+                    });
         }
     }
 
     public bool MongoDb {
         get => _mongodb;
         set {
-            if (_mongodb == value)
+            if(_mongodb == value)
                 return;
             _mongodb = value;
             RaisePropertyChanged(nameof(MongoDb));
@@ -207,7 +216,7 @@ public class ViewTirage : NotificationObject, ICommand {
     public int Count {
         get => _count;
         set {
-            if (_count == value)
+            if(_count == value)
                 return;
             _count = value;
             RaisePropertyChanged(nameof(Count));
@@ -217,12 +226,12 @@ public class ViewTirage : NotificationObject, ICommand {
     public bool Popup {
         get => _popup;
         set {
-            if (_popup == value)
+            if(_popup == value)
                 return;
             _popup = value;
             NotifyWatch.Stop();
             NotifyWatch.Reset();
-            if (_popup)
+            if(_popup)
                 NotifyWatch.Start();
             RaisePropertyChanged(nameof(Popup));
         }
@@ -245,13 +254,13 @@ public class ViewTirage : NotificationObject, ICommand {
 
     public async void Execute(object parameter) {
         var cmd = (parameter as string)?.ToLower();
-        switch (cmd) {
+        switch(cmd) {
             case "random":
                 await RandomAsync();
                 break;
 
             case "resolve":
-                switch (Tirage.Status) {
+                switch(Tirage.Status) {
                     case CebStatus.Valide:
                         await ResolveAsync();
                         break;
@@ -269,7 +278,7 @@ public class ViewTirage : NotificationObject, ICommand {
                 break;
 
             case "export":
-                if (Count != 0)
+                if(Count != 0)
                     await ExportAsync();
                 break;
         }
@@ -282,7 +291,7 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     private void ClearData() {
-        if (_isUpdating)
+        if(_isUpdating)
             return;
         Duree = TimeSpan.Zero;
         _isUpdating = true;
@@ -296,10 +305,10 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     private void UpdateData() {
-        if (_isUpdating)
+        if(_isUpdating)
             return;
         _isUpdating = true;
-        foreach (var (p, i) in Tirage.Plaques.WithIndex())
+        foreach (var (p, i) in Tirage.Plaques.Indexed())
             Plaques[i] = p.Value;
         RaisePropertyChanged(nameof(Search));
         _isUpdating = false;
@@ -307,7 +316,8 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     private void UpdateForeground() {
-        Foreground = Tirage.Status switch {
+        Foreground = Tirage.Status switch
+        {
             CebStatus.Indefini => Colors.Blue,
             CebStatus.Valide => Colors.White,
             CebStatus.EnCours => Colors.Aqua,
@@ -319,13 +329,15 @@ public class ViewTirage : NotificationObject, ICommand {
     }
 
     public void ShowPopup(int index = 0) {
-        if (index < 0 || index >= Tirage.Count) return;
+        if(index < 0 || index >= Tirage.Count)
+            return;
         Solution = Tirage.Solutions!.ElementAt(index);
         Popup = true;
     }
 
     public static (bool Ok, string Path) SaveFileName() {
-        var dialog = new SaveFileDialog {
+        var dialog = new SaveFileDialog
+        {
             Title = "Export Excel-Word",
             Filter = "Excel (*.xlsx)| *.xlsx | Word (*.docx) | *.docx | Json (*.json) | *.json | XML (*.xml) | *.xml ",
             InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
@@ -336,14 +348,15 @@ public class ViewTirage : NotificationObject, ICommand {
         return ((bool)dialog.ShowDialog(), dialog.FileName);
     }
 
-    
+
     private void ExportFichier() {
         var (Ok, Path) = SaveFileName();
-        if (!Ok) return;
+        if(!Ok)
+            return;
         FileInfo fi = new(Path);
-        if (fi.Exists)  
+        if(fi.Exists)
             fi.Delete();
-        switch (fi.Extension)  {
+        switch(fi.Extension) {
             case ".xlsx":
                 Tirage.SaveXlsx(fi);
                 break;
@@ -362,48 +375,49 @@ public class ViewTirage : NotificationObject, ICommand {
         Outils.OpenDocument(Path);
     }
 
-   
-    
-
     #region Action
-
     public async Task ClearAsync() {
+        var old = IsBusy;
         await Tirage.ClearAsync();
         ClearData();
+        IsBusy = old;
     }
 
     public async Task RandomAsync() {
         await Tirage.RandomAsync();
         UpdateData();
+        if(Auto)
+            await ResolveAsync();
     }
 
     public async Task<CebStatus> ResolveAsync() {
-        if (IsBusy) return Tirage.Status;
+        if(IsBusy)
+            return Tirage.Status;
         IsBusy = true;
         Result = "⏰ Calcul en cours...";
-        
+
         Foreground = Colors.Aqua;
 
         await Tirage.ResolveAsync();
-        Result = Tirage.Status switch {
+        Result = Tirage.Status switch
+        {
             CebStatus.CompteEstBon => "😊 Compte est Bon",
-            CebStatus.CompteApproche => $"😢 Compte approché: {Tirage.Found}, écart: {Tirage.Diff}",
+            CebStatus.CompteApproche => $"😢 Compte approché: {Tirage.Found}, écart: {Tirage.Ecart}",
             CebStatus.Invalide => "🤬 Tirage invalide",
             _ => "Jeu du Compte Est Bon"
         };
-        
+
         Duree = Tirage.Duree;
         Solution = Tirage.Solutions![0];
-        Solutions = Tirage.Solutions; 
+        Solutions = Tirage.Solutions;
         UpdateForeground();
         IsBusy = false;
         RaisePropertyChanged(nameof(IsComputed));
         ShowPopup();
-        if (MongoDb)
+        if(MongoDb)
             Tirage.SerializeMongo(Settings.Default.MongoServer, "SfWpf");
 
         return Tirage.Status;
     }
-
     #endregion Action
 }

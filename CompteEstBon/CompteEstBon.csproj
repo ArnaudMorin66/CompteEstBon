@@ -10,13 +10,13 @@
     <LangVersion>preview</LangVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
-    <AssemblyVersion>4.2.14.13475</AssemblyVersion>
-    <FileVersion>4.2.14.13476</FileVersion>
-    <Version>4.2.2.20090</Version>
+    <AssemblyVersion>2023.53.4.7</AssemblyVersion>
+    <FileVersion>2023.53.4.7</FileVersion>
+    <Version>4.2.4.0</Version>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
-    <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
-    <EnableNETAnalyzers>False</EnableNETAnalyzers>
+    <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringLiveAnalysis>True</RunAnalyzersDuringLiveAnalysis>
+    <EnableNETAnalyzers>True</EnableNETAnalyzers>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

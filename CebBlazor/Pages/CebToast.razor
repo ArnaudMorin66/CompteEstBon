@@ -21,8 +21,8 @@
         <Content>
             <div class="w-100 text-center text-white">
                 <div>Trouv&eacute;&nbsp;@tirage.Found</div>
-                @if (tirage.Diff != 0) {
-                    <div>&Eacute;cart:&nbsp;@tirage.Diff</div>
+                @if (tirage.Ecart != 0) {
+                    <div>&Eacute;cart:&nbsp;@tirage.Ecart</div>
                 }
                 <div>@tirage.Count&nbsp;solutions&nbsp;en&nbsp;@($"{tirage.Duree.TotalSeconds:F3}") s</div>
             </div>

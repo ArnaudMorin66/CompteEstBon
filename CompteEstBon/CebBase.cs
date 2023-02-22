@@ -6,10 +6,12 @@
 //-----------------------------------------------------------------------
 #pragma warning disable CS1591
 
-using arnaud.morin.outils;
 
 using System.Runtime.InteropServices;
+
 using System.Text.Json.Serialization;
+
+using arnaud.morin.outils;
 
 namespace CompteEstBon {
     ///
@@ -51,7 +53,7 @@ namespace CompteEstBon {
         /// <param name="obj"></param>
         /// <returns></returns>
         public override bool Equals(object obj) => (obj is CebBase op && op.Rank == Rank) &&
-            Operations.WithIndex()
+            Operations.Indexed()
                 .All(e => string.Compare(e.Item1, op.Operations[e.Item2], StringComparison.Ordinal) == 0);
 
         /// <inheritdoc/>
@@ -68,7 +70,7 @@ namespace CompteEstBon {
         public CebDetail Detail {
             get {
                 CebDetail detail = new CebDetail();
-                foreach (var (operation, i) in Operations.WithIndex()) detail[i] = operation;
+                foreach (var (operation, i) in Operations.Indexed()) detail[i] = operation;
                 return detail;
             }
         }

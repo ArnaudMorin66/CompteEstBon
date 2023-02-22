@@ -8,7 +8,7 @@ public static class Outils {
     /// <typeparam name="T"></typeparam>
     /// <param name="self"></param>
     /// <returns></returns>
-    public static IEnumerable<(T, int)> WithIndex<T>(this IEnumerable<T> self) =>
+    public static IEnumerable<(T, int)> Indexed<T>(this IEnumerable<T> self) =>
         self.Select((value, index) => (value, index));
 
     /// <summary>

@@ -5,17 +5,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 using System.CommandLine;
-
 using System.CommandLine.Invocation;
 using System.CommandLine.Rendering;
-
 using arnaud.morin.outils;
-
 using CompteEstBon;
 using CompteEstBon.Properties;
-
 using Microsoft.Extensions.Configuration;
-
 using static System.Console;
 
 
@@ -31,7 +26,6 @@ var exports = new List<FileInfo>();
 var sflicence = Resources.sflicence;
 FileInfo zipfile = null;
 var tirage = new CebTirage();
-
 if(File.Exists(configurationFile)) {
     var configs = new ConfigurationBuilder().AddJsonFile(configurationFile).Build();
     foreach(var config in configs.GetChildren())
@@ -46,7 +40,7 @@ if(File.Exists(configurationFile)) {
                 mongoServer = config.Value;
                 break;
             case "ZIPFILE":
-                zipfile = config.Value.FileInfo();
+                zipfile = config.Value.FichierPath();
                 break;
             case "SFLICENCE":
                 sflicence = config.Value;
@@ -67,7 +61,7 @@ var rootCommand = new RootCommand("Compte Est Bon")
     new Option<bool>(new[] { "--sauvegarde", "-s" }, "Sauvegarder le Compte"),
     new Option<bool>(new[] { "--mongodb", "-m" }, "Sauvegarder le Compte dans MongoDB"),
     new Option<string>(new[] { "--serveur", "-S" }, "Nom du serveur MongoDB"),
-    new Option<List<string>>(new[] { "--exports", "-x", "-f" }, "Exporter vers excel, word, json, xml, zip...")
+    new Option<List<FileInfo>>(new[] { "--exports", "-x", "-f" }, "Exporter vers excel, word, json, xml, zip...")
     {
         AllowMultipleArgumentsPerToken = true
     },
@@ -95,11 +89,17 @@ void Handler(InvocationContext context) {
                     break;
 
                 case "json":
-                    (json, jsonx) = (optionResult.GetValueOrDefault<bool>(), false);
+                    json = optionResult.GetValueOrDefault<bool>();
+                    jsonx = false;
+                    break;
+
+                case "jsonx":
+                    json = optionResult.GetValueOrDefault<bool>();
+                    jsonx = true;
                     break;
 
                 case "exports":
-                    exports.AddRange(optionResult.GetValueOrDefault<List<string>>().Select(CebStatic.FileInfo));
+                    exports.AddRange(optionResult.GetValueOrDefault<List<FileInfo>>());
                     save = true;
                     break;
 
@@ -114,10 +114,6 @@ void Handler(InvocationContext context) {
 
                 case "serveur":
                     mongoServer = optionResult.GetValueOrDefault<string>();
-                    break;
-
-                case "jsonx":
-                    (json, jsonx) = (optionResult.GetValueOrDefault<bool>(), true);
                     break;
 
                 case "afficher":
@@ -147,7 +143,6 @@ void Handler(InvocationContext context) {
             }
         }
         Run();
-        WriteLine();
     } catch(Exception e) {
         Abort(e);
     }
@@ -166,11 +161,8 @@ void Run() {
     }
 
     var message = string.Empty;
-    message += "Plaques: ".LightYellow();
-
-    message += string.Join(',', tirage.Plaques.Select(p => p.Value));
-    message += "\t Recherche: ".LightYellow();
-    message += $"{tirage.Search}";
+    message += $"{"Plaques: ".LightYellow()}{(string.Join(',', tirage.Plaques.Select(p => p.Value)))}";
+    message += $"{"\t Recherche: ".LightYellow()}{tirage.Search}";
     WriteLine(message);
     WriteLine();
 
@@ -183,16 +175,14 @@ void Run() {
     WriteLine(message);
     WriteLine();
 
-    message = string.Empty;
-
-    message += $@"{"Nombre de solutions:".LightYellow()} {tirage.Count}";
+    message = $@"{"Nombre de solutions:".LightYellow()} {tirage.Count}";
     if(tirage.Status == CebStatus.CompteApproche)
-        message += $@", {"écart:".LightYellow()} {tirage.Diff}";
+        message += $@", {"écart:".LightYellow()} {tirage.Ecart}";
     message += $@", {"durée du calcul:".LightYellow()} {tirage.Duree.TotalSeconds:F3} s";
     WriteLine(message);
     WriteLine();
 
-    foreach (var (solution, i) in tirage.Solutions!.WithIndex()) {
+    foreach (var (solution, i) in tirage.Solutions!.Indexed()) {
         var count = $"{i + 1:0000}".ControlCode(
             tirage.Status == CebStatus.CompteEstBon ? Ansi.Color.Foreground.Green : Ansi.Color.Foreground.Magenta);
         WriteLine($@"{solution.Rank}: {count} => {solution.LightYellow()}");
@@ -252,14 +242,15 @@ public static class CebStatic {
     /// <summary>
     /// Dossier téléchargement par défaut
     /// </summary>
-    public static readonly string TelechargementFolder = $@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\Downloads";
+    public static readonly string TelechargementFolder = 
+        $@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\Downloads";
 
     /// <summary>
     /// FileInfo du fichier
     /// </summary>
     /// <param name="fichier"></param>
     /// <returns></returns>
-    public static FileInfo FileInfo(this string fichier) => new(
+    public static FileInfo FichierPath(this string fichier) => new(
         fichier.IndexOfAny(new[] { '\\', '/' }) < 0 ? $"{TelechargementFolder}\\{fichier}" : fichier);
 }
 #pragma warning restore CA1050

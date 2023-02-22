@@ -4,6 +4,7 @@
 //     Copyright (c) . All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+#nullable enable
 using System.Xml.Serialization;
 
 namespace CompteEstBon;

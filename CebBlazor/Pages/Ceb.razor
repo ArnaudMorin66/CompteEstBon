@@ -131,7 +131,7 @@
                 case CebStatus.CompteApproche:
                     <div class="bg-secondary text-wheat" style="cursor: pointer;" @onclick="ClearAsync" accesskey="i">
                         <i class="fa-regular fa-thumbs-down"></i>&nbsp;
-                        &nbsp;Compte approch&eacute;:&nbsp;@tirage.Found,&nbsp;&eacute;cart:&nbsp;@tirage.Diff,&nbsp;@tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.Duree.TotalSeconds:F3}")&nbsp;s
+                        &nbsp;Compte approch&eacute;:&nbsp;@tirage.Found,&nbsp;&eacute;cart:&nbsp;@tirage.Ecart,&nbsp;@tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.Duree.TotalSeconds:F3}")&nbsp;s
                     </div>
                     break;
                 case CebStatus.CompteEstBon:
@@ -191,7 +191,7 @@
         await base.OnInitializedAsync();
         tirage.PropertyChanged += async (_, args) => {
             await toast.HideAsync();
-            if (!Auto || args.PropertyName != "Clear" || tirage.Status == CebStatus.EnCours) return;
+            if (!Auto || args.PropertyName.ToLower() != "clear" || tirage.Status == CebStatus.EnCours) return;
             await ResolveAsync();
             await InvokeAsync(StateHasChanged);
         };
