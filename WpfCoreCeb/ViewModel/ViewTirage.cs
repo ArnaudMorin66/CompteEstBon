@@ -85,8 +85,9 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
                 Popup = false;
             Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
         };
+        IsBusy = false;
         Plaques.CollectionChanged += (_, e) => {
-            if(e.Action != NotifyCollectionChangedAction.Replace)
+            if(e.Action != NotifyCollectionChangedAction.Replace || IsBusy)
                 return;
 
             var i = e.NewStartingIndex;
@@ -192,9 +193,13 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     public int Search {
         get => Tirage.Search;
         set {
+            if(Tirage.Search == value)
+                return;
             Tirage.Search = value;
             NotifiedChanged();
-            Task.Run(ClearAsync);
+            ClearData();
+            if(!IsBusy && Auto && Tirage.Status == CebStatus.Valide)
+                Task.Run(ResolveAsync);
         }
     }
 
@@ -235,6 +240,8 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     public bool IsBusy {
         get => _isBusy;
         set {
+            if(_isBusy == value)
+                return;
             _isBusy = value;
             NotifiedChanged();
         }
@@ -331,9 +338,9 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         new PropertyChangedEventArgs(propertyName));
 
     private void ClearData() {
-        var old = IsBusy;
+        //var old = IsBusy;
 
-        IsBusy = true;
+        //IsBusy = true;
         Solution = null;
         Solutions = null;
         Duree = TimeSpan.Zero;
@@ -341,17 +348,16 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         UpdateForeground();
         Result = Tirage.Status != CebStatus.Invalide ? "Jeu du Compte Est Bon" : "Tirage invalide";
         Popup = false;
-        IsBusy = old;
+        //IsBusy = old;
         NotifiedChanged(nameof(IsComputed));
     }
 
     private void UpdateData() {
-        var old = IsBusy;
         IsBusy = true;
         foreach (var (p, i) in Tirage.Plaques.Indexed())
             Plaques[i] = p.Value;
         NotifiedChanged(nameof(Search));
-        IsBusy = old;
+        IsBusy = false;
         ClearData();
     }
 
@@ -371,10 +377,8 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     }
 
     public async Task RandomAsync() {
-        IsBusy = true;
         await Tirage.RandomAsync();
         UpdateData();
-        IsBusy = false;
         if(Auto && Tirage.Status == CebStatus.Valide)
             await ResolveAsync();
     }

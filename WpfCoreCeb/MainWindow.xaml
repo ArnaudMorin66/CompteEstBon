@@ -312,15 +312,14 @@
                 <TextBox
                     x:Name="txtSearch"
                     Grid.Column="1"
-                    AcceptsTab="True"
-                    GotFocus="TxtSearch_GotFocus"
+                   
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     IsTabStop="True"
-                    LostFocus="TxtSearch_LostFocus"
-                    PreviewTextInput="TxtSearch_OnPreviewTextInput"
                     Style="{StaticResource SearchControlStyle}"
                     TabIndex="6"
-                    Text="{Binding Search, Mode=TwoWay, NotifyOnTargetUpdated=True, NotifyOnValidationError=True, NotifyOnSourceUpdated=True, UpdateSourceTrigger=Default}" />
+                    Text="{Binding Search, Mode=TwoWay}" CaretBrush="White" 
+                    LostFocus="TxtSearch_LostFocus" 
+                    GotFocus="TxtSearch_GotFocus" />
                 <RepeatButton
                     x:Name="tbPlus"
                     Grid.Column="2"
@@ -493,21 +492,19 @@
             Grid.Row="3"
             Grid.Column="0"
             Grid.ColumnSpan="12"
-            Margin="0,20,0,20"
             HorizontalAlignment="Center"
             VerticalAlignment="Stretch"
             Panel.ZIndex="10"
             Height="20"
             Width="200"
-            Background="Black"
-            BorderBrush="White"
+            BorderBrush="Yellow"
             BorderThickness="0.4"
-            Foreground="Yellow"
             IsIndeterminate="True"
             Maximum="100"
             Minimum="0"
             Orientation="Horizontal"
-            Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverterParam}, ConverterParameter={StaticResource True}}" Opacity="0.495" />
+            Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverterParam}, ConverterParameter={StaticResource True}}" 
+            SmallChange="0.2" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
         <Popup
             Grid.Row="0"
             Grid.Column="0"

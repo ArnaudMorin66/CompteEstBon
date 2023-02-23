@@ -25,7 +25,7 @@ using Syncfusion.Windows.Shared;
 #endregion
 
 // ReSharper disable once CheckNamespace
-namespace CompteEstBon;
+namespace CompteEstBon.ViewModel;
 
 public class ViewTirage : NotificationObject, ICommand {
     private readonly Stopwatch NotifyWatch = new();
@@ -39,7 +39,6 @@ public class ViewTirage : NotificationObject, ICommand {
 
     private Color _foreground = Colors.White;
     private bool _isBusy;
-    private bool _isUpdating;
 
     // ⁞…
     private char _modeView = '…';
@@ -72,7 +71,7 @@ public class ViewTirage : NotificationObject, ICommand {
         };
 
         Plaques.CollectionChanged += async (_, e) => {
-            if(e.Action != NotifyCollectionChangedAction.Replace && IsBusy)
+            if(e.Action != NotifyCollectionChangedAction.Replace || IsBusy)
                 return;
 
             var i = e.NewStartingIndex;
@@ -85,7 +84,6 @@ public class ViewTirage : NotificationObject, ICommand {
 
         Auto = Settings.Default.AutoCalcul;
         MongoDb = Settings.Default.MongoDB;
-        _isUpdating = false;
         UpdateData();
         Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
         dateDispatcher.Start();
@@ -143,14 +141,13 @@ public class ViewTirage : NotificationObject, ICommand {
     public int Search {
         get => Tirage.Search;
         set {
+            if(Tirage.Search == value)
+                return;
             Tirage.Search = value;
             RaisePropertyChanged(nameof(Search));
-            Task.Run(
-                async () => {
-                    await ClearAsync();
-                    if(Auto)
-                        await ResolveAsync();
-                });
+            ClearData();
+            if(Auto && Tirage.Status == CebStatus.Valide)
+                Task.Run(ResolveAsync);
         }
     }
 
@@ -175,6 +172,8 @@ public class ViewTirage : NotificationObject, ICommand {
     public bool IsBusy {
         get => _isBusy;
         set {
+            if(_isBusy == value)
+                return;
             _isBusy = value;
             RaisePropertyChanged(nameof(IsBusy));
         }
@@ -187,13 +186,8 @@ public class ViewTirage : NotificationObject, ICommand {
                 return;
             _auto = value;
             RaisePropertyChanged(nameof(Auto));
-            if(Tirage.Status == CebStatus.Valide)
-                Task.Run(
-                    async () => {
-                        await ClearAsync();
-                        if(_auto)
-                            await ResolveAsync();
-                    });
+            if(Tirage.Status == CebStatus.Valide && Auto)
+                Task.Run(ResolveAsync);
         }
     }
 
@@ -284,34 +278,24 @@ public class ViewTirage : NotificationObject, ICommand {
         }
     }
 
-    private async Task ExportAsync() {
-        IsBusy = true;
-        await Task.Run(ExportFichier);
-        IsBusy = false;
-    }
+    private async Task ExportAsync() { await Task.Run(ExportFichier); }
 
     private void ClearData() {
-        if(_isUpdating)
-            return;
         Duree = TimeSpan.Zero;
-        _isUpdating = true;
         Solution = null;
         Solutions = null;
         UpdateForeground();
         Result = Tirage.Status != CebStatus.Invalide ? "Jeu du Compte Est Bon" : "Tirage invalide";
         Popup = false;
-        _isUpdating = false;
         RaisePropertyChanged(nameof(IsComputed));
     }
 
     private void UpdateData() {
-        if(_isUpdating)
-            return;
-        _isUpdating = true;
+        IsBusy = true;
         foreach (var (p, i) in Tirage.Plaques.Indexed())
             Plaques[i] = p.Value;
         RaisePropertyChanged(nameof(Search));
-        _isUpdating = false;
+        IsBusy = false;
         ClearData();
     }
 
@@ -353,6 +337,7 @@ public class ViewTirage : NotificationObject, ICommand {
         var (Ok, Path) = SaveFileName();
         if(!Ok)
             return;
+        IsBusy = true;
         FileInfo fi = new(Path);
         if(fi.Exists)
             fi.Delete();
@@ -373,6 +358,7 @@ public class ViewTirage : NotificationObject, ICommand {
                 return;
         }
         Outils.OpenDocument(Path);
+        IsBusy = false;
     }
 
     #region Action
@@ -395,9 +381,7 @@ public class ViewTirage : NotificationObject, ICommand {
             return Tirage.Status;
         IsBusy = true;
         Result = "⏰ Calcul en cours...";
-
         Foreground = Colors.Aqua;
-
         await Tirage.ResolveAsync();
         Result = Tirage.Status switch
         {
@@ -406,7 +390,6 @@ public class ViewTirage : NotificationObject, ICommand {
             CebStatus.Invalide => "🤬 Tirage invalide",
             _ => "Jeu du Compte Est Bon"
         };
-
         Duree = Tirage.Duree;
         Solution = Tirage.Solutions![0];
         Solutions = Tirage.Solutions;

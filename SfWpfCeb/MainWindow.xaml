@@ -4,8 +4,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:CompteEstBon"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mdl="clr-namespace:CompteEstBon.ViewModel"
     xmlns:s="http://schemas.syncfusion.com/wpf"
     xmlns:skin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
     mc:Ignorable="d"
@@ -25,27 +25,28 @@
                 <ResourceDictionary Source="/Syncfusion.Themes.FluentDark.WPF;component/Common/Brushes.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="TextForegroundBrush" Color="{Binding Foreground}" />
+            <SolidColorBrush x:Key="TextBackgroundBrush" Color="{Binding Background}" />
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-            <local:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <mdl:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <DataTemplate x:Key="listboxOperations">
                 <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
                 <ListBox
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
-                    KeyboardNavigation.DirectionalNavigation="Continue"
-                    ItemsSource="{Binding Operations}"
-                    PreviewMouseWheel="ListBox_PreviewMouseWheel"
-                    BorderThickness="0,0,0,0.1"
                     BorderBrush="White"
+                    BorderThickness="0,0,0,0.1"
+                    ItemsSource="{Binding Operations}"
+                    KeyboardNavigation.DirectionalNavigation="Continue"
+                    PreviewMouseWheel="ListBox_PreviewMouseWheel"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Style="{DynamicResource TextCellGrid}" Text="{Binding}" />
                         </DataTemplate>
                     </ListBox.ItemTemplate>
-                    
+
                 </ListBox>
-               
+
             </DataTemplate>
 
 
@@ -58,7 +59,8 @@
                 <Setter Property="FontWeight" Value="ExtraLight" />
             </Style>
             <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
-                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Background" Value="{DynamicResource TextBackgroundBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
             </Style>
             <Style BasedOn="{StaticResource {x:Type StatusBarItem}}" TargetType="{x:Type StatusBarItem}">
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -68,9 +70,9 @@
                 <Setter Property="BorderThickness" Value="0.2" />
                 <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
             </Style>
-
-
-
+            <Style TargetType="{x:Type s:ComboBoxItemAdv}">
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+            </Style>
         </ResourceDictionary>
     </s:ChromelessWindow.Resources>
     <s:ChromelessWindow.TaskbarItemInfo>
@@ -109,7 +111,7 @@
         </TaskbarItemInfo>
     </s:ChromelessWindow.TaskbarItemInfo>
     <s:ChromelessWindow.DataContext>
-        <local:ViewTirage x:Name="ViewTirage" />
+        <mdl:ViewTirage x:Name="ViewTirage" />
     </s:ChromelessWindow.DataContext>
     <s:ChromelessWindow.InputBindings>
         <KeyBinding
@@ -134,8 +136,10 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
-            <RowDefinition Height="40" />
+            <RowDefinition Height="5"/>
             <RowDefinition Height="*" />
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="40" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -148,201 +152,120 @@
             <ColumnDefinition />
             <ColumnDefinition />
             <ColumnDefinition />
-            <ColumnDefinition Width="75" />
+            <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Label
-            x:Name="label"
+        <Border
             Grid.Row="0"
             Grid.Column="0"
-            Grid.ColumnSpan="7"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center"
-            BorderThickness="0"
-            Content="Plaques" />
-        <Border
-            Grid.Row="1"
-            Grid.Column="0"
-            Grid.ColumnSpan="7"
-            BorderThickness="0">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+            Grid.ColumnSpan="10"
+            BorderThickness="0.4"
+            BorderBrush="White">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+               
+                <Label
+                    x:Name="lbPlaques"
+                                      HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    BorderThickness="0"
+                    Width="100"
+                    Content="Plaques:" />
                 <s:ComboBoxAdv
                     x:Name="Plaque1"
-                    Grid.Column="0"
+                    Width="100"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    BorderThickness="0"
                     IsEditable="True"
-                    BorderThickness="0.2"
-                    BorderBrush="White"
-                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
                     TabIndex="0"
                     Text="{Binding Plaques[0], Mode=TwoWay}" />
                 <s:ComboBoxAdv
                     x:Name="Plaque2"
-                    Grid.Column="1"
+                    Width="100"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    BorderThickness="0"
                     IsEditable="True"
-                    BorderThickness="0.2"
-                    BorderBrush="White"
-                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
                     TabIndex="1"
                     Text="{Binding Plaques[1], Mode=TwoWay}" />
                 <s:ComboBoxAdv
                     x:Name="Plaque3"
-                    Grid.Column="2"
+                    Grid.Column="3"
+                    Width="100"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    BorderThickness="0"
                     IsEditable="True"
-                    BorderThickness="0.2"
-                    BorderBrush="White"
-                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
                     TabIndex="2"
                     Text="{Binding Plaques[2], Mode=TwoWay}" />
                 <s:ComboBoxAdv
                     x:Name="Plaque4"
-                    Grid.Column="3"
+                    Grid.Column="4"
+                    Width="100"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    BorderThickness="0"
                     IsEditable="True"
-                    BorderThickness="0.2"
-                    BorderBrush="White"
-                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
                     TabIndex="3"
                     Text="{Binding Plaques[3], Mode=TwoWay}" />
                 <s:ComboBoxAdv
                     x:Name="Plaque5"
-                    Grid.Column="4"
+                    Grid.Column="5"
+                    Width="100"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    BorderThickness="0"
                     IsEditable="True"
-                    BorderThickness="0.2"
-                    BorderBrush="White"
-                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
                     TabIndex="4"
                     Text="{Binding Plaques[4], Mode=TwoWay}" />
                 <s:ComboBoxAdv
                     x:Name="Plaque6"
-                    Grid.Column="5"
+                    
+                    Width="100"
                     HorizontalAlignment="Stretch"
                     HorizontalContentAlignment="Center"
+                    BorderThickness="0"
                     IsEditable="True"
-                    BorderThickness="0.2"
-                    BorderBrush="White"
-                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
                     TabIndex="5"
                     Text="{Binding Plaques[5], Mode=TwoWay}" />
-
-            </Grid>
+                <Label
+                    x:Name="lbSearch"
+                    Width="100"
+                    Grid.ColumnSpan="1"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    BorderThickness="0"
+                    Content="Trouver:" />
+                <s:UpDown
+                    x:Name="Search"
+                    Width="100"
+                    VerticalAlignment="Stretch"
+                    VerticalContentAlignment="Stretch"
+                    Value="{Binding Search, Mode=TwoWay}"
+                    BorderThickness="0"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    IsTabStop="True"
+                    NumberDecimalDigits="0"
+                    TabIndex="6"
+                    TextAlignment="Center" />
+            </StackPanel>
         </Border>
-        <Label
-            Grid.Row="0"
-            Grid.Column="7"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center"
-            BorderThickness="0"
-            Content="Cherche" />
-        <s:UpDown
-            x:Name="Search"
-            Grid.Row="1"
-            Grid.Column="7"
-            VerticalAlignment="Stretch"
-            VerticalContentAlignment="Stretch"
-            Value="{Binding Search, Mode=TwoWay}"
-            IsTabStop="True"
-            BorderThickness="0.2"
-            BorderBrush="White"
-            MaxValidation="OnLostFocus"
-            MaxValue="999"
-            MinValidation="OnLostFocus"
-            MinValue="0"
-            NumberDecimalDigits="0"
-            TabIndex="6"
-            TextAlignment="Center" />
-
-        <Button
-            x:Name="btnResoudre"
-            Grid.Row="0"
-            Grid.Column="8"
-            Grid.ColumnSpan="2"
-            Command="{Binding}"
-            CommandParameter="resolve"
-            BorderThickness="0.1"
-            BorderBrush="White"
-            Foreground="{Binding Foreground}"
-            IsTabStop="True"
-            TabIndex="7"
-            ToolTipService.ToolTip="Lancement résolution (Ctrl+R)">
-
-            <StackPanel Orientation="Horizontal">
-                <Image
-                    Width="16"
-                    Height="16"
-                    HorizontalAlignment="Left"
-                    Source="images/exec.png" />
-                <TextBlock
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Padding="4"
-                    Text="Résoudre"
-                    TextWrapping="Wrap" />
-            </StackPanel>
-        </Button>
-        <Button
-            x:Name="btnHasard"
-            Grid.Row="1"
-            Grid.Column="8"
-            BorderThickness="0,0,0,0.1"
-            BorderBrush="White"
-            Command="{Binding}"
-            CommandParameter="random"
-            IsTabStop="True"
-            TabIndex="8"
-            ToolTipService.ToolTip="Lancement tirage (Ctrl+H)">
-            <StackPanel Orientation="Horizontal">
-                <Image
-                    Width="16"
-                    Height="16"
-                    HorizontalAlignment="Left"
-                    Source="images/random.png" />
-                <TextBlock
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Padding="4"
-                    Text="Tirage" />
-
-            </StackPanel>
-
-        </Button>
-        <Button
-            x:Name="btnExport"
-            Grid.Row="1"
-            Grid.Column="9"
-            BorderThickness="0,0,0,0.1"
-            BorderBrush="White"
-            Command="{Binding}"
-            CommandParameter="export"
-            IsTabStop="True"
-            TabIndex="9"
-            ToolTipService.ToolTip="Export Excel (Ctrl+X)">
-            <Image
-                Width="16"
-                Height="16"
-                HorizontalAlignment="Left"
-                Source="images/excel.png" />
-
-        </Button>
+        
         <s:SfDataGrid
             x:Name="SolutionsData"
             Grid.Row="2"
@@ -400,12 +323,91 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Panel.ZIndex="10"
-            AnimationType="SlicedCircle"
+            AnimationType="Ripple"
             Foreground="{DynamicResource TextForegroundBrush}"
             IsBusy="{Binding IsBusy}"
             Name="Wait" />
+        <Button
+            x:Name="btnResoudre"
+            Grid.Row="4"
+            Margin="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="5"
+            BorderBrush="White"
+            BorderThickness="0.2"
+            Command="{Binding}"
+            CommandParameter="resolve"
+            Foreground="{Binding Foreground}"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            IsTabStop="True"
+            TabIndex="7"
+            ToolTipService.ToolTip="Lancement résolution (Ctrl+R)">
+            <StackPanel Orientation="Horizontal">
+                <Image
+                    Width="16"
+                    Height="16"
+                    HorizontalAlignment="Left"
+                    Source="images/exec.png" />
+                <TextBlock
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Foreground="{StaticResource TextForegroundBrush}"
+                    Padding="4"
+                    Text="Résoudre"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+        </Button>
+        <Button
+            x:Name="btnHasard"
+            Grid.Row="4"
+            Grid.Column="5"
+            Grid.ColumnSpan="4"
+            Margin="1"
+            BorderBrush="White"
+            BorderThickness="0.2"
+            Command="{Binding}"
+            CommandParameter="random"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            IsTabStop="True"
+            TabIndex="8"
+            ToolTipService.ToolTip="Lancement tirage (Ctrl+H)">
+            <StackPanel Orientation="Horizontal">
+                <Image
+                    Width="16"
+                    Height="16"
+                    HorizontalAlignment="Left"
+                    Source="images/random.png" />
+                <TextBlock
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Foreground="{StaticResource TextForegroundBrush}"
+                    Padding="4"
+                    Text="Tirage" />
+
+            </StackPanel>
+        </Button>
+        <Button
+            x:Name="btnExport"
+            Grid.Row="4"
+            Grid.Column="9"
+            Grid.ColumnSpan="2"
+            Margin="1"
+            BorderBrush="White"
+            BorderThickness="0.2"
+            Command="{Binding}"
+            CommandParameter="export"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            IsTabStop="True"
+            TabIndex="9"
+            ToolTipService.ToolTip="Export Excel (Ctrl+X)">
+            <Image
+                Width="16"
+                Height="16"
+                HorizontalAlignment="Left"
+                Source="images/excel.png" />
+        </Button>
         <StatusBar
-            Grid.Row="3"
+            Grid.Row="5"
             Grid.Column="0"
             Grid.ColumnSpan="10">
 
@@ -460,7 +462,7 @@
                     <ComboBoxItem Content="MaterialDark" />
                     <ComboBoxItem Content="MaterialDarkBlue" />
                     <ComboBoxItem Content="Office2019Black" />
-                    
+
                 </ComboBox>
             </StatusBarItem>
             <StatusBarItem Grid.Column="5" Background="Transparent">
