@@ -97,7 +97,6 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// </summary>
     /// <returns></returns>
     public CebStatus Clear() {
-        Solutions = null;
         _solutions.Clear();
         Duree = TimeSpan.Zero;
         Ecart = null;
@@ -190,7 +189,6 @@ public sealed class CebTirage : INotifyPropertyChanged {
         Resolve(Plaques);
         Status = Ecart == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
         _solutions.Sort((p, q) => p.Rank.CompareTo(q.Rank));
-        Solutions = _solutions;
         Duree = DateTime.Now - debut;
         NotifyPropertyChanged(nameof(Solutions));
         return Status;
@@ -341,7 +339,9 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <summary>
     ///
     /// </summary>
-    public List<CebBase>? Solutions { get; private set; }
+    public List<CebBase>? Solutions {
+        get => (Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) ? _solutions : null;
+    }
 
 
     /// <summary>

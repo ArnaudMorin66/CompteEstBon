@@ -115,7 +115,7 @@
     </Window.InputBindings>
     <Grid Background="{DynamicResource CebBackgroundBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
             <RowDefinition Height="*" />
@@ -141,7 +141,7 @@
             Grid.ColumnSpan="12"
             Background="{DynamicResource CebBackgroundBrush}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="9*" />
+                <RowDefinition Height="5*" />
                 <RowDefinition Height="5*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -335,12 +335,13 @@
             Grid.RowSpan="2"
             Grid.Column="9"
             Grid.ColumnSpan="3"
-            Height="30"
-            VerticalAlignment="Top"
+            Margin="1"
             Background="{DynamicResource CebBackgroundBrush}"
-            BorderThickness="0.2"
-            BorderBrush="Yellow"
+            BorderThickness="0.4"
+            BorderBrush="White"
             Command="{Binding}"
+            VerticalContentAlignment="Top"
+            VerticalAlignment="Stretch"
             CommandParameter="resolve"
             FontWeight="Bold"
             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
@@ -350,17 +351,14 @@
             ToolTipService.ToolTip="Résoudre le compte, Ctrl+R">
             <StackPanel Orientation="Horizontal">
                 <Image
-                    Width="16"
-                    Height="16"
+                   Height="12"
                     HorizontalAlignment="Left"
-                    Opacity="50"
                     OpacityMask="{DynamicResource CebForegroundBrush}"
                     Source="images/resolve.png" />
                 <TextBlock
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     Foreground="White"
-                    Padding="4"
                     Text="Résoudre" />
             </StackPanel>
         </Button>
@@ -368,10 +366,13 @@
             x:Name="btnHasard"
             Grid.Row="2"
             Grid.Column="9"
-            Margin="0"
+            Grid.ColumnSpan="2"
+            Margin="1"
             Background="{DynamicResource CebBackgroundBrush}"
-            BorderThickness="0.2"
-            BorderBrush="Yellow"
+            VerticalContentAlignment="Center"
+            VerticalAlignment="Stretch"
+            BorderThickness="0.4"
+            BorderBrush="White"
             Command="{Binding}"
             CommandParameter="random"
             Foreground="White"
@@ -382,27 +383,28 @@
             ToolTipService.ToolTip="Choisir les plaques,  Ctrl+H">
             <StackPanel Orientation="Horizontal">
                 <Image
-                    Width="16"
-                    Height="16"
+                    Height="12"
                     HorizontalAlignment="Left"
                     Source="images/random.png" />
                 <TextBlock
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
-                    Padding="4"
                     Text="Tirage" />
             </StackPanel>
         </Button>
         <Button
             x:Name="btnExport"
             Grid.Row="2"
-            Grid.Column="10"
-            Grid.ColumnSpan="2"
+            Grid.Column="11"
+            Margin="1"
+            Grid.ColumnSpan="1"
             Background="{DynamicResource CebBackgroundBrush}"
-            BorderThickness="0.2"
-            BorderBrush="Yellow"
+            BorderThickness="0.4"
+            BorderBrush="White"
             Command="{Binding}"
             CommandParameter="export"
+            VerticalContentAlignment="Center"
+            VerticalAlignment="Stretch"
             IsEnabled="{Binding IsComputed}"
             IsTabStop="True"
             TabIndex="10"
@@ -410,8 +412,7 @@
             ToolTipService.ToolTip="Exportation vers Word ou Excel">
             <StackPanel Orientation="Horizontal">
                 <Image
-                    Width="16"
-                    Height="16"
+                    Height="12"
                     HorizontalAlignment="Left"
                     Opacity="50"
                     OpacityMask="{DynamicResource CebForegroundBrush}"

@@ -8,6 +8,7 @@
     xmlns:mdl="clr-namespace:CompteEstBon.ViewModel"
     xmlns:s="http://schemas.syncfusion.com/wpf"
     xmlns:skin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
+    Margin="1"
     mc:Ignorable="d"
     BorderThickness="0"
     FontSize="10"
@@ -46,9 +47,7 @@
                     </ListBox.ItemTemplate>
 
                 </ListBox>
-
             </DataTemplate>
-
 
             <Style TargetType="{x:Type s:VirtualizingCellsControl}">
                 <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
@@ -59,8 +58,8 @@
                 <Setter Property="FontWeight" Value="ExtraLight" />
             </Style>
             <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
-                <Setter Property="Background" Value="{DynamicResource TextBackgroundBrush}" />
-                <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
+                <Setter Property="Background" Value="{StaticResource TextBackgroundBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource TextForegroundBrush}" />
             </Style>
             <Style BasedOn="{StaticResource {x:Type StatusBarItem}}" TargetType="{x:Type StatusBarItem}">
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -72,6 +71,7 @@
             </Style>
             <Style TargetType="{x:Type s:ComboBoxItemAdv}">
                 <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="Foreground" Value="Yellow"/>
             </Style>
         </ResourceDictionary>
     </s:ChromelessWindow.Resources>
@@ -136,9 +136,9 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
-            <RowDefinition Height="5"/>
+            <RowDefinition Height="5" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="5"/>
+            <RowDefinition Height="5" />
             <RowDefinition Height="40" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
@@ -154,118 +154,104 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Border
-            Grid.Row="0"
+
+        <Label
+            x:Name="lbPlaques"
             Grid.Column="0"
-            Grid.ColumnSpan="10"
-            BorderThickness="0.4"
-            BorderBrush="White">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
-               
-                <Label
-                    x:Name="lbPlaques"
-                                      HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"
-                    BorderThickness="0"
-                    Width="100"
-                    Content="Plaques:" />
-                <s:ComboBoxAdv
-                    x:Name="Plaque1"
-                    Width="100"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Center"
-                    BorderThickness="0"
-                    IsEditable="True"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
-                    TabIndex="0"
-                    Text="{Binding Plaques[0], Mode=TwoWay}" />
-                <s:ComboBoxAdv
-                    x:Name="Plaque2"
-                    Width="100"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Center"
-                    BorderThickness="0"
-                    IsEditable="True"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
-                    TabIndex="1"
-                    Text="{Binding Plaques[1], Mode=TwoWay}" />
-                <s:ComboBoxAdv
-                    x:Name="Plaque3"
-                    Grid.Column="3"
-                    Width="100"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Center"
-                    BorderThickness="0"
-                    IsEditable="True"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
-                    TabIndex="2"
-                    Text="{Binding Plaques[2], Mode=TwoWay}" />
-                <s:ComboBoxAdv
-                    x:Name="Plaque4"
-                    Grid.Column="4"
-                    Width="100"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Center"
-                    BorderThickness="0"
-                    IsEditable="True"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
-                    TabIndex="3"
-                    Text="{Binding Plaques[3], Mode=TwoWay}" />
-                <s:ComboBoxAdv
-                    x:Name="Plaque5"
-                    Grid.Column="5"
-                    Width="100"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Center"
-                    BorderThickness="0"
-                    IsEditable="True"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
-                    TabIndex="4"
-                    Text="{Binding Plaques[4], Mode=TwoWay}" />
-                <s:ComboBoxAdv
-                    x:Name="Plaque6"
-                    
-                    Width="100"
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Center"
-                    BorderThickness="0"
-                    IsEditable="True"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
-                    TabIndex="5"
-                    Text="{Binding Plaques[5], Mode=TwoWay}" />
-                <Label
-                    x:Name="lbSearch"
-                    Width="100"
-                    Grid.ColumnSpan="1"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"
-                    BorderThickness="0"
-                    Content="Trouver:" />
-                <s:UpDown
-                    x:Name="Search"
-                    Width="100"
-                    VerticalAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"
-                    Value="{Binding Search, Mode=TwoWay}"
-                    BorderThickness="0"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    IsTabStop="True"
-                    NumberDecimalDigits="0"
-                    TabIndex="6"
-                    TextAlignment="Center" />
-            </StackPanel>
-        </Border>
-        
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            BorderThickness="0"
+            Content="Plaques:" />
+        <s:ComboBoxAdv
+            x:Name="Plaque1"
+            Grid.Column="1"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            BorderThickness="0"
+            IsEditable="True"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
+            TabIndex="0"
+            Text="{Binding Plaques[0], Mode=TwoWay}" />
+        <s:ComboBoxAdv
+            x:Name="Plaque2"
+            Grid.Column="2"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            BorderThickness="0"
+            IsEditable="True"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
+            TabIndex="1"
+            Text="{Binding Plaques[1], Mode=TwoWay}" />
+        <s:ComboBoxAdv
+            x:Name="Plaque3"
+            Grid.Column="3"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            BorderThickness="0"
+            IsEditable="True"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
+            TabIndex="2"
+            Text="{Binding Plaques[2], Mode=TwoWay}" />
+        <s:ComboBoxAdv
+            x:Name="Plaque4"
+            Grid.Column="4"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            BorderThickness="0"
+            IsEditable="True"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
+            TabIndex="3"
+            Text="{Binding Plaques[3], Mode=TwoWay}" />
+        <s:ComboBoxAdv
+            x:Name="Plaque5"
+            Grid.Column="5"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            BorderThickness="0"
+            IsEditable="True"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
+            TabIndex="6"
+            Text="{Binding Plaques[4], Mode=TwoWay}" />
+        <s:ComboBoxAdv
+            x:Name="Plaque6"
+            Grid.Column="6"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            BorderThickness="0"
+            IsEditable="True"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
+            TabIndex="5"
+            Text="{Binding Plaques[5], Mode=TwoWay}" />
+        <Label
+            x:Name="lbSearch"
+            Grid.Column="8"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            BorderThickness="0"
+            Content="Trouver:" />
+        <s:UpDown
+            x:Name="Search"
+            Grid.Column="9"
+            VerticalAlignment="Stretch"
+            VerticalContentAlignment="Stretch"
+            Value="{Binding Search, Mode=TwoWay}"
+            BorderThickness="0"
+            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+            IsTabStop="True"
+            NumberDecimalDigits="0"
+            TabIndex="6"
+            TextAlignment="Center" />
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10" BorderBrush="White" BorderThickness="0.2"></Border>
         <s:SfDataGrid
             x:Name="SolutionsData"
             Grid.Row="2"
@@ -276,7 +262,7 @@
             AllowSorting="False"
             AutoGenerateColumns="False"
             ColumnSizer="Star"
-            CurrentCellBorderThickness="0"
+            CurrentCellBorderThickness="0,0,0,0.1"
             FontSize="10"
             HeaderRowHeight="0"
             IsTabStop="True"
@@ -323,21 +309,18 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Panel.ZIndex="10"
-            AnimationType="Ripple"
+            AnimationType="Ball"
             Foreground="{DynamicResource TextForegroundBrush}"
             IsBusy="{Binding IsBusy}"
             Name="Wait" />
         <Button
             x:Name="btnResoudre"
             Grid.Row="4"
-            Margin="1"
             Grid.Column="0"
             Grid.ColumnSpan="5"
-            BorderBrush="White"
-            BorderThickness="0.2"
+            Margin="1"
             Command="{Binding}"
             CommandParameter="resolve"
-            Foreground="{Binding Foreground}"
             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
             IsTabStop="True"
             TabIndex="7"
@@ -363,8 +346,6 @@
             Grid.Column="5"
             Grid.ColumnSpan="4"
             Margin="1"
-            BorderBrush="White"
-            BorderThickness="0.2"
             Command="{Binding}"
             CommandParameter="random"
             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
@@ -392,8 +373,6 @@
             Grid.Column="9"
             Grid.ColumnSpan="2"
             Margin="1"
-            BorderBrush="White"
-            BorderThickness="0.2"
             Command="{Binding}"
             CommandParameter="export"
             IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"

@@ -40,7 +40,9 @@ if(File.Exists(configurationFile)) {
                 mongoServer = config.Value;
                 break;
             case "ZIPFILE":
-                zipfile = config.Value.FichierPath();
+                try {
+                    zipfile = new FileInfo(config.Value);
+                } catch { }
                 break;
             case "SFLICENCE":
                 sflicence = config.Value;
@@ -234,23 +236,3 @@ if(wait) {
     ReadKey();
 }
 
-#pragma warning disable CA1050
-/// <summary>
-///
-/// </summary>
-public static class CebStatic {
-    /// <summary>
-    /// Dossier téléchargement par défaut
-    /// </summary>
-    public static readonly string TelechargementFolder = 
-        $@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\Downloads";
-
-    /// <summary>
-    /// FileInfo du fichier
-    /// </summary>
-    /// <param name="fichier"></param>
-    /// <returns></returns>
-    public static FileInfo FichierPath(this string fichier) => new(
-        fichier.IndexOfAny(new[] { '\\', '/' }) < 0 ? $"{TelechargementFolder}\\{fichier}" : fichier);
-}
-#pragma warning restore CA1050

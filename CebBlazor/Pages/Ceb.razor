@@ -175,7 +175,7 @@
             _auto = value;
             if (_auto && tirage.Status == CebStatus.Valide) {
                 Task.Run(async () => {
-                    await tirage.ClearAsync();
+                    await tirage.ResolveAsync();
                     await InvokeAsync(StateHasChanged);
                 });
             }
