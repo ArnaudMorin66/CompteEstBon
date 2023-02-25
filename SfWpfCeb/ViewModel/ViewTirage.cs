@@ -12,6 +12,8 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -28,6 +30,8 @@ using Syncfusion.Windows.Shared;
 namespace CompteEstBon.ViewModel;
 
 public class ViewTirage : NotificationObject, ICommand {
+    public static string DotnetVersion => $"Version: {Assembly.GetExecutingAssembly().GetName().Version}, {RuntimeInformation.FrameworkDescription}";
+
     private readonly Stopwatch NotifyWatch = new();
     private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(Settings.Default.SolutionTimer);
 
@@ -38,6 +42,16 @@ public class ViewTirage : NotificationObject, ICommand {
     private TimeSpan _duree;
 
     private Color _foreground = Colors.White;
+    private Color _background = Color.FromRgb(22, 22, 22);
+
+    public Color Background {
+        get => _background;
+        set {
+            _background = value;
+            RaisePropertyChanged();
+        }
+    }
+
     private bool _isBusy;
 
     // ⁞…

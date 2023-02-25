@@ -5,6 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 #region using
+using System.Collections.Immutable;
 using System.ComponentModel;
 
 using System.Runtime.CompilerServices;
@@ -142,8 +143,8 @@ public sealed class CebTirage : INotifyPropertyChanged {
 #region resolution
     /// <param name="sol"></param>
     private void InsertSolution(CebBase sol) {
-        var diff = Abs(_search - sol.Value);
-        switch(diff - Ecart) {
+        var ecart = Abs(_search - sol.Value);
+        switch(ecart - Ecart) {
             case > 0:
                 return;
             case 0: {
@@ -152,7 +153,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
                 break;
             }
             case < 0:
-                Ecart = diff;
+                Ecart = ecart;
                 _solutions.Clear();
                 break;
         }
@@ -189,6 +190,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
         Resolve(Plaques);
         Status = Ecart == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
         _solutions.Sort((p, q) => p.Rank.CompareTo(q.Rank));
+
         Duree = DateTime.Now - debut;
         NotifyPropertyChanged(nameof(Solutions));
         return Status;
@@ -339,9 +341,9 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <summary>
     ///
     /// </summary>
-    public List<CebBase>? Solutions {
-        get => (Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) ? _solutions : null;
-    }
+    public ImmutableList<CebBase>? Solutions => (Status is CebStatus.CompteEstBon or CebStatus.CompteApproche)
+        ? _solutions.ToImmutableList()
+        : null;
 
 
     /// <summary>

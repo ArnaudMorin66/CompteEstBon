@@ -19,7 +19,7 @@ public sealed class CebOperation : CebBase {
     public const string ListeOperations = "x+-/";
 
     /// <summary>
-    /// Constructor op�ration (g op d)
+    /// Constructor opération (g op d)
     /// </summary>
     /// <param name="g"></param>
     /// <param
@@ -73,12 +73,4 @@ public sealed class CebOperation : CebBase {
         AddOperation(droite);
         AddOperation($"{gauche.Value} {op} {droite.Value} = {Value}");
     }
-    /// <summary>
-    /// Création d'une instance
-    /// </summary>
-    /// <param name="g"></param>
-    /// <param name="op"></param>
-    /// <param name="d"></param>
-    /// <returns></returns>
-    public static CebOperation Instance(CebBase g, char op, CebBase d) => new CebOperation(g, op, d);
 }

@@ -27,12 +27,12 @@ public partial class MainWindow {
 
     public MainWindow() {
         InitializeComponent();
-        Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr");
+        System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("fr");
+        // Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr");
         Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
         VisualStyle = _style;
     }
 
-    public static string DotnetVersion => $"Version: {Assembly.GetExecutingAssembly().GetName().Version}, {RuntimeInformation.FrameworkDescription}";
 
     public string VisualStyle {
         get => _style;

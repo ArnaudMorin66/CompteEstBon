@@ -61,24 +61,6 @@ public record CebDetail {
                     yield break;
                 yield return Op(i);
             }
-            //yield return Op1;
-
-            //if(Op2 is null)
-            //    yield break;
-            //yield return Op2;
-
-
-            //if(Op3 is null)
-            //    yield break;
-            //yield return Op3;
-
-            //if(Op4 is null)
-            //    yield break;
-            //yield return Op4;
-
-            //if(Op5 is null)
-            //    yield break;
-            //yield return Op5;
         }
     }
 

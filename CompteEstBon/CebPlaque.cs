@@ -73,8 +73,6 @@ public sealed class CebPlaque : CebBase, INotifyPropertyChanged {
     /// 
     /// </summary>
     /// <param name="propertyName"></param>
-    private void OnPropertyChanged([CallerMemberName] string propertyName = null) {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+    private void OnPropertyChanged([CallerMemberName] string propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 }

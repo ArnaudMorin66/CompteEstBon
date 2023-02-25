@@ -8,18 +8,20 @@
     xmlns:mdl="clr-namespace:CompteEstBon.ViewModel"
     xmlns:s="http://schemas.syncfusion.com/wpf"
     xmlns:skin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
-    Margin="1"
     mc:Ignorable="d"
+    AllowsTransparency="True"
     BorderThickness="0"
     FontSize="10"
     Icon="images/favicon.png"
+    ResizeBorderBrush="{DynamicResource TextForegroundBrush}"
+    ResizeBorderThickness="0.4"
     skin:SfSkinManager.VisualStyle="FluentDark"
     Title="{Binding Titre}"
     TitleBarForeground="{DynamicResource TextForegroundBrush}"
     TitleTextAlignment="Center"
-    Top="6"
     UseNativeChrome="True"
-    WindowStartupLocation="CenterScreen">
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None">
     <s:ChromelessWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -29,26 +31,6 @@
             <SolidColorBrush x:Key="TextBackgroundBrush" Color="{Binding Background}" />
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <mdl:InverseBooleanConverter x:Key="InverseBooleanConverter" />
-            <DataTemplate x:Key="listboxOperations">
-                <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
-                <ListBox
-                    HorizontalAlignment="Stretch"
-                    HorizontalContentAlignment="Center"
-                    BorderBrush="White"
-                    BorderThickness="0,0,0,0.1"
-                    ItemsSource="{Binding Operations}"
-                    KeyboardNavigation.DirectionalNavigation="Continue"
-                    PreviewMouseWheel="ListBox_PreviewMouseWheel"
-                    ScrollViewer.VerticalScrollBarVisibility="Hidden">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Style="{DynamicResource TextCellGrid}" Text="{Binding}" />
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-
-                </ListBox>
-            </DataTemplate>
-
             <Style TargetType="{x:Type s:VirtualizingCellsControl}">
                 <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
             </Style>
@@ -57,9 +39,15 @@
                 <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
                 <Setter Property="FontWeight" Value="ExtraLight" />
             </Style>
-            <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
-                <Setter Property="Background" Value="{StaticResource TextBackgroundBrush}" />
-                <Setter Property="Foreground" Value="{StaticResource TextForegroundBrush}" />
+            <Style TargetType="{x:Type s:ButtonAdv}">
+                <Setter Property="Background" Value="{DynamicResource TextBackgroundBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
+                <Setter Property="Margin" Value="1" />
+                <Setter Property="Command" Value="{Binding}" />
+                <Setter Property="BorderThickness" Value="0.2" />
+                <Setter Property="IsEnabled" Value="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
+                <Setter Property="IsTabStop" Value="True" />
+                <Setter Property="Opacity" Value="20" />
             </Style>
             <Style BasedOn="{StaticResource {x:Type StatusBarItem}}" TargetType="{x:Type StatusBarItem}">
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -71,7 +59,6 @@
             </Style>
             <Style TargetType="{x:Type s:ComboBoxItemAdv}">
                 <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="Foreground" Value="Yellow"/>
             </Style>
         </ResourceDictionary>
     </s:ChromelessWindow.Resources>
@@ -154,7 +141,6 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-
         <Label
             x:Name="lbPlaques"
             Grid.Column="0"
@@ -251,7 +237,12 @@
             NumberDecimalDigits="0"
             TabIndex="6"
             TextAlignment="Center" />
-        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10" BorderBrush="White" BorderThickness="0.2"></Border>
+        <Border
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="10"
+            BorderBrush="White"
+            BorderThickness="0.2" />
         <s:SfDataGrid
             x:Name="SolutionsData"
             Grid.Row="2"
@@ -299,7 +290,28 @@
                     MappingName="Operations[4]"
                     TextAlignment="Center"
                     UseBindingValue="True" />
-                <s:GridTemplateColumn CellTemplate="{StaticResource listboxOperations}" IsHidden="{Binding Vertical, Converter={StaticResource InverseBooleanConverter}}" />
+                <s:GridTemplateColumn IsHidden="{Binding Vertical, Converter={StaticResource InverseBooleanConverter}}">
+                    <s:GridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
+                            <ListBox
+                                HorizontalContentAlignment="Center"
+                                BorderBrush="White"
+                                BorderThickness="0,0,0,0.1"
+                                ItemsSource="{Binding Operations}"
+                                KeyboardNavigation.DirectionalNavigation="Continue"
+                                PreviewMouseWheel="ListBox_PreviewMouseWheel"
+                                ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Style="{DynamicResource TextCellGrid}" Text="{Binding}" />
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+
+                            </ListBox>
+                        </DataTemplate>
+                    </s:GridTemplateColumn.CellTemplate>
+                </s:GridTemplateColumn>
             </s:SfDataGrid.Columns>
         </s:SfDataGrid>
         <s:SfBusyIndicator
@@ -313,83 +325,46 @@
             Foreground="{DynamicResource TextForegroundBrush}"
             IsBusy="{Binding IsBusy}"
             Name="Wait" />
-        <Button
+        <s:ButtonAdv
             x:Name="btnResoudre"
             Grid.Row="4"
             Grid.Column="0"
             Grid.ColumnSpan="5"
-            Margin="1"
-            Command="{Binding}"
             CommandParameter="resolve"
-            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-            IsTabStop="True"
+            IsDefault="True"
+            IsMultiLine="False"
+            Label="Résoudre"
+            SizeMode="Normal"
+            SmallIcon="images/exec.png"
             TabIndex="7"
-            ToolTipService.ToolTip="Lancement résolution (Ctrl+R)">
-            <StackPanel Orientation="Horizontal">
-                <Image
-                    Width="16"
-                    Height="16"
-                    HorizontalAlignment="Left"
-                    Source="images/exec.png" />
-                <TextBlock
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Foreground="{StaticResource TextForegroundBrush}"
-                    Padding="4"
-                    Text="Résoudre"
-                    TextWrapping="Wrap" />
-            </StackPanel>
-        </Button>
-        <Button
+            ToolTipService.ToolTip="Lancement résolution (Ctrl+R)" />
+        <s:ButtonAdv
             x:Name="btnHasard"
             Grid.Row="4"
             Grid.Column="5"
             Grid.ColumnSpan="4"
-            Margin="1"
-            Command="{Binding}"
             CommandParameter="random"
-            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-            IsTabStop="True"
+            IsMultiLine="False"
+            Label="Tirage"
+            SmallIcon="images/random.png"
             TabIndex="8"
-            ToolTipService.ToolTip="Lancement tirage (Ctrl+H)">
-            <StackPanel Orientation="Horizontal">
-                <Image
-                    Width="16"
-                    Height="16"
-                    HorizontalAlignment="Left"
-                    Source="images/random.png" />
-                <TextBlock
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Foreground="{StaticResource TextForegroundBrush}"
-                    Padding="4"
-                    Text="Tirage" />
-
-            </StackPanel>
-        </Button>
-        <Button
+            ToolTipService.ToolTip="Lancement tirage (Ctrl+H)" />
+        <s:ButtonAdv
             x:Name="btnExport"
             Grid.Row="4"
             Grid.Column="9"
             Grid.ColumnSpan="2"
-            Margin="1"
-            Command="{Binding}"
             CommandParameter="export"
-            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-            IsTabStop="True"
+            Label="Export"
+            SmallIcon="images/excel.png"
             TabIndex="9"
-            ToolTipService.ToolTip="Export Excel (Ctrl+X)">
-            <Image
-                Width="16"
-                Height="16"
-                HorizontalAlignment="Left"
-                Source="images/excel.png" />
-        </Button>
+            ToolTipService.ToolTip="Export Excel (Ctrl+X)" />
         <StatusBar
             Grid.Row="5"
             Grid.Column="0"
-            Grid.ColumnSpan="10">
-
+            Grid.ColumnSpan="10"
+            Background="Transparent"
+            Foreground="{DynamicResource TextForegroundBrush}">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
@@ -406,17 +381,19 @@
                     </Grid>
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
-            <StatusBarItem
-                Grid.Column="0"
-                Background="Transparent"
-                Content="{Binding DotnetVersion, ElementName=chromelessWindow}" />
-            <StatusBarItem Grid.Column="1" Background="Transparent">
+            <StatusBarItem Grid.Column="0">
+                <TextBlock
+                    x:Name="textBlock0"
+                    Foreground="{DynamicResource TextForegroundBrush}"
+                    Text="{Binding DotnetVersion}" />
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="1">
                 <TextBlock
                     x:Name="textBlock1"
                     Foreground="{DynamicResource TextForegroundBrush}"
                     Text="{Binding Result}" />
             </StatusBarItem>
-            <StatusBarItem Grid.Column="2" Background="Transparent">
+            <StatusBarItem Grid.Column="2">
                 <TextBlock
                     x:Name="textBlock2"
                     Foreground="{DynamicResource TextForegroundBrush}"
@@ -425,13 +402,13 @@
                     <Run Text=" solutions" />
                 </TextBlock>
             </StatusBarItem>
-            <StatusBarItem Grid.Column="3" Background="Transparent">
+            <StatusBarItem Grid.Column="3">
                 <TextBlock
                     x:Name="textBlock3"
                     Foreground="{DynamicResource TextForegroundBrush}"
                     Text="{Binding Duree.TotalSeconds, Mode=OneWay, StringFormat=Durée: {0:N3}}" />
             </StatusBarItem>
-            <StatusBarItem Grid.Column="4" Background="Transparent">
+            <StatusBarItem Grid.Column="4">
                 <ComboBox
                     x:Name="cbstyle"
                     Foreground="{DynamicResource TextForegroundBrush}"
@@ -441,34 +418,41 @@
                     <ComboBoxItem Content="MaterialDark" />
                     <ComboBoxItem Content="MaterialDarkBlue" />
                     <ComboBoxItem Content="Office2019Black" />
-
                 </ComboBox>
             </StatusBarItem>
-            <StatusBarItem Grid.Column="5" Background="Transparent">
-
-                <CheckBox
+            <StatusBarItem Grid.Column="5">
+                <s:ButtonAdv
                     x:Name="cbAuto"
-                    Content="Auto"
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Stretch"
+                    IconHeight="0"
+                    IconWidth="0"
+                    IsCheckable="True"
                     IsChecked="{Binding Auto}"
                     IsTabStop="False"
+                    Label="Auto"
                     ToolTipService.ToolTip="Mode auto" />
 
             </StatusBarItem>
-            <StatusBarItem Grid.Column="6" Background="Transparent">
-
-                <CheckBox
-                    x:Name="cbMongoDb"
-                    Content="Mongo"
+            <StatusBarItem Grid.Column="6">
+                <s:ButtonAdv
+                    HorizontalAlignment="Stretch"
+                    IconHeight="0"
+                    IconWidth="0"
+                    IsCheckable="True"
                     IsChecked="{Binding MongoDb}"
-                    IsTabStop="False"
+                    Label="Mongo"
+                    SizeMode="Normal"
                     ToolTipService.ToolTip="Sauvegarde dans Mongo" />
-
             </StatusBarItem>
-            <StatusBarItem Grid.Column="7" Background="Transparent">
-                <Button
+            <StatusBarItem Grid.Column="7">
+                <s:ButtonAdv
                     Click="BtnMode_Click"
-                    Content="{Binding ModeView}"
+                    IconHeight="0"
+                    IconWidth="0"
                     IsTabStop="False"
+                    Label="{Binding ModeView}"
+                    SizeMode="Normal"
                     ToolTipService.ToolTip="Vue grille ou liste" />
             </StatusBarItem>
 

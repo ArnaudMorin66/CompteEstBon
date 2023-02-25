@@ -9,8 +9,8 @@
     xmlns:s="clr-namespace:System;assembly=System.Runtime"
     xmlns:vw="clr-namespace:CompteEstBon.ViewModel"
     mc:Ignorable="d"
-    AllowsTransparency="True"
     BorderBrush="{DynamicResource CebForegroundBrush}"
+    Background="{DynamicResource CebBackgroundBrush}"
     BorderThickness="0.2"
     d:DesignHeight="340.99"
     d:DesignWidth="676.677"
@@ -19,8 +19,10 @@
     MouseLeftButtonDown="Window_MouseLeftButtonDown"
     OverridesDefaultStyle="False"
     ResizeMode="CanResize"
+    Title="{Binding Titre}"
     WindowStartupLocation="CenterScreen"
-    WindowStyle="None">
+    WindowStyle="SingleBorderWindow">
+    
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -117,7 +119,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
             <RowDefinition Height="30" />
-            <RowDefinition Height="30" />
             <RowDefinition Height="*" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
@@ -135,100 +136,15 @@
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Grid
-            Grid.Row="0"
-            Grid.Column="0"
-            Grid.ColumnSpan="12"
-            Background="{DynamicResource CebBackgroundBrush}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="5*" />
-                <RowDefinition Height="5*" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Button
-                x:Name="btnMenu"
-                Grid.RowSpan="2"
-                Grid.Column="0"
-                Width="20"
-                Height="20"
-                Click="BtnMenu_Click"
-                Cursor="Hand"
-                IsTabStop="False"
-                MouseRightButtonDown="TextBlock_MouseRightButtonUp"
-                Padding="2"
-                Template="{DynamicResource CebButtonTemplate}">
-                <Button.Content>
-                    <Image
-                        Width="16"
-                        Height="16"
-                        Source="favicon.ico" />
-                </Button.Content>
-            </Button>
-            <Label
-                Grid.Row="0"
-                Grid.RowSpan="2"
-                Grid.Column="1"
-                Margin="0"
-                VerticalAlignment="Top"
-                HorizontalContentAlignment="Center"
-                Content="{Binding Titre}"
-                Foreground="{DynamicResource CebForegroundBrush}"
-                MouseDoubleClick="Window_MouseDoubleClick"
-                MouseRightButtonUp="TextBlock_MouseRightButtonUp" />
 
-            <Button
-                x:Name="btnMinimize"
-                Grid.Row="0"
-                Grid.RowSpan="2"
-                Grid.Column="3"
-                Margin="0"
-                HorizontalAlignment="Center"
-                Click="BtnMinimize_Click"
-                Content="_"
-                Style="{StaticResource ButtonWindowsStyle}"
-                Template="{DynamicResource CebButtonTemplate}"
-                ToolTipService.ToolTip="Réduire" />
-            <Button
-                x:Name="btnSize"
-                Grid.Row="0"
-                Grid.RowSpan="2"
-                Grid.Column="4"
-                Margin="0"
-                HorizontalAlignment="Center"
-                Click="BtnSize_Click"
-                Content="□"
-                Style="{StaticResource ButtonWindowsStyle}"
-                Template="{DynamicResource CebButtonTemplate}"
-                ToolTipService.ToolTip="Rétablir précédent" />
-            <Button
-                x:Name="btnClose"
-                Grid.Row="0"
-                Grid.RowSpan="2"
-                Grid.Column="5"
-                Margin="0"
-                HorizontalAlignment="Center"
-                BorderBrush="Black"
-                Click="BtnClose_Click"
-                Content="x"
-                Style="{StaticResource ButtonWindowsStyle}"
-                Template="{DynamicResource CebButtonTemplate}"
-                ToolTipService.ToolTip="Fermer" />
-        </Grid>
         <Label
-            Grid.Row="1"
+            Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="7"
             Content="Plaques"
             Style="{StaticResource LabelTitreStyle}" />
         <Border
-            Grid.Row="2"
+            Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="7"
             Margin="0"
@@ -282,13 +198,13 @@
             </Grid>
         </Border>
         <Label
-            Grid.Row="1"
+            Grid.Row="0"
             Grid.Column="7"
             Grid.ColumnSpan="2"
             Content="Chercher"
             Style="{StaticResource LabelTitreStyle}" />
         <Border
-            Grid.Row="2"
+            Grid.Row="1"
             Grid.Column="7"
             Grid.ColumnSpan="2"
             BorderThickness="0"
@@ -331,7 +247,7 @@
         </Border>
         <Button
             x:Name="btnResoudre"
-            Grid.Row="1"
+            Grid.Row="0"
             Grid.RowSpan="2"
             Grid.Column="9"
             Grid.ColumnSpan="3"
@@ -364,7 +280,7 @@
         </Button>
         <Button
             x:Name="btnHasard"
-            Grid.Row="2"
+            Grid.Row="1"
             Grid.Column="9"
             Grid.ColumnSpan="2"
             Margin="1"
@@ -394,7 +310,7 @@
         </Button>
         <Button
             x:Name="btnExport"
-            Grid.Row="2"
+            Grid.Row="1"
             Grid.Column="11"
             Margin="1"
             Grid.ColumnSpan="1"
@@ -421,7 +337,7 @@
         </Button>
         <DataGrid
             x:Name="SolutionsData"
-            Grid.Row="3"
+            Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="12"
             AlternationCount="1"
@@ -490,7 +406,7 @@
             </DataGrid.Columns>
         </DataGrid>
         <ProgressBar
-            Grid.Row="3"
+            Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="12"
             HorizontalAlignment="Center"
@@ -555,7 +471,7 @@
         </Popup>
 
         <StatusBar
-            Grid.Row="4"
+            Grid.Row="3"
             Grid.Column="0"
             Grid.ColumnSpan="12"
             Background="Transparent"
