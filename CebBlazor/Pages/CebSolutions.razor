@@ -24,30 +24,30 @@
             </EmptyRecordTemplate>
         </GridTemplates>
         <GridColumns>
-            @if (VueGrille) {
-                @for (var i = 0; i < 5; i++) {
-                    var _i = i;
-                    <GridColumn TextAlign="TextAlign.Center">
-                        <Template Context="data">
-                            @{
-                                var operations = (data as CebBase)!.Operations;
-                                if (_i < operations.Count)
-                                    @operations[_i]
-                            }
-                        </Template>
-                    </GridColumn>
-                }
+            @if (VueVerticale) {
+	            <GridColumn TextAlign="TextAlign.Center">
+		            <Template Context="data">
+			            @{
+				            var operations = (data as CebBase)!.Operations;
+				            foreach (var operation in operations) {
+					            <div>@operation</div>
+				            }
+			            }
+		            </Template>
+	            </GridColumn>
             } else {
-                <GridColumn TextAlign="TextAlign.Center">
-                    <Template Context="data">
-                        @{
-                            var operations = (data as CebBase)!.Operations;
-                            foreach (var operation in operations) {
-                                <div>@operation</div>
-                            }
-                        }
-                    </Template>
-                </GridColumn>
+	            @for (var i = 0; i < 5; i++) {
+		            var _i = i;
+		            <GridColumn TextAlign="TextAlign.Center">
+			            <Template Context="data">
+				            @{
+					            var operations = (data as CebBase)!.Operations;
+					            if (_i < operations.Count)
+						            @operations[_i]
+				            }
+			            </Template>
+		            </GridColumn>
+	            }
             }
         </GridColumns>
     </SfGrid>
@@ -57,14 +57,14 @@
 
 #pragma warning disable CS8618
     [Parameter]
-    public bool VueGrille { get; set; }
+    public bool VueVerticale { get; set; }
 
 
     [Parameter]
     public EventCallback<CebBase> ShowDetail { get; set; }
 
     protected override void OnInitialized() {
-        VueGrille = true;
+        VueVerticale = true;
         base.OnInitialized();
     }
 

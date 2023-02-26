@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mdl="clr-namespace:CompteEstBon.ViewModel"
     xmlns:s="http://schemas.syncfusion.com/wpf"
+    xmlns:rt="clr-namespace:System;assembly=System.Runtime"
     xmlns:skin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
     mc:Ignorable="d"
     AllowsTransparency="True"
@@ -152,7 +153,7 @@
             Content="Plaques:" />
         <s:ComboBoxAdv
             x:Name="Plaque1"
-            Grid.Column="1"
+            Grid.Row="0" Grid.Column="1"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Center"
             BorderThickness="0"
@@ -163,7 +164,7 @@
             Text="{Binding Plaques[0], Mode=TwoWay}" />
         <s:ComboBoxAdv
             x:Name="Plaque2"
-            Grid.Column="2"
+            Grid.Row="0" Grid.Column="2"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Center"
             BorderThickness="0"
@@ -185,7 +186,7 @@
             Text="{Binding Plaques[2], Mode=TwoWay}" />
         <s:ComboBoxAdv
             x:Name="Plaque4"
-            Grid.Column="4"
+            Grid.Row="0" Grid.Column="4"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Center"
             BorderThickness="0"
@@ -196,7 +197,7 @@
             Text="{Binding Plaques[3], Mode=TwoWay}" />
         <s:ComboBoxAdv
             x:Name="Plaque5"
-            Grid.Column="5"
+            Grid.Row="0" Grid.Column="5"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Center"
             BorderThickness="0"
@@ -207,7 +208,7 @@
             Text="{Binding Plaques[4], Mode=TwoWay}" />
         <s:ComboBoxAdv
             x:Name="Plaque6"
-            Grid.Column="6"
+            Grid.Row="0" Grid.Column="6"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Center"
             BorderThickness="0"
@@ -218,7 +219,7 @@
             Text="{Binding Plaques[5], Mode=TwoWay}" />
         <Label
             x:Name="lbSearch"
-            Grid.Column="8"
+            Grid.Row="0" Grid.Column="8"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             HorizontalContentAlignment="Center"
@@ -227,7 +228,7 @@
             Content="Trouver:" />
         <s:UpDown
             x:Name="Search"
-            Grid.Column="9"
+            Grid.Row="0" Grid.Column="9"
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             Value="{Binding Search, Mode=TwoWay}"
@@ -290,18 +291,19 @@
                     MappingName="Operations[4]"
                     TextAlignment="Center"
                     UseBindingValue="True" />
+              
                 <s:GridTemplateColumn IsHidden="{Binding Vertical, Converter={StaticResource InverseBooleanConverter}}">
                     <s:GridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
                             <ListBox
-                                HorizontalContentAlignment="Center"
-                                BorderBrush="White"
-                                BorderThickness="0,0,0,0.1"
-                                ItemsSource="{Binding Operations}"
-                                KeyboardNavigation.DirectionalNavigation="Continue"
-                                PreviewMouseWheel="ListBox_PreviewMouseWheel"
-                                ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                                    HorizontalContentAlignment="Center"
+                                    BorderBrush="White"
+                                    BorderThickness="0,0,0,0.1"
+                                    ItemsSource="{Binding Operations}"
+                                    KeyboardNavigation.DirectionalNavigation="Continue"
+                                    PreviewMouseWheel="ListBox_PreviewMouseWheel"
+                                    ScrollViewer.VerticalScrollBarVisibility="Hidden">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Style="{DynamicResource TextCellGrid}" Text="{Binding}" />
@@ -409,16 +411,17 @@
                     Text="{Binding Duree.TotalSeconds, Mode=OneWay, StringFormat=Durée: {0:N3}}" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="4">
-                <ComboBox
+                <s:ComboBoxAdv
                     x:Name="cbstyle"
                     Foreground="{DynamicResource TextForegroundBrush}"
                     SelectedIndex="0"
                     Text="{Binding VisualStyle, ElementName=chromelessWindow, Mode=TwoWay}">
-                    <ComboBoxItem Content="FluentDark" />
-                    <ComboBoxItem Content="MaterialDark" />
-                    <ComboBoxItem Content="MaterialDarkBlue" />
-                    <ComboBoxItem Content="Office2019Black" />
-                </ComboBox>
+                    <s:ComboBoxItemAdv Content="FluentDark" />
+                    <s:ComboBoxItemAdv Content="MaterialDark" />
+                    <s:ComboBoxItemAdv Content="MaterialDarkBlue" />
+                    <s:ComboBoxItemAdv Content="Office2019Black" />
+                    <s:ComboBoxItemAdv Content="Windows11Dark" />
+                </s:ComboBoxAdv>
             </StatusBarItem>
             <StatusBarItem Grid.Column="5">
                 <s:ButtonAdv
@@ -452,7 +455,7 @@
                     IconWidth="0"
                     IsTabStop="False"
                     Label="{Binding ModeView}"
-                    SizeMode="Normal"
+                    SizeMode="Large"
                     ToolTipService.ToolTip="Vue grille ou liste" />
             </StatusBarItem>
 

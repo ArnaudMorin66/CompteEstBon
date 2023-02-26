@@ -44,6 +44,7 @@
     <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="20.4.0.51" />
     <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="20.4.0.51" />
     <PackageReference Include="Syncfusion.Themes.Office2019Black.WPF" Version="20.4.0.51" />
+    <PackageReference Include="Syncfusion.Themes.Windows11Dark.WPF" Version="20.4.0.51" />
   </ItemGroup>
 
   <ItemGroup>

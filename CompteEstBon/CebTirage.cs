@@ -77,6 +77,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     ///
     /// </summary>
     /// <param name="propertyName"></param>
+    // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
     private void NotifyPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(
         this,
         new PropertyChangedEventArgs(propertyName));
@@ -103,7 +104,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
         Ecart = null;
         Status = CebStatus.Indefini;
         Valid();
-        NotifyPropertyChanged("clear");
+        NotifyPropertyChanged();
         return Status;
     }
 
@@ -111,7 +112,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// Remise à zéro asynchrone
     /// </summary>
     /// <returns></returns>
-    public async Task<CebStatus> ClearAsync() => await Task.Run(() => Clear());
+    public async Task<CebStatus> ClearAsync() => await Task.Run(Clear);
 
     /// <summary>
     /// Select the value and the plaque's list
@@ -165,9 +166,11 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// boucle de résolution du compte
     /// </summary>
     /// <param name="liste"></param>
+    // ReSharper disable PossibleMultipleEnumeration
     private void Resolve(IEnumerable<CebBase> liste) {
         foreach (var (g, i) in liste.Indexed()) {
             InsertSolution(g);
+           
             foreach (var (d, j) in liste.Indexed().Where((_, j) => j > i))
                 foreach(var oper in CebOperation.ListeOperations
                     .Select(op => new CebOperation(g, op, d))
@@ -175,7 +178,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
                     Resolve(liste.Where((_, k) => k != i && k != j).Concat(new[] { oper }));
         }
     }
-
+    // ReSharper enable PossibleMultipleEnumeration
     /// <summary>
     ///
     /// </summary>
@@ -282,7 +285,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <summary>
     /// Ecart
     /// </summary>
-    public int? Ecart { get; private set; } = null;
+    public int? Ecart { get; private set; }
 
     /// <summary>
     ///
@@ -312,9 +315,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// </summary>
     public CebPlaque[] Plaques { get; }
 
-    /// <summary>
-    ///
-    /// </summary>
+    /// <summary />
     public CebData Resultat => new()
     {
         Search = Search,
@@ -344,7 +345,6 @@ public sealed class CebTirage : INotifyPropertyChanged {
     public ImmutableList<CebBase>? Solutions => (Status is CebStatus.CompteEstBon or CebStatus.CompteApproche)
         ? _solutions.ToImmutableList()
         : null;
-
 
     /// <summary>
     /// Gets the status.

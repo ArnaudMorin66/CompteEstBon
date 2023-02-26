@@ -20,9 +20,7 @@ public static class Util {
 
     public static string? SyncfusionVersion => typeof(SfBaseComponent).Assembly.GetName().Version?.ToString();
 
-#pragma warning disable CS8602 // Déréférencement d'une éventuelle référence null.
-    public static string CebBlazorVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
-#pragma warning restore CS8602 // Déréférencement d'une éventuelle référence null.
+    public static string CebBlazorVersion => Assembly.GetExecutingAssembly().GetName().Version!.ToString();
 
     public static string DotNetVersion => RuntimeInformation.FrameworkDescription;
 

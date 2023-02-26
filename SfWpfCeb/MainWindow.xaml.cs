@@ -4,18 +4,15 @@
 //     Copyright (c) . All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-using System;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Threading;
+
 using System.Windows;
 using System.Windows.Input;
 
 using Syncfusion.SfSkinManager;
+
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.UI.Xaml.Grid.Helpers;
+using Syncfusion.Windows.Shared;
 
 namespace CompteEstBon;
 
@@ -28,32 +25,30 @@ public partial class MainWindow {
     public MainWindow() {
         InitializeComponent();
         System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("fr");
-        // Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr");
         Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
-        VisualStyle = _style;
     }
 
 
     public string VisualStyle {
         get => _style;
         set {
-            var resource = Resources.MergedDictionaries.First(v => v.Source.OriginalString.Contains(_style));
+            if(_style == value)
+                return;
             _style = value;
-
-            SfSkinManager.SetVisualStyle(this, (VisualStyles)Enum.Parse(typeof(VisualStyles), value));
-            resource.Source =
-                    new Uri($"pack://application:,,,/Syncfusion.Themes.{value}.WPF;component/Common/Brushes.xaml");
+            SfSkinManagerExtension.SetTheme(this, new Theme(value));
         }
     }
 
     private void SolutionsData_SelectionChanged(object sender, GridSelectionChangedEventArgs e) => ViewTirage.ShowPopup(
-        SolutionsData.SelectedIndex);
+        (sender as SfDataGrid)!.SelectedIndex);
 
     private void SolutionsData_QueryRowHeight(object sender, QueryRowHeightEventArgs e) {
         if(e.RowIndex <= 0)
             return;
         var gridRowResizingOptions = new GridRowSizingOptions();
-        if(!SolutionsData.GridColumnSizer.GetAutoRowHeight(e.RowIndex, gridRowResizingOptions, out var autoHeight))
+
+        if(!(sender as SfDataGrid)!.GridColumnSizer
+            .GetAutoRowHeight(e.RowIndex, gridRowResizingOptions, out var autoHeight))
             return;
         e.Height = autoHeight;
         e.Handled = true;
