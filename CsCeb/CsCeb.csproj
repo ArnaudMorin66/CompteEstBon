@@ -13,10 +13,10 @@
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
     <EnableNETAnalyzers>False</EnableNETAnalyzers>
-    <AssemblyVersion>2023.55.4.20</AssemblyVersion>
-    <FileVersion>2023.55.4.20</FileVersion>
+    <AssemblyVersion>2023.57.4.21</AssemblyVersion>
+    <FileVersion>2023.57.4.21</FileVersion>
     <IncrementVersionOnBuild>1.yyyy.Mdd.Hmm</IncrementVersionOnBuild>
-    <Version>1.2023.225.1944</Version>
+    <Version>1.2023.226.1654</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

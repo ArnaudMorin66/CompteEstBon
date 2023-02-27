@@ -42,7 +42,11 @@ if(File.Exists(configurationFile)) {
             case "ZIPFILE":
                 try {
                     zipfile = new FileInfo(config.Value);
-                } catch { }
+                }
+                catch {
+                    // ignored
+                }
+
                 break;
             case "SFLICENCE":
                 sflicence = config.Value;
@@ -210,11 +214,11 @@ void Run() {
 
 void Abort(Exception ex, int retour = -1) {
     SetOut(Console.Error);
-    Write($"{Ansi.Color.Foreground.White.EscapeSequence}{Ansi.Color.Background.Red.EscapeSequence}");
+    Write($@"{Ansi.Color.Foreground.White.EscapeSequence}{Ansi.Color.Background.Red.EscapeSequence}");
     WriteLine(@"+-----------------------------+".Center(WindowWidth));
     WriteLine(@"|          Erreur             |".Center(WindowWidth));
     WriteLine(@"+-----------------------------+".Center(WindowWidth));
-    Write($"{Ansi.Color.Foreground.Default.EscapeSequence}{Ansi.Color.Background.Default.EscapeSequence}");
+    Write($@"{Ansi.Color.Foreground.Default.EscapeSequence}{Ansi.Color.Background.Default.EscapeSequence}");
     WriteLine($@"{ex.GetType()}: {ex.Message.Red()}".Center(WindowWidth));
     WriteLine();
     WriteLine($@"{"AIDE".ControlCode(Ansi.Text.UnderlinedOn, Ansi.Text.UnderlinedOff)} :");

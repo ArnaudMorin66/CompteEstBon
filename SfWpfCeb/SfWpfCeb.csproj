@@ -12,10 +12,11 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
-    <AssemblyVersion>3.1.8416.50</AssemblyVersion>
-    <FileVersion>3.1.8416.50</FileVersion>
-    <Version>3.1.0.1</Version>
+    <AssemblyVersion>4.1.8416.50</AssemblyVersion>
+    <FileVersion>4.1.8416.50</FileVersion>
+    <Version>4.0.0.1</Version>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <Authors>$(AssemblyName), Arnaud Morin</Authors>
   </PropertyGroup>
 
   <ItemGroup>

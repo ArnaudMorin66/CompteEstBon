@@ -7,7 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mdl="clr-namespace:CompteEstBon.ViewModel"
     xmlns:s="http://schemas.syncfusion.com/wpf"
-    xmlns:rt="clr-namespace:System;assembly=System.Runtime"
     xmlns:skin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
     mc:Ignorable="d"
     AllowsTransparency="True"
@@ -46,7 +45,8 @@
                 <Setter Property="Margin" Value="1" />
                 <Setter Property="Command" Value="{Binding}" />
                 <Setter Property="BorderThickness" Value="0.2" />
-                <Setter Property="IsEnabled" Value="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
+                <Setter Property="IsEnabled"
+                        Value="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
                 <Setter Property="IsTabStop" Value="True" />
                 <Setter Property="Opacity" Value="20" />
             </Style>
@@ -77,7 +77,6 @@
                         DismissWhenClicked="True"
                         ImageSource="Images/random.png"
                         IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
-
                     <ThumbButtonInfo
                         Command="{Binding}"
                         CommandParameter="Resolve"
@@ -125,9 +124,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="5" />
+            <RowDefinition Height="40" />
+            <RowDefinition Height="5" />
             <RowDefinition Height="*" />
             <RowDefinition Height="5" />
-            <RowDefinition Height="40" />
             <RowDefinition Height="30" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -175,7 +175,7 @@
             Text="{Binding Plaques[1], Mode=TwoWay}" />
         <s:ComboBoxAdv
             x:Name="Plaque3"
-            Grid.Column="3"
+            Grid.Row="0" Grid.Column="3"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Center"
             BorderThickness="0"
@@ -244,9 +244,44 @@
             Grid.ColumnSpan="10"
             BorderBrush="White"
             BorderThickness="0.2" />
+        <s:ButtonAdv
+            x:Name="btnResoudre"
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="5"
+            CommandParameter="resolve"
+            IsDefault="True"
+            IsMultiLine="False"
+            Label="Résoudre"
+            SizeMode="Normal"
+            SmallIcon="images/exec.png"
+            TabIndex="7"
+            ToolTipService.ToolTip="Lancement résolution (Ctrl+R)" />
+        <s:ButtonAdv
+            x:Name="btnHasard"
+            Grid.Row="2"
+            Grid.Column="5"
+            Grid.ColumnSpan="3"
+            CommandParameter="random"
+            IsMultiLine="False"
+            Label="Tirage"
+            SmallIcon="images/random.png"
+            TabIndex="8"
+            ToolTipService.ToolTip="Lancement tirage (Ctrl+H)" />
+        <s:ButtonAdv
+            x:Name="btnExport"
+            Grid.Row="2"
+            Grid.Column="8"
+            Grid.ColumnSpan="2"
+            CommandParameter="export"
+            IsMultiLine="False"
+            Label="Export"
+            SmallIcon="images/excel.png"
+            TabIndex="9"
+            ToolTipService.ToolTip="Export Excel (Ctrl+X)" />
         <s:SfDataGrid
             x:Name="SolutionsData"
-            Grid.Row="2"
+            Grid.Row="4"
             Grid.Column="0"
             Grid.ColumnSpan="10"
             AllowFiltering="False"
@@ -291,19 +326,20 @@
                     MappingName="Operations[4]"
                     TextAlignment="Center"
                     UseBindingValue="True" />
-              
-                <s:GridTemplateColumn IsHidden="{Binding Vertical, Converter={StaticResource InverseBooleanConverter}}">
+
+                <s:GridTemplateColumn 
+                    IsHidden="{Binding Vertical, Converter={StaticResource InverseBooleanConverter}}">
                     <s:GridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
                             <ListBox
-                                    HorizontalContentAlignment="Center"
-                                    BorderBrush="White"
-                                    BorderThickness="0,0,0,0.1"
-                                    ItemsSource="{Binding Operations}"
-                                    KeyboardNavigation.DirectionalNavigation="Continue"
-                                    PreviewMouseWheel="ListBox_PreviewMouseWheel"
-                                    ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                                HorizontalContentAlignment="Center"
+                                BorderBrush="White"
+                                BorderThickness="0,0,0,0.1"
+                                ItemsSource="{Binding Operations}"
+                                KeyboardNavigation.DirectionalNavigation="Continue"
+                                PreviewMouseWheel="ListBox_PreviewMouseWheel"
+                                ScrollViewer.VerticalScrollBarVisibility="Hidden">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Style="{DynamicResource TextCellGrid}" Text="{Binding}" />
@@ -317,7 +353,7 @@
             </s:SfDataGrid.Columns>
         </s:SfDataGrid>
         <s:SfBusyIndicator
-            Grid.Row="2"
+            Grid.Row="4"
             Grid.Column="0"
             Grid.ColumnSpan="10"
             HorizontalAlignment="Center"
@@ -327,42 +363,9 @@
             Foreground="{DynamicResource TextForegroundBrush}"
             IsBusy="{Binding IsBusy}"
             Name="Wait" />
-        <s:ButtonAdv
-            x:Name="btnResoudre"
-            Grid.Row="4"
-            Grid.Column="0"
-            Grid.ColumnSpan="5"
-            CommandParameter="resolve"
-            IsDefault="True"
-            IsMultiLine="False"
-            Label="Résoudre"
-            SizeMode="Normal"
-            SmallIcon="images/exec.png"
-            TabIndex="7"
-            ToolTipService.ToolTip="Lancement résolution (Ctrl+R)" />
-        <s:ButtonAdv
-            x:Name="btnHasard"
-            Grid.Row="4"
-            Grid.Column="5"
-            Grid.ColumnSpan="4"
-            CommandParameter="random"
-            IsMultiLine="False"
-            Label="Tirage"
-            SmallIcon="images/random.png"
-            TabIndex="8"
-            ToolTipService.ToolTip="Lancement tirage (Ctrl+H)" />
-        <s:ButtonAdv
-            x:Name="btnExport"
-            Grid.Row="4"
-            Grid.Column="9"
-            Grid.ColumnSpan="2"
-            CommandParameter="export"
-            Label="Export"
-            SmallIcon="images/excel.png"
-            TabIndex="9"
-            ToolTipService.ToolTip="Export Excel (Ctrl+X)" />
+
         <StatusBar
-            Grid.Row="5"
+            Grid.Row="6"
             Grid.Column="0"
             Grid.ColumnSpan="10"
             Background="Transparent"

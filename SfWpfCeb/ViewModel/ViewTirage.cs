@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -313,7 +314,7 @@ public class ViewTirage : NotificationObject, ICommand {
         ClearData();
     }
 
-    private void UpdateForeground() {
+    private void UpdateForeground() =>
         Foreground = Tirage.Status switch
         {
             CebStatus.Indefini => Colors.Blue,
@@ -324,7 +325,6 @@ public class ViewTirage : NotificationObject, ICommand {
             CebStatus.Invalide => Colors.Red,
             _ => throw new NotImplementedException()
         };
-    }
 
     public void ShowPopup(int index = 0) {
         if(index < 0 || index >= Tirage.Count)
@@ -336,7 +336,7 @@ public class ViewTirage : NotificationObject, ICommand {
     public static (bool Ok, string Path) SaveFileName() {
         var dialog = new SaveFileDialog
         {
-            Title = "Export Excel-Word",
+            Title = "Exporter vers...",
             Filter = "Excel (*.xlsx)| *.xlsx | Word (*.docx) | *.docx | Json (*.json) | *.json | XML (*.xml) | *.xml ",
             InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
             DefaultExt = ".xlsx",
@@ -346,32 +346,13 @@ public class ViewTirage : NotificationObject, ICommand {
         return ((bool)dialog.ShowDialog(), dialog.FileName);
     }
 
-
     private void ExportFichier() {
         var (Ok, Path) = SaveFileName();
         if(!Ok)
             return;
         IsBusy = true;
         FileInfo fi = new(Path);
-        if(fi.Exists)
-            fi.Delete();
-        switch(fi.Extension) {
-            case ".xlsx":
-                Tirage.SaveXlsx(fi);
-                break;
-            case ".docx":
-                Tirage.SaveDocx(fi);
-                break;
-            case ".json":
-                Tirage.SaveJson(fi);
-                break;
-            case ".xml":
-                Tirage.SaveXml(fi);
-                break;
-            default:
-                return;
-        }
-        Outils.OpenDocument(Path);
+        if (Tirage.Export(fi)) Path.OpenDocument();
         IsBusy = false;
     }
 

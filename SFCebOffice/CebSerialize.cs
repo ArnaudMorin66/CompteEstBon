@@ -23,7 +23,7 @@ using System.Xml.Serialization;
 namespace CompteEstBon;
 
 public static class CebSerialize {
-    private static readonly Dictionary<string, Action<CebTirage, FileInfo>> ListeFormats = 
+    public static readonly Dictionary<string, Action<CebTirage, FileInfo>> ListeFormats = 
         new()
     {
         [".zip"] = SaveZip,
@@ -32,6 +32,14 @@ public static class CebSerialize {
         [".xlsx"] = SaveXlsx,
         [".docx"] = SaveDocx
     };
+
+    public static bool Export(this CebTirage tirage, FileInfo fi) {
+        if (!ListeFormats.TryGetValue(fi.Extension, out var laction)) return false;
+        if (fi.Exists)
+            fi.Delete();
+        laction(tirage, fi);
+        return true;
+    }
     /// <summary>
     ///
     /// </summary>
@@ -181,13 +189,7 @@ public static class CebSerialize {
     /// <param name="fichiers"></param>
     /// <exception cref="Exception"></exception>
     public static void SerializeFichiers(this CebTirage tirage, IEnumerable<FileInfo> fichiers) {
-        foreach(var fichier in fichiers) {
-            if(ListeFormats.TryGetValue(fichier.Extension, out var exportFichier)) {
-                exportFichier(tirage, fichier);
-            } else {
-                throw new Exception("type de fichier non défini");
-            }
-        }
+        foreach(var fichier in fichiers) tirage.Export(fichier);
     }
 }
 
