@@ -4,7 +4,9 @@
 //     Copyright (c) . All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+
 #region
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,25 +25,10 @@ using CompteEstBon.Properties;
 using Microsoft.Win32;
 
 #endregion
+
 namespace CompteEstBon.ViewModel;
 
 public class ViewTirage : INotifyPropertyChanged, ICommand {
-    public static Dictionary<string, Color> ThemeColors {
-        get;
-    } = new()
-    {
-        ["DarkSlateGray"] = Colors.DarkSlateGray,
-        ["SlateGray"] = Colors.SlateGray,
-        ["Blue"] = Color.FromArgb(0xFF, 0x15, 0x25, 0x49),
-        ["Black"] = Colors.Black,
-        ["DarkBlue"] = Colors.DarkBlue,
-        ["Green"] = Colors.Green,
-        ["Red"] = Colors.Red,
-        ["Yellow"] = Colors.Yellow,
-        ["Navy"] = Colors.Navy,
-        ["Sombre"] = Color.FromRgb(40, 40, 40)
-    };
-
     private readonly Stopwatch NotifyWatch = new();
     private readonly TimeSpan SolutionTimer = TimeSpan.FromSeconds(10);
 
@@ -69,26 +56,25 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 
     public DispatcherTimer dateDispatcher;
 
-    // public Stopwatch stopwatch;
-
     /// <summary>
-    /// Initialisation
+    ///     Initialisation
     /// </summary>
     /// <returns>
-    ///
     /// </returns>
     public ViewTirage() {
         Solutions = null;
         dateDispatcher = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
         dateDispatcher.Tick += (_, _) => {
-            if(Popup && NotifyWatch.Elapsed > SolutionTimer)
-                Popup = false;
-            Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
+            if (Popup && NotifyWatch.Elapsed > SolutionTimer) Popup = false;
+            
+
+            Titre = $"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}\t{Result}";
         };
         IsBusy = false;
         Plaques.CollectionChanged += (_, e) => {
-            if(e.Action != NotifyCollectionChangedAction.Replace || IsBusy)
+            if (e.Action != NotifyCollectionChangedAction.Replace || IsBusy) {
                 return;
+            }
 
             var i = e.NewStartingIndex;
             Tirage.Plaques[i].Value = Plaques[i];
@@ -99,28 +85,48 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         Auto = Settings.Default.AutoCalcul;
         UpdateData();
 
-        Titre = $"😊 Le compte est bon - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
+        Titre = $"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}\t😊 Le compte est bon";
         dateDispatcher.Start();
     }
+
+    public static Dictionary<string, Color> ThemeColors {
+        get;
+    } = new() {
+        ["DarkSlateGray"] = Colors.DarkSlateGray,
+        ["SlateGray"] = Colors.SlateGray,
+        ["Blue"] = Color.FromArgb(0xFF, 0x15, 0x25, 0x49),
+        ["Black"] = Colors.Black,
+        ["DarkBlue"] = Colors.DarkBlue,
+        ["Green"] = Colors.Green,
+        ["Red"] = Colors.Red,
+        ["Yellow"] = Colors.Yellow,
+        ["Navy"] = Colors.Navy,
+        ["Sombre"] = Color.FromRgb(40, 40, 40)
+    };
 
     public bool Auto {
         get => _auto;
         set {
-            if(_auto == value)
+            if (_auto == value) {
                 return;
+            }
+
             _auto = value;
 
             NotifiedChanged();
-            if(_auto && Tirage.Status == CebStatus.Valide)
+            if (_auto && Tirage.Status == CebStatus.Valide) {
                 Task.Run(ClearAsync);
+            }
         }
     }
 
     public bool MongoDb {
         get => _mongodb;
         set {
-            if(_mongodb == value)
+            if (_mongodb == value) {
                 return;
+            }
+
             _mongodb = value;
             NotifiedChanged();
         }
@@ -130,17 +136,24 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     public string Theme {
         get => _theme;
         set {
-            if(_theme == value)
+            if (_theme == value) {
                 return;
+            }
+
             _theme = value;
             Background = ThemeColors[value];
             NotifiedChanged();
         }
     }
 
-    public CebTirage Tirage { get; set; } = new();
+    public CebTirage Tirage {
+        get;
+        set;
+    } = new();
 
-    public static IEnumerable<int> ListePlaques { get; } = CebPlaque.DistinctPlaques;
+    public static IEnumerable<int> ListePlaques {
+        get;
+    } = CebPlaque.DistinctPlaques;
 
     public ObservableCollection<int> Plaques {
         get;
@@ -193,13 +206,16 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     public int Search {
         get => Tirage.Search;
         set {
-            if(Tirage.Search == value)
+            if (Tirage.Search == value) {
                 return;
+            }
+
             Tirage.Search = value;
             NotifiedChanged();
             ClearData();
-            if(!IsBusy && Auto && Tirage.Status == CebStatus.Valide)
+            if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide) {
                 Task.Run(ResolveAsync);
+            }
         }
     }
 
@@ -208,8 +224,10 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     public string Result {
         get => _result;
         set {
-            if(value == _result)
+            if (value == _result) {
                 return;
+            }
+
             _result = value;
             NotifiedChanged();
         }
@@ -240,8 +258,10 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     public bool IsBusy {
         get => _isBusy;
         set {
-            if(_isBusy == value)
+            if (_isBusy == value) {
                 return;
+            }
+
             _isBusy = value;
             NotifiedChanged();
         }
@@ -250,13 +270,17 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     public bool Popup {
         get => _popup;
         set {
-            if(_popup == value)
+            if (_popup == value) {
                 return;
+            }
+
             _popup = value;
             NotifyWatch.Stop();
             NotifyWatch.Reset();
-            if(_popup)
+            if (_popup) {
                 NotifyWatch.Start();
+            }
+
             NotifiedChanged();
         }
     }
@@ -279,16 +303,18 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     public async void Execute(object parameter) {
         try {
             var cmd = (parameter as string)?.ToLower();
-            switch(cmd) {
+            switch (cmd) {
                 case "random":
                     await RandomAsync();
                     break;
 
                 case "resolve": {
-                    switch(Tirage.Status) {
+                    switch (Tirage.Status) {
                         case CebStatus.Valide:
-                            if(IsBusy)
+                            if (IsBusy) {
                                 return;
+                            }
+
                             await ResolveAsync();
                             break;
 
@@ -308,7 +334,8 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
                     await ExportAsync();
                     break;
             }
-        } catch(Exception e) {
+        }
+        catch (Exception e) {
             Console.WriteLine(e);
         }
     }
@@ -321,9 +348,8 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         IsBusy = false;
     }
 
-    private void UpdateForeground() {
-        Foreground = Tirage.Status switch
-        {
+    private void UpdateForeground() =>
+        Foreground = Tirage.Status switch {
             CebStatus.Valide => Colors.White,
             CebStatus.Invalide => Colors.Red,
             CebStatus.CompteEstBon => Colors.LawnGreen,
@@ -331,7 +357,6 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
             CebStatus.EnCours => Colors.Yellow,
             _ => Colors.Gray
         };
-    }
 
     private void NotifiedChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(
         this,
@@ -354,33 +379,38 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 
     private void UpdateData() {
         IsBusy = true;
-        foreach (var (p, i) in Tirage.Plaques.Indexed())
+        foreach (var (p, i) in Tirage.Plaques.Indexed()) {
             Plaques[i] = p.Value;
+        }
+
         NotifiedChanged(nameof(Search));
         IsBusy = false;
         ClearData();
     }
 
     public void ShowNotify(int index = 0) {
-        if(index >= 0 && Tirage.Solutions!.Any() && index < Tirage.Count) {
+        if (index >= 0 && Tirage.Solutions!.Any() && index < Tirage.Count) {
             Solution = Tirage.Solutions.ElementAt(index);
             Popup = true;
         }
     }
 
     #region Action
+
     public async Task ClearAsync() {
         await Tirage.ClearAsync();
         ClearData();
-        if(!IsBusy && Auto && Tirage.Status == CebStatus.Valide)
+        if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide) {
             await ResolveAsync();
+        }
     }
 
     public async Task RandomAsync() {
         await Tirage.RandomAsync();
         UpdateData();
-        if(Auto && Tirage.Status == CebStatus.Valide)
+        if (Auto && Tirage.Status == CebStatus.Valide) {
             await ResolveAsync();
+        }
     }
 
     private int _count;
@@ -388,8 +418,10 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     public int Count {
         get => _count;
         private set {
-            if(_count == value)
+            if (_count == value) {
                 return;
+            }
+
             _count = value;
             NotifiedChanged();
         }
@@ -399,8 +431,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         IsBusy = true;
         Result = "Calcul...";
         await Tirage.ResolveAsync();
-        Result = Tirage.Status switch
-        {
+        Result = Tirage.Status switch {
             CebStatus.CompteEstBon => "😊 Compte est bon",
             CebStatus.CompteApproche => $"😢 Compte approché: {Tirage.Found}, écart: {Tirage.Ecart}",
             CebStatus.Invalide => "Tirage invalide",
@@ -412,8 +443,10 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         Solution = Tirage.Solutions![0];
 
         Solutions = Tirage.Solutions; // .Select(CebDetail.FromCebBase);
-        if(MongoDb)
+        if (MongoDb) {
             Tirage.SerializeMongo(Settings.Default.MongoServer, "Wpf");
+        }
+
         IsBusy = false;
 
         ShowNotify();
@@ -424,7 +457,9 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 
     public static (bool select, string name) FileSaveName() {
         SaveFileDialog dialog = new() { DefaultExt = ".xlsx" };
-        (dialog.Filter, dialog.Title) = ("Document Excel|*.xlsx|Document Word|*.docx| Document Json| *.json| Document XML|*.xml", "Export Excel-Word");
+        (dialog.Filter, dialog.Title) = (
+            "Document Excel|*.xlsx|Document Word|*.docx| Document Json| *.json| Document XML|*.xml",
+            "Export Excel-Word");
         dialog.InitialDirectory = Environment.SpecialFolder.UserProfile + "\\Downloads";
         // ReSharper disable once PossibleInvalidOperationException
         return (bool)dialog.ShowDialog() ? (true, dialog.FileName) : (false, null);
@@ -432,12 +467,16 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 
     public void ExportFichier() {
         var (Ok, Path) = FileSaveName();
-        if(!Ok)
+        if (!Ok) {
             return;
+        }
+
         FileInfo fi = new(Path);
-        if(fi.Exists)
+        if (fi.Exists) {
             fi.Delete();
-        switch(fi.Extension) {
+        }
+
+        switch (fi.Extension) {
             case ".xlsx":
                 Tirage.SaveXlsx(fi);
                 break;
@@ -451,7 +490,9 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
                 Tirage.SaveXml(fi);
                 break;
         }
-        Outils.OpenDocument(Path);
+
+        Path.OpenDocument();
     }
+
     #endregion Action
 }

@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:hp="clr-namespace:CompteEstBon.Helpers"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:s="clr-namespace:System;assembly=System.Runtime"
         xmlns:vw="clr-namespace:CompteEstBon.ViewModel"
@@ -26,11 +27,10 @@
                 <ResourceDictionary Source="/CebDictionary.xaml" />
                 <ResourceDictionary Source="/CebComboBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-            <s:Boolean x:Key="True">true</s:Boolean>
 
-            <vw:InverseBooleanConverter x:Key="InverseBooleanConverter" />
-            <vw:BooleanToVisibilityConverterParam x:Key="BooleanToVisibilityConverterParam" />
+            <s:Boolean x:Key="True">true</s:Boolean>
+            <hp:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <hp:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         </ResourceDictionary>
     </Window.Resources>
     <Window.TaskbarItemInfo>
@@ -347,34 +347,34 @@
                                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                                     Header="Opération 1"
                                     IsReadOnly="True"
-                                    Visibility="{Binding Vertical, Converter={StaticResource BooleanToVisibilityConverterParam}, Source={x:Reference ViewTirage}}" />
+                                    Visibility="{Binding Vertical, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn Width="*"
                                     Binding="{Binding Operations[1], IsAsync=True, Mode=OneWay}"
                                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                                     Header="Opération 2"
                                     IsReadOnly="True"
-                                    Visibility="{Binding Vertical, Converter={StaticResource BooleanToVisibilityConverterParam}, Source={x:Reference ViewTirage}}" />
+                                    Visibility="{Binding Vertical, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn Width="*"
                                     Binding="{Binding Operations[2], IsAsync=True, Mode=OneWay}"
                                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                                     Header="Opération 3"
                                     IsReadOnly="True"
-                                    Visibility="{Binding Vertical, Converter={StaticResource BooleanToVisibilityConverterParam}, Source={x:Reference ViewTirage}}" />
+                                    Visibility="{Binding Vertical, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn Width="*"
                                     Binding="{Binding Operations[3], Mode=OneWay, IsAsync=True}"
                                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                                     Header="Opération 4"
                                     IsReadOnly="True"
-                                    Visibility="{Binding Vertical, Converter={StaticResource BooleanToVisibilityConverterParam}, Source={x:Reference ViewTirage}}" />
+                                    Visibility="{Binding Vertical, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Reference ViewTirage}}" />
                 <DataGridTextColumn Width="*"
                                     Binding="{Binding Operations[4], Mode=OneWay, IsAsync=True}"
                                     ElementStyle="{StaticResource CebGridTextBlockColumnStyle}"
                                     Header="Opération 5"
                                     IsReadOnly="True"
-                                    Visibility="{Binding Vertical, Converter={StaticResource BooleanToVisibilityConverterParam}, Source={x:Reference ViewTirage}}" />
+                                    Visibility="{Binding Vertical, Converter={StaticResource BoolToVisibilityConverter}, Source={x:Reference ViewTirage}}" />
                 <DataGridTemplateColumn Width="*"
                                         IsReadOnly="True"
-                                        Visibility="{Binding Vertical, Converter={StaticResource BooleanToVisibilityConverterParam}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}">
+                                        Visibility="{Binding Vertical, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={StaticResource True}, Source={x:Reference ViewTirage}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ListBox HorizontalAlignment="Stretch"
@@ -421,7 +421,7 @@
                      Minimum="0"
                      Orientation="Horizontal"
                      SmallChange="0.2"
-                     Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverterParam}, ConverterParameter={StaticResource True}}" />
+                     Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter={StaticResource True}}" />
         <Popup Grid.Row="0"
                Grid.RowSpan="3"
                Grid.Column="0"
@@ -464,7 +464,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Separator Background="{DynamicResource CebForegroundBrush}" Height="0.5" />
+                    <Separator Height="0.5" Background="{DynamicResource CebForegroundBrush}" />
                     <TextBlock HorizontalAlignment="Center"
                                VerticalAlignment="Center"
                                FontSize="11"
