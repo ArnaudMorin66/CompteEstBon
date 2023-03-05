@@ -64,11 +64,10 @@ public partial class MainWindow {
     }
 
     private void ListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e) {
-        if(sender is UIElement element) {
-            e.Handled = true;
+        if (sender is not UIElement element) return;
+        e.Handled = true;
 
-            var e2 = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta) { RoutedEvent = MouseWheelEvent };
-            element.RaiseEvent(e2);
-        }
+        var e2 = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta) { RoutedEvent = MouseWheelEvent };
+        element.RaiseEvent(e2);
     }
 }

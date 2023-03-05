@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="BooleanToVisibilityConverterParam.cs" company="">
+// <copyright file="BooleanToVisibilityConverter.cs" company="">
 //     Author:  
 //     Copyright (c) . All rights reserved.
 // </copyright>
@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Data;
 
 namespace CompteEstBon.ViewModel {
-    public sealed class BooleanToVisibilityConverterParam : IValueConverter {
+    public sealed class BooleanToVisibilityConverter : IValueConverter {
         /// <summary>
         /// Convert bool or Nullable&lt;bool&gt; to Visibility
         /// </summary>

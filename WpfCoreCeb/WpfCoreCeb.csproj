@@ -38,11 +38,6 @@
         <None Remove="Images\word.png" />
     </ItemGroup>
 
-
-    <ItemGroup>
-        <Compile Include="..\CebOffice\NativeMethods.cs" Link="ViewModel\NativeMethods.cs" />
-    </ItemGroup>
-
     <ItemGroup>
         <Resource Include="Images\giphy.gif" />
     </ItemGroup>

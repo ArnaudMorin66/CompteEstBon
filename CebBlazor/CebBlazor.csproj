@@ -26,9 +26,9 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
-        <PackageReference Include="Syncfusion.Blazor.Core" Version="20.4.0.51" />
-        <PackageReference Include="Syncfusion.Blazor.Grid" Version="20.4.0.51" />
-        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="20.4.0.51" />
+        <PackageReference Include="Syncfusion.Blazor.Core" Version="20.4.0.52" />
+        <PackageReference Include="Syncfusion.Blazor.Grid" Version="20.4.0.52" />
+        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="20.4.0.52" />
     </ItemGroup>
 
     <ItemGroup>

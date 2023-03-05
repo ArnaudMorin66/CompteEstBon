@@ -17,25 +17,36 @@
 	<script src="_framework/blazor.server.js" async type="text/javascript"></script>
 	@* ReSharper enable Html.PathError *@
 	<script type="text/javascript">
-		function saveAsFile(fileName, bytesBase64) {
+		window.saveAsFile = (fileName, bytesBase64) => {
 			var regex = new RegExp("[^.]+$");
 			var extention = fileName.match(regex);
 			var mimeType = "application/vnd.openxmlformats-officedocument." + 
 				extention === "docx" ? "wordprocessingml.document": "spreadsheetml.sheet";
-			
-			
-			var fileUrl = "data:" + mimeType + ";base64," + bytesBase64;
+
+			var fileUrl = `data:${mimeType};base64,${bytesBase64}`;
 			window.fetch(fileUrl)
 				.then(response => response.blob())
 				.then(blob => {
 					var link = window.document.createElement("a");
-					link.href = window.URL.createObjectURL(blob); 
-					link.download = fileName;
-					document.body.appendChild(link);
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = fileName ?? '';
+                    document.body.appendChild(link);
 					link.click();
 					document.body.removeChild(link);
 				});
-		};
+		 };
+		window.downloadFileFromStream = async (fileName, contentStreamReference) => {
+			const arrayBuffer = await contentStreamReference.arrayBuffer();
+			const blob = new Blob([arrayBuffer]);
+			const url = URL.createObjectURL(blob);
+			const anchorElement = document.createElement('a');
+			anchorElement.href = url;
+			anchorElement.download = fileName ?? '';
+			anchorElement.click();
+			anchorElement.remove();
+			URL.revokeObjectURL(url);
+		}
+	
 	</script>
 	<component type="typeof(HeadOutlet)" render-mode="ServerPrerendered"/>
 </head>

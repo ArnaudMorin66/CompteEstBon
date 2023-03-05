@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -24,7 +23,6 @@ using CompteEstBon.Properties;
 using Microsoft.Win32;
 using Syncfusion.Windows.Shared;
 
-//using Syncfusion.Drawing;
 #endregion
 
 // ReSharper disable once CheckNamespace
@@ -56,7 +54,7 @@ public class ViewTirage : NotificationObject, ICommand {
     private bool _isBusy;
 
     // ⁞…
-    private char _modeView = '…';
+    private char _modeView = '⋯';  
 
     private bool _mongodb;
     private bool _popup;
@@ -95,8 +93,6 @@ public class ViewTirage : NotificationObject, ICommand {
             if(Auto)
                 await ResolveAsync();
         };
-
-
         Auto = Settings.Default.AutoCalcul;
         MongoDb = Settings.Default.MongoDB;
         UpdateData();
@@ -132,7 +128,7 @@ public class ViewTirage : NotificationObject, ICommand {
         get => _vertical;
         set {
             _vertical = value;
-            ModeView = value ? '⁞' : '…';
+            ModeView = value ? '⁝' : '⋯'; 
             RaisePropertyChanged(nameof(Vertical));
         }
     }
@@ -293,7 +289,7 @@ public class ViewTirage : NotificationObject, ICommand {
         }
     }
 
-    private async Task ExportAsync() { await Task.Run(ExportFichier); }
+    private async Task ExportAsync() => await Task.Run(ExportFichier);
 
     private void ClearData() {
         Duree = TimeSpan.Zero;
@@ -307,8 +303,12 @@ public class ViewTirage : NotificationObject, ICommand {
 
     private void UpdateData() {
         IsBusy = true;
-        foreach (var (p, i) in Tirage.Plaques.Indexed())
-            Plaques[i] = p.Value;
+        lock (Plaques) {
+
+            foreach (var (p, i) in Tirage.Plaques.Indexed())
+                Plaques[i] = p.Value;
+        }
+
         RaisePropertyChanged(nameof(Search));
         IsBusy = false;
         ClearData();
@@ -329,7 +329,7 @@ public class ViewTirage : NotificationObject, ICommand {
     public void ShowPopup(int index = 0) {
         if(index < 0 || index >= Tirage.Count)
             return;
-        Solution = Tirage.Solutions!.ElementAt(index);
+        Solution = Tirage.Solutions![index];
         Popup = true;
     }
 

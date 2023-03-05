@@ -27,7 +27,7 @@
         <Setter Property="Margin" Value="0" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="FontSize" Value="11" />
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Foreground" Value="{DynamicResource CebForegroundBrush}" />
         <Setter Property="BorderBrush" Value="Black" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
@@ -35,6 +35,18 @@
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Background" Value="{DynamicResource CebBackgroundBrush}" />
+    </Style>
+    <Style TargetType="{x:Type Button}">
+        <Setter Property="Margin" Value="1" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="{DynamicResource CebBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CebForegroundBrush}" />
+        <Setter Property="BorderThickness" Value="0.3" />
+        <Setter Property="Foreground" Value="{DynamicResource CebForegroundBrush}" />
+        <Setter Property="IsTabStop" Value="True" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Template" Value="{DynamicResource CebButtonTemplate}" />
     </Style>
     <ControlTemplate x:Key="CebButtonTemplate" TargetType="{x:Type Button}">
         <Border
@@ -58,7 +70,7 @@
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="border" Property="Background" Value="Black" />
+                <Setter TargetName="border" Property="Background" Value="DarkSlateGray" />
                 <Setter TargetName="border" Property="BorderBrush" Value="White" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
@@ -85,18 +97,26 @@
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
     </Style>
+    <Style TargetType="ListBoxItem">
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Foreground" Value="{DynamicResource CebForegroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource CebBackgroundBrush}" />
+        <Setter Property="FontWeight" Value="ExtraLight" />
+    </Style>
     <Style x:Key="TextBlockStyle1" TargetType="{x:Type TextBlock}">
         <Setter Property="Margin" Value="2,0" />
         <Setter Property="Background" Value="Black" />
         <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
+   
     <Style x:Key="CebGridTextBlockColumnStyle" TargetType="TextBlock">
         <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
 
     <Style x:Key="DataGridRowStyle" TargetType="DataGridRow">
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Foreground" Value="{DynamicResource CebForegroundBrush}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Style.Triggers>
@@ -111,9 +131,9 @@
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <!--<Setter Property="Background" Value="{DynamicResource CebBackgroundBrush}" />-->
-        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Foreground" Value="{DynamicResource CebForegroundBrush}" />
         <Setter Property="InputScope" Value="Number" />
         <Setter Property="MaxLength" Value="3" />
         <Style.Triggers>

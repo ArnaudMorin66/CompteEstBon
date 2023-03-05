@@ -34,7 +34,7 @@ public record struct CebData {
     /// <summary>
     ///
     /// </summary>
-    public required int? Diff { get; set; }
+    public required int? Ecart { get; set; }
 
     /// <summary>
     ///

@@ -326,10 +326,10 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         {
             CebStatus.Valide => Colors.White,
             CebStatus.Invalide => Colors.Red,
-            CebStatus.CompteEstBon => Colors.LightYellow,
+            CebStatus.CompteEstBon => Colors.LawnGreen,
             CebStatus.CompteApproche => Colors.Orange,
             CebStatus.EnCours => Colors.Yellow,
-            _ => Colors.White
+            _ => Colors.Gray
         };
     }
 

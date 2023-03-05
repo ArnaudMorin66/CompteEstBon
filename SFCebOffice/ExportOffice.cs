@@ -70,8 +70,10 @@ public static class ExportOffice {
             ws.ImportArray(s.Operations.ToArray(), ++l, 1, false);
         ws[$"A7:E{l}"].AutofitColumns();
         ws.ListObjects.Create("TabSolutions", ws[$"A7:E{l}"]).BuiltInTableStyle = styletb;
-
         workbook.SaveAs(stream);
+        //stream.Close();
+        engine.Dispose();
+
     }
 
 
@@ -159,5 +161,7 @@ public static class ExportOffice {
         tbl.ApplyStyleForFirstColumn = false;
         tbl.Rows[0].IsHeader = true;
         wd.Save(stream, FormatType.Docx);
+        //stream.Close();
+        wd.Dispose();
     }
 }

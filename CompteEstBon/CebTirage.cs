@@ -321,7 +321,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
         Search = Search,
         Plaques = Plaques.Select(p => p.Value).ToArray(),
         Status = Status.ToString(),
-        Diff = Ecart,
+        Ecart = Ecart,
         Solutions = Solutions?.Select(p => p.ToString()).ToArray(),
         Found = Found
     };

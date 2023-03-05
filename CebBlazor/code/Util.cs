@@ -7,16 +7,16 @@
 
 using Microsoft.JSInterop;
 using Syncfusion.Blazor;
+
+using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace CebBlazor.Code;
 
 public static class Util {
-    public static ValueTask<object> SaveAsAsync(this IJSRuntime js, string filename, MemoryStream data) => js.InvokeAsync<object>(
-        "saveAsFile",
-        filename,
-        Convert.ToBase64String(data.ToArray()));
+    public static async Task SaveAsAsync(this IJSRuntime js, string filename, MemoryStream data) =>
+        await js.InvokeVoidAsync("saveAsFile", filename,  Convert.ToBase64String(data.ToArray()));
 
     public static string? SyncfusionVersion => typeof(SfBaseComponent).Assembly.GetName().Version?.ToString();
 
@@ -29,4 +29,5 @@ public static class Util {
         false)[0] as AssemblyCopyrightAttribute)?.Copyright;
 
     public static string Version => $"{Authors} ({CebBlazorVersion}), Syncfusion {SyncfusionVersion}, {DotNetVersion}";
+   
 }
