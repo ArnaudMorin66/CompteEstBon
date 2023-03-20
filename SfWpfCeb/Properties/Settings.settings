@@ -11,9 +11,6 @@
     <Setting Name="MongoServer" Type="System.String" Scope="User">
       <Value Profile="(Default)">mongodb://127.0.0.1:27017</Value>
     </Setting>
-    <Setting Name="SfLicence" Type="System.String" Scope="User">
-      <Value Profile="(Default)">NjcyNzM3QDMyMzAyZTMyMmUzMFV2TGVNenhCUjJwZktkNVVJWjlJaWo4QlRRTVpjN0ZvSSswMjk5RWJ6U0k9;NRAiBiAaIQQuGjN/V0Z+Xk9EaFxEVmJLYVB3WmpQdldgdVRMZVVbQX9PIiBoS35RdEVkWXZfcndRQ2JUVUJw</Value>
-    </Setting>
     <Setting Name="AutoCalcul" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>

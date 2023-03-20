@@ -5,10 +5,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using CompteEstBon;
+
 using Microsoft.JSInterop;
 using Syncfusion.Blazor;
 
-using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -29,5 +30,19 @@ public static class Util {
         false)[0] as AssemblyCopyrightAttribute)?.Copyright;
 
     public static string Version => $"{Authors} ({CebBlazorVersion}), Syncfusion {SyncfusionVersion}, {DotNetVersion}";
-   
+
+    public static async ValueTask ExportAsync(this IJSRuntime js, CebTirage tirage, string extension) {
+        if (tirage.Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
+        var filename = $"CompteEstBon.{extension}";
+        await using var mstream = new MemoryStream();
+        Action<MemoryStream> exportStream = extension switch {
+            "xlsx" => tirage.ExcelSaveStream,
+            "docx" => tirage.WordSaveStream,
+            "json" => tirage.JsonSaveStream,
+            "xml" => tirage.XmlSaveStream,
+            _ => throw new NotImplementedException()
+        };
+        exportStream(mstream);
+        await js.SaveAsAsync(filename, mstream);
+    }
 }

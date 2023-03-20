@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net80</TargetFramework>
     <RootNamespace>CompteEstBon</RootNamespace>
     <SignAssembly>false</SignAssembly>
     <LangVersion>preview</LangVersion>
@@ -13,10 +13,10 @@
     <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
     <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
     <EnableNETAnalyzers>False</EnableNETAnalyzers>
-    <AssemblyVersion>2023.57.4.21</AssemblyVersion>
-    <FileVersion>2023.57.4.21</FileVersion>
+    <AssemblyVersion>2023.71.4.34</AssemblyVersion>
+    <FileVersion>2023.71.4.34</FileVersion>
     <IncrementVersionOnBuild>1.yyyy.Mdd.Hmm</IncrementVersionOnBuild>
-    <Version>1.2023.226.1654</Version>
+    <Version>1.2023.317.527</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

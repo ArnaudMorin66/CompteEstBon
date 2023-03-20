@@ -9,7 +9,7 @@ using System.Globalization;
 using System.Windows.Data;
 
 // ReSharper disable once CheckNamespace
-namespace CompteEstBon.ViewModel;
+namespace CompteEstBon.Helpers;
 
 [ValueConversion(typeof(bool), typeof(bool))]
 public class InverseBooleanConverter : IValueConverter {

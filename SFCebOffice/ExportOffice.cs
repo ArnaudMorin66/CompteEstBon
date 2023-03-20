@@ -40,7 +40,7 @@ public static class ExportOffice {
             ws.Range[2, i + 1].Value2 = tirage.Plaques[i].Value;
         }
 
-        ws.Range[1, 7].Value2 = "Cherche";
+        ws.Range[1, 7].Value2 = "Trouver";
         ws.Range[2, 7].Value2 = tirage.Search;
 
         ws.ListObjects.Create("TabEntree", ws["A1:G2"]).BuiltInTableStyle = styletb;
@@ -108,7 +108,7 @@ public static class ExportOffice {
 
         pg = tbl[0, 6].AddParagraph();
         pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
-        pg.AppendText("Chercher");
+        pg.AppendText("Trouver");
         pg = tbl[1, 6].AddParagraph();
         pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
         pg.AppendText($"{tirage.Search}");

@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net7.0-windows</TargetFramework>
+        <TargetFramework>net80-windows</TargetFramework>
         <Version>10</Version>
         <UseWPF>true</UseWPF>
         <RootNamespace>CompteEstBon</RootNamespace>

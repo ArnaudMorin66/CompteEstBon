@@ -54,6 +54,7 @@ resharper_suggest_var_or_type_simple_types_highlighting = hint
 resharper_allow_comment_after_lbrace = true
 resharper_apply_auto_detected_rules = false
 resharper_apply_on_completion = true
+resharper_csharp_indent_style = space
 resharper_indent_nested_foreach_stmt = true
 resharper_indent_nested_for_stmt = true
 resharper_indent_nested_while_stmt = true
@@ -67,6 +68,11 @@ indent_size = tab
 tab_width = 4
 
 [*.{appxmanifest,asax,ascx,aspx,axaml,axml,build,config,cs,csproj,css,dbml,discomap,dtd,js,jsproj,jsx,lsproj,master,njsproj,nuspec,paml,proj,props,resw,resx,skin,StyleCop,targets,tasks,ts,tsx,vb,vbproj,xaml,xamlx,xml,xoml,xsd}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*.cs]
 indent_style = space
 indent_size = 4
 tab_width = 4

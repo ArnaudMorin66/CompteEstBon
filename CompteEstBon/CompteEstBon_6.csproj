@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net80</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Platforms>AnyCPU;x64</Platforms>
     <ImplicitUsings>True</ImplicitUsings>
@@ -37,7 +37,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Outils\arnaud.morin.outils.csproj" />
+    <ProjectReference Include="..\Outils\arnaud.morin.outils_6.csproj" />
   </ItemGroup>
 
 

@@ -16,11 +16,13 @@ public partial class App {
 
     protected override void OnStartup(StartupEventArgs e) {
         CultureInfo vCulture = new("fr-FR");
+        
 
         Thread.CurrentThread.CurrentCulture = vCulture;
         Thread.CurrentThread.CurrentUICulture = vCulture;
         CultureInfo.DefaultThreadCurrentCulture = vCulture;
         CultureInfo.DefaultThreadCurrentUICulture = vCulture;
+        ShutdownMode = ShutdownMode.OnMainWindowClose;
 
         FrameworkElement.LanguageProperty
             .OverrideMetadata(

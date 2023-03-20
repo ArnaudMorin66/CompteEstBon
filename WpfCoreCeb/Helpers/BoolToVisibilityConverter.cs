@@ -6,6 +6,7 @@ using System.Windows.Data;
 namespace CompteEstBon.Helpers;
 
 public sealed class BoolToVisibilityConverter : IValueConverter {
+    public bool Hidden { get; set; } 
     /// <summary>
     ///     Convert bool or Nullable&lt;bool&gt; to Visibility
     /// </summary>
@@ -13,15 +14,16 @@ public sealed class BoolToVisibilityConverter : IValueConverter {
     /// <param name="targetType">Visibility</param>
     /// <param name="parameter">null</param>
     /// <param name="culture">null</param>
-    /// <returns>Visible or Collapsed</returns>
+    /// <returns>Hidden or Collapsed</returns>
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-        var inversion = parameter is bool and true;
+        
         var bValue = value is bool and true;
-        if (inversion) {
+        
+        if (Hidden) {
             bValue = !bValue;
         }
 
-        return bValue ? Visibility.Hidden : Visibility.Visible;
+        return bValue ? Visibility.Visible : Visibility.Hidden;
     }
 
     /// <summary>

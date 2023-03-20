@@ -6,10 +6,8 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -22,11 +20,7 @@ namespace CompteEstBon;
 public partial class MainWindow {
     private string _theme = "Dark";
 
-    public MainWindow() {
-        InitializeComponent();
-        Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr");
-        Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
-    }
+    public MainWindow() => InitializeComponent();
 
     public static string DotnetVersion =>
         $"{RuntimeInformation.FrameworkDescription}-{Assembly.GetExecutingAssembly().GetName().Version}";
@@ -63,7 +57,7 @@ public partial class MainWindow {
     }
 
     private void TxtSearch_LostFocus(object sender, RoutedEventArgs e) {
-        txtSearch.SelectAll();
+        TxtSearch.SelectAll();
     }
 
     private void TxtSearch_GotFocus(object sender, RoutedEventArgs e) {
@@ -71,7 +65,7 @@ public partial class MainWindow {
         var r = int.TryParse(textbox?.Text, out var v);
         if (r && v is >= 100 and <= 999)
             return;
-        txtSearch.SelectAll();
+        TxtSearch.SelectAll();
         e.Handled = true;
     }
 

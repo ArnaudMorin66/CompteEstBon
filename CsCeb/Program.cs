@@ -4,13 +4,18 @@
 //     Copyright (c) . All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.Rendering;
+
 using arnaud.morin.outils;
+
 using CompteEstBon;
 using CompteEstBon.Properties;
+
 using Microsoft.Extensions.Configuration;
+
 using static System.Console;
 
 
@@ -23,13 +28,12 @@ var configurationFile = @$"{Environment.GetFolderPath(Environment.SpecialFolder.
 var mongoServer = string.Empty;
 var saveToMongoDb = false;
 var exports = new List<FileInfo>();
-var sflicence = Resources.sflicence;
 FileInfo zipfile = null;
 var tirage = new CebTirage();
-if(File.Exists(configurationFile)) {
+if (File.Exists(configurationFile)) {
     var configs = new ConfigurationBuilder().AddJsonFile(configurationFile).Build();
-    foreach(var config in configs.GetChildren())
-        switch(config.Path.ToUpper()) {
+    foreach (var config in configs.GetChildren())
+        switch (config.Path.ToUpper()) {
             case "SAVE":
                 save = bool.TryParse(config.Value, out var v) && v;
                 break;
@@ -42,24 +46,18 @@ if(File.Exists(configurationFile)) {
             case "ZIPFILE":
                 try {
                     zipfile = new FileInfo(config.Value);
-                }
-                catch {
+                } catch {
                     // ignored
                 }
 
-                break;
-            case "SFLICENCE":
-                sflicence = config.Value;
                 break;
         }
 }
 
 
-var rootCommand = new RootCommand("Compte Est Bon")
-{
+var rootCommand = new RootCommand("Compte Est Bon") {
     new Option<int>(new[] { "--trouve", "-t" }, "Nombre à chercher (entre 100 et 999)"),
-    new Option<List<int>>(new[] { "--plaques", "-p" }, "Liste des plaques (6)")
-    {
+    new Option<List<int>>(new[] { "--plaques", "-p" }, "Liste des plaques (6)") {
         AllowMultipleArgumentsPerToken = true
     },
     new Option<bool>(new[] { "--json", "-j" }, "Export au format JSON"),
@@ -67,8 +65,7 @@ var rootCommand = new RootCommand("Compte Est Bon")
     new Option<bool>(new[] { "--sauvegarde", "-s" }, "Sauvegarder le Compte"),
     new Option<bool>(new[] { "--mongodb", "-m" }, "Sauvegarder le Compte dans MongoDB"),
     new Option<string>(new[] { "--serveur", "-S" }, "Nom du serveur MongoDB"),
-    new Option<List<FileInfo>>(new[] { "--exports", "-x", "-f" }, "Exporter vers excel, word, json, xml, zip...")
-    {
+    new Option<List<FileInfo>>(new[] { "--exports", "-x", "-f" }, "Exporter vers excel, word, json, xml, zip...") {
         AllowMultipleArgumentsPerToken = true
     },
     new Option<bool>(new[] { "--afficher", "-a" }, "Afficher les fichiers exportés"),
@@ -79,13 +76,13 @@ var rootCommand = new RootCommand("Compte Est Bon")
 
 void Handler(InvocationContext context) {
     var parseResult = context.ParseResult;
-    if(parseResult.UnparsedTokens.Count > 0)
+    if (parseResult.UnparsedTokens.Count > 0)
         Abort(new ArgumentException($"Option(s) {string.Join(",", parseResult.UnparsedTokens)} invalide(s)"), -2);
     try {
-        foreach(var option in rootCommand.Options) {
-            if(parseResult.FindResultFor(option) is not { } optionResult)
+        foreach (var option in rootCommand.Options) {
+            if (parseResult.FindResultFor(option) is not { } optionResult)
                 continue;
-            switch(option.Name.ToLower()) {
+            switch (option.Name.ToLower()) {
                 case "trouve":
                     tirage.Search = optionResult.GetValueOrDefault<int>();
                     break;
@@ -131,89 +128,88 @@ void Handler(InvocationContext context) {
             }
         }
 
-        foreach(var argument in rootCommand.Arguments) {
-            if(parseResult.FindResultFor(argument) is not { } argumentResult)
+        foreach (var argument in rootCommand.Arguments) {
+            if (parseResult.FindResultFor(argument) is not { } argumentResult)
                 continue;
             var arguments = argumentResult.GetValueOrDefault<List<int>>();
-            if(arguments.Count > 0) {
-                if(arguments[0] > 100) {
+            if (arguments.Count > 0) {
+                if (arguments[0] > 100) {
                     tirage.Search = arguments[0];
                     arguments.RemoveAt(0);
-                } else if(arguments.Count >= 7 && arguments[6] >= 100) {
+                } else if (arguments.Count >= 7 && arguments[6] >= 100) {
                     tirage.Search = arguments[6];
                     arguments.RemoveAt(6);
                 }
 
-                if(arguments.Count > 0)
+                if (arguments.Count > 0)
                     tirage.SetPlaques(arguments);
             }
         }
+
         Run();
-    } catch(Exception e) {
+    } catch (Exception e) {
         Abort(e);
     }
 }
 
 void Run() {
-    if(!jsonx) {
+    if (!jsonx) {
         WriteLine("*** LE COMPTE EST BON ***".Center(WindowWidth).Red());
         WriteLine();
     }
+
     tirage.Resolve();
-    if(json) {
+    if (json) {
         WriteLine(tirage.WriteJson());
-        if(jsonx)
+        if (jsonx)
             Environment.Exit(0);
     }
 
-    var message = string.Empty;
-    message += $"{"Plaques: ".LightYellow()}{(string.Join(',', tirage.Plaques.Select(p => p.Value)))}";
-    message += $"{"\t Recherche: ".LightYellow()}{tirage.Search}";
-    WriteLine(message);
+    WriteLine(
+        $@"{"Plaques: ".LightYellow()}{string.Join(',', tirage.Plaques.Select(p => p.Value))}{"\t Recherche: ".LightYellow()}{tirage.Search}");
     WriteLine();
 
-    if(tirage.Status == CebStatus.Invalide)
+    if (tirage.Status == CebStatus.Invalide)
         throw new ArgumentException("Tirage  invalide");
 
-    message = tirage.Status == CebStatus.CompteEstBon
+    WriteLine(tirage.Status == CebStatus.CompteEstBon
         ? $"{Ansi.Color.Foreground.Green.EscapeSequence}Compte est bon{Ansi.Color.Foreground.Default.EscapeSequence}"
-        : $"{Ansi.Color.Foreground.Magenta.EscapeSequence}Compte approché:{Ansi.Color.Foreground.Default.EscapeSequence} {tirage.Found}";
-    WriteLine(message);
+        : $"{Ansi.Color.Foreground.Magenta.EscapeSequence}Compte approché:{Ansi.Color.Foreground.Default.EscapeSequence} {tirage.Found}");
     WriteLine();
 
-    message = $@"{"Nombre de solutions:".LightYellow()} {tirage.Count}";
-    if(tirage.Status == CebStatus.CompteApproche)
-        message += $@", {"écart:".LightYellow()} {tirage.Ecart}";
-    message += $@", {"durée du calcul:".LightYellow()} {tirage.Duree.TotalSeconds:F3} s";
-    WriteLine(message);
+    WriteLine(
+        $@"{"Nombre de solutions:".LightYellow()} {tirage.Count}{((tirage.Status == CebStatus.CompteApproche) ?
+                $@", {"écart:".LightYellow()} {tirage.Ecart}" : "")}, {"durée du calcul:".LightYellow()} {tirage.Duree.TotalSeconds:F3} s");
+    
     WriteLine();
 
     foreach (var (solution, i) in tirage.Solutions!.Indexed()) {
         var count = $"{i + 1:0000}".ControlCode(
             tirage.Status == CebStatus.CompteEstBon ? Ansi.Color.Foreground.Green : Ansi.Color.Foreground.Magenta);
-        WriteLine($@"{solution.Rank}: {count} => {solution.LightYellow()}");
+        // ReSharper disable once LocalizableElement
+        WriteLine($"{count} ({solution.Rank}) =>\t{solution.LightYellow()}");
     }
 
     WriteLine();
 
-    if(save) {
-        if(zipfile != null && exports.Any(p => p.Extension == ".zip"))
+    if (save) {
+        if (zipfile != null && exports.Any(p => p.Extension == ".zip"))
             exports.Add(zipfile);
-        ExportOffice.RegisterLicense(sflicence);
+        ExportOffice.RegisterLicense(Resources.sflicence);
 
         tirage.SerializeFichiers(exports);
-        if(saveToMongoDb && mongoServer != string.Empty)
+        if (saveToMongoDb && mongoServer != string.Empty)
             tirage.SerializeMongo(mongoServer);
 
-        if(afficher)
-            foreach(var export in exports)
-                Outils.OpenDocument(export.FullName);
+        if (afficher)
+            foreach (var export in exports)
+                export.FullName.OpenDocument();
     }
 }
 
 
 void Abort(Exception ex, int retour = -1) {
-    SetOut(Console.Error);
+    SetOut(Error);
     Write($@"{Ansi.Color.Foreground.White.EscapeSequence}{Ansi.Color.Background.Red.EscapeSequence}");
     WriteLine(@"+-----------------------------+".Center(WindowWidth));
     WriteLine(@"|          Erreur             |".Center(WindowWidth));
@@ -231,12 +227,11 @@ void Abort(Exception ex, int retour = -1) {
 try {
     rootCommand.SetHandler(Handler);
     rootCommand.Invoke(args);
-} catch(Exception ex) {
+} catch (Exception ex) {
     Abort(ex);
 }
 
-if(wait) {
+if (wait) {
     Write(@"Appuyez sur une touche pour terminer...");
     ReadKey();
 }
-

@@ -14,8 +14,8 @@ namespace arnaud.morin.outils;
         private static SHA1? _sha1;
 
         // ReSharper disable InconsistentNaming
-        private static readonly Regex _emailRegex =
-            MyRegex();
+       // private static readonly Regex _emailRegex =
+         //   MyRegex();
 
         /// <summary>
         /// Indique si une chaine est nulle ou vide
@@ -326,7 +326,7 @@ namespace arnaud.morin.outils;
         ///</summary>
         ///<param name="email">La chaine à vérifier</param>
         ///<returns>true si la chaine est une adresse email valide, false sinon</returns>
-        public static bool IsValidEmail(this string email) => _emailRegex.IsMatch(email);
+        // public static bool IsValidEmail(this string email) => _emailRegex.IsMatch(email);
 
         /// <summary>
         /// Détermine si deux objets String ont la même valeur. Null et string.Empty sont considérés comme égaux
@@ -528,6 +528,6 @@ namespace arnaud.morin.outils;
             return new string(digits);
         }
 
-    [GeneratedRegex("^([\\w\\!\\#$\\%\\&\\'\\*\\+\\-\\/\\=\\?\\^\\`{\\|\\}\\~]+\\.)*[\\w\\!\\#$\\%\\&\\'\\*\\+\\-\\/\\=\\?\\^\\`{\\|\\}\\~]+@((((([a-z0-9]{1}[a-z0-9\\-]{0,62}[a-z0-9]{1})|[a-z])\\.)+[a-z]{2,6})|(\\d{1,3}\\.){3}\\d{1,3}(\\:\\d{1,5})?)$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "fr-FR")]
-    private static partial Regex MyRegex();
+    //[GeneratedRegex("^([\\w\\!\\#$\\%\\&\\'\\*\\+\\-\\/\\=\\?\\^\\`{\\|\\}\\~]+\\.)*[\\w\\!\\#$\\%\\&\\'\\*\\+\\-\\/\\=\\?\\^\\`{\\|\\}\\~]+@((((([a-z0-9]{1}[a-z0-9\\-]{0,62}[a-z0-9]{1})|[a-z])\\.)+[a-z]{2,6})|(\\d{1,3}\\.){3}\\d{1,3}(\\:\\d{1,5})?)$", RegexOptions.IgnoreCase | RegexOptions.Compiled, "fr-FR")]
+    //private static partial Regex MyRegex();
 }

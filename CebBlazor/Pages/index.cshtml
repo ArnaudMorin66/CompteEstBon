@@ -6,49 +6,52 @@
 <!DOCTYPE html>
 <html lang="fr-fr">
 <head>
-	<title>Le Compte est bon</title>
-	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	<base href="~/"/>
-	<link rel="icon" type="image/x-icon" href="~/favicon.ico" />
-	<link href="css/site.min.css" rel="stylesheet"/>
-	@* ReSharper disable Html.PathError *@
-	<script src="_content/Syncfusion.Blazor.Core/scripts/syncfusion-blazor.min.js" async type="text/javascript"></script>
-	<script src="_framework/blazor.server.js" async type="text/javascript"></script>
-	@* ReSharper enable Html.PathError *@
-	<script type="text/javascript">
-		window.saveAsFile = (fileName, bytesBase64) => {
-			var regex = new RegExp("[^.]+$");
-			var extention = fileName.match(regex);
-			var mimeType = "application/vnd.openxmlformats-officedocument." + 
-				extention === "docx" ? "wordprocessingml.document": "spreadsheetml.sheet";
+    <title>Le Compte est bon</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <base href="~/"/>
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+    <link href="css/site.min.css" rel="stylesheet"/>
+    @* ReSharper disable Html.PathError *@
+    <script src="_content/Syncfusion.Blazor.Core/scripts/syncfusion-blazor.min.js" async type="text/javascript"></script>
+    <script src="_framework/blazor.server.js" async type="text/javascript"></script>
+    @* ReSharper enable Html.PathError *@
+    <script type="text/javascript">
+        window.saveAsFile = (fileName, bytesBase64) => {
+            var regex = new RegExp("[^.]+$");
+            var extention = fileName.match(regex);
+            var mimeType = "application/";
 
-			var fileUrl = `data:${mimeType};base64,${bytesBase64}`;
-			window.fetch(fileUrl)
-				.then(response => response.blob())
-				.then(blob => {
-					var link = window.document.createElement("a");
+            switch (extention) {
+                case "docx":
+                    mimeType += "vnd.openxmlformats-officedocument.wordprocessingml.document";
+                    break;
+                case "xlsx":
+                    mimeType += "vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    break;
+                case "json":
+            		mimeType += "json";
+                    break;
+                case "xml":
+            		mimeType += "xml";
+                    break;
+            }
+
+            var fileUrl = `data:${mimeType};base64,${bytesBase64}`;
+            window.fetch(fileUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    var link = window.document.createElement("a");
                     link.href = window.URL.createObjectURL(blob);
                     link.download = fileName ?? '';
                     document.body.appendChild(link);
-					link.click();
-					document.body.removeChild(link);
-				});
-		 };
-		window.downloadFileFromStream = async (fileName, contentStreamReference) => {
-			const arrayBuffer = await contentStreamReference.arrayBuffer();
-			const blob = new Blob([arrayBuffer]);
-			const url = URL.createObjectURL(blob);
-			const anchorElement = document.createElement('a');
-			anchorElement.href = url;
-			anchorElement.download = fileName ?? '';
-			anchorElement.click();
-			anchorElement.remove();
-			URL.revokeObjectURL(url);
-		}
-	
-	</script>
-	<component type="typeof(HeadOutlet)" render-mode="ServerPrerendered"/>
+                    link.click();
+                    document.body.removeChild(link);
+                });
+         };
+    
+    </script>
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered"/>
 </head>
 <body>
 <component type="typeof(App)" render-mode="ServerPrerendered"/>

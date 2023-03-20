@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-Windows</TargetFramework>
+    <TargetFramework>net80-windows</TargetFramework>
     <LangVersion>10</LangVersion>
     <UseWPF>true</UseWPF>
     <RootNamespace>CompteEstBon</RootNamespace>
@@ -36,16 +36,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="20.4.0.52" />
-    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="20.4.0.52" />
-    <PackageReference Include="Syncfusion.SfInput.WPF" Version="20.4.0.52" />
-    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="20.4.0.52" />
-    <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="20.4.0.52" />
-    <PackageReference Include="Syncfusion.Themes.FluentDark.WPF" Version="20.4.0.52" />
-    <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="20.4.0.52" />
-    <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="20.4.0.52" />
-    <PackageReference Include="Syncfusion.Themes.Office2019Black.WPF" Version="20.4.0.52" />
-    <PackageReference Include="Syncfusion.Themes.Windows11Dark.WPF" Version="20.4.0.52" />
+    <Page Remove="CebButtonAdvTemplate.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="20.4.0.54" />
+    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="20.4.0.54" />
+    <PackageReference Include="Syncfusion.SfInput.WPF" Version="20.4.0.54" />
+    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="20.4.0.54" />
+    <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="20.4.0.54" />
+    <PackageReference Include="Syncfusion.Themes.FluentDark.WPF" Version="20.4.0.54" />
+    <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="20.4.0.54" />
+    <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="20.4.0.54" />
+    <PackageReference Include="Syncfusion.Themes.Office2019Black.WPF" Version="20.4.0.54" />
+    <PackageReference Include="Syncfusion.Themes.Windows11Dark.WPF" Version="20.4.0.54" />
   </ItemGroup>
 
   <ItemGroup>

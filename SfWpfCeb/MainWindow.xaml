@@ -2,16 +2,17 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:hp="clr-namespace:CompteEstBon.Helpers"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mdl="clr-namespace:CompteEstBon.ViewModel"
         xmlns:s="http://schemas.syncfusion.com/wpf"
         xmlns:skin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
-        x:Name="chromelessWindow"
+        x:Name="Window"
         Title="{Binding Titre}"
         skin:SfSkinManager.VisualStyle="FluentDark"
         BorderThickness="0.2"
         FontSize="10"
-        FontWeight="ExtraLight"
+        FontWeight="Thin"
         Foreground="{DynamicResource TextForegroundBrush}"
         Icon="images/favicon.png"
         ResizeMode="CanResize"
@@ -20,25 +21,22 @@
         mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Syncfusion.Themes.FluentDark.WPF;component/Common/Brushes.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="TextForegroundBrush" Color="{Binding Foreground}" />
             <SolidColorBrush x:Key="TextBackgroundBrush" Color="{Binding Background}" />
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-            <mdl:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <hp:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <Style TargetType="{x:Type s:VirtualizingCellsControl}">
                 <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
             </Style>
-            <Style TargetType="ListBoxItem">
+            <Style TargetType="ListViewItem">
                 <Setter Property="HorizontalContentAlignment" Value="Center" />
                 <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
-                <Setter Property="FontWeight" Value="ExtraLight" />
+                <Setter Property="FontWeight" Value="Thin" />
             </Style>
             <Style x:Key="TextCellGrid" TargetType="TextBlock">
                 <Setter Property="TextAlignment" Value="Center" />
                 <Setter Property="Foreground" Value="{DynamicResource TextForegroundBrush}" />
-                <Setter Property="FontWeight" Value="ExtraLight" />
+                <Setter Property="FontWeight" Value="Thin" />
             </Style>
             <Style BasedOn="{StaticResource {x:Type s:ButtonAdv}}" TargetType="{x:Type s:ButtonAdv}">
                 <Setter Property="Background" Value="{DynamicResource TextBackgroundBrush}" />
@@ -77,14 +75,14 @@
                                      IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
                     <ThumbButtonInfo Command="{Binding}"
                                      CommandParameter="Resolve"
-                                     CommandTarget="{Binding ElementName=btnResoudre}"
+                                     CommandTarget="{Binding ElementName=BtnResoudre}"
                                      Description="Résoudre"
                                      DismissWhenClicked="True"
                                      ImageSource="Images/resolve.png"
                                      IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}" />
                     <ThumbButtonInfo Command="{Binding}"
                                      CommandParameter="export"
-                                     CommandTarget="{Binding ElementName=btnExport}"
+                                     CommandTarget="{Binding ElementName=BtnExport}"
                                      Description="Exportation Word/Excel"
                                      DismissWhenClicked="True"
                                      ImageSource="Images/excel.png"
@@ -100,17 +98,17 @@
         <KeyBinding Key="H"
                     Command="{Binding}"
                     CommandParameter="random"
-                    CommandTarget="{Binding ElementName=btnHasard}"
+                    CommandTarget="{Binding ElementName=BtnHasard}"
                     Modifiers="Ctrl" />
         <KeyBinding Key="R"
                     Command="{Binding}"
                     CommandParameter="resolve"
-                    CommandTarget="{Binding ElementName=btnResoudre}"
+                    CommandTarget="{Binding ElementName=BtnResoudre}"
                     Modifiers="Ctrl" />
         <KeyBinding Key="X"
                     Command="{Binding}"
                     CommandParameter="export"
-                    CommandTarget="{Binding ElementName=btnExport}"
+                    CommandTarget="{Binding ElementName=BtnExport}"
                     Modifiers="Ctrl" />
     </Window.InputBindings>
     <Grid>
@@ -145,9 +143,7 @@
                     <ColumnDefinition Width="1*" />
                     <ColumnDefinition Width="3*" />
                 </Grid.ColumnDefinitions>
-
-
-                <Label x:Name="lbPlaques"
+                <Label x:Name="LbPlaques"
                        Grid.Row="0"
                        Grid.Column="0"
                        HorizontalAlignment="Stretch"
@@ -157,6 +153,8 @@
                        BorderBrush="{DynamicResource TextForegroundBrush}"
                        BorderThickness="0.1"
                        Content="Plaques"
+                       FontSize="10"
+                       FontWeight="Thin"
                        Foreground="{DynamicResource TextForegroundBrush}" />
                 <s:ComboBoxAdv x:Name="Plaque1"
                                Grid.Row="0"
@@ -166,6 +164,8 @@
                                HorizontalContentAlignment="Center"
                                BorderBrush="{DynamicResource TextForegroundBrush}"
                                BorderThickness="0.1"
+                               FontSize="10"
+                               FontWeight="Thin"
                                Foreground="{DynamicResource TextForegroundBrush}"
                                IsEditable="True"
                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
@@ -180,6 +180,8 @@
                                HorizontalContentAlignment="Center"
                                BorderBrush="{DynamicResource TextForegroundBrush}"
                                BorderThickness="0.1"
+                               FontSize="10"
+                               FontWeight="Thin"
                                Foreground="{DynamicResource TextForegroundBrush}"
                                IsEditable="True"
                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
@@ -194,6 +196,8 @@
                                HorizontalContentAlignment="Center"
                                BorderBrush="{DynamicResource TextForegroundBrush}"
                                BorderThickness="0.1"
+                               FontSize="10"
+                               FontWeight="Thin"
                                Foreground="{DynamicResource TextForegroundBrush}"
                                IsEditable="True"
                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
@@ -208,6 +212,8 @@
                                HorizontalContentAlignment="Center"
                                BorderBrush="{DynamicResource TextForegroundBrush}"
                                BorderThickness="0.1"
+                               FontSize="10"
+                               FontWeight="Thin"
                                Foreground="{DynamicResource TextForegroundBrush}"
                                IsEditable="True"
                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
@@ -222,6 +228,8 @@
                                HorizontalContentAlignment="Center"
                                BorderBrush="{DynamicResource TextForegroundBrush}"
                                BorderThickness="0.1"
+                               FontSize="10"
+                               FontWeight="Thin"
                                Foreground="{DynamicResource TextForegroundBrush}"
                                IsEditable="True"
                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
@@ -236,13 +244,15 @@
                                HorizontalContentAlignment="Center"
                                BorderBrush="{DynamicResource TextForegroundBrush}"
                                BorderThickness="0.1"
+                               FontSize="10"
+                               FontWeight="Thin"
                                Foreground="{DynamicResource TextForegroundBrush}"
                                IsEditable="True"
                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                                ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
                                TabIndex="5"
                                Text="{Binding Plaques[5], Mode=TwoWay}" />
-                <Label x:Name="lbSearch"
+                <Label x:Name="LbSearch"
                        Grid.Row="0"
                        Grid.Column="7"
                        HorizontalAlignment="Stretch"
@@ -252,6 +262,8 @@
                        BorderBrush="{DynamicResource TextForegroundBrush}"
                        BorderThickness="0"
                        Content="Trouver"
+                       FontSize="10"
+                       FontWeight="Thin"
                        Foreground="{DynamicResource TextForegroundBrush}" />
                 <s:UpDown x:Name="Search"
                           Grid.Row="0"
@@ -262,6 +274,8 @@
                           ApplyZeroColor="False"
                           BorderBrush="{DynamicResource TextForegroundBrush}"
                           BorderThickness="0.1"
+                          FontSize="10"
+                          FontWeight="Thin"
                           Foreground="{DynamicResource TextForegroundBrush}"
                           IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                           IsTabStop="True"
@@ -271,7 +285,7 @@
                           Value="{Binding Search, Mode=TwoWay}" />
             </Grid>
         </Border>
-        <s:ButtonAdv x:Name="btnResoudre"
+        <s:ButtonAdv x:Name="BtnResoudre"
                      Grid.Row="2"
                      Grid.Column="0"
                      CommandParameter="resolve"
@@ -282,7 +296,7 @@
                      SmallIcon="images/exec.png"
                      TabIndex="7"
                      ToolTipService.ToolTip="Lancement résolution (Ctrl+R)" />
-        <s:ButtonAdv x:Name="btnHasard"
+        <s:ButtonAdv x:Name="BtnHasard"
                      Grid.Row="2"
                      Grid.Column="1"
                      CommandParameter="random"
@@ -292,7 +306,7 @@
                      SmallIcon="images/random.png"
                      TabIndex="8"
                      ToolTipService.ToolTip="Lancement tirage (Ctrl+H)" />
-        <s:ButtonAdv x:Name="btnExport"
+        <s:ButtonAdv x:Name="BtnExport"
                      Grid.Row="2"
                      Grid.Column="2"
                      CommandParameter="export"
@@ -302,7 +316,6 @@
                      SmallIcon="images/excel.png"
                      TabIndex="9"
                      ToolTipService.ToolTip="Export Excel (Ctrl+X)" />
-
         <s:SfDataGrid x:Name="SolutionsData"
                       Grid.Row="4"
                       Grid.Column="0"
@@ -311,15 +324,16 @@
                       x:FieldModifier="public"
                       AllowFiltering="False"
                       AllowGrouping="False"
+                      AllowSelectionOnPointerPressed="True"
                       AllowSorting="False"
                       AutoGenerateColumns="False"
                       Background="{DynamicResource TextBackgroundBrush}"
                       BorderBrush="{DynamicResource TextForegroundBrush}"
-                      BorderThickness="0.3"
+                      BorderThickness="0.2"
                       ColumnSizer="Star"
-                      CurrentCellBorderThickness="0,0,0,0.1"
+                      CurrentCellBorderThickness="0"
                       FontSize="10"
-                      FontWeight="Normal"
+                      FontWeight="Thin"
                       Foreground="{DynamicResource TextForegroundBrush}"
                       HeaderRowHeight="0"
                       IsTabStop="True"
@@ -327,7 +341,7 @@
                       NavigationMode="Row"
                       QueryRowHeight="SolutionsData_QueryRowHeight"
                       RowHoverHighlightingBrush="ForestGreen"
-                      RowSelectionBrush="Navy"
+                      RowSelectionBrush="{DynamicResource TextForegroundBrush}"
                       SelectionChanged="SolutionsData_SelectionChanged"
                       ShowBusyIndicator="True"
                       TabIndex="10">
@@ -356,24 +370,22 @@
                     <s:GridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
-                            <ListBox BorderBrush="{DynamicResource TextForegroundBrush}"
-                                     BorderThickness="0,0,0,0.1"
-                                     Foreground="{DynamicResource TextForegroundBrush}"
-                                     IsEnabled="False"
-                                     ItemsSource="{Binding Operations}"
-                                     KeyboardNavigation.DirectionalNavigation="Continue"
-                                     ScrollViewer.CanContentScroll="False"
-                                     ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                                <ListBox.ItemTemplate>
+                            <ListView HorizontalAlignment="Center"
+                                      HorizontalContentAlignment="Stretch"
+                                      BorderBrush="{DynamicResource TextForegroundBrush}"
+                                      BorderThickness="0"
+                                      Foreground="{DynamicResource TextForegroundBrush}"
+                                      IsEnabled="True"
+                                      ItemsSource="{Binding Operations}"
+                                      KeyboardNavigation.DirectionalNavigation="Continue"
+                                      ScrollViewer.CanContentScroll="False"
+                                      ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center"
-                                                   IsEnabled="False"
-                                                   Style="{DynamicResource TextCellGrid}"
-                                                   Text="{Binding}" />
+                                        <TextBlock Style="{DynamicResource TextCellGrid}" Text="{Binding}" />
                                     </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
+                                </ListView.ItemTemplate>
+                            </ListView>
                         </DataTemplate>
                     </s:GridTemplateColumn.CellTemplate>
                 </s:GridTemplateColumn>
@@ -411,17 +423,17 @@
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
             <StatusBarItem Grid.Column="0">
-                <TextBlock x:Name="textBlock0"
+                <TextBlock x:Name="TextBlock0"
                            Foreground="{DynamicResource TextForegroundBrush}"
                            Text="{Binding DotnetVersion}" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="1">
-                <TextBlock x:Name="textBlock1"
+                <TextBlock x:Name="TextBlock1"
                            Foreground="{DynamicResource TextForegroundBrush}"
                            Text="{Binding Result}" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="2">
-                <TextBlock x:Name="textBlock2"
+                <TextBlock x:Name="TextBlock2"
                            Foreground="{DynamicResource TextForegroundBrush}"
                            Visibility="{Binding IsComputed, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Run Text="{Binding Count, Mode=OneWay}" />
@@ -429,15 +441,16 @@
                 </TextBlock>
             </StatusBarItem>
             <StatusBarItem Grid.Column="3">
-                <TextBlock x:Name="textBlock3"
+                <TextBlock x:Name="TextBlock3"
                            Foreground="{DynamicResource TextForegroundBrush}"
-                           Text="{Binding Duree.TotalSeconds, Mode=OneWay, StringFormat=Durée: {0:N3}}" />
+                           Text="{Binding Duree.TotalSeconds, Mode=OneWay, StringFormat=Durée: {0:N3}}"
+                           Visibility="{Binding IsComputed, Converter={StaticResource BoolToVisibilityConverter}}" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="4">
-                <s:ComboBoxAdv x:Name="cbstyle"
+                <s:ComboBoxAdv x:Name="Cbstyle"
                                Foreground="{DynamicResource TextForegroundBrush}"
                                SelectedIndex="0"
-                               Text="{Binding VisualStyle, ElementName=chromelessWindow, Mode=TwoWay}">
+                               Text="{Binding VisualStyle, ElementName=Window, Mode=TwoWay}">
                     <s:ComboBoxItemAdv Content="FluentDark" />
                     <s:ComboBoxItemAdv Content="MaterialDark" />
                     <s:ComboBoxItemAdv Content="MaterialDarkBlue" />
@@ -446,9 +459,11 @@
                 </s:ComboBoxAdv>
             </StatusBarItem>
             <StatusBarItem Grid.Column="5">
-                <s:ButtonAdv x:Name="cbAuto"
+                <s:ButtonAdv x:Name="CbAuto"
                              HorizontalAlignment="Stretch"
                              HorizontalContentAlignment="Stretch"
+                             Background="{DynamicResource TextBackgroundBrush}"
+                             BorderThickness="0"
                              IconHeight="0"
                              IconWidth="0"
                              IsCheckable="True"
@@ -456,10 +471,11 @@
                              IsTabStop="False"
                              Label="Auto"
                              ToolTipService.ToolTip="Mode auto" />
-
             </StatusBarItem>
             <StatusBarItem Grid.Column="6">
                 <s:ButtonAdv HorizontalAlignment="Stretch"
+                             Background="{DynamicResource TextBackgroundBrush}"
+                             BorderThickness="0"
                              IconHeight="0"
                              IconWidth="0"
                              IsCheckable="True"
@@ -469,7 +485,9 @@
                              ToolTipService.ToolTip="Sauvegarde dans Mongo" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="7">
-                <s:ButtonAdv Click="BtnMode_Click"
+                <s:ButtonAdv Background="{DynamicResource TextBackgroundBrush}"
+                             BorderThickness="0"
+                             Click="BtnMode_Click"
                              IconHeight="0"
                              IconWidth="0"
                              IsTabStop="False"
@@ -491,7 +509,7 @@
                     Background="{DynamicResource PopupBackground}"
                     BorderBrush="{DynamicResource TextForegroundBrush}"
                     BorderThickness="1"
-                    CornerRadius="2,2,2,2">
+                    CornerRadius="4">
                 <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
                     <Label HorizontalAlignment="Stretch"
                            VerticalAlignment="Center"

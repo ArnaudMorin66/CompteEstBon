@@ -9,36 +9,39 @@ using System.Xml.Serialization;
 
 namespace CompteEstBon;
 
+/// <summary>
+/// Données de ceb
+/// </summary>
 public record struct CebData {
     /// <summary>
     ///
     /// </summary>
-    public required int Search { get; set; }
+    public  int Search { get; set; }
 
     /// <summary>
     ///
     /// </summary>
     [XmlArray, XmlArrayItem("Plaque")]
-    public required int[] Plaques { get; set; }
+    public  int[] Plaques { get; set; }
 
     /// <summary>
     ///
     /// </summary>
-    public required string? Status { get; set; }
+    public string? Status { get; set; }
 
     /// <summary>
     ///
     /// </summary>
-    public required string Found { get; set; }
+    public string Found { get; set; }
 
     /// <summary>
     ///
     /// </summary>
-    public required int? Ecart { get; set; }
+    public  int? Ecart { get; set; }
 
     /// <summary>
     ///
     /// </summary>
     [XmlArray,XmlArrayItem("Solution")]
-    public required string[]? Solutions { get; set; }
+    public string[]? Solutions { get; set; }
 }

@@ -39,6 +39,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <summary>
     /// Constructeur Tirage du Compte est bon
     /// </summary>
+    /// <param name="n"></param>
     /// <param name="search"></param>
     /// <param name="plaques"></param>
     public CebTirage(int n, int search, params int[] plaques) : this(n) {
@@ -50,7 +51,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <summary>
     ///
     /// </summary>
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
     ///
@@ -112,7 +113,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// Remise à zéro asynchrone
     /// </summary>
     /// <returns></returns>
-    public async Task<CebStatus> ClearAsync() => await Task.Run(Clear);
+    public async ValueTask<CebStatus> ClearAsync() => await Task.Run(Clear);
 
     /// <summary>
     /// Select the value and the plaque's list
@@ -124,7 +125,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
         for(var i = 0; i < Plaques.Length; i++) {
             var n = Rnd.Next(0, liste.Count);
             Plaques[i] = new(liste[n]);
-            Plaques[i].PropertyChanged += PlaqueUpdated;
+            Plaques[i].PropertyChanged += PlaqueUpdated!;
             liste.RemoveAt(n);
         }
 
@@ -136,12 +137,9 @@ public sealed class CebTirage : INotifyPropertyChanged {
     ///
     /// </summary>
     /// <returns></returns>
-    public async Task<CebStatus> RandomAsync() => await Task.Run(Random);
+    public async ValueTask<CebStatus> RandomAsync() => await Task.Run(Random);
 
-    /// <summary>
-    /// Insertion de la solution en cours
-    /// </summary>
-#region resolution
+    #region resolution
     /// <param name="sol"></param>
     private void InsertSolution(CebBase sol) {
         var ecart = Abs(_search - sol.Value);
@@ -153,10 +151,11 @@ public sealed class CebTirage : INotifyPropertyChanged {
                     return;
                 break;
             }
-            case < 0:
+            case < 0: {
                 Ecart = ecart;
                 _solutions.Clear();
                 break;
+            }
         }
         _solutions.Add(sol);
     }
@@ -223,7 +222,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     ///
     /// </summary>
     /// <returns></returns>
-    public async Task<CebStatus> ResolveAsync() => await Task.Run(Resolve);
+    public async ValueTask<CebStatus> ResolveAsync() => await  Task.Run(Resolve);
 
     /// <summary>
     /// Résoudre en asynchrone avec paramètres
@@ -231,7 +230,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <param name="search"></param>
     /// <param name="plq"></param>
     /// <returns></returns>
-    public async Task<CebStatus> ResolveAsync(int search, params int[] plq) => await Task.Run(
+    public async ValueTask<CebStatus> ResolveAsync(int search, params int[] plq) => await Task.Run(
         () => Resolve(search, plq));
     #endregion
 
@@ -295,17 +294,17 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <summary>
     ///
     /// </summary>
-    public string FirstSolution => Solutions?.First().ToString();
+    public string FirstSolution => Solutions?.First().ToString()!;
 
     /// <summary>
     ///
     /// </summary>
     public string? Found {
         get {
-            int mn = Solutions?.Min(sol => sol.Value) ?? int.MaxValue;
+            var mn = Solutions?.Min(sol => sol.Value) ?? int.MaxValue;
             if(mn == int.MaxValue)
                 return null;
-            int mx = Solutions.Max(sol => sol.Value);
+            var mx = Solutions!.Max(sol => sol.Value);
             return $"{mn}{(mn == mx ? string.Empty : $" et {mx}")}";
         }
     }
@@ -323,7 +322,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
         Status = Status.ToString(),
         Ecart = Ecart,
         Solutions = Solutions?.Select(p => p.ToString()).ToArray(),
-        Found = Found
+        Found = Found!
     };
 
     /// <summary>

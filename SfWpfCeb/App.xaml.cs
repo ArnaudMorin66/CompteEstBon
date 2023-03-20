@@ -20,7 +20,7 @@ namespace CompteEstBon;
 /// </summary>
 public partial class App {
     public App() {
-        SyncfusionLicenseProvider.RegisterLicense(CompteEstBon.Properties.Settings.Default.SfLicence);
+        SyncfusionLicenseProvider.RegisterLicense(CompteEstBon.Properties.Resources.license);
         SfSkinManager.ApplyStylesOnApplication = true;
     }
     protected override void OnStartup(StartupEventArgs e) {
