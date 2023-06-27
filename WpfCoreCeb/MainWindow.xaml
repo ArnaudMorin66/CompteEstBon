@@ -29,6 +29,11 @@
             <hp:InverseBooleanConverter x:Key="InverseBooleanConverter" />
             <hp:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" Hidden="True" />
             <hp:BoolToVisibilityConverter x:Key="BoolToVisibilityConverterReverse" />
+            <Style x:Key="TextCellGrid" TargetType="TextBlock">
+                <Setter Property="TextAlignment" Value="Center" />
+                <Setter Property="Foreground" Value="{DynamicResource CebForegroundBrush}" />
+                <Setter Property="FontWeight" Value="Thin" />
+            </Style>
         </ResourceDictionary>
     </Window.Resources>
     <Window.TaskbarItemInfo>
@@ -426,7 +431,7 @@
                PlacementTarget="{Binding ElementName=SolutionsData}">
             <Border Background="{DynamicResource CebBackgroundBrush}"
                     BorderBrush="{DynamicResource CebForegroundBrush}"
-                    BorderThickness="0.5">
+                    BorderThickness="1">
                 <StackPanel HorizontalAlignment="Stretch"
                             Background="{DynamicResource CebBackgroundBrush}"
                             Orientation="Vertical">
@@ -462,15 +467,13 @@
                                VerticalAlignment="Center"
                                FontSize="11"
                                FontWeight="Medium"
-                               Foreground="White"
-                               TextAlignment="Center"><Run Text="Nombre de solutions: " /><Run Text=" " /><Run Text="{Binding Count, Mode=OneWay}" /></TextBlock>
-                    <TextBlock HorizontalAlignment="Center"
-                               VerticalAlignment="Center"
-                               FontSize="11"
-                               FontWeight="Medium"
-                               Foreground="White"
-                               Text="{Binding Duree.TotalSeconds, StringFormat=Durée \{0:N3\}}"
-                               TextAlignment="Center" />
+                               Foreground="{DynamicResource CebForegroundBrush}"
+                               TextAlignment="Center">
+                        <Run Text="Nombre de solutions: " />
+                        <Run Text="{Binding Count, Mode=OneWay}" />
+                        <Run Text=","/>
+                        <Run Text="{Binding Duree.TotalSeconds, StringFormat=Durée \{0:N3\},Mode=OneWay}"/>
+                    </TextBlock>
                 </StackPanel>
             </Border>
         </Popup>

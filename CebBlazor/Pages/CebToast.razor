@@ -3,45 +3,46 @@
 @using System.Timers
 @using Microsoft.AspNetCore.Routing.Constraints
 @inject CebTirage tirage
-<SfDialog Width="480"
-          ShowCloseIcon="false"
-          AllowDragging="true"
-          @bind-Visible="@Visible"
-          @onclick="() => Visible = false"
-          ID="DlgToast">
-    <DialogAnimationSettings Effect="@DialogEffect.FadeZoom"
-                             Duration="1000">
-    </DialogAnimationSettings>
-    <DialogTemplates>
-        <Header>
-            <div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @cls">
-                <i class="fa-regular @icn"></i>&nbsp;@rsl
-            </div>
-        </Header>
-        <Content>
-            <div class="w-100 text-center text-white">
-                <div>Trouv&eacute;&nbsp;@tirage.Found</div>
-                @if (tirage.Ecart != 0) {
-                    <div>&Eacute;cart:&nbsp;@tirage.Ecart</div>
-                }
-                <div>@tirage.Count&nbsp;solutions&nbsp;en&nbsp;@($"{tirage.Duree.TotalSeconds:F3}") s</div>
-            </div>
-            <div class="w-100 text-center text-white">
-                @{
-                    <div class="separator bg-warning mb-2">&nbsp;</div>
-                    foreach (var item in Solution.Operations) {
-                        <div>@item</div>
+@if (Visible) {
+    <SfDialog Width="480"
+              ShowCloseIcon="false"
+              AllowDragging="true"
+              @onclick="() => Visible = false"
+              ID="DlgToast">
+        <DialogAnimationSettings Effect="@DialogEffect.FadeZoom"
+                                 Duration="1000">
+        </DialogAnimationSettings>
+        <DialogTemplates>
+            <Header>
+                <div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @cls">
+                    <i class="fa-regular @icn"></i>&nbsp;@rsl
+                </div>
+            </Header>
+            <Content>
+                <div class="w-100 text-center text-white">
+                    <div>Trouv&eacute;&nbsp;@tirage.Found</div>
+                    @if (tirage.Ecart != 0) {
+                        <div>&Eacute;cart:&nbsp;@tirage.Ecart</div>
                     }
-                }
-            </div>
-        </Content>
-        <FooterTemplate>
-            <div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @cls">
-                <i class="fa-regular @icn"></i>&nbsp;@rsl
-            </div>
-        </FooterTemplate>
-    </DialogTemplates>
-</SfDialog>
+                    <div>@tirage.Count&nbsp;solutions&nbsp;en&nbsp;@($"{tirage.Duree.TotalSeconds:F3}") s</div>
+                </div>
+                <div class="w-100 text-center text-white">
+                    @{
+                        <div class="separator bg-warning mb-2">&nbsp;</div>
+                        foreach (var item in Solution.Operations) {
+                            <div>@item</div>
+                        }
+                    }
+                </div>
+            </Content>
+            <FooterTemplate>
+                <div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @cls">
+                    <i class="fa-regular @icn"></i>&nbsp;@rsl
+                </div>
+            </FooterTemplate>
+        </DialogTemplates>
+    </SfDialog>
+}
 @code {
 #pragma warning disable CS8618
     protected Timer timer = new();

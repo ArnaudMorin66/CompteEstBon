@@ -89,9 +89,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <param name="sender"></param>
     /// <param name="args"></param>
     private void PlaqueUpdated(object sender, PropertyChangedEventArgs args) {
-        if(Status is CebStatus.EnCours or CebStatus.Indefini)
-            return;
-        Clear();
+        if (Status is not (CebStatus.EnCours or CebStatus.Indefini)) Clear();
     }
 
 
@@ -174,7 +172,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
                 foreach(var oper in CebOperation.ListeOperations
                     .Select(op => new CebOperation(g, op, d))
                     .Where(o => o.Value != 0))
-                    Resolve(liste.Where((_, k) => k != i && k != j).Concat(new[] { oper }));
+                    Resolve(liste.Where((_, k) => k != i && k != j).Append( oper));
         }
     }
     // ReSharper enable PossibleMultipleEnumeration
@@ -270,9 +268,9 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// Valid
     /// </summary>
     public CebStatus Valid() {
-        if(Status is CebStatus.CompteEstBon or CebStatus.CompteApproche)
-            return Status;
-        Status = IsSearchValid() && IsPlaquesValid() ? CebStatus.Valide : CebStatus.Invalide;
+        if (Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche)) {
+            Status = IsSearchValid() && IsPlaquesValid() ? CebStatus.Valide : CebStatus.Invalide;
+        }
         return Status;
     }
 

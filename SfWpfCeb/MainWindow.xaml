@@ -130,6 +130,7 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="3"
                 BorderBrush="{DynamicResource TextForegroundBrush}"
+                Background="{DynamicResource TextBackgroundBrush}"
                 BorderThickness="0.2">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -337,10 +338,9 @@
                       Foreground="{DynamicResource TextForegroundBrush}"
                       HeaderRowHeight="0"
                       IsTabStop="True"
+                      EnableDataVirtualization="True"
                       ItemsSource="{Binding Solutions}"
-                      NavigationMode="Row"
                       QueryRowHeight="SolutionsData_QueryRowHeight"
-                      RowHoverHighlightingBrush="ForestGreen"
                       RowSelectionBrush="{DynamicResource TextForegroundBrush}"
                       SelectionChanged="SolutionsData_SelectionChanged"
                       ShowBusyIndicator="True"
@@ -370,16 +370,13 @@
                     <s:GridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <!--  ReSharper disable once Xaml.BindingWithContextNotResolved  -->
-                            <ListView HorizontalAlignment="Center"
+                            <ListView HorizontalAlignment="Stretch"
                                       HorizontalContentAlignment="Stretch"
                                       BorderBrush="{DynamicResource TextForegroundBrush}"
+                                      Background="{DynamicResource TextBackgroundBrush}"
                                       BorderThickness="0"
-                                      Foreground="{DynamicResource TextForegroundBrush}"
-                                      IsEnabled="True"
-                                      ItemsSource="{Binding Operations}"
-                                      KeyboardNavigation.DirectionalNavigation="Continue"
-                                      ScrollViewer.CanContentScroll="False"
-                                      ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                      IsEnabled="False"
+                                      ItemsSource="{Binding Operations}" IsSynchronizedWithCurrentItem="False" UseLayoutRounding="True">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Style="{DynamicResource TextCellGrid}" Text="{Binding}" />
@@ -518,7 +515,7 @@
                            FontSize="14"
                            FontWeight="ExtraBlack"
                            Foreground="{DynamicResource TextForegroundBrush}" />
-                    <Separator Background="Transparent" />
+                    <Separator Margin="0" BorderThickness="0.2" BorderBrush="{DynamicResource TextForegroundBrush}"/>
                     <ListBox HorizontalAlignment="Stretch"
                              HorizontalContentAlignment="Center"
                              ItemsSource="{Binding Solution.Operations}">
@@ -531,7 +528,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Separator Background="Transparent" />
+                    <Separator Margin="0" BorderThickness="0.1" BorderBrush="{DynamicResource TextForegroundBrush}"/>
                     <TextBlock HorizontalAlignment="Center"
                                VerticalAlignment="Center"
                                FontSize="10"

@@ -61,7 +61,7 @@ namespace CebBlazor.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à OTA4NjMwQDMyMzAyZTM0MmUzMEowQ2F0N1FZOWdobEtzY2lzZy9lMkZNK1pXU1lQSDVLUXIvVUhkSGQydjQ9.
+        ///   Recherche une chaîne localisée semblable à MjUxODk2N0AzMjMyMmUzMDJlMzBGOW1La0F1VktYNUg2VE8xZVg3clpuL3VaVXBXSGJuUDdaa3lTU0dnU1JzPQ==.
         /// </summary>
         internal static string Licence {
             get {

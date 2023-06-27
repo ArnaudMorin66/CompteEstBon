@@ -28,7 +28,7 @@ namespace CompteEstBon {
         public List<string> Operations { get; }
 
         /// <summary>
-        /// Valeur de la donn�e
+        /// Valeur de la donnée
         /// </summary>
         [JsonIgnore]
         public virtual int Value { get; set; } = 0;

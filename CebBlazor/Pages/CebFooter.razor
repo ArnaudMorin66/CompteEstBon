@@ -1,15 +1,17 @@
 ﻿@using System.Timers
-<div class="d-flex bg-gradient justify-content-between align-items-center border border-secondary">
-	<span class="e-badge text-white">
-		@Util.Version
-	</span>
+<section>
+	<div class="d-flex bg-gradient justify-content-between align-items-center border border-secondary">
+		<span class="e-badge text-white">
+			@Util.Version
+		</span>
 
-	<div class="d-flex justify-content-between align-items-center">
-		<img src="favicon.ico" height="32" alt="" class="p-1">
-		<div class="text-center text-uppercase text-danger text-wrap text-truncate ">Compte&nbsp;est&nbsp;bon</div>
+		<div class="d-flex justify-content-between align-items-center">
+			<img src="favicon.ico" height="32" alt="" class="p-1">
+			<div class="text-center text-uppercase text-danger text-wrap text-truncate ">Compte&nbsp;est&nbsp;bon</div>
+		</div>
+		<span class="e-badge text-white">@($"{datetime:dddd dd MMMM yyyy à HH:mm:ss}")</span>
 	</div>
-	<span class="e-badge text-white">@($"{datetime:dddd dd MMMM yyyy à HH:mm:ss}")</span>
-</div>
+</section>
 
 @code {
 	private DateTime datetime;

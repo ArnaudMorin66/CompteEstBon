@@ -4,10 +4,7 @@
 			"path": "."
 		},
 		{
-			"path": "..\\SFCebOffice"
-		},
-		{
-			"path": "..\\CompteEstBon"
+			"path": "../CompteEstBon"
 		}
 	],
 	"settings": {
