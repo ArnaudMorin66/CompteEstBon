@@ -55,9 +55,11 @@ if (File.Exists(configurationFile)) {
 }
 
 
-var rootCommand = new RootCommand("Compte Est Bon") {
+var rootCommand = new RootCommand("Compte Est Bon")
+{
     new Option<int>(new[] { "--trouve", "-t" }, "Nombre à chercher (entre 100 et 999)"),
-    new Option<List<int>>(new[] { "--plaques", "-p" }, "Liste des plaques (6)") {
+    new Option<List<int>>(new[] { "--plaques", "-p" }, "Liste des plaques (6)")
+    {
         AllowMultipleArgumentsPerToken = true
     },
     new Option<bool>(new[] { "--json", "-j" }, "Export au format JSON"),
@@ -65,7 +67,8 @@ var rootCommand = new RootCommand("Compte Est Bon") {
     new Option<bool>(new[] { "--sauvegarde", "-s" }, "Sauvegarder le Compte"),
     new Option<bool>(new[] { "--mongodb", "-m" }, "Sauvegarder le Compte dans MongoDB"),
     new Option<string>(new[] { "--serveur", "-S" }, "Nom du serveur MongoDB"),
-    new Option<List<FileInfo>>(new[] { "--exports", "-x", "-f" }, "Exporter vers excel, word, json, xml, zip...") {
+    new Option<List<FileInfo>>(new[] { "--exports", "-x", "-f" }, "Exporter vers excel, word, json, xml, zip...")
+    {
         AllowMultipleArgumentsPerToken = true
     },
     new Option<bool>(new[] { "--afficher", "-a" }, "Afficher les fichiers exportés"),
@@ -172,15 +175,16 @@ void Run() {
     if (tirage.Status == CebStatus.Invalide)
         throw new ArgumentException("Tirage  invalide");
 
-    WriteLine(tirage.Status == CebStatus.CompteEstBon
-        ? $"{Ansi.Color.Foreground.Green.EscapeSequence}Compte est bon{Ansi.Color.Foreground.Default.EscapeSequence}"
-        : $"{Ansi.Color.Foreground.Magenta.EscapeSequence}Compte approché:{Ansi.Color.Foreground.Default.EscapeSequence} {tirage.Found}");
+    WriteLine(
+        tirage.Status == CebStatus.CompteEstBon
+            ? $"{Ansi.Color.Foreground.Green.EscapeSequence}Compte est bon{Ansi.Color.Foreground.Default.EscapeSequence}"
+            : $"{Ansi.Color.Foreground.Magenta.EscapeSequence}Compte approché:{Ansi.Color.Foreground.Default.EscapeSequence} {tirage.Found}");
     WriteLine();
 
     WriteLine(
         $@"{"Nombre de solutions:".LightYellow()} {tirage.Count}{((tirage.Status == CebStatus.CompteApproche) ?
-                $@", {"écart:".LightYellow()} {tirage.Ecart}" : "")}, {"durée du calcul:".LightYellow()} {tirage.Duree.TotalSeconds:F3} s");
-    
+                $@", {"écart:".LightYellow()} {tirage.Ecart}" : string.Empty)}, {"durée du calcul:".LightYellow()} {tirage.Duree.TotalSeconds:F3} s");
+
     WriteLine();
 
     foreach (var (solution, i) in tirage.Solutions!.Indexed()) {

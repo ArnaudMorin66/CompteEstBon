@@ -28,7 +28,7 @@ public sealed class CebOperation : CebBase {
     /// </param>
     /// <param name="d"></param>
     public CebOperation(CebBase g, char op, CebBase d) {
-        if(g.Value < d.Value)
+        if (g.Value < d.Value)
             (g, d) = (d, g);
         Value = op switch
         {
@@ -38,7 +38,7 @@ public sealed class CebOperation : CebBase {
             '/' => d.Value <= 1 || g.Value % d.Value != 0 ? 0 : g.Value / d.Value,
             _ => 0
         };
-        if(Value != 0)
+        if (Value != 0)
             AddOperations(g, op, d);
     }
 
@@ -58,7 +58,7 @@ public sealed class CebOperation : CebBase {
     /// </summary>
     /// <param name="ceb"></param>
     private void AddOperation(CebBase ceb) {
-        if(ceb is CebOperation)
+        if (ceb is CebOperation)
             Operations.AddRange(ceb.Operations);
     }
 

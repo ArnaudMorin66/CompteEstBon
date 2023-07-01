@@ -61,7 +61,7 @@ namespace CompteEstBon.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à NRAiBiAaIQQuGjN/V0d+XU9Hc1RDX3xKf0x/TGpQb19xflBPallYVBYiSV9jS31TckVnW3xcdndVRWZbUw==.
+        ///   Recherche une chaîne localisée semblable à NRAiBiAaIQQuGjN/V0R+XU9HclRDX3xKf0x/TGpQb19xflBPallYVBYiSV9jS31TcEZjWXhceXZTRWhcUw==.
         /// </summary>
         internal static string Syncfusion {
             get {

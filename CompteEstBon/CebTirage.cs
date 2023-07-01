@@ -43,7 +43,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <param name="search"></param>
     /// <param name="plaques"></param>
     public CebTirage(int n, int search, params int[] plaques) : this(n) {
-        if(plaques.Length != 0)
+        if (plaques.Length != 0)
             SetPlaques(plaques);
         Search = search;
     }
@@ -89,7 +89,8 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <param name="sender"></param>
     /// <param name="args"></param>
     private void PlaqueUpdated(object sender, PropertyChangedEventArgs args) {
-        if (Status is not (CebStatus.EnCours or CebStatus.Indefini)) Clear();
+        if (Status is not (CebStatus.EnCours or CebStatus.Indefini))
+            Clear();
     }
 
 
@@ -120,7 +121,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
         Status = CebStatus.Indefini;
         List<int> liste = new(CebPlaque.ListePlaques);
 
-        for(var i = 0; i < Plaques.Length; i++) {
+        for (var i = 0; i < Plaques.Length; i++) {
             var n = Rnd.Next(0, liste.Count);
             Plaques[i] = new(liste[n]);
             Plaques[i].PropertyChanged += PlaqueUpdated!;
@@ -141,11 +142,11 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <param name="sol"></param>
     private void InsertSolution(CebBase sol) {
         var ecart = Abs(_search - sol.Value);
-        switch(ecart - Ecart) {
+        switch (ecart - Ecart) {
             case > 0:
                 return;
             case 0: {
-                if(_solutions.Contains(sol))
+                if (_solutions.Contains(sol))
                     return;
                 break;
             }
@@ -167,14 +168,15 @@ public sealed class CebTirage : INotifyPropertyChanged {
     private void Resolve(IEnumerable<CebBase> liste) {
         foreach (var (g, i) in liste.Indexed()) {
             InsertSolution(g);
-           
+
             foreach (var (d, j) in liste.Indexed().Where((_, j) => j > i))
-                foreach(var oper in CebOperation.ListeOperations
+                foreach (var oper in CebOperation.ListeOperations
                     .Select(op => new CebOperation(g, op, d))
                     .Where(o => o.Value != 0))
-                    Resolve(liste.Where((_, k) => k != i && k != j).Append( oper));
+                    Resolve(liste.Where((_, k) => k != i && k != j).Append(oper));
         }
     }
+
     // ReSharper enable PossibleMultipleEnumeration
     /// <summary>
     ///
@@ -182,7 +184,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <returns></returns>
     public CebStatus Resolve() {
         _solutions.Clear();
-        if(Status == CebStatus.Invalide)
+        if (Status == CebStatus.Invalide)
             return Status;
         var debut = DateTime.Now;
         Status = CebStatus.EnCours;
@@ -240,8 +242,8 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// </returns>
     public void SetPlaques(params int[] plaq) {
         Status = CebStatus.Indefini;
-        if(plaq.Length != Plaques.Length) {
-            foreach(var plaque in Plaques)
+        if (plaq.Length != Plaques.Length) {
+            foreach (var plaque in Plaques)
                 plaque.Value = 0;
             Clear();
             return;
@@ -297,22 +299,15 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <summary>
     ///
     /// </summary>
-    public string? Found {
-        get {
-            var mn = Solutions?.Min(sol => sol.Value) ?? int.MaxValue;
-            if(mn == int.MaxValue)
-                return null;
-            var mx = Solutions!.Max(sol => sol.Value);
-            return $"{mn}{(mn == mx ? string.Empty : $" et {mx}")}";
-        }
-    }
+    public string Found => Solutions.Select(s => s.Value).Distinct().Order().Select(p => p.ToString()).Join(", ");
+
 
     /// <summary>
     /// Liste des plaques
     /// </summary>
     public CebPlaque[] Plaques { get; }
 
-    /// <summary />
+    /// <summary/>
     public CebData Resultat => new()
     {
         Search = Search,
@@ -320,7 +315,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
         Status = Status.ToString(),
         Ecart = Ecart,
         Solutions = Solutions?.Select(p => p.ToString()).ToArray(),
-        Found = Found!
+        Found = Found
     };
 
     /// <summary>
@@ -329,7 +324,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     public int Search {
         get => _search;
         set {
-            if(value == _search)
+            if (value == _search)
                 return;
             _search = value;
             Clear();
@@ -339,9 +334,9 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <summary>
     ///
     /// </summary>
-    public ImmutableList<CebBase>? Solutions => (Status is CebStatus.CompteEstBon or CebStatus.CompteApproche)
-        ? _solutions.ToImmutableList()
-        : null;
+    public List<CebBase> Solutions => (Status is CebStatus.CompteEstBon or CebStatus.CompteApproche)
+        ? _solutions
+        : new List<CebBase>();
 
     /// <summary>
     /// Gets the status.

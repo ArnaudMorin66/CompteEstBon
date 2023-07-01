@@ -4,9 +4,7 @@
 //     Copyright (c) . All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-
 #region
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -28,7 +26,6 @@ using CompteEstBon.Properties;
 using Microsoft.Win32;
 
 #endregion
-
 namespace CompteEstBon.ViewModel {
     public class ViewTirage : INotifyPropertyChanged, ICommand {
         private readonly Stopwatch _notifyWatch = new();
@@ -55,14 +52,16 @@ namespace CompteEstBon.ViewModel {
         public DispatcherTimer DateDispatcher;
 
         /// <summary>
-        ///     Initialisation
+        /// Initialisation
         /// </summary>
         /// <returns>
+        ///
         /// </returns>
         public ViewTirage() {
             DateDispatcher = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(10) };
             DateDispatcher.Tick += (_, _) => {
-                if (Popup && _notifyWatch.Elapsed > _solutionTimer) Popup = false;
+                if (Popup && _notifyWatch.Elapsed > _solutionTimer)
+                    Popup = false;
                 Titre = $"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}\t{Result}";
             };
             IsBusy = false;
@@ -84,7 +83,10 @@ namespace CompteEstBon.ViewModel {
             DateDispatcher.Start();
         }
 
-        public static Dictionary<string, Color> ThemeColors { get; } = new() {
+        public static Dictionary<string, Color> ThemeColors {
+            get;
+        } = new()
+        {
             ["DarkSlateGray"] = Colors.DarkSlateGray,
             ["SlateGray"] = Colors.SlateGray,
             ["Blue"] = Color.FromArgb(0xFF, 0x15, 0x25, 0x49),
@@ -187,7 +189,8 @@ namespace CompteEstBon.ViewModel {
                 Tirage.Search = value;
                 NotifiedChanged();
                 ClearData();
-                if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide) Task.Run(ResolveAsync);
+                if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide)
+                    Task.Run(ResolveAsync);
             }
         }
 
@@ -238,12 +241,14 @@ namespace CompteEstBon.ViewModel {
         public bool Popup {
             get => _popup;
             set {
-                if (_popup == value) return;
+                if (_popup == value)
+                    return;
 
                 _popup = value;
                 _notifyWatch.Stop();
                 _notifyWatch.Reset();
-                if (_popup) _notifyWatch.Start();
+                if (_popup)
+                    _notifyWatch.Start();
 
                 NotifiedChanged();
             }
@@ -262,9 +267,7 @@ namespace CompteEstBon.ViewModel {
             remove => CommandManager.RequerySuggested -= value;
         }
 
-        public bool CanExecute(object parameter) {
-            return true;
-        }
+        public bool CanExecute(object parameter) { return true; }
 
         public async void Execute(object parameter) {
             try {
@@ -313,7 +316,8 @@ namespace CompteEstBon.ViewModel {
         }
 
         private void UpdateForeground() {
-            Foreground = Tirage.Status switch {
+            Foreground = Tirage.Status switch
+            {
                 CebStatus.Valide => Colors.White,
                 CebStatus.Invalide => Colors.Red,
                 CebStatus.CompteEstBon => Colors.LawnGreen,
@@ -328,7 +332,8 @@ namespace CompteEstBon.ViewModel {
         }
 
         private void NotifiedChanged(params string[] propertiesName) {
-            foreach (var s in propertiesName) PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(s));
+            foreach (var s in propertiesName)
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(s));
         }
 
         private void ClearData() {
@@ -352,24 +357,25 @@ namespace CompteEstBon.ViewModel {
         }
 
         public void ShowNotify(int index = 0) {
-            if (index >= 0 && Tirage.Solutions!.Any() && index < Tirage.Count) {
+            if (index >= 0 && Tirage.Solutions!.Count != 0 && index < Tirage.Count) {
                 Solution = Tirage.Solutions.ElementAt(index);
                 Popup = true;
             }
         }
 
         #region Action
-
         public async Task ClearAsync() {
             await Tirage.ClearAsync();
             ClearData();
-            if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide) await ResolveAsync();
+            if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide)
+                await ResolveAsync();
         }
 
         public async Task RandomAsync() {
             await Tirage.RandomAsync();
             UpdateData();
-            if (Auto && Tirage.Status == CebStatus.Valide) await ResolveAsync();
+            if (Auto && Tirage.Status == CebStatus.Valide)
+                await ResolveAsync();
         }
 
 
@@ -379,7 +385,8 @@ namespace CompteEstBon.ViewModel {
             IsBusy = true;
             Result = "Calcul...";
             await Tirage.ResolveAsync();
-            Result = Tirage.Status switch {
+            Result = Tirage.Status switch
+            {
                 CebStatus.CompteEstBon => "😊 Compte est bon",
                 CebStatus.CompteApproche => $"😢 Compte approché: {Tirage.Found}, écart: {Tirage.Ecart}",
                 CebStatus.Invalide => "Tirage invalide",
@@ -388,7 +395,8 @@ namespace CompteEstBon.ViewModel {
 
             Solution = Tirage.Solutions![0];
             NotifiedChanged(nameof(Duree), nameof(Count), nameof(Solutions));
-            if (MongoDb) Tirage.SerializeMongo(Settings.Default.MongoServer, "Wpf");
+            if (MongoDb)
+                Tirage.SerializeMongo(Settings.Default.MongoServer, "Wpf");
 
             IsBusy = false;
 
@@ -417,7 +425,6 @@ namespace CompteEstBon.ViewModel {
             Tirage.Export(fi);
             path.OpenDocument();
         }
-
         #endregion Action
     }
 }

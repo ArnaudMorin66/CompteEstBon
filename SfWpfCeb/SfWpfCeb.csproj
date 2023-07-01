@@ -40,16 +40,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="21.1.39" />
-    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="21.1.39" />
-    <PackageReference Include="Syncfusion.SfInput.WPF" Version="21.1.39" />
-    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="21.1.39" />
-    <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="21.1.39" />
-    <PackageReference Include="Syncfusion.Themes.FluentDark.WPF" Version="21.1.39" />
-    <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="21.1.39" />
-    <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="21.1.39" />
-    <PackageReference Include="Syncfusion.Themes.Office2019Black.WPF" Version="21.1.39" />
-    <PackageReference Include="Syncfusion.Themes.Windows11Dark.WPF" Version="21.1.39" />
+    <PackageReference Include="Syncfusion.SfBusyIndicator.WPF" Version="22.1.36" />
+    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="22.1.36" />
+    <PackageReference Include="Syncfusion.SfInput.WPF" Version="22.1.36" />
+    <PackageReference Include="Syncfusion.SfProgressBar.WPF" Version="22.1.36" />
+    <PackageReference Include="Syncfusion.SfSkinManager.WPF" Version="22.1.36" />
+    <PackageReference Include="Syncfusion.Themes.FluentDark.WPF" Version="22.1.36" />
+    <PackageReference Include="Syncfusion.Themes.MaterialDark.WPF" Version="22.1.36" />
+    <PackageReference Include="Syncfusion.Themes.MaterialDarkBlue.WPF" Version="22.1.36" />
+    <PackageReference Include="Syncfusion.Themes.Office2019Black.WPF" Version="22.1.36" />
+    <PackageReference Include="Syncfusion.Themes.Windows11Dark.WPF" Version="22.1.36" />
   </ItemGroup>
 
   <ItemGroup>
