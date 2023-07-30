@@ -18,6 +18,7 @@
         <Copyright>©️Arnaud Morin</Copyright>
         <Authors>@Arnaud Morin</Authors>
         <SignAssembly>False</SignAssembly>
+        <NeutralLanguage>fr</NeutralLanguage>
     </PropertyGroup>
 
     <ItemGroup>

@@ -5,9 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 #region using
-using System.Collections.Immutable;
 using System.ComponentModel;
-
 using System.Runtime.CompilerServices;
 
 using arnaud.morin.outils;
@@ -24,9 +22,9 @@ namespace CompteEstBon;
 public sealed class CebTirage : INotifyPropertyChanged {
     private static readonly Random Rnd = System.Random.Shared;
 
-    private int _search;
-
     private readonly List<CebBase> _solutions = new();
+
+    private int _search;
 
     /// <summary>
     /// <param name="n">Nombre de plaques du tirage</param>
@@ -49,18 +47,94 @@ public sealed class CebTirage : INotifyPropertyChanged {
     }
 
     /// <summary>
+    /// Solution à la position i
+    /// </summary>
+    /// <param name="i"></param>
+    /// <returns></returns>
+    public CebBase this[int i] => Solutions[i];
+
+    /// <summary>
+    /// Nombre de solutions
+    /// </summary>
+    public int Count => Solutions.Count;
+
+    /// <summary>
+    /// Ecart
+    /// </summary>
+    public int? Ecart { get; private set; }
+
+    /// <summary>
+    /// Durée de calcul
+    /// </summary>
+    public TimeSpan Duree { get; private set; }
+
+    /// <summary>
+    /// Première solution
+    /// </summary>
+    public string FirstSolution => Solutions.First().ToString()!;
+
+    /// <summary>
+    /// Renvoie le ou les valeurs trouvées
+    /// </summary>
+    public string Found => Solutions.Select(s => s.Value.ToString()).Distinct().Order().Join(", ");
+
+
+    /// <summary>
+    /// Liste des plaques
+    /// </summary>
+    public CebPlaque[] Plaques { get; }
+
+    /// <summary>
+    /// Retourne le résultat
+    /// </summary>/>
+    public CebData Resultat => new()
+    {
+        Search = Search,
+        Plaques = Plaques.Select(p => p.Value).ToArray(),
+        Status = Status.ToString(),
+        Ecart = Ecart,
+        Solutions = Solutions.Select(p => p.ToString()).ToArray(),
+        Found = Found
+    };
+
+    /// <summary>
+    /// nombre à chercher
+    /// </summary>
+    public int Search {
+        get => _search;
+        set {
+            if (value == _search)
+                return;
+            _search = value;
+            Clear();
+        }
+    }
+
+    /// <summary>
+    /// Liste des soulutions
+    /// </summary>
+    public List<CebBase> Solutions => Status is CebStatus.CompteEstBon or CebStatus.CompteApproche
+        ? _solutions
+        : new List<CebBase>();
+
+    /// <summary>
+    /// Gets the status.
+    /// </summary>
+    /// <returns>
     ///
+    /// </returns>
+    /// <value>
+    /// The status.
+    /// </value>
+    public CebStatus Status { get; private set; } = CebStatus.Indefini;
+
+    /// <summary>
+    /// Evènement de changement
     /// </summary>
     public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
-    ///
-    /// </summary>
-    /// <param name="i"></param>
-    /// <returns></returns>
-    public CebBase? this[int i] => Solutions?[i];
-    /// <summary>
-    ///
+    /// Retourne si la plaque est valide
     /// </summary>
     /// <returns></returns>
     private bool IsPlaquesValid() => Plaques.All(
@@ -75,7 +149,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     private bool IsSearchValid() => _search is >= 100 and <= 999;
 
     /// <summary>
-    ///
+    /// Notifier changement propriété
     /// </summary>
     /// <param name="propertyName"></param>
     // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
@@ -84,7 +158,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
         new PropertyChangedEventArgs(propertyName));
 
     /// <summary>
-    ///
+    /// Si la plaque est modifiée
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="args"></param>
@@ -123,7 +197,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
 
         for (var i = 0; i < Plaques.Length; i++) {
             var n = Rnd.Next(0, liste.Count);
-            Plaques[i] = new(liste[n]);
+            Plaques[i] = new CebPlaque(liste[n]);
             Plaques[i].PropertyChanged += PlaqueUpdated!;
             liste.RemoveAt(n);
         }
@@ -138,7 +212,49 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <returns></returns>
     public async ValueTask<CebStatus> RandomAsync() => await Task.Run(Random);
 
+    /// <summary>
+    /// resolution
+    /// </summary>
+    /// <returns>
+    ///
+    /// </returns>
+    public void SetPlaques(params int[] plaq) {
+        Status = CebStatus.Indefini;
+        if (plaq.Length != Plaques.Length) {
+            foreach (var plaque in Plaques)
+                plaque.Value = 0;
+            Clear();
+            return;
+        }
+
+        foreach (var (p, i) in plaq.Indexed()) Plaques[i].Value = p;
+        Clear();
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="pq"></param>
+    public void SetPlaques(IList<int> pq) => SetPlaques(pq.ToArray());
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="no"></param>
+    /// <returns></returns>
+    public string? Solution(int no = 0) => no >= 0 && no < Solutions.Count ? Solutions[no].ToString() : null;
+
+    /// <summary>
+    /// Valid
+    /// </summary>
+    public CebStatus Valid() {
+        if (Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche))
+            Status = IsSearchValid() && IsPlaquesValid() ? CebStatus.Valide : CebStatus.Invalide;
+        return Status;
+    }
+
     #region resolution
+
     /// <param name="sol"></param>
     private void InsertSolution(CebBase sol) {
         var ecart = Abs(_search - sol.Value);
@@ -156,6 +272,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
                 break;
             }
         }
+
         _solutions.Add(sol);
     }
 
@@ -222,7 +339,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     ///
     /// </summary>
     /// <returns></returns>
-    public async ValueTask<CebStatus> ResolveAsync() => await  Task.Run(Resolve);
+    public async ValueTask<CebStatus> ResolveAsync() => await Task.Run(Resolve);
 
     /// <summary>
     /// Résoudre en asynchrone avec paramètres
@@ -233,119 +350,4 @@ public sealed class CebTirage : INotifyPropertyChanged {
     public async ValueTask<CebStatus> ResolveAsync(int search, params int[] plq) => await Task.Run(
         () => Resolve(search, plq));
     #endregion
-
-    /// <summary>
-    /// resolution
-    /// </summary>
-    /// <returns>
-    ///
-    /// </returns>
-    public void SetPlaques(params int[] plaq) {
-        Status = CebStatus.Indefini;
-        if (plaq.Length != Plaques.Length) {
-            foreach (var plaque in Plaques)
-                plaque.Value = 0;
-            Clear();
-            return;
-        }
-
-        foreach (var (p, i) in plaq.Indexed()) Plaques[i].Value = p;
-        Clear();
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="pq"></param>
-    public void SetPlaques(IList<int> pq) => SetPlaques(pq.ToArray());
-
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="no"></param>
-    /// <returns></returns>
-    public string? Solution(int no = 0) => no >= 0 && no < Solutions?.Count ? Solutions![no].ToString() : null;
-
-    /// <summary>
-    /// Valid
-    /// </summary>
-    public CebStatus Valid() {
-        if (Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche)) {
-            Status = IsSearchValid() && IsPlaquesValid() ? CebStatus.Valide : CebStatus.Invalide;
-        }
-        return Status;
-    }
-
-    /// <summary>
-    /// Nombre de solutions
-    /// </summary>
-    public int Count => Solutions?.Count ?? 0;
-
-    /// <summary>
-    /// Ecart
-    /// </summary>
-    public int? Ecart { get; private set; }
-
-    /// <summary>
-    ///
-    /// </summary>
-    public TimeSpan Duree { get; private set; }
-
-    /// <summary>
-    ///
-    /// </summary>
-    public string FirstSolution => Solutions?.First().ToString()!;
-
-    /// <summary>
-    ///
-    /// </summary>
-    public string Found => Solutions.Select(s => s.Value).Distinct().Order().Select(p => p.ToString()).Join(", ");
-
-
-    /// <summary>
-    /// Liste des plaques
-    /// </summary>
-    public CebPlaque[] Plaques { get; }
-
-    /// <summary/>
-    public CebData Resultat => new()
-    {
-        Search = Search,
-        Plaques = Plaques.Select(p => p.Value).ToArray(),
-        Status = Status.ToString(),
-        Ecart = Ecart,
-        Solutions = Solutions?.Select(p => p.ToString()).ToArray(),
-        Found = Found
-    };
-
-    /// <summary>
-    /// nombre à chercher
-    /// </summary>
-    public int Search {
-        get => _search;
-        set {
-            if (value == _search)
-                return;
-            _search = value;
-            Clear();
-        }
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    public List<CebBase> Solutions => (Status is CebStatus.CompteEstBon or CebStatus.CompteApproche)
-        ? _solutions
-        : new List<CebBase>();
-
-    /// <summary>
-    /// Gets the status.
-    /// </summary>
-    /// <returns>
-    ///
-    /// </returns>
-    /// <value>
-    /// The status.
-    /// </value>
-    public CebStatus Status { get; private set; } = CebStatus.Indefini;
 }

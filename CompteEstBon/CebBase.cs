@@ -7,78 +7,74 @@
 #pragma warning disable CS1591
 
 
-using System.Runtime.InteropServices;
-
 using System.Text.Json.Serialization;
 
 using arnaud.morin.outils;
 
-namespace CompteEstBon {
-    ///
-    /// clase de base plaque ou operation
-    ///
-    [Guid("F4D942FB-85DF-4391-AE82-9EFE20DDADB0")]
-    public abstract class CebBase {
-        /// <inheritdoc/>
-        public override string ToString() => string.Join(", ", Operations);
+namespace CompteEstBon;
 
-        /// <summary>
-        ///
-        /// </summary>
-        public List<string> Operations { get; }
+/// <summary>
+/// Classe de base pour les plaques et les opérations
+/// </summary>
+public abstract class CebBase {
+    /// <inheritdoc/>
+    public override string ToString() => string.Join(", ", Operations);
 
-        /// <summary>
-        /// Valeur de la donnée
-        /// </summary>
-        [JsonIgnore]
-        public virtual int Value { get; set; } = 0;
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="b"></param>
-        public static implicit operator int(CebBase b) => b.Value;
+    /// <summary>
+    /// Liste des opérations
+    /// </summary>
+    public List<string> Operations { get; }
 
-        [JsonIgnore]
-        public int Rank => Operations.Count;
+    /// <summary>
+    /// Valeur de la donnée
+    /// </summary>
+    [JsonIgnore]
+    public virtual int Value { get; set; } = 0;
+    /// <summary>
+    /// Conversion d'une CebPlaque en int
+    /// </summary>
+    /// <param name="b"></param>
+    public static implicit operator int(CebBase b) => b.Value;
 
-        /// <summary>
-        ///
-        /// </summary>
-        [JsonIgnore]
-        public abstract bool IsValid { get; }
+    [JsonIgnore]
+    public int Rank => Operations.Count;
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
-        public override bool Equals(object obj) => (obj is CebBase op && op.Rank == Rank) &&
-            Operations.Indexed()
-                .All(e => string.Compare(e.Item1, op.Operations[e.Item2], StringComparison.Ordinal) == 0);
+    /// <summary>
+    /// Teste si l'objet est valide
+    /// </summary>
+    [JsonIgnore]
+    public abstract bool IsValid { get; }
 
-        /// <inheritdoc/>
-        public override int GetHashCode() => base.GetHashCode();
+    /// <summary>
+    /// Egalité entre deux objets
+    /// </summary>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    public override bool Equals(object obj) => (obj is CebBase op && op.Rank == Rank) &&
+        Operations.Indexed().All(e => string.Compare(e.Item1, op.Operations[e.Item2], StringComparison.Ordinal) == 0);
 
-        /// <summary>
-        ///
-        /// </summary>
-        protected CebBase() => Operations = new List<string>();
+    /// <inheritdoc/>
+    public override int GetHashCode() => base.GetHashCode();
 
-        /// <summary>
-        ///
-        /// </summary>
-        public CebDetail Detail {
-            get {
-                CebDetail detail = new CebDetail();
-                foreach (var (operation, i) in Operations.Indexed()) detail[i] = operation;
-                return detail;
-            }
+    /// <summary>
+    /// Initialisations CebBase
+    /// </summary>
+    protected CebBase() => Operations = new List<string>();
+
+    /// <summary>
+    /// retourne le détail
+    /// </summary>
+    public CebDetail Detail {
+        get {
+            CebDetail detail = new CebDetail();
+            foreach (var (operation, i) in Operations.Indexed()) detail[i] = operation;
+            return detail;
         }
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="b"></param>
-        public static implicit operator CebDetail(CebBase b) => b.Detail;
     }
+
+    /// <summary>
+    /// Conversion base vers détail
+    /// </summary>
+    /// <param name="b"></param>
+    public static implicit operator CebDetail(CebBase b) => b.Detail;
 }

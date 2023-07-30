@@ -14,34 +14,34 @@ namespace CompteEstBon;
 /// </summary>
 public record struct CebData {
     /// <summary>
-    ///
+    /// Valeur recherché
     /// </summary>
-    public  int Search { get; set; }
+    public int Search { get; set; }
 
     /// <summary>
-    ///
+    /// Liste desplaques
     /// </summary>
     [XmlArray, XmlArrayItem("Plaque")]
-    public  int[] Plaques { get; set; }
+    public int[] Plaques { get; set; }
 
     /// <summary>
-    ///
+    /// Status
     /// </summary>
     public string? Status { get; set; }
 
     /// <summary>
-    ///
+    /// Found
     /// </summary>
     public string Found { get; set; }
 
     /// <summary>
-    ///
+    /// Ecart
     /// </summary>
-    public  int? Ecart { get; set; }
+    public int? Ecart { get; set; }
 
     /// <summary>
-    ///
+    /// Solutions
     /// </summary>
-    [XmlArray,XmlArrayItem("Solution")]
+    [XmlArray, XmlArrayItem("Solution")]
     public string[]? Solutions { get; set; }
 }

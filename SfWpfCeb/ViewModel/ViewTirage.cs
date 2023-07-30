@@ -4,9 +4,7 @@
 //     Copyright (c) . All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-
 #region Using
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,9 +17,13 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+
 using arnaud.morin.outils;
+
 using CompteEstBon.Properties;
+
 using Microsoft.Win32;
+
 using Syncfusion.Windows.Shared;
 
 #endregion
@@ -33,7 +35,6 @@ namespace CompteEstBon.ViewModel {
 
         private bool _auto;
         private Color _background = Color.FromRgb(22, 22, 22);
-
 
         private Color _foreground = Colors.White;
 
@@ -55,9 +56,10 @@ namespace CompteEstBon.ViewModel {
         public DispatcherTimer DateDispatcher;
 
         /// <summary>
-        ///     Initialisation
+        /// Initialisation
         /// </summary>
         /// <returns>
+        ///
         /// </returns>
         public ViewTirage() {
             DateDispatcher =
@@ -87,8 +89,7 @@ namespace CompteEstBon.ViewModel {
             DateDispatcher.Start();
         }
 
-        public static string DotnetVersion =>
-            $"Version: {Assembly.GetExecutingAssembly().GetName().Version}, {RuntimeInformation.FrameworkDescription}";
+        public static string DotnetVersion => $"Version: {Assembly.GetExecutingAssembly().GetName().Version}, {RuntimeInformation.FrameworkDescription}";
 
         public Color Background {
             get => _background;
@@ -144,7 +145,8 @@ namespace CompteEstBon.ViewModel {
         public int Search {
             get => Tirage.Search;
             set {
-                if (Tirage.Search == value) return;
+                if (Tirage.Search == value)
+                    return;
 
                 Tirage.Search = value;
                 RaisePropertyChanged(nameof(Search));
@@ -165,7 +167,8 @@ namespace CompteEstBon.ViewModel {
         public string Result {
             get => _result;
             set {
-                if (value == _result) return;
+                if (value == _result)
+                    return;
 
                 _result = value;
                 RaisePropertyChanged(nameof(Result));
@@ -175,7 +178,8 @@ namespace CompteEstBon.ViewModel {
         public bool IsBusy {
             get => _isBusy;
             set {
-                if (_isBusy == value) return;
+                if (_isBusy == value)
+                    return;
 
                 _isBusy = value;
                 RaisePropertyChanged(nameof(IsBusy));
@@ -185,18 +189,21 @@ namespace CompteEstBon.ViewModel {
         public bool Auto {
             get => _auto;
             set {
-                if (_auto == value) return;
+                if (_auto == value)
+                    return;
 
                 _auto = value;
                 RaisePropertyChanged(nameof(Auto));
-                if (Tirage.Status == CebStatus.Valide && Auto) Task.Run(ResolveAsync);
+                if (Tirage.Status == CebStatus.Valide && Auto)
+                    Task.Run(ResolveAsync);
             }
         }
 
         public bool MongoDb {
             get => _mongodb;
             set {
-                if (_mongodb == value) return;
+                if (_mongodb == value)
+                    return;
 
                 _mongodb = value;
                 RaisePropertyChanged(nameof(MongoDb));
@@ -218,12 +225,14 @@ namespace CompteEstBon.ViewModel {
         public bool Popup {
             get => _popup;
             set {
-                if (_popup == value) return;
+                if (_popup == value)
+                    return;
 
                 _popup = value;
                 _notifyWatch.Stop();
                 _notifyWatch.Reset();
-                if (_popup) _notifyWatch.Start();
+                if (_popup)
+                    _notifyWatch.Start();
 
                 RaisePropertyChanged(nameof(Popup));
             }
@@ -268,12 +277,12 @@ namespace CompteEstBon.ViewModel {
                     break;
 
                 case "export":
-                    if (Count != 0) await Task.Run(ExportFichier);
+                    if (Count != 0)
+                        await Task.Run(ExportFichier);
 
                     break;
             }
         }
-
 
         private void ClearData() {
             Solution = null;
@@ -294,8 +303,9 @@ namespace CompteEstBon.ViewModel {
             ClearData();
         }
 
-        private void UpdateForeground() =>
-            Foreground = Tirage.Status switch {
+        private void UpdateForeground() => Foreground =
+            Tirage.Status switch
+            {
                 CebStatus.Indefini => Colors.Blue,
                 CebStatus.Valide => Colors.White,
                 CebStatus.EnCours => Colors.Aqua,
@@ -306,13 +316,15 @@ namespace CompteEstBon.ViewModel {
             };
 
         public void ShowPopup(int index = 0) {
-            if (index < 0) return;
+            if (index < 0)
+                return;
             Solution = Tirage.Solutions![index];
             Popup = true;
         }
 
         public static (bool Ok, string Path) SaveFileName() {
-            var dialog = new SaveFileDialog {
+            var dialog = new SaveFileDialog
+            {
                 Title = "Exporter vers...",
                 Filter =
                     "Excel (*.xlsx)| *.xlsx | Word (*.docx) | *.docx | Json (*.json) | *.json | XML (*.xml) | *.xml ",
@@ -326,15 +338,16 @@ namespace CompteEstBon.ViewModel {
 
         private void ExportFichier() {
             var (ok, path) = SaveFileName();
-            if (!ok) return;
+            if (!ok)
+                return;
 
             IsBusy = true;
-            if (Tirage.Export(new FileInfo(path))) path.OpenDocument();
+            if (Tirage.Export(new FileInfo(path)))
+                path.OpenDocument();
             IsBusy = false;
         }
 
         #region Action
-
         public async ValueTask ClearAsync() {
             var old = IsBusy;
             await Tirage.ClearAsync();
@@ -345,17 +358,20 @@ namespace CompteEstBon.ViewModel {
         public async ValueTask RandomAsync() {
             await Tirage.RandomAsync();
             UpdateData();
-            if (Auto) await ResolveAsync();
+            if (Auto)
+                await ResolveAsync();
         }
 
         public async ValueTask<CebStatus> ResolveAsync() {
-            if (IsBusy) return Tirage.Status;
+            if (IsBusy)
+                return Tirage.Status;
 
             IsBusy = true;
             Result = "⏰ Calcul en cours...";
             Foreground = Colors.Aqua;
             await Tirage.ResolveAsync();
-            Result = Tirage.Status switch {
+            Result = Tirage.Status switch
+            {
                 CebStatus.CompteEstBon => "😊 Compte est Bon",
                 CebStatus.CompteApproche => $"😢 Compte approché: {Tirage.Found}, écart: {Tirage.Ecart}",
                 CebStatus.Invalide => "🤬 Tirage invalide",
@@ -368,11 +384,11 @@ namespace CompteEstBon.ViewModel {
             IsBusy = false;
             RaisePropertyChanged(nameof(IsComputed), nameof(Duree), nameof(Solutions), nameof(Count));
             ShowPopup();
-            if (MongoDb) Tirage.SerializeMongo(Settings.Default.MongoServer, "SfWpf");
+            if (MongoDb)
+                Tirage.SerializeMongo(Settings.Default.MongoServer, "SfWpf");
 
             return Tirage.Status;
         }
-
         #endregion Action
     }
 }

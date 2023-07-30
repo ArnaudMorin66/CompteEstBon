@@ -17,7 +17,7 @@ using Syncfusion.Windows.Shared;
 namespace CompteEstBon;
 
 /// <summary>
-///     Logique d'interaction pour MainWindow.xaml
+/// Logique d'interaction pour MainWindow.xaml
 /// </summary>
 public partial class MainWindow {
     private string _style = "FluentDark";
@@ -27,7 +27,6 @@ public partial class MainWindow {
         Thread.CurrentThread.CurrentUICulture = new CultureInfo("fr");
         Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
     }
-
 
     public string VisualStyle {
         get => _style;
@@ -45,7 +44,8 @@ public partial class MainWindow {
         (sender as SfDataGrid)!.SelectedIndex);
 
     private void SolutionsData_QueryRowHeight(object sender, QueryRowHeightEventArgs e) {
-        if (e.RowIndex <= 0) return;
+        if (e.RowIndex <= 0)
+            return;
 
         var gridRowResizingOptions = new GridRowSizingOptions();
 
@@ -56,10 +56,10 @@ public partial class MainWindow {
         }
     }
 
-
     private void BtnMode_Click(object sender, RoutedEventArgs e) {
         ViewTirage.Vertical = !ViewTirage.Vertical;
-        if (SolutionsData.GetRecordsCount() <= 0) return;
+        if (SolutionsData.GetRecordsCount() <= 0)
+            return;
 
         for (var index = 0; index <= SolutionsData.GetRecordsCount(); index++) {
             SolutionsData.InvalidateRowHeight(index);

@@ -9,9 +9,9 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
 
+
 using Syncfusion.Licensing;
 using Syncfusion.SfSkinManager;
-
 
 namespace CompteEstBon;
 
@@ -23,6 +23,7 @@ public partial class App {
         SyncfusionLicenseProvider.RegisterLicense(CompteEstBon.Properties.Resources.license);
         SfSkinManager.ApplyStylesOnApplication = true;
     }
+
     protected override void OnStartup(StartupEventArgs e) {
         CultureInfo vCulture = new("fr-FR");
 
@@ -38,5 +39,3 @@ public partial class App {
         base.OnStartup(e);
     }
 }
-
-
