@@ -5,10 +5,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 #region using
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
 using arnaud.morin.outils;
+
+using System.ComponentModel;
+
+using System.Runtime.CompilerServices;
 
 using static System.Math;
 
