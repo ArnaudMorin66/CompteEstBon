@@ -1,0 +1,197 @@
+//$primary: #3b3a39; 
+$primary: #1f2428;
+// $font-size: 1rem;
+$enable-shadows: true;
+$enable-responsive-font-sizes: true;
+//$grid-header-border-color: $primary;
+$enable-dark-mode: true;
+$font-size: 0.8rem;
+$font-weight: 200;
+
+
+// $font-family-sans-serif: 'Segoe UI', 'Colibri', sans-serif;
+// $font-family: $font-family-sans-serif;
+$enable-gradients: true;
+
+@import "@fortawesome/fontawesome-free/scss/regular";
+@import "@fortawesome/fontawesome-free/scss/solid";
+@import "@fortawesome/fontawesome-free/scss/brands";
+@import "@fortawesome/fontawesome-free/scss/fontawesome";
+
+@import "ej2/bootstrap5-dark";
+@import "bootstrap/scss/bootstrap";
+
+
+body {
+    background: $dark;
+    font-size: $font-size;
+}
+.e-input, .e-popup {
+    text-align:center;
+}
+
+#solutions {
+    .e-gridheader {
+        visibility: collapse;
+        // border: none;
+    }
+
+    .e-content {
+        // @extend .bg-gradient;
+        background-color: $primary;
+        text-align: center;
+        // color: white;
+        font-size: $font-size;
+        //height: 30rem;
+    }
+
+    .e-emptyrow {
+        color: $primary;
+        background-color: $primary;
+        margin: 0;
+        padding: 0;
+    }
+
+    .e-lastrowcell {
+        border-bottom-color: $primary;
+        border-style: none;
+    }
+
+
+    .e-row {
+        td.e-rowcell {
+            font-size: $font-size;
+            text-align: center;
+        }
+
+        td.e-active {
+            background-color: $gray-800;
+            color: white;
+        }
+
+        td.e-rowcell.e-focus {
+            background-color: #222222;
+            color: $yellow;
+            font-weight: 700;
+        }
+
+        .e-rowcell:not(.e-active) {
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        &:not(.e-altrow) > :not(.e-active) {
+            background-color: $primary;
+            color: yellow;
+        }
+
+        &.e-altrow > :not(.e-active) {
+            background-color: $primary;
+            color: white;
+        }
+
+        & td > .e-blazor-template {
+            color: yellow;
+            border: none;
+            background-color: transparent;
+        }
+
+        & td .e-rowcell {
+            text-align: center;
+        }
+    }
+}
+
+.card-body,
+.card-text {
+    background-color: $primary; //  lightslategray;
+    color: black; // white;
+}
+
+.separator {
+    margin: 0%;
+    padding: 0%;
+    height: 0.1rem;
+}
+
+@keyframes resultat {
+    from {
+        transform: translateX(50%);
+        width: 50%;
+    }
+
+    to {
+        transform: translateX(0);
+        width: 100%;
+    }
+}
+
+.animation {
+    animation-duration: 10s;
+    animation-name: resultat;
+    animation-direction: alternate-reverse;
+    animation-iteration-count: infinite;
+}
+
+.gradient {
+    background: radial-gradient($primary, $primary);
+    background-image: radial-gradient( #505050, $primary);
+}
+
+.footer {
+    @extend .fixed-bottom;
+    height: 2rem;
+}
+
+.e-dialog {
+    background-color: $primary;
+    border-style: solid;
+    border-width: thin;
+    border-color: $secondary;
+    cursor: pointer;
+
+    .e-dlg-content {
+        @extend .rounded-1;
+        //background: $primary;
+        padding: 0px;
+        margin: 0px;
+        width: 100%;
+    }
+
+    .e-dlg-header-content {
+        width: 100%;
+        height:100%;
+        padding: 0px;
+        margin: 0px;
+
+        .e-dlg-header {
+            width: 100%;
+            height: 100%;
+            padding: 0px;
+            margin: 0px;
+        }
+    }
+
+    .e-footer-content {
+        width: 100%;
+        padding: 0px;
+        margin: 0px;
+    }
+}
+
+.g-cell {
+    text-align: center;
+}
+
+.text-wheat {
+    color: wheat;
+}
+
+.cursor-wait {
+    cursor: wait;
+}
+
+.c-pointer {
+    cursor: pointer;
+}

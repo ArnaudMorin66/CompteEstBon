@@ -1,0 +1,26 @@
+{
+  "name": "cebblazor",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "sass-debug": "sass scss/site.scss:scss/debug/site.css -I node_modules/ -I node_modules/@syncfusion/ --source-map -c",
+    "sass-release": "sass scss/site.scss:scss/release/site.min.css --style=compressed -I node_modules/ -I node_modules/@syncfusion/ -c --no-source-map",
+    "sass-watch": "sass scss/site.scss:wwwroot/css/site.min.css --style=compressed -I node_modules/ -I node_modules/@syncfusion/ -c --no-source-map -w"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.4.2",
+    "@syncfusion/ej2": "^23.1.38",
+    "bootstrap": "^5.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "sass": "1.68.0",
+    "stylelint-config-twbs-bootstrap": "11.0.1"
+  },
+  "-vs-binding": {
+    "ProjectOpened": [
+      "sass-watch"
+    ]
+  }
+}
