@@ -61,7 +61,7 @@ namespace CompteEstBon.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à NRAiBiAaIQQuGjN/V0Z+WE9EaFtKVmJLYVB3WmpQdldgdVRMZVVbQX9PIiBoS35RdUVhWX5eeHFTR2dYWUd1.
+        ///   Recherche une chaîne localisée semblable à NRAiBiAaIQQuGjN/V0V+XU9HflRDX3xKf0x/TGpQb19xflBPallYVBYiSV9jS31Tf0dqWXxfeXFQQmReVw==.
         /// </summary>
         internal static string sflicence {
             get {

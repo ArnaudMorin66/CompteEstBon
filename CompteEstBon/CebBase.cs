@@ -50,9 +50,13 @@ public abstract class CebBase {
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
-    public override bool Equals(object obj) => (obj is CebBase op && op.Rank == Rank) &&
-        Operations.Indexed().All(e => string.Compare(e.Item1, op.Operations[e.Item2], StringComparison.Ordinal) == 0);
-
+    //public override bool Equals(object obj) => (obj is CebBase op && op.Rank == Rank) &&
+    //    Operations.Indexed().All(e => string.Compare(e.Item1, op.Operations[e.Item2], StringComparison.Ordinal) == 0);
+    public override bool Equals(object obj) {
+        if (object.ReferenceEquals(this, obj)) return true;
+        return obj is CebBase op && Operations.Indexed().All(e =>
+            string.Compare(e.Item1, op.Operations[e.Item2], StringComparison.Ordinal) == 0);
+    }
     /// <inheritdoc/>
     public override int GetHashCode() => base.GetHashCode();
 

@@ -8,6 +8,7 @@
 		}
 	],
 	"settings": {
-		"razor.disabled": true
+		"razor.disabled": true,
+		"dotnet.defaultSolution": "CebBlazor/CebBlazor.sln"
 	}
 }

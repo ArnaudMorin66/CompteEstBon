@@ -5,19 +5,20 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Reflection;
+using System.Runtime.InteropServices;
+
 using CompteEstBon;
 
 using Microsoft.JSInterop;
-using Syncfusion.Blazor;
 
-using System.Reflection;
-using System.Runtime.InteropServices;
+using Syncfusion.Blazor;
 
 namespace CebBlazor.Code;
 
 public static class Util {
     public static async Task SaveAsAsync(this IJSRuntime js, string filename, MemoryStream data) =>
-        await js.InvokeVoidAsync("saveAsFile", filename,  Convert.ToBase64String(data.ToArray()));
+        await js.InvokeVoidAsync("saveAsFile", filename, Convert.ToBase64String(data.ToArray()));
 
     public static string? SyncfusionVersion => typeof(SfBaseComponent).Assembly.GetName().Version?.ToString();
 

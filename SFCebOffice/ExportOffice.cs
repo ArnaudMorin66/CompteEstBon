@@ -7,7 +7,9 @@
 
 using System;
 using System.IO;
+
 using arnaud.morin.outils;
+
 using Syncfusion.DocIO;
 using Syncfusion.DocIO.DLS;
 using Syncfusion.Drawing;
@@ -19,7 +21,7 @@ namespace CompteEstBon;
 
 public static class ExportOffice {
     public static void RegisterLicense(string license) {
-        if(!string.IsNullOrEmpty(license))
+        if (!string.IsNullOrEmpty(license))
             SyncfusionLicenseProvider.RegisterLicense(license);
     }
 
@@ -35,7 +37,7 @@ public static class ExportOffice {
             ? TableBuiltInStyles.TableStyleMedium7
             : TableBuiltInStyles.TableStyleMedium3;
 
-        for(var i = 0; i < 6; i++) {
+        for (var i = 0; i < 6; i++) {
             ws.Range[1, i + 1].Value2 = $"Plaque {i + 1}";
             ws.Range[2, i + 1].Value2 = tirage.Plaques[i].Value;
         }
@@ -47,7 +49,7 @@ public static class ExportOffice {
         var rg = ws["A5"];
         string res;
         rg.CellStyle.Font.Color = ExcelKnownColors.White;
-        if(tirage.Status == CebStatus.CompteEstBon) {
+        if (tirage.Status == CebStatus.CompteEstBon) {
             res = "Compte est bon";
             rg.CellStyle.ColorIndex = ExcelKnownColors.Green;
         } else {
@@ -63,10 +65,10 @@ public static class ExportOffice {
 
 
         var l = 7;
-        for(var i = 1; i < 6; i++)
+        for (var i = 1; i < 6; i++)
             ws.Range[l, i].Value2 = $"Operation {i}";
 
-        foreach(var s in tirage.Solutions!)
+        foreach (var s in tirage.Solutions!)
             ws.ImportArray(s.Operations.ToArray(), ++l, 1, false);
         ws[$"A7:E{l}"].AutofitColumns();
         ws.ListObjects.Create("TabSolutions", ws[$"A7:E{l}"]).BuiltInTableStyle = styletb;
@@ -82,7 +84,7 @@ public static class ExportOffice {
         var sect = wd.AddSection() as WSection;
         var dotm =
             $@"{Environment.GetEnvironmentVariable("USERPROFILE")}\AppData\Roaming\Microsoft\Templates\Normal.dotm";
-        if(File.Exists(dotm)) {
+        if (File.Exists(dotm)) {
             wd.AttachedTemplate.Path = dotm;
             wd.UpdateStylesOnOpen = true;
         }
@@ -96,7 +98,7 @@ public static class ExportOffice {
             : BuiltinTableStyle.MediumGrid1Accent6;
         tbl.ResetCells(2, 7);
         IWParagraph pg;
-        for(var i = 0; i < 6; i++) {
+        for (var i = 0; i < 6; i++) {
             pg = tbl[0, i].AddParagraph();
             pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
 
@@ -121,7 +123,7 @@ public static class ExportOffice {
         Color tcolor;
 
         string res;
-        if(tirage.Status == CebStatus.CompteEstBon) {
+        if (tirage.Status == CebStatus.CompteEstBon) {
             res = "Compte est bon";
             bcolor = Color.Green;
             tcolor = Color.White;
@@ -141,13 +143,13 @@ public static class ExportOffice {
         sect.AddParagraph();
         tbl = sect.AddTable();
         tbl.ResetCells(1, 5);
-        for(var i = 0; i < 5; i++) {
+        for (var i = 0; i < 5; i++) {
             pg = tbl[0, i].AddParagraph();
             pg.ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Center;
             pg.AppendText($"Opération {i + 1}");
         }
 
-        foreach(var s in tirage.Solutions!) {
+        foreach (var s in tirage.Solutions!) {
             var rw = tbl.AddRow();
             foreach (var (op, ix) in s.Operations.Indexed()) {
                 pg = rw.Cells[ix].AddParagraph();

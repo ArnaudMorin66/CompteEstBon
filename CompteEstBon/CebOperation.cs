@@ -30,8 +30,7 @@ public sealed class CebOperation : CebBase {
     public CebOperation(CebBase g, char op, CebBase d) {
         if (g.Value < d.Value)
             (g, d) = (d, g);
-        Value = op switch
-        {
+        Value = op switch {
             '+' => g.Value + d.Value,
             '-' => g.Value - d.Value,
             'x' => g.Value <= 1 || d.Value <= 1 ? 0 : g.Value * d.Value,

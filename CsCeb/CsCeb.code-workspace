@@ -10,5 +10,7 @@
 			"path": "../SFCebOffice"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"dotnet.defaultSolution": "CsCeb/CsCeb.sln"
+	}
 }

@@ -4,10 +4,6 @@
 //     Copyright (c) . All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Conventions;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,18 +16,22 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Conventions;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
+
 namespace CompteEstBon;
 
 public static class CebSerialize {
-    public static readonly Dictionary<string, Action<CebTirage, FileInfo>> ListeFormats = 
-        new()
-    {
-        [".zip"] = SaveZip,
-        [".json"] = SaveJson,
-        [".xml"] = SaveXml,
-        [".xlsx"] = SaveXlsx,
-        [".docx"] = SaveDocx
-    };
+    public static readonly Dictionary<string, Action<CebTirage, FileInfo>> ListeFormats =
+        new() {
+            [".zip"] = SaveZip,
+            [".json"] = SaveJson,
+            [".xml"] = SaveXml,
+            [".xlsx"] = SaveXlsx,
+            [".docx"] = SaveDocx
+        };
 
     public static bool Export(this CebTirage tirage, FileInfo fi) {
         if (!ListeFormats.TryGetValue(fi.Extension, out var laction)) return false;
@@ -40,11 +40,12 @@ public static class CebSerialize {
         laction(tirage, fi);
         return true;
     }
+
+    public static bool Export(this CebTirage tirage, string path) => Export(tirage, new FileInfo(path));
     /// <summary>
     ///
     /// </summary>
-    public static readonly JsonSerializerOptions JsonOptions = new()
-    {
+    public static readonly JsonSerializerOptions JsonOptions = new() {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         Converters = { new JsonStringEnumConverter() },
         WriteIndented = false
@@ -142,7 +143,7 @@ public static class CebSerialize {
         XmlSerializer mySerializer = new(typeof(CebData));
         try {
             mySerializer.Serialize(stream, tirage.Resultat);
-        } catch(SerializationException) {
+        } catch (SerializationException) {
             throw new Exception("Erreur serialisation");
         }
     }
@@ -177,7 +178,7 @@ public static class CebSerialize {
                 }
                 }).AddRange(tirage.Resultat.ToBsonDocument());
             client.InsertOne(document);
-        } catch(Exception) {
+        } catch (Exception) {
             throw new Exception("Erreur de sauvegarde sous MongoDb ");
         }
     }
@@ -189,7 +190,7 @@ public static class CebSerialize {
     /// <param name="fichiers"></param>
     /// <exception cref="Exception"></exception>
     public static void SerializeFichiers(this CebTirage tirage, IEnumerable<FileInfo> fichiers) {
-        foreach(var fichier in fichiers) tirage.Export(fichier);
+        foreach (var fichier in fichiers) tirage.Export(fichier);
     }
 }
 

@@ -56,8 +56,8 @@ public record CebDetail {
 
     public IEnumerable<string> Operations {
         get {
-            for(int i = 0; i < 5; i++) {
-                if(Op(i) is null)
+            for (int i = 0; i < 5; i++) {
+                if (Op(i) is null)
                     yield break;
                 yield return Op(i);
             }

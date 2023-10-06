@@ -342,7 +342,7 @@ namespace CompteEstBon.ViewModel {
                 return;
 
             IsBusy = true;
-            if (Tirage.Export(new FileInfo(path)))
+            if (Tirage.Export(path))
                 path.OpenDocument();
             IsBusy = false;
         }

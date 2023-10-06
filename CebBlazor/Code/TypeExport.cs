@@ -3,6 +3,6 @@
         Excel = 0,
         Word = 1,
         Json = 2,
-        XML = 3
+        Xml = 3
     }
 }

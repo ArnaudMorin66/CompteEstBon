@@ -5,11 +5,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 #region using
-using arnaud.morin.outils;
-
 using System.ComponentModel;
-
 using System.Runtime.CompilerServices;
+
+using arnaud.morin.outils;
 
 using static System.Math;
 
@@ -88,8 +87,7 @@ public sealed class CebTirage : INotifyPropertyChanged {
     /// <summary>
     /// Retourne le résultat
     /// </summary>/>
-    public CebData Resultat => new()
-    {
+    public CebData Resultat => new() {
         Search = Search,
         Plaques = Plaques.Select(p => p.Value).ToArray(),
         Status = Status.ToString(),
