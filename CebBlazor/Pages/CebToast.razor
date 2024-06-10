@@ -2,7 +2,7 @@
 @using Syncfusion.Blazor.Popups
 @using System.Timers
 @using Microsoft.AspNetCore.Routing.Constraints
-@inject CebTirage tirage
+@inject CebTirage Tirage
 @if (Visible) {
     <SfDialog Width="480"
               ShowCloseIcon="false"
@@ -14,17 +14,17 @@
         </DialogAnimationSettings>
         <DialogTemplates>
             <Header>
-                <div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @cls">
-                    <i class="fa-regular @icn"></i>&nbsp;@rsl
+                <div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @_cls">
+                    <i class="fa-regular @_icn"></i>&nbsp;@_rsl
                 </div>
             </Header>
             <Content>
                 <div class="w-100 text-center text-white">
-                    <div>Trouv&eacute;&nbsp;@tirage.Found</div>
-                    @if (tirage.Ecart != 0) {
-                        <div>&Eacute;cart:&nbsp;@tirage.Ecart</div>
+                    <div>Trouv&eacute;&nbsp;@Tirage.Found</div>
+                    @if (Tirage.Ecart != 0) {
+                        <div>&Eacute;cart:&nbsp;@Tirage.Ecart</div>
                     }
-                    <div>@tirage.Count&nbsp;solutions&nbsp;en&nbsp;@($"{tirage.Duree.TotalSeconds:F3}") s</div>
+                    <div>@Tirage.Count&nbsp;solutions&nbsp;en&nbsp;@($"{Tirage.Duree.TotalSeconds:F3}") s</div>
                 </div>
                 <div class="w-100 text-center text-white">
                     @{
@@ -36,8 +36,8 @@
                 </div>
             </Content>
             <FooterTemplate>
-                <div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @cls">
-                    <i class="fa-regular @icn"></i>&nbsp;@rsl
+                <div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @_cls">
+                    <i class="fa-regular @_icn"></i>&nbsp;@_rsl
                 </div>
             </FooterTemplate>
         </DialogTemplates>
@@ -45,7 +45,7 @@
 }
 @code {
 #pragma warning disable CS8618
-    protected Timer timer = new();
+    protected Timer Timer = new();
     protected bool WithTimer { get; set; }
     private bool _visible;
 
@@ -55,9 +55,9 @@
             if (value == _visible) return;
             _visible = value;
             if (WithTimer) {
-                timer.Stop();
+                Timer.Stop();
                 if (_visible) {
-                    timer.Start();
+                    Timer.Start();
                 }
             }
             InvokeAsync(StateHasChanged);
@@ -75,26 +75,26 @@
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (_duetime == value) return;
             _duetime = value;
-            timer.Interval = _duetime;
+            Timer.Interval = _duetime;
 
         }
 
     }
-    string cls;
-    string icn;
-    string rsl;
-    protected override void OnInitialized() => timer.Elapsed += (_, _) => Visible = false;
+    string _cls;
+    string _icn;
+    string _rsl;
+    protected override void OnInitialized() => Timer.Elapsed += (_, _) => Visible = false;
 
     public async Task ShowAsync(CebBase ligne, bool withTimer = true) {
 // #pragma warning disable CS8601
-        (cls, icn, rsl) = tirage.Status switch {
+        (_cls, _icn, _rsl) = Tirage.Status switch {
             CebStatus.CompteEstBon => ("bg-success text-white", "fa-thumbs-up", "Le compte est bon"),
             CebStatus.CompteApproche => ("bg-secondary text-wheat", "fa-thumbs-down text-wheat", "Compte approché"),
             _ => (string.Empty, string.Empty, string.Empty)
         };
         
         if (Visible) {
-            await InvokeAsync(() => Visible = false);
+            await HideAsync();
         }
         WithTimer = withTimer;
         Solution = ligne;

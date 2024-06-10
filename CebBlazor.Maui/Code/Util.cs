@@ -20,15 +20,19 @@ public static class Util {
     public static async Task SaveAsAsync(this IJSRuntime js, string filename, MemoryStream data) =>
         await js.InvokeVoidAsync("saveAsFile", filename, Convert.ToBase64String(data.ToArray()));
 
+#pragma warning disable CS8632 // L'annotation pour les types référence Nullable doit être utilisée uniquement dans le code au sein d'un contexte d'annotations '#nullable'.
     public static string? SyncfusionVersion => typeof(SfBaseComponent).Assembly.GetName().Version?.ToString();
+#pragma warning restore CS8632 // L'annotation pour les types référence Nullable doit être utilisée uniquement dans le code au sein d'un contexte d'annotations '#nullable'.
 
     public static string CebBlazorVersion => Assembly.GetExecutingAssembly().GetName().Version!.ToString();
 
     public static string DotNetVersion => RuntimeInformation.FrameworkDescription;
 
+#pragma warning disable CS8632 // L'annotation pour les types référence Nullable doit être utilisée uniquement dans le code au sein d'un contexte d'annotations '#nullable'.
     public static string? Authors => (Assembly.GetEntryAssembly()?.GetCustomAttributes(
         typeof(AssemblyCopyrightAttribute),
         false)[0] as AssemblyCopyrightAttribute)?.Copyright;
+#pragma warning restore CS8632 // L'annotation pour les types référence Nullable doit être utilisée uniquement dans le code au sein d'un contexte d'annotations '#nullable'.
     
     public static string Version => $"{Authors} ({CebBlazorVersion}), Syncfusion {SyncfusionVersion}, {DotNetVersion}";
 

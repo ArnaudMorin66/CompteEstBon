@@ -38,9 +38,10 @@ public static class Util {
         await using var mstream = new MemoryStream();
         Action<MemoryStream> exportStream = extension switch {
             "xlsx" => tirage.ExcelSaveStream,
-            "docx" => tirage.WordSaveStream,
+            "docx" => tirage.WordStream,
             "json" => tirage.JsonSaveStream,
             "xml" => tirage.XmlSaveStream,
+            "html" => tirage.HtmlStream,
             _ => throw new NotImplementedException()
         };
         exportStream(mstream);

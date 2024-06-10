@@ -7,9 +7,9 @@
 #pragma warning disable CS1591
 
 
-using System.Text.Json.Serialization;
-
 using arnaud.morin.outils;
+
+using System.Text.Json.Serialization;
 
 namespace CompteEstBon;
 
@@ -52,11 +52,12 @@ public abstract class CebBase {
     /// <returns></returns>
     //public override bool Equals(object obj) => (obj is CebBase op && op.Rank == Rank) &&
     //    Operations.Indexed().All(e => string.Compare(e.Item1, op.Operations[e.Item2], StringComparison.Ordinal) == 0);
-    public override bool Equals(object obj) {
-        if (object.ReferenceEquals(this, obj)) return true;
-        return obj is CebBase op && Operations.Indexed().All(e =>
-            string.Compare(e.Item1, op.Operations[e.Item2], StringComparison.Ordinal) == 0);
-    }
+
+    //$$public override bool Equals(object obj) => (obj is CebBase op && op.Operations.Count == Operations.Count) &&
+    //$$  Operations.Indexed().All(e => string.Compare(e.Item1, op.Operations[e.Item2], StringComparison.Ordinal) == 0);
+
+    //   return false;
+    public override bool Equals(object obj) => obj is CebBase op && op.ToString() == this.ToString();
     /// <inheritdoc/>
     public override int GetHashCode() => base.GetHashCode();
 

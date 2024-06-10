@@ -5,16 +5,19 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-using System.IO;
 
 using arnaud.morin.outils;
 
 using Syncfusion.DocIO;
+
 using Syncfusion.DocIO.DLS;
+
 using Syncfusion.Drawing;
 using Syncfusion.Licensing;
 using Syncfusion.XlsIO;
+
+using System;
+using System.IO;
 
 namespace CompteEstBon;
 //
@@ -78,9 +81,15 @@ public static class ExportOffice {
 
     }
 
-
-    public static void WordSaveStream(this CebTirage tirage, Stream stream) {
+    public static void HtmlStream(this CebTirage tirage, Stream stream) {
+        tirage.WordSaveStream(stream, FormatType.Html);
+    }
+    public static void WordStream(this CebTirage tirage, Stream stream) {
+        tirage.WordSaveStream(stream, FormatType.Docx);
+    }
+    public static void WordSaveStream(this CebTirage tirage, Stream stream, FormatType ftype=FormatType.Docx) {
         WordDocument wd = new();
+        
         var sect = wd.AddSection() as WSection;
         var dotm =
             $@"{Environment.GetEnvironmentVariable("USERPROFILE")}\AppData\Roaming\Microsoft\Templates\Normal.dotm";
@@ -162,7 +171,7 @@ public static class ExportOffice {
         tbl.ApplyStyleForHeaderRow = true;
         tbl.ApplyStyleForFirstColumn = false;
         tbl.Rows[0].IsHeader = true;
-        wd.Save(stream, FormatType.Docx);
+        wd.Save(stream, ftype);
         //stream.Close();
         wd.Dispose();
     }

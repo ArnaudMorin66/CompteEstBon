@@ -1,10 +1,10 @@
 ﻿@using CompteEstBon
 @using SelectionType = Syncfusion.Blazor.Grids.SelectionType
-@inject CebTirage tirage
+@inject CebTirage Tirage
 <section>
 	<div class="border border-secondary border-1 rounded bg-primary mb-1 mt-1" style="height: 32rem;">
 		<SfGrid AllowSelection="true"
-		        DataSource="tirage.Solutions"
+		        DataSource="Tirage.Solutions"
 		        EnableAltRow="true"
 		        GridLines="GridLine.Horizontal"
 		        Height="100%"
@@ -17,7 +17,7 @@
 			<GridSelectionSettings CellSelectionMode="CellSelectionMode.Box" Type="SelectionType.Single"></GridSelectionSettings>
 			<GridTemplates>
 				<EmptyRecordTemplate>
-					@if (tirage.Status == CebStatus.EnCours) {
+					@if (Tirage.Status == CebStatus.EnCours) {
 						<div class="position-absolute top-50 start-50 translate-middle">
 							<SfSpinner Visible=true Type="@SpinnerType.Fluent" Size="100"/>
 						</div>
@@ -39,13 +39,13 @@
 				}
 				else {
 					@for (var i = 0; i < 5; i++) {
-						var _i = i;
+						var ii = i;
 						<GridColumn TextAlign="TextAlign.Center">
 							<Template Context="data">
 								@{
 									var operations = (data as CebBase)!.Operations;
-									if (_i < operations.Count)
-										@operations[_i]
+									if (ii < operations.Count)
+										@operations[ii]
 								}
 							</Template>
 						</GridColumn>

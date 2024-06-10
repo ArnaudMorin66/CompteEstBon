@@ -24,7 +24,7 @@ public static class MauiProgram {
         builder.Services.AddScoped<CebTirage>();
         builder.Services.AddSyncfusionBlazor();
         builder.Services.AddSingleton(new CebSetting {
-        MongoDb = bool.TryParse(builder.Configuration["mongodb:actif"], out var mdb) && mdb,
+            MongoDb = bool.TryParse(builder.Configuration["mongodb:actif"], out var mdb) && mdb,
         MongoDbConnectionString = builder.Configuration["mongodb:server"],
         AutoCalcul = bool.TryParse(builder.Configuration["AutoCalcul"], out var res) && res
     });

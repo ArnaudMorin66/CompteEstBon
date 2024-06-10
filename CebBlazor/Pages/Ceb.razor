@@ -1,9 +1,9 @@
 ﻿@page "/"
 @using CompteEstBon
 @using Syncfusion.Blazor.SplitButtons
-@inject CebTirage tirage;
-@inject CebSetting setting;
-@inject IJSRuntime js;
+@inject CebTirage Tirage;
+@inject CebSetting Setting;
+@inject IJSRuntime Js;
 <section>
     <div class="card text-center border-secondary m-1">
         <div class="card-text">
@@ -13,7 +13,7 @@
                         Plaques
                     </div>
                 </div>
-                @foreach (var plq in tirage.Plaques) {
+                @foreach (var plq in Tirage.Plaques) {
                     <div class="col-md-1">
                         <SfComboBox TItem="int"
                                     TValue="int"
@@ -21,7 +21,7 @@
                                     DataSource="@CebPlaque.DistinctPlaques"
                                     ShowClearButton="false"
                                     AllowFiltering="true"
-                                    Enabled="tirage.Status != CebStatus.EnCours">
+                                    Enabled="Tirage.Status != CebStatus.EnCours">
                         </SfComboBox>
                     </div>
                 }
@@ -32,13 +32,13 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <SfNumericTextBox @bind-Value="tirage.Search"
+                    <SfNumericTextBox @bind-Value="Tirage.Search"
                                       Max="999"
                                       Min="100"
                                       Format="N0"
                                       Step="1"
                                       TValue="int"
-                                      Enabled="tirage.Status != CebStatus.EnCours">
+                                      Enabled="Tirage.Status != CebStatus.EnCours">
                     </SfNumericTextBox>
                 </div>
             </div>
@@ -48,7 +48,7 @@
         <div class="row text-center bg-primary border-secondary border-1 g-0">
             <div class="col-md">
                 <button id="hasard"
-                        class="btn btn-primary border border-secondary w-100 @(tirage.Status == CebStatus.EnCours ? "disabled" : "")"
+                        class="btn btn-primary border border-secondary w-100 @(Tirage.Status == CebStatus.EnCours ? "disabled" : "")"
                         accesskey="h"
                         title="Tirage aléatoire"
                         role="button"
@@ -61,15 +61,13 @@
                 <div class="btn-group w-100" role="group">
                     <input class="btn-check" type="checkbox" id="autoCheckbox" @bind-value="Auto" accesskey="a">
                     <label class="btn w-100 border   @(Auto ? "btn-warning border-dark" : "btn-dark border-warning text-white")" for="autoCheckbox">Automatique</label>
-                    <input class="btn-check" type="checkbox" id="mongoChecked" @bind-value="MongoDb" accesskey="m">
-                    <label class="btn w-100 border   @(MongoDb ? "btn-warning border-dark" : "btn-dark border-warning text-white")" for="mongoChecked">MongoDB</label>
                     <input class="btn-check" type="checkbox" id="vueGrille" @bind-value="VueVerticale" accesskey="v">
                     <label class="btn border w-100  @(VueVerticale ? "btn-warning border-dark" : "btn-dark border-warning text-white")" for="vueGrille">
                         <i class="fa-solid @(VueVerticale ? "fa-ellipsis-vertical" : "fa-ellipsis")"></i>
                     </label>
                 </div>
             </div>
-            @if (tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) {
+            @if (Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) {
                 <SfDropDownButton IconCss="fa-solid fa-download"
                                   IconPosition="SplitButtonIconPosition.Left"
                                   CssClass="btn btn-primary border border-warning col-md-1">
@@ -78,8 +76,9 @@
                         <DropDownMenuItem Text="Word" IconCss="fa-regular fa-file-word" Id="docx"></DropDownMenuItem>
                         <DropDownMenuItem Text="Json" IconCss="fa-solid fa-file-export" id="json"></DropDownMenuItem>
                         <DropDownMenuItem Text="XML" IconCss="fa-solid fa-file-export" id="xml"></DropDownMenuItem>
+						<DropDownMenuItem Text="HTML" IconCss="fa-solid fa-file-export" id="html"></DropDownMenuItem>
                     </DropDownMenuItems>
-                    <DropDownButtonEvents ItemSelected="@(async args => await js.ExportAsync(tirage, args.Item.Id))"></DropDownButtonEvents>
+                    <DropDownButtonEvents ItemSelected="@(async args => await Js.ExportAsync(Tirage, args.Item.Id))"></DropDownButtonEvents>
                 </SfDropDownButton>
             }
         </div>
@@ -87,7 +86,7 @@
     <div class="card text-center bg-primary bg-gradient border-secondary mt-1" id="statusx">
         <div class="card-header">
             <div class="'text-center'">
-                @switch (tirage.Status) {
+                @switch (Tirage.Status) {
                     case CebStatus.EnCours:
                         <div class="bg-info cursor-wait" role="alert">
                             <i class="e-icons e-repeat fa-solid fa-spin-pulse"></i>
@@ -101,13 +100,13 @@
                     case CebStatus.CompteApproche:
                         <div class="bg-secondary text-wheat" style="cursor: pointer;" @onclick="ClearAsync" accesskey="r">
                             <i class="fa-regular fa-thumbs-down"></i>&nbsp;
-                            &nbsp;Compte approché:&nbsp;@tirage.Found,&nbsp;écart:&nbsp;@tirage.Ecart,&nbsp;@tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{tirage.Duree.TotalSeconds:F3}")&nbsp;s
+                            &nbsp;Compte approché:&nbsp;@Tirage.Found,&nbsp;écart:&nbsp;@Tirage.Ecart,&nbsp;@Tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{Tirage.Duree.TotalSeconds:F3}")&nbsp;s
                         </div>
                         break;
                     case CebStatus.CompteEstBon:
                         <div class="bg-success w-100 text-black" style="cursor: pointer;" @onclick="ClearAsync" accesskey="r">
                             <i class="fa-regular fa-thumbs-up"></i>
-                            &nbsp;Compte est bon,&nbsp;@(tirage.Count)&nbsp;solutions&nbsp;en&nbsp;@($"{tirage.Duree.TotalSeconds:F3}")&nbsp;s
+                            &nbsp;Compte est bon,&nbsp;@(Tirage.Count)&nbsp;solutions&nbsp;en&nbsp;@($"{Tirage.Duree.TotalSeconds:F3}")&nbsp;s
                         </div>
                         break;
                     default:
@@ -120,9 +119,9 @@
         </div>
     </div>
 </section>
-<CebSolutions VueVerticale="VueVerticale" ShowDetail="async solution => await toast!.ShowAsync(solution, false)"></CebSolutions>
+<CebSolutions VueVerticale="VueVerticale" ShowDetail="async solution => await Toast!.ShowAsync(solution, false)"></CebSolutions>
 <CebFooter></CebFooter>
-<CebToast @ref="toast" DueTime="10000"></CebToast>
+<CebToast @ref="Toast" DueTime="10000"></CebToast>
 
 @code {
     private bool _vueVerticale;
@@ -144,53 +143,48 @@
             if (_auto == value) return;
             _auto = value;
             InvokeAsync(StateHasChanged);
-            if (_auto && tirage.Status == CebStatus.Valide) {
+            if (_auto && Tirage.Status == CebStatus.Valide) {
                 Task.Run(async () => {
-                    await tirage.ResolveAsync();
+                    await Tirage.ResolveAsync();
                     await InvokeAsync(StateHasChanged);
                 });
             }
         }
     }
-
-    bool MongoDb { get; set; }
+    
 #pragma warning disable CS8618
 #pragma warning disable CS8602
-    public CebToast? toast { get; set; }
+    public CebToast? Toast { get; set; }
 
     protected override async Task OnInitializedAsync() {
         await base.OnInitializedAsync();
-        tirage.PropertyChanged += async (_, args) => {
-            await toast.HideAsync();
-            if (!Auto || args.PropertyName.ToLower() != "clear" || tirage.Status == CebStatus.EnCours) return;
+        Tirage.PropertyChanged += async (_, args) => {
+            await Toast.HideAsync();
+            if (!Auto || args.PropertyName.ToLower() != "clear" || Tirage.Status == CebStatus.EnCours) return;
             await ResolveAsync();
             await InvokeAsync(StateHasChanged);
         };
-        Auto = setting.AutoCalcul;
-        MongoDb = setting.MongoDb;
-
+        Auto = Setting.AutoCalcul;
         VueVerticale = false;
         await InvokeAsync(StateHasChanged);
     }
 
     async Task RandomAsync() {
-        await toast.HideAsync();
-        await tirage.RandomAsync();
+        await Toast.HideAsync();
+        await Tirage.RandomAsync();
     }
 
     async Task ClearAsync() {
-        await toast.HideAsync();
-        await tirage.ClearAsync();
+        await Toast.HideAsync();
+        await Tirage.ClearAsync();
     }
 
     async Task ResolveAsync() {
-        await toast.HideAsync();
-        await tirage.ResolveAsync();
+        await Toast.HideAsync();
+        await Tirage.ResolveAsync();
 
-        if (tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) {
-            if (MongoDb)
-                tirage.SerializeMongo(setting.MongoDbConnectionString, "Blazor");
-            await toast.ShowAsync(tirage.Solutions[0]);
+        if (Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) {
+            await Toast.ShowAsync(Tirage.Solutions[0]);
         }
     }
 

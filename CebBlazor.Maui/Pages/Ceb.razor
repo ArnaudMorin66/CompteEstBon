@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using CompteEstBon
 @using Syncfusion.Blazor.SplitButtons
+@* ReSharper disable  InconsistentNaming *@
 @inject CebTirage tirage;
 @inject CebSetting setting;
 @inject IJSRuntime js;
@@ -119,7 +120,7 @@
         </div>
     </div>
 </section>
-<CebSolutions VueVerticale="VueVerticale" ShowDetail="async solution => await toast!.ShowAsync(solution, false)"></CebSolutions>
+<CebSolutions VueVerticale="VueVerticale" ShowDetail="async solution => await toast!.ShowAsync(solution)"></CebSolutions>
 <CebFooter></CebFooter>
 <CebToast @ref="toast" DueTime="10000"></CebToast>
 
@@ -156,6 +157,7 @@
     bool MongoDb { get; set; }
 #pragma warning disable CS8618
 #pragma warning disable CS8602
+    #nullable enable 
     public CebToast? toast { get; set; }
 
     protected override async Task OnInitializedAsync() {

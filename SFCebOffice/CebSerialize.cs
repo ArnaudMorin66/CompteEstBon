@@ -16,10 +16,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Conventions;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
+using Syncfusion.DocIO;
 
 namespace CompteEstBon;
 
@@ -30,7 +27,8 @@ public static class CebSerialize {
             [".json"] = SaveJson,
             [".xml"] = SaveXml,
             [".xlsx"] = SaveXlsx,
-            [".docx"] = SaveDocx
+            [".docx"] = SaveDocx,
+            [".html"] = SaveDocx
         };
 
     public static bool Export(this CebTirage tirage, FileInfo fi) {
@@ -78,7 +76,7 @@ public static class CebSerialize {
     /// <param name="file"></param>
     public static void SaveDocx(this CebTirage tirage, FileInfo file) {
         using var stream = file.Create();
-        tirage.WordSaveStream(stream);
+        tirage.WordSaveStream(stream, file.Extension==".html" ? FormatType.Html: FormatType.Docx);
     }
 
     /// <summary>
@@ -156,32 +154,7 @@ public static class CebSerialize {
     /// <param name="lang"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    public static void SerializeMongo(this CebTirage tirage, string server, string lang = "c#") {
-        try {
-            ConventionRegistry.Register(
-                "EnumStringConvention",
-                new ConventionPack { new EnumRepresentationConvention(BsonType.String) },
-                _ => true);
-            var clientSettings = MongoClientSettings.FromConnectionString(server);
-            clientSettings.LinqProvider = LinqProvider.V3;
-
-            var client = new MongoClient(clientSettings)
-                .GetDatabase("CompteEstBon")
-                .GetCollection<BsonDocument>(lang);
-            var document = new BsonDocument(
-                new Dictionary<string, object>
-                {
-                {
-                    "_id",
-                    new { domain = Environment.GetEnvironmentVariable("USERDOMAIN"), date = DateTime.UtcNow }.ToBsonDocument(
-                    )
-                }
-                }).AddRange(tirage.Resultat.ToBsonDocument());
-            client.InsertOne(document);
-        } catch (Exception) {
-            throw new Exception("Erreur de sauvegarde sous MongoDb ");
-        }
-    }
+    
 
     /// <summary>
     ///

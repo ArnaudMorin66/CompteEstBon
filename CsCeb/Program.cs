@@ -5,14 +5,18 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.CommandLine;
-using System.CommandLine.Invocation;
-using System.CommandLine.Parsing;
-using System.CommandLine.Rendering;
+
 
 using arnaud.morin.outils;
 
 using Microsoft.Extensions.Configuration;
+
+using System.CommandLine;
+using System.CommandLine.Invocation;
+
+using System.CommandLine.Parsing;
+
+using System.CommandLine.Rendering;
 
 using static System.Console;
 
@@ -24,9 +28,7 @@ bool afficher = false;
 bool wait = false;
 string configurationFile =
     @$"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\Ceb\config.json";
-string mongoServer = string.Empty;
-bool saveToMongoDb = false;
-List<FileInfo> exports = new();
+List<FileInfo> exports = [];
 FileInfo zipfile = null;
 CebTirage tirage = new();
 if (File.Exists(configurationFile)) {
@@ -35,12 +37,6 @@ if (File.Exists(configurationFile)) {
         switch (config.Path.ToUpper()) {
             case "SAVE":
                 save = bool.TryParse(config.Value, out bool v) && v;
-                break;
-            case "MONGODB":
-                saveToMongoDb = bool.TryParse(config.Value, out bool wv) && wv;
-                break;
-            case "MONGODBSERVER":
-                mongoServer = config.Value;
                 break;
             case "ZIPFILE":
                 try {
@@ -54,9 +50,11 @@ if (File.Exists(configurationFile)) {
 }
 
 
-RootCommand rootCommand = new("Compte Est Bon") {
+RootCommand rootCommand = new("Compte Est Bon")
+{
     new Option<int>(new[] { "--trouve", "-t" }, "Nombre à chercher (entre 100 et 999)"),
-    new Option<List<int>>(new[] { "--plaques", "-p" }, "Liste des plaques (6)") {
+    new Option<List<int>>(new[] { "--plaques", "-p" }, "Liste des plaques (6)")
+    {
         AllowMultipleArgumentsPerToken = true
     },
     new Option<bool>(new[] { "--json", "-j" }, "Export au format JSON"),
@@ -64,7 +62,8 @@ RootCommand rootCommand = new("Compte Est Bon") {
     new Option<bool>(new[] { "--sauvegarde", "-s" }, "Sauvegarder le Compte"),
     new Option<bool>(new[] { "--mongodb", "-m" }, "Sauvegarder le Compte dans MongoDB"),
     new Option<string>(new[] { "--serveur", "-S" }, "Nom du serveur MongoDB"),
-    new Option<List<FileInfo>>(new[] { "--exports", "-x", "-f" }, "Exporter vers excel, word, json, xml, zip...") {
+    new Option<List<FileInfo>>(new[] { "--exports", "-x", "-f" }, "Exporter vers excel, word, json, xml, zip...")
+    {
         AllowMultipleArgumentsPerToken = true
     },
     new Option<bool>(new[] { "--afficher", "-a" }, "Afficher les fichiers exportés"),
@@ -134,8 +133,6 @@ void Run() {
         ExportOffice.RegisterLicense(Resources.sflicence);
 
         tirage.SerializeFichiers(exports);
-        if (saveToMongoDb && mongoServer != string.Empty)
-            tirage.SerializeMongo(mongoServer);
 
         if (afficher)
             foreach (FileInfo export in exports)
@@ -194,16 +191,8 @@ void Handler(InvocationContext context) {
                 case "sauvegarde":
                     save = optionResult.GetValueOrDefault<bool>();
                     break;
-
-                case "mongodb":
-                    saveToMongoDb = optionResult.GetValueOrDefault<bool>();
-                    save = true;
-                    break;
-
-                case "serveur":
-                    mongoServer = optionResult.GetValueOrDefault<string>();
-                    break;
-
+                
+                
                 case "afficher":
                     afficher = optionResult.GetValueOrDefault<bool>();
                     break;
