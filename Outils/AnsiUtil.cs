@@ -1,18 +1,7 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="CebUtilitaires.cs" company="">
-//     Author:  
-//     Copyright (c) . All rights reserved.
-// </copyright>
-//-----------------------------------------------------------------------
-using System.CommandLine.Rendering;
+﻿using System.CommandLine.Rendering;
 
-namespace CompteEstBon;
-
-// ReSharper disable once CheckNamespace
-/// <summary>
-///
-/// </summary>
-public static class CebUtilitaires {
+namespace arnaud.morin.outils;
+public static class AnsiUtils {
     /// <summary>
     ///
     /// </summary>
@@ -32,8 +21,8 @@ public static class CebUtilitaires {
     /// </summary>
     /// <param name="texte"></param>
     /// <returns></returns>
-     public static string Red(this string texte) => texte.ControlCode(Ansi.Color.Foreground.Red);
-     
+    public static string Red(this string texte) => texte.ControlCode(Ansi.Color.Foreground.Red);
+
     /// <summary>
     ///
     /// </summary>
@@ -49,11 +38,11 @@ public static class CebUtilitaires {
     public static string Cyan(this string texte) => texte.ControlCode(Ansi.Color.Foreground.Cyan);
 
     /// <summary>
-///
-/// </summary>
+    ///
+    /// </summary>
     /// <param name="texte"></param>
     /// <returns></returns>
-        public static string Green(this string texte) => texte.ControlCode(Ansi.Color.Foreground.Green);
+    public static string Green(this string texte) => texte.ControlCode(Ansi.Color.Foreground.Green);
 
     /// <summary>
     ///
@@ -76,8 +65,8 @@ public static class CebUtilitaires {
     /// <returns></returns>
     public static string Blue(this string texte) => texte.ControlCode(Ansi.Color.Foreground.Blue);
 
-    public static string Underline(this string texte) =>texte.ControlCode(Ansi.Text.UnderlinedOn,Ansi.Text.AttributesOff);
-    public static string Bold(this string texte)=> texte.ControlCode(Ansi.Text.BoldOn, Ansi.Text.BoldOff);
+    public static string Underline(this string texte) => texte.ControlCode(Ansi.Text.UnderlinedOn, Ansi.Text.AttributesOff);
+    public static string Bold(this string texte) => texte.ControlCode(Ansi.Text.BoldOn, Ansi.Text.BoldOff);
     public static string ReverseColors(this string texte) => texte.ControlCode(Ansi.Text.ReverseOn, Ansi.Text.ReverseOff);
 
 }

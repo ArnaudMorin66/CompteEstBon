@@ -1,8 +1,7 @@
 ﻿@using CompteEstBon
 @using SelectionType = Syncfusion.Blazor.Grids.SelectionType
 @inject CebTirage Tirage
-<section>
-	<div class="border border-secondary border-1 rounded bg-primary mb-1 mt-1" style="height: 32rem;">
+	<div class="border border-secondary border-1 rounded bg-primary mb-1 mt-1" style="height: 32rem;" id="grille">
 		<SfGrid AllowSelection="true"
 		        DataSource="Tirage.Solutions"
 		        EnableAltRow="true"
@@ -54,7 +53,7 @@
 			</GridColumns>
 		</SfGrid>
 	</div>
-</section>
+
 
 @code {
 

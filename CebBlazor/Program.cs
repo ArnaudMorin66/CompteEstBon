@@ -5,7 +5,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 using CebBlazor.Code;
-using CebBlazor.Properties;
+
 
 using CompteEstBon;
 
@@ -21,12 +21,10 @@ svc.AddSyncfusionBlazor();
 
 svc.AddSingleton(
     new CebSetting {
-        MongoDb = bool.TryParse(builder.Configuration["mongodb:actif"], out var mdb) && mdb,
-        MongoDbConnectionString = builder.Configuration["mongodb:server"],
         AutoCalcul = bool.TryParse(builder.Configuration["AutoCalcul"], out var res) && res
     });
 svc.AddScoped<CebTirage>();
-SyncfusionLicenseProvider.RegisterLicense(licenseKey: Resources.Licence);
+SyncfusionLicenseProvider.RegisterLicense(licenseKey: builder.Configuration["sflicense"]);
 
 
 var app = builder.Build();

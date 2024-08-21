@@ -1,48 +1,51 @@
 @using CompteEstBon
 @using Syncfusion.Blazor.Popups
 @using System.Timers
-@using Microsoft.AspNetCore.Routing.Constraints
 @inject CebTirage Tirage
-@if (Visible) {
-    <SfDialog Width="480"
-              ShowCloseIcon="false"
-              AllowDragging="true"
-              @onclick="() => Visible = false"
-              ID="DlgToast">
-        <DialogAnimationSettings Effect="@DialogEffect.FadeZoom"
-                                 Duration="1000">
-        </DialogAnimationSettings>
-        <DialogTemplates>
-            <Header>
-                <div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @_cls">
-                    <i class="fa-regular @_icn"></i>&nbsp;@_rsl
-                </div>
-            </Header>
-            <Content>
-                <div class="w-100 text-center text-white">
-                    <div>Trouv&eacute;&nbsp;@Tirage.Found</div>
-                    @if (Tirage.Ecart != 0) {
-                        <div>&Eacute;cart:&nbsp;@Tirage.Ecart</div>
-                    }
-                    <div>@Tirage.Count&nbsp;solutions&nbsp;en&nbsp;@($"{Tirage.Duree.TotalSeconds:F3}") s</div>
-                </div>
-                <div class="w-100 text-center text-white">
-                    @{
-                        <div class="separator bg-warning mb-2">&nbsp;</div>
-                        foreach (var item in Solution.Operations) {
-                            <div>@item</div>
-                        }
-                    }
-                </div>
-            </Content>
-            <FooterTemplate>
-                <div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @_cls">
-                    <i class="fa-regular @_icn"></i>&nbsp;@_rsl
-                </div>
-            </FooterTemplate>
-        </DialogTemplates>
-    </SfDialog>
-}
+@if (Visible) { 
+	<SfDialog Width="480"
+	          ShowCloseIcon="false"
+	          AllowDragging="true"
+	          @onclick="() => Visible = false"
+	         Target="#Solutions"
+	          ID="DlgToast">
+		<DialogAnimationSettings Effect="@DialogEffect.FadeZoom"
+		                         Duration="1000">
+		</DialogAnimationSettings>
+		<DialogTemplates>
+			<Header>
+				<div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @_cls">
+					<i class="fa-regular @_icn"></i>&nbsp;@_rsl
+				</div>
+			</Header>
+			<Content>
+				<div class="w-100 text-center text-white">
+					<div>Trouv&eacute;&nbsp;@Tirage.Found</div>
+					@if (Tirage.Ecart != 0) {
+						<div>&Eacute;cart:&nbsp;@Tirage.Ecart</div>
+					}
+					<div>@Tirage.Count&nbsp;solutions&nbsp;en&nbsp;@($"{Tirage.Duree.TotalSeconds:F3}") s</div>
+				</div>
+				<div class="w-100 text-center text-white">
+					@{
+						<div class="separator bg-warning mb-2">&nbsp;</div>
+						
+							foreach (var item in Solution.Operations) {
+								<div>@item</div>
+							}
+						
+					}
+				</div>
+			</Content>
+			<FooterTemplate>
+				<div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @_cls">
+					<i class="fa-regular @_icn"></i>&nbsp;@_rsl
+				</div>
+			</FooterTemplate>
+		</DialogTemplates>
+	</SfDialog>
+
+ } 
 @code {
 #pragma warning disable CS8618
     protected Timer Timer = new();
@@ -104,7 +107,7 @@
 
     public async Task HideAsync() {
         if (!Visible) return;
-        Visible = false;
+        _visible = false;
         await InvokeAsync(StateHasChanged);
     }
 

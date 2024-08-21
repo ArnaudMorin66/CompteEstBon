@@ -1,14 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
-        <TargetFramework>net9.0-windows</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <LangVersion>preview</LangVersion>
-        <IsPackable>true</IsPackable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <TypeScriptEnabled>false</TypeScriptEnabled>
-        <TypeScriptCompileBlocked>false</TypeScriptCompileBlocked>
-        <TypeScriptCompileOnSaveEnabled>False</TypeScriptCompileOnSaveEnabled>
-        <TypeScriptSourceMap>False</TypeScriptSourceMap>
         <NoWarn>1701;1702;8002</NoWarn>
         <UserSecretsId>863459e9-e5ca-4fdd-813d-9a4f7efc30bc</UserSecretsId>
         <AssemblyVersion>4.8.2.13120</AssemblyVersion>
@@ -18,61 +12,21 @@
         <Authors>@Arnaud Morin</Authors>
         <SignAssembly>False</SignAssembly>
         <NeutralLanguage>fr</NeutralLanguage>
-        <OutputType>Exe</OutputType>
     </PropertyGroup>
-
     <ItemGroup>
-        <TypeScriptCompile Remove="node_modules\**" />        
+      <EmbeddedResource Remove="Resource.resx" />
     </ItemGroup>
-
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.Identity.Web" Version="2.16.0" />
-        <PackageReference Include="Microsoft.Identity.Web.UI" Version="2.16.0" />
-        <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
-        <PackageReference Include="Syncfusion.Blazor.Core" Version="23.2.7" />
-        <PackageReference Include="Syncfusion.Blazor.Grid" Version="23.2.7" />
-        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="23.2.7" />
+        <PackageReference Include="Syncfusion.Blazor.Core" Version="26.2.9" />
+        <PackageReference Include="Syncfusion.Blazor.Grid" Version="26.2.9" />
+        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="26.2.9" />
     </ItemGroup>
-
     <ItemGroup>
-        <Folder Include="wwwroot\css\" />
-        <Folder Include="wwwroot\js\fontawesome\" />
-        <Folder Include="wwwroot\js\" />
-        <Folder Include="wwwroot\webfonts\" />
+      <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
+      <ProjectReference Include="..\Outils\arnaud.morin.outils.csproj" />
+      <ProjectReference Include="..\SFCebOffice\CebExport.csproj" />
     </ItemGroup>
-
     <ItemGroup>
-        <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
-        <ProjectReference Include="..\SFCebOffice\CebExport.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Update="Properties\Resources.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Resources.resx</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Update="Properties\Resources.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-    </ItemGroup>
-
-    <ProjectExtensions>
-        <VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="https://appsemble.app/api.json" libman_1json__JsonSchema="" package_1json__JsonSchema="" properties_4launchsettings_1json__JsonSchema="" /></VisualStudio>
-    </ProjectExtensions>
-
-    <ItemGroup>
-      <EditorConfigFiles Update="C:\Users\Arnaud\Source\SqlServer\ConsoleApp2\.editorconfig" Link=".editorconfig" />
+      <Resource Include="Properties\Resource.resx" />
     </ItemGroup>
 </Project>

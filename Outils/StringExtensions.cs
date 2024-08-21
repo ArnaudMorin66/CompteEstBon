@@ -173,7 +173,7 @@ public static partial class StringExtensions {
     /// <param name="s">chaine dont les caractères situés le plus à gauche sont retournés</param>
     /// <param name="count">Nombre de caractères à retourner</param>
     /// <returns>une chaîne contenant le nombre spécifié de caractères en partant de la gauche de s</returns>
-    public static string Left(this string s, int count) => s[..count];
+    public static string Left(this string s, int count) => s.Length >= count ? s : s[..count];
 
     /// <summary>
     /// Retourne une chaîne contenant un nombre spécifié de caractères en partant de la droite d'une chaîne.
@@ -181,7 +181,7 @@ public static partial class StringExtensions {
     /// <param name="s">chaine dont les caractères situés le plus à droite sont retournés</param>
     /// <param name="count">Nombre de caractères à retourner</param>
     /// <returns>une chaîne contenant le nombre spécifié de caractères en partant de la droite de s</returns>
-    public static string Right(this string s, int count) => s[^count..];
+    public static string Right(this string s, int count) => s.Length >= count ? s : s[^count..];
 
     /// <summary>
     /// Retourne une chaine tronquée au nombre de caractères spécifié.
@@ -319,13 +319,7 @@ public static partial class StringExtensions {
     /// <param name="prefix">Préfixe à vérifier et éventuellement ajouter</param>
     /// <returns>La chaine originale si elle commence par le le préfixe spécifié, sinon la chaine originale précédée du préfixe</returns>
     public static string EnsureStartsWith(this string s, string prefix) => !s.StartsWith(prefix) ? prefix + s : s;
-
-    ///<summary>
-    /// Vérifie si une chaine de caractères est une adresse email valide
-    ///</summary>
-    ///<param name="email">La chaine à vérifier</param>
-    ///<returns>true si la chaine est une adresse email valide, false sinon</returns>
-    // public static bool IsValidEmail(this string email) => _emailRegex.IsMatch(email);
+    
 
     /// <summary>
     /// Détermine si deux objets String ont la même valeur. Null et string.Empty sont considérés comme égaux

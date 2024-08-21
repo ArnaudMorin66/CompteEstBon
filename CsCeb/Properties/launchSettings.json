@@ -1,7 +1,8 @@
 {
   "profiles": {
     "ceb": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "[enable-vt]"
     },
     "help": {
       "commandName": "Project",
@@ -13,27 +14,31 @@
     },
     "JSon": {
       "commandName": "Project",
-      "commandLineArgs": "--json"
+      "commandLineArgs": "--jsonx"
     },
     "File": {
       "commandName": "Project",
-      "commandLineArgs": "-f \"C:\\Users\\arnaud\\Downloads\\ceb.json\""
+      "commandLineArgs": "-f \"C:\\Users\\arnaud\\Downloads\\ceb.xlsx\" \"C:\\Users\\arnaud\\Downloads\\ceb.docx\" -S"
     },
     "Zip": {
       "commandName": "Project",
       "commandLineArgs": "-f \"C:\\Users\\arnaud\\Downloads\\compeestbon.zip\""
     },
-    "Save": {
-      "commandName": "Project",
-      "commandLineArgs": "-S"
-    },
     "parametres": {
       "commandName": "Project",
-      "commandLineArgs": "5 5 6 6 7 7 333 "
+      "commandLineArgs": "-p 5 5 6 6 7 7 -s 444"
     },
     "Erreur option": {
       "commandName": "Project",
       "commandLineArgs": "-imposs kop --rez -%%"
+    },
+    "arguments": {
+      "commandName": "Project",
+      "commandLineArgs": "654 9 8 7 6 5 4"
+    },
+    "parse": {
+      "commandName": "Project",
+      "commandLineArgs": "[suggest] -p 5 5 6 6 7 7 -s 444"
     }
   }
 }

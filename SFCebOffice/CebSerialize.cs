@@ -46,7 +46,7 @@ public static class CebSerialize {
     public static readonly JsonSerializerOptions JsonOptions = new() {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         Converters = { new JsonStringEnumConverter() },
-        WriteIndented = false
+        WriteIndented = true
     };
 
     /// <summary>
@@ -147,20 +147,11 @@ public static class CebSerialize {
     }
 
     /// <summary>
-    ///
-    /// </summary>
-    /// <param name="tirage"></param>
-    /// <param name="server"></param>
-    /// <param name="lang"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
-    
-
-    /// <summary>
-    ///
+    /// 
     /// </summary>
     /// <param name="tirage"></param>
     /// <param name="fichiers"></param>
+    /// <returns></returns>
     /// <exception cref="Exception"></exception>
     public static void SerializeFichiers(this CebTirage tirage, IEnumerable<FileInfo> fichiers) {
         foreach (var fichier in fichiers) tirage.Export(fichier);
