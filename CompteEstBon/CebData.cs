@@ -43,5 +43,5 @@ public record struct CebData {
     /// Solutions
     /// </summary>
     [XmlArray, XmlArrayItem("Solution")]
-    public string[]? Solutions { get; set; }
+    public List<string> Solutions { get; set; }
 }

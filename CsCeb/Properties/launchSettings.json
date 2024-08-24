@@ -2,7 +2,7 @@
   "profiles": {
     "ceb": {
       "commandName": "Project",
-      "commandLineArgs": "[enable-vt]"
+      "commandLineArgs": "-w"
     },
     "help": {
       "commandName": "Project",
@@ -14,11 +14,11 @@
     },
     "JSon": {
       "commandName": "Project",
-      "commandLineArgs": "--jsonx"
+      "commandLineArgs": "--json"
     },
     "File": {
       "commandName": "Project",
-      "commandLineArgs": "-f \"C:\\Users\\arnaud\\Downloads\\ceb.xlsx\" \"C:\\Users\\arnaud\\Downloads\\ceb.docx\" -S"
+      "commandLineArgs": "-f \"C:\\Users\\arnaud\\Downloads\\ceb.xlsx\" \"C:\\Users\\arnaud\\Downloads\\ceb.docx\" -d"
     },
     "Zip": {
       "commandName": "Project",
@@ -26,15 +26,15 @@
     },
     "parametres": {
       "commandName": "Project",
-      "commandLineArgs": "-p 5 5 6 6 7 7 -s 444"
+      "commandLineArgs": "-p 7 6 10 10 8 1 -s 871"
     },
     "Erreur option": {
       "commandName": "Project",
-      "commandLineArgs": "-imposs kop --rez -%%"
+      "commandLineArgs": "1277 2 3 4 5 6 7"
     },
     "arguments": {
       "commandName": "Project",
-      "commandLineArgs": "654 9 8 7 6 5 4"
+      "commandLineArgs": "658 8 7 6 5 4 9"
     },
     "parse": {
       "commandName": "Project",

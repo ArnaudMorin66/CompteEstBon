@@ -7,20 +7,16 @@
 
 
 using System.CommandLine;
-using System.CommandLine.Builder;
-using System.CommandLine.Parsing;
-using System.CommandLine.Rendering;
+using System.CommandLine.NamingConventionBinder;
 
 using arnaud.morin.outils;
+
+using Spectre.Console.Json;
 
 using static Spectre.Console.AnsiConsole;
 
 
-var json = false;
-var jsonx = false;
-var display = false;
-var wait = false;
-List<FileInfo> exports = [];
+List<FileInfo> listExports = [];
 CebTirage tirage = new();
 
 var optSearch = new Option<int?>(["--search", "-s"], "Nombre à chercher (entre 100 et 999)");
@@ -28,18 +24,18 @@ var optSearch = new Option<int?>(["--search", "-s"], "Nombre à chercher (entre 
 var optPlaques =
     new Option<List<int>?>(["--plaques", "-p"], "Liste des plaques (6)") { AllowMultipleArgumentsPerToken = true };
 
-var optJson = new Option<bool?>(["--json", "-j"], "Export au format JSON");
+var optJson = new Option<bool>(["--json", "-j"], () => false, "Export au format JSON");
 
-var optJsonx = new Option<bool?>(["--jsonx", "-J"], "Export au format JSON et quitte");
+var optJsonx = new Option<bool>(["--jsonx", "-J"], () => false, "Export au format JSON et quitte");
 
 var optExports =
-    new Option<List<FileInfo>?>(["--exports", "-x", "-f"], "Exporter vers excel, word, json, xml, zip...") {
+    new Option<List<FileInfo>>(["--exports", "-x", "-f"], "Exporter vers excel, word, json, xml, zip...") {
         AllowMultipleArgumentsPerToken = true
     };
 
-var optDisplay = new Option<bool?>(["--display", "-d"], "Afficher les fichiers exportés");
+var optDisplay = new Option<bool>(["--display", "-d"], () => false, "Afficher les fichiers exportés");
 
-var optWait = new Option<bool?>(["--wait", "-w"], "Attendre touche");
+var optWait = new Option<bool>(["--wait", "-w"], () => false, "Attendre touche");
 
 var argArguments = new Argument<List<int>?>("arguments", "Plaques (6) et nombre à trouver (entre 100 et 999)");
 
@@ -47,95 +43,92 @@ var argArguments = new Argument<List<int>?>("arguments", "Plaques (6) et nombre 
 RootCommand commands = new("Compte Est Bon") {
     optSearch, optPlaques, optJson, optJsonx, optExports, optDisplay, optWait, argArguments
 };
-
-var parser = new CommandLineBuilder(commands)
-    .UseDefaults()
-    .UseParseDirective()
-    .UseAnsiTerminalWhenAvailable()
-    .UseHelp()
-    .UseVersionOption()
-    .UseSuggestDirective()
-    .Build();
+// ReSharper disable InconsistentNaming
+var Wait = false;
+var Json = false;
+var Jsonx = false;
+var Display = false;
+// ReSharper restore InconsistentNaming
 
 try {
-    commands.SetHandler(async ctx => {
-        var result = ctx.ParseResult;
+    commands.Handler = CommandHandler.Create<int?, List<int>, bool, bool, List<FileInfo>, bool, bool, List<int>?>(
+        (search, plaques, json, jsonx, exports, display, wait, arguments) => {
+            if (search is not null) tirage.Search = (int)search;
+            if (plaques is { Count: > 0 }) tirage.SetPlaques(plaques);
+            Wait = wait;
+            Json = json;
+            Jsonx = jsonx;
+            Display = display;
+            listExports.AddRange(exports);
+            if (arguments is { Count: > 0 }) {
+                if (arguments[0] is > 100) {
+                    tirage.Search = arguments[0];
+                    arguments.RemoveAt(0);
+                } else if (arguments[6] is > 100) {
+                    tirage.Search = arguments[6];
+                    arguments.RemoveAt(6);
+                }
 
-        if (result.GetValueForOption(optSearch) is { } search) tirage.Search = search;
-
-        if (result.GetValueForOption(optPlaques) is { Count: > 0 } plq) tirage.SetPlaques(plq);
-
-        if (result.GetValueForOption(optJson) is { } jsonValue) json = jsonValue;
-
-        if (result.GetValueForOption(optJsonx) is { } jsonxValue) jsonx = jsonxValue;
-
-        if (result.GetValueForOption(optExports) is { Count: > 0 } fileInfos) exports.AddRange(fileInfos);
-
-        if (result.GetValueForOption(optDisplay) is { } displaValue) display = displaValue;
-
-        if (result.GetValueForOption(optWait) is { } waitValue) wait = waitValue;
-
-        if (result.GetValueForArgument(argArguments) is { Count: > 0 } valeurs) {
-            if (valeurs[0] > 100) {
-                tirage.Search = valeurs[0];
-                valeurs.RemoveAt(0);
-            } else if (valeurs is [_, _, _, _, _, _, >= 100, ..]) {
-                tirage.Search = valeurs[6];
-                valeurs.RemoveAt(6);
+                if (arguments.Count > 0)
+                    tirage.SetPlaques(arguments);
             }
 
-            if (valeurs.Count > 0)
-                tirage.SetPlaques(valeurs);
-        }
+            return 1;
+        });
+    if (await commands.InvokeAsync(args) != 1) return;
 
-        await RunAsync();
-    });
-    await parser.InvokeAsync(args);
-
-    //await commands.InvokeAsync(args);
-} catch (Exception ex) {
-    Abort(ex);
+    await RunAsync();
+} catch (Exception e) {
+    Abort(e);
 }
 
-if (wait) {
+if (Wait) {
     Write(@"Appuyez sur une touche pour terminer...");
-    AnsiConsole.Console.Input.ReadKey(true);
+    AnsiConsole.Console.Input.ReadKey(false);
 }
 
 return;
 
 async Task RunAsync() {
-    if (!jsonx) {
-        Write(Align.Center(new Markup("[black on red bold u]*** LE COMPTE EST BON ***[/]")));
+    if (!Jsonx) {
+        Write(
+            new FigletText("COMPTE EST BON")
+                .Centered()
+                .Color(Color.Yellow));
+        WriteLine();
+        WriteLine();
+
+        var res = new List<string> { "[yellow bold]Plaques:[/]" };
+        res.AddRange(tirage.Plaques.Select(p => p.ToString()));
+        res.Add("[yellow]Recherche:[/]");
+        res.Add(tirage.Search.ToString());
+        Write(Align.Center(new Panel(new Columns(res)).Border(BoxBorder.Square)));
         WriteLine();
         WriteLine();
     }
+
 
     await tirage.ResolveAsync();
-
-    if (json || jsonx) {
+    if (Jsonx) {
         WriteLine(tirage.WriteJson());
-        if (jsonx) Environment.Exit(0);
+        Environment.Exit(0);
     }
 
-    var grid = new Grid();
-    var res = new List<string> { "[yellow]Plaques:[/]" };
-    res.AddRange(tirage.Plaques.Select(p => p.ToString()));
-    res.Add("[yellow]Recherche:[/]");
-    res.Add(tirage.Search.ToString());
-    grid.AddColumns(9)
-        .AddRow(res.ToArray());
+    if (Json) {
+        var jtext = new JsonText(tirage.WriteJson());
+        Write(Align.Center(
+            new Panel(jtext).Expand()
+                .RoundedBorder()
+                .BorderColor(Color.Yellow)));
+    }
 
-    Write(Align.Center(grid));
-    WriteLine();
-    WriteLine();
-
-    if (tirage.Status == CebStatus.Invalide) throw new ArgumentException("Tirage  invalide");
+    if (tirage.Status == CebStatus.Invalide)
+        throw new ArgumentException("Tirage  invalide");
 
     Write(Align.Center(new Markup(
         tirage.Status == CebStatus.CompteEstBon
-            ? "[green]CompteEstBon[/]"
-            : $"[magenta]Compte approché[/]: {tirage.Found}")));
+            ? "[green]Compte est bon[/]"
+            : $"[orange1]Compte approché:[/] {tirage.Found}")));
     WriteLine();
     WriteLine();
 
@@ -145,51 +138,56 @@ async Task RunAsync() {
 
     WriteLine();
     WriteLine();
-    var tab = new Table().Alignment(Justify.Center)
+    var table = new Table().Alignment(Justify.Center)
+        .Border(TableBorder.HeavyHead)
+        //.ShowRowSeparators()
         .BorderColor(tirage.Status == CebStatus.CompteEstBon ? Color.Green : Color.Orange1)
-        .AddColumns(new TableColumn("Numéro").Alignment(Justify.Center),
-            new TableColumn("Opération 1").Alignment(Justify.Left),
-            new TableColumn("Opération 2").Alignment(Justify.Left),
-            new TableColumn("Opération 3").Alignment(Justify.Left),
-            new TableColumn("Opération 4").Alignment(Justify.Left),
-            new TableColumn("Opération 5").Alignment(Justify.Left));
+        .AddColumns(
+            new TableColumn("[red]N°[/]").Alignment(Justify.Center),
+            new TableColumn("[yellow b]Opération 1[/]").Alignment(Justify.Left),
+            new TableColumn("[yellow b]Opération 2[/]").Alignment(Justify.Left),
+            new TableColumn("[yellow b]Opération 3[/]").Alignment(Justify.Left),
+            new TableColumn("[yellow b]Opération 4[/]").Alignment(Justify.Left),
+            new TableColumn("[yellow b]Opération 5[/]").Alignment(Justify.Left));
     var no = 0;
-    foreach (var solution in tirage.Solutions) {
-        var rw = new List<string> { $"{++no}/{tirage.Count}" };
-        rw.AddRange(solution.Operations);
-        tab.AddRow(rw.ToArray());
-    }
+    await Live(table)
+        .AutoClear(false)
+        .Overflow(VerticalOverflow.Ellipsis)
+        .StartAsync(ctx => {
+            foreach (var solution in tirage.Solutions) {
+                var rw = new List<string> { $"{++no}/{tirage.Count}" };
+                rw.AddRange(solution.Operations);
+                table.AddRow(rw.ToArray());
+                ctx.Refresh();
+            }
 
-    Write(tab);
+            return Task.CompletedTask;
+        });
+    //Write(tab);
     WriteLine();
 
-    if (exports.Count != 0) {
+    if (listExports.Count != 0) {
         ExportOffice.RegisterLicense(Resources.sflicence);
-        tirage.SerializeFichiers(exports);
+        tirage.SerializeFichiers(listExports);
 
-        if (display)
-            foreach (var export in exports)
+        if (Display)
+            foreach (var export in listExports)
                 export.FullName.OpenDocument();
     }
 }
 
 void Abort(Exception ex, int retour = -1) {
-    // SetOut(Error);
-    Foreground = Color.Red;
-    Background = Color.White;
-    // Write($@"{Ansi.Color.Foreground.Red.EscapeSequence}{Ansi.Color.Background.White.EscapeSequence}");
-    Write(Align.Center(new Text("+-----------------------------+")));
-    Write(Align.Center(new Text(@"|          Erreur             |")));
-    Write(Align.Center(new Text(@"+-----------------------------+")));
+    Write(new FigletText("ERREUR")
+        .Centered()
+        .Color(Color.Red));
+    Write(new FigletText(ex.Message)
+        .Centered()
+        .Color(Color.Red));
     WriteLine();
-    Foreground = Color.Default;
-    Background = Color.Default;
-    //Write($@"{Ansi.Color.Foreground.Default.EscapeSequence}{Ansi.Color.Background.Default.EscapeSequence}");
-    Write(Align.Center(new Markup($@"[red]{ex.Message}")));
-    WriteLine();
-    MarkupLine(@"[u]AIDE[/]line()} :");
 
+    MarkupLine(@"[u yellow]AIDE[/] :");
     WriteLine();
-    parser.InvokeAsync("-h");
+    commands.Invoke("-h");
     Environment.Exit(retour);
 }
+

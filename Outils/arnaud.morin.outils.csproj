@@ -16,9 +16,6 @@
   <ItemGroup>
     <Compile Remove="AnsiUtil.cs" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.CommandLine.Rendering" Version="0.4.0-alpha.22272.1" />
-  </ItemGroup>
+    
 
 </Project>
