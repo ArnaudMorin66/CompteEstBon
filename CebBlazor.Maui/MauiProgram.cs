@@ -1,34 +1,40 @@
 ﻿using CompteEstBon;
-using CebBlazor.Maui.Code;
-using CebBlazor.Maui.Properties;
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration.Json;
+
 using Syncfusion.Blazor;
 using Syncfusion.Licensing;
 
 namespace CebBlazor.Maui;
-public static class MauiProgram {
-    public static MauiApp CreateMauiApp() {
-        var builder = MauiApp.CreateBuilder();
-        builder
-            .UseMauiApp<App>();
-            //.ConfigureFonts(fonts => {
-            //    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-            //});
 
-        builder.Services.AddMauiBlazorWebView();
+public static class MauiProgram {
+	public static MauiApp CreateMauiApp() {
+		var builder = MauiApp.CreateBuilder();
+		builder
+			.UseMauiApp<App>()
+			.ConfigureFonts(fonts => {
+				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+			});
+#if !ANDROID
+
+			builder.Configuration.AddJsonFile("appsettings.json");
+#endif
+		builder.Services.AddMauiBlazorWebView();
+		// builder.Services.AddScoped<CebTirage>();
+#if ANDROID
+		SyncfusionLicenseProvider.RegisterLicense("MzQyMTY2NkAzMjM2MmUzMDJlMzBhWE9sYmVsYkxDZFFkYll5VTRibDFyQ2NEWWQ5RFoybVhtemFpbld2Wm5RPQ==");
+#else
+			SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["sflicense"]);
+#endif
+		builder.Services.AddSyncfusionBlazor();
 
 #if DEBUG
-        builder.Services.AddBlazorWebViewDeveloperTools();
-        builder.Logging.AddDebug();
+			builder.Services.AddBlazorWebViewDeveloperTools();
+			builder.Logging.AddDebug();
 #endif
-        builder.Services.AddScoped<CebTirage>();
-        builder.Services.AddSyncfusionBlazor();
-        builder.Services.AddSingleton(new CebSetting {
-            MongoDb = bool.TryParse(builder.Configuration["mongodb:actif"], out var mdb) && mdb,
-        MongoDbConnectionString = builder.Configuration["mongodb:server"],
-        AutoCalcul = bool.TryParse(builder.Configuration["AutoCalcul"], out var res) && res
-    });
-        SyncfusionLicenseProvider.RegisterLicense(licenseKey: Resources.Licence);
-        return builder.Build();
-    }
+
+		return builder.Build();
+	}
 }

@@ -1,0 +1,116 @@
+@using CompteEstBon
+@using Syncfusion.Blazor.Popups
+@using System.Timers
+@* @inject CebTirage Tirage *@
+@if (Visible) { 
+	<SfDialog Width="480"
+			  ShowCloseIcon="false"
+			  AllowDragging="true"
+			  @onclick="() => Visible = false"
+			 Target="#Solutions"
+			  ID="DlgToast">
+		<DialogAnimationSettings Effect="@DialogEffect.FadeZoom"
+								 Duration="1000">
+		</DialogAnimationSettings>
+		<DialogTemplates>
+			<Header>
+				<div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @_cls">
+					<i class="fa-regular @_icn"></i>&nbsp;@_rsl
+				</div>
+			</Header>
+			<Content>
+				<div class="w-100 text-center text-white">
+					<div>Trouv&eacute;&nbsp;@Tirage.Found</div>
+					@if (Tirage.Ecart != 0) {
+						<div>&Eacute;cart:&nbsp;@Tirage.Ecart</div>
+					}
+					<div>@Tirage.Count&nbsp;solutions&nbsp;en&nbsp;@($"{Tirage.Duree.TotalSeconds:F3}") s</div>
+				</div>
+				<div class="w-100 text-center text-white">
+					@{
+						<div class="separator bg-warning mb-2">&nbsp;</div>
+						
+							foreach (var item in Solution.Operations) {
+								<div>@item</div>
+							}
+						
+					}
+				</div>
+			</Content>
+			<FooterTemplate>
+				<div class="w-100 h-100 text-center fs-5 text-uppercase fw-bold @_cls">
+					<i class="fa-regular @_icn"></i>&nbsp;@_rsl
+				</div>
+			</FooterTemplate>
+		</DialogTemplates>
+	</SfDialog>
+
+ } 
+@code {
+#pragma warning disable CS8618
+	protected Timer Timer = new();
+    [Parameter]
+    public CebTirage Tirage { get; set; }
+	protected bool WithTimer { get; set; }
+	private bool _visible;
+
+	public bool Visible {
+		get => _visible;
+		set {
+			if (value == _visible) return;
+			_visible = value;
+			if (WithTimer) {
+				Timer.Stop();
+				if (_visible) {
+					Timer.Start();
+				}
+			}
+			InvokeAsync(StateHasChanged);
+		}
+	}
+
+	public CebBase Solution { get; set; }
+	private int _duetime;
+
+	[Parameter]
+#pragma warning disable BL0007
+	public int DueTime {
+		get => _duetime;
+		set {
+			// ReSharper disable once CompareOfFloatsByEqualityOperator
+			if (_duetime == value) return;
+			_duetime = value;
+			Timer.Interval = _duetime;
+
+		}
+
+	}
+	string _cls;
+	string _icn;
+	string _rsl;
+	protected override void OnInitialized() => Timer.Elapsed += (_, _) => Visible = false;
+
+	public async Task ShowAsync(CebBase ligne, bool withTimer = true) {
+// #pragma warning disable CS8601
+		(_cls, _icn, _rsl) = Tirage.Status switch {
+			CebStatus.CompteEstBon => ("bg-success text-white", "fa-thumbs-up", "Le compte est bon"),
+			CebStatus.CompteApproche => ("bg-secondary text-wheat", "fa-thumbs-down text-wheat", "Compte approché"),
+			_ => (string.Empty, string.Empty, string.Empty)
+		};
+		
+		if (Visible) {
+			await HideAsync();
+		}
+		WithTimer = withTimer;
+		Solution = ligne;
+		Visible = true;
+		await InvokeAsync(StateHasChanged);
+	}
+
+	public async Task HideAsync() {
+		if (!Visible) return;
+		_visible = false;
+		await InvokeAsync(StateHasChanged);
+	}
+
+}

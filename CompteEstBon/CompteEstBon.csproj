@@ -37,6 +37,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="CebDetail.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Outils\arnaud.morin.outils.csproj" />
   </ItemGroup>
 

@@ -4,13 +4,14 @@
 //     Copyright (c) . All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
+
 #region Using
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -27,6 +28,7 @@ using Microsoft.Win32;
 using Syncfusion.Windows.Shared;
 
 #endregion
+
 // ReSharper disable EnforceIfStatementBraces
 namespace CompteEstBon.ViewModel {
     public class ViewTirage : NotificationObject, ICommand {
@@ -56,10 +58,9 @@ namespace CompteEstBon.ViewModel {
         public DispatcherTimer DateDispatcher;
 
         /// <summary>
-        /// Initialisation
+        ///     Initialisation
         /// </summary>
         /// <returns>
-        ///
         /// </returns>
         public ViewTirage() {
             DateDispatcher =
@@ -89,7 +90,8 @@ namespace CompteEstBon.ViewModel {
             DateDispatcher.Start();
         }
 
-        public static string DotnetVersion => $"Version: {Assembly.GetExecutingAssembly().GetName().Version}, {RuntimeInformation.FrameworkDescription}";
+        public static string DotnetVersion =>
+            $"Version: {Assembly.GetExecutingAssembly().GetName().Version}, {RuntimeInformation.FrameworkDescription}";
 
         public Color Background {
             get => _background;
@@ -103,7 +105,14 @@ namespace CompteEstBon.ViewModel {
 
         public CebTirage Tirage { get; } = new();
 
-        public ObservableCollection<int> Plaques { get; } = new() { 0, 0, 0, 0, 0, 0 };
+        public ObservableCollection<int> Plaques { get; } = new() {
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        };
 
         public IEnumerable<CebBase> Solutions {
             get => Tirage.Solutions;
@@ -251,7 +260,9 @@ namespace CompteEstBon.ViewModel {
             remove => CommandManager.RequerySuggested -= value;
         }
 
-        public bool CanExecute(object parameter) => true;
+        public bool CanExecute(object parameter) {
+            return true;
+        }
 
         public async void Execute(object parameter) {
             var cmd = (parameter as string)?.ToLower();
@@ -274,6 +285,7 @@ namespace CompteEstBon.ViewModel {
                             await RandomAsync();
                             break;
                     }
+
                     break;
 
                 case "export":
@@ -303,17 +315,18 @@ namespace CompteEstBon.ViewModel {
             ClearData();
         }
 
-        private void UpdateForeground() => Foreground =
-            Tirage.Status switch
-            {
-                CebStatus.Indefini => Colors.Blue,
-                CebStatus.Valide => Colors.White,
-                CebStatus.EnCours => Colors.Aqua,
-                CebStatus.CompteEstBon => Colors.SpringGreen,
-                CebStatus.CompteApproche => Colors.Orange,
-                CebStatus.Invalide => Colors.Red,
-                _ => throw new NotImplementedException()
-            };
+        private void UpdateForeground() {
+            Foreground =
+                Tirage.Status switch {
+                    CebStatus.Indefini => Colors.Blue,
+                    CebStatus.Valide => Colors.White,
+                    CebStatus.EnCours => Colors.Aqua,
+                    CebStatus.CompteEstBon => Colors.SpringGreen,
+                    CebStatus.CompteApproche => Colors.Orange,
+                    CebStatus.Invalide => Colors.Red,
+                    _ => throw new NotImplementedException()
+                };
+        }
 
         public void ShowPopup(int index = 0) {
             if (index < 0)
@@ -323,8 +336,7 @@ namespace CompteEstBon.ViewModel {
         }
 
         public static (bool Ok, string Path) SaveFileName() {
-            var dialog = new SaveFileDialog
-            {
+            var dialog = new SaveFileDialog {
                 Title = "Exporter vers...",
                 Filter =
                     "Excel (*.xlsx)| *.xlsx | Word (*.docx) | *.docx | Json (*.json) | *.json | XML (*.xml) | *.xml ",
@@ -348,6 +360,7 @@ namespace CompteEstBon.ViewModel {
         }
 
         #region Action
+
         public async ValueTask ClearAsync() {
             var old = IsBusy;
             await Tirage.ClearAsync();
@@ -370,8 +383,7 @@ namespace CompteEstBon.ViewModel {
             Result = "⏰ Calcul en cours...";
             Foreground = Colors.Aqua;
             await Tirage.ResolveAsync();
-            Result = Tirage.Status switch
-            {
+            Result = Tirage.Status switch {
                 CebStatus.CompteEstBon => "😊 Compte est Bon",
                 CebStatus.CompteApproche => $"😢 Compte approché: {Tirage.Found}, écart: {Tirage.Ecart}",
                 CebStatus.Invalide => "🤬 Tirage invalide",
@@ -384,11 +396,10 @@ namespace CompteEstBon.ViewModel {
             IsBusy = false;
             RaisePropertyChanged(nameof(IsComputed), nameof(Duree), nameof(Solutions), nameof(Count));
             ShowPopup();
-            if (MongoDb)
-                Tirage.SerializeMongo(Settings.Default.MongoServer, "SfWpf");
 
             return Tirage.Status;
         }
+
         #endregion Action
     }
 }

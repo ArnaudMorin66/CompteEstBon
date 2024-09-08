@@ -145,9 +145,9 @@
 			InvokeAsync(StateHasChanged);
 			if (_auto && Tirage.Status == CebStatus.Valide) {
 				Task.Run(async () => {
-					         await Tirage.ResolveAsync();
-					         await InvokeAsync(StateHasChanged);
-				         });
+					await Tirage.ResolveAsync();
+					await InvokeAsync(StateHasChanged);
+				});
 			}
 		}
 	}
@@ -159,11 +159,11 @@
 	protected override async Task OnInitializedAsync() {
 		await base.OnInitializedAsync();
 		Tirage.PropertyChanged += async (_, args) => {
-			                          await Toast.HideAsync();
-			                          if (!Auto || args.PropertyName.ToLower() != "clear" || Tirage.Status == CebStatus.EnCours) return;
-			                          await ResolveAsync();
-			                          await InvokeAsync(StateHasChanged);
-		                          };
+			await Toast.HideAsync();
+			if (!Auto || args.PropertyName.ToLower() != "clear" || Tirage.Status == CebStatus.EnCours) return;
+			await ResolveAsync();
+			await InvokeAsync(StateHasChanged);
+		};
 		Auto = Setting.AutoCalcul;
 		VueVerticale = false;
 		await InvokeAsync(StateHasChanged);

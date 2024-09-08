@@ -145,7 +145,7 @@ namespace CompteEstBon.ViewModel {
 
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.DistinctPlaques;
 
-        public ObservableCollection<int> Plaques { get; } = new() { 0, 0, 0, 0, 0, 0 };
+        public ObservableCollection<int> Plaques { get; } = [0, 0, 0, 0, 0, 0];
 
         public TimeSpan Duree {
             get => Tirage.Duree;
@@ -395,8 +395,7 @@ namespace CompteEstBon.ViewModel {
 
             Solution = Tirage.Solutions![0];
             NotifiedChanged(nameof(Duree), nameof(Count), nameof(Solutions));
-            if (MongoDb)
-                Tirage.SerializeMongo(Settings.Default.MongoServer, "Wpf");
+            
 
             IsBusy = false;
 
