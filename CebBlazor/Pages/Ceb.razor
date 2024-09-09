@@ -1,8 +1,7 @@
 ﻿@page "/"
 @using CompteEstBon
 @using Syncfusion.Blazor.SplitButtons
-@inject CebTirage Tirage;
-@inject CebSetting Setting;
+@* @inject CebTirage Tirage; *@
 @inject IJSRuntime Js;
 
 <div class="card text-center border-secondary m-1">
@@ -16,12 +15,12 @@
 			@foreach (var plq in Tirage.Plaques) {
 				<div class="col-md-1">
 					<SfComboBox TItem="int"
-					            TValue="int"
-					            @bind-Value="plq.Value"
-					            DataSource="@CebPlaque.DistinctPlaques"
-					            ShowClearButton="false"
-					            AllowFiltering="true"
-					            Enabled="Tirage.Status != CebStatus.EnCours">
+								TValue="int"
+								@bind-Value="plq.Value"
+								DataSource="@CebPlaque.DistinctPlaques"
+								ShowClearButton="false"
+								AllowFiltering="true"
+								Enabled="Tirage.Status != CebStatus.EnCours">
 					</SfComboBox>
 				</div>
 			}
@@ -33,12 +32,12 @@
 			</div>
 			<div class="col-md-2">
 				<SfNumericTextBox @bind-Value="Tirage.Search"
-				                  Max="999"
-				                  Min="100"
-				                  Format="N0"
-				                  Step="1"
-				                  TValue="int"
-				                  Enabled="Tirage.Status != CebStatus.EnCours">
+								  Max="999"
+								  Min="100"
+								  Format="N0"
+								  Step="1"
+								  TValue="int"
+								  Enabled="Tirage.Status != CebStatus.EnCours">
 				</SfNumericTextBox>
 			</div>
 		</div>
@@ -48,12 +47,12 @@
 	<div class="row text-center bg-primary border-secondary border-1 g-0">
 		<div class="col-md">
 			<button id="hasard"
-			        class="btn btn-primary border border-secondary w-100 @(Tirage.Status == CebStatus.EnCours ? "disabled" : "")"
-			        accesskey="h"
-			        title="Tirage aléatoire"
-			        role="button"
-			        type="button"
-			        @onclick="RandomAsync">
+					class="btn btn-primary border border-secondary w-100 @(Tirage.Status == CebStatus.EnCours ? "disabled" : "")"
+					accesskey="h"
+					title="Tirage aléatoire"
+					role="button"
+					type="button"
+					@onclick="RandomAsync">
 				<i class="fa-solid fa-shuffle"></i>
 			</button>
 		</div>
@@ -69,8 +68,8 @@
 		</div>
 		@if (Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) {
 			<SfDropDownButton IconCss="fa-solid fa-download"
-			                  IconPosition="SplitButtonIconPosition.Left"
-			                  CssClass="btn btn-primary border border-warning col-md-1">
+							  IconPosition="SplitButtonIconPosition.Left"
+							  CssClass="btn btn-primary border border-warning col-md-1">
 				<DropDownMenuItems>
 					<DropDownMenuItem Text="Excel" IconCss="fa-regular fa-file-excel" Id="xlsx"></DropDownMenuItem>
 					<DropDownMenuItem Text="Word" IconCss="fa-regular fa-file-word" Id="docx"></DropDownMenuItem>
@@ -119,11 +118,15 @@
 	</div>
 </div>
 
-<CebSolutions VueVerticale="VueVerticale" ShowDetail="async solution => await Toast!.ShowAsync(solution, false)"></CebSolutions>
+<CebSolutions Tirage="Tirage" 
+			  VueVerticale="VueVerticale" 
+			  ShowDetail="async ligne => await Toast!.ShowAsync(ligne, false)"></CebSolutions>
 <CebFooter></CebFooter>
-<CebToast @ref="Toast" DueTime="10000"></CebToast>
+<CebToast @ref="Toast" Tirage="Tirage" DueTime="10000"></CebToast>
 
 @code {
+	public CebTirage Tirage { get; init; } = new();
+	
 	private bool _vueVerticale;
 
 	public bool VueVerticale {
@@ -164,7 +167,7 @@
 			await ResolveAsync();
 			await InvokeAsync(StateHasChanged);
 		};
-		Auto = Setting.AutoCalcul;
+		Auto = false;
 		VueVerticale = false;
 		await InvokeAsync(StateHasChanged);
 	}
@@ -184,7 +187,7 @@
 		await Tirage.ResolveAsync();
 
 		if (Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) {
-			await Toast.ShowAsync(Tirage.Solutions[0]);
+			await Toast.ShowAsync(0);
 		}
 	}
 

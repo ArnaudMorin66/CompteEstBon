@@ -1,16 +1,16 @@
 @using CompteEstBon
 @using Syncfusion.Blazor.Popups
 @using System.Timers
-@inject CebTirage Tirage
+@* @inject CebTirage Tirage *@
 @if (Visible) { 
 	<SfDialog Width="480"
-	          ShowCloseIcon="false"
-	          AllowDragging="true"
-	          @onclick="() => Visible = false"
-	         Target="#Solutions"
-	          ID="DlgToast">
+			  ShowCloseIcon="false"
+			  AllowDragging="true"
+			  @onclick="() => Visible = false"
+			 Target="#Solutions"
+			  ID="DlgToast">
 		<DialogAnimationSettings Effect="@DialogEffect.FadeZoom"
-		                         Duration="1000">
+								 Duration="1000">
 		</DialogAnimationSettings>
 		<DialogTemplates>
 			<Header>
@@ -48,67 +48,69 @@
  } 
 @code {
 #pragma warning disable CS8618
-    protected Timer Timer = new();
-    protected bool WithTimer { get; set; }
-    private bool _visible;
-
-    public bool Visible {
-        get => _visible;
-        set {
-            if (value == _visible) return;
-            _visible = value;
-            if (WithTimer) {
-                Timer.Stop();
-                if (_visible) {
-                    Timer.Start();
-                }
-            }
-            InvokeAsync(StateHasChanged);
-        }
-    }
-
-    public CebBase Solution { get; set; }
-    private int _duetime;
-
-    [Parameter]
 #pragma warning disable BL0007
-    public int DueTime {
-        get => _duetime;
-        set {
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
-            if (_duetime == value) return;
-            _duetime = value;
-            Timer.Interval = _duetime;
+	[Parameter] public CebTirage Tirage { get; set; } 
+	
+	protected Timer Timer = new();
+	protected bool WithTimer { get; set; }
+	private bool _visible;
 
-        }
+	public bool Visible {
+		get => _visible;
+		set {
+			if (value == _visible) return;
+			_visible = value;
+			if (WithTimer) {
+				Timer.Stop();
+				if (_visible) {
+					Timer.Start();
+				}
+			}
+			InvokeAsync(StateHasChanged);
+		}
+	}
 
-    }
-    string _cls;
-    string _icn;
-    string _rsl;
-    protected override void OnInitialized() => Timer.Elapsed += (_, _) => Visible = false;
+	public CebBase Solution { get; set; }
+	private int _duetime;
 
-    public async Task ShowAsync(CebBase ligne, bool withTimer = true) {
+	[Parameter]
+	public int DueTime {
+		get => _duetime;
+		set {
+			// ReSharper disable once CompareOfFloatsByEqualityOperator
+			if (_duetime == value) return;
+			_duetime = value;
+			Timer.Interval = _duetime;
+
+		}
+
+	}
+	string _cls;
+	string _icn;
+	string _rsl;
+	protected override void OnInitialized() => Timer.Elapsed += (_, _) => Visible = false;
+
+	public async Task ShowAsync(int ligne, bool withTimer = true) {
 // #pragma warning disable CS8601
-        (_cls, _icn, _rsl) = Tirage.Status switch {
-            CebStatus.CompteEstBon => ("bg-success text-white", "fa-thumbs-up", "Le compte est bon"),
-            CebStatus.CompteApproche => ("bg-secondary text-wheat", "fa-thumbs-down text-wheat", "Compte approché"),
-            _ => (string.Empty, string.Empty, string.Empty)
-        };
-        
-        if (Visible) {
-            await HideAsync();
-        }
-        WithTimer = withTimer;
-        Solution = ligne;
-        Visible = true;
-        await InvokeAsync(StateHasChanged);
-    }
+		(_cls, _icn, _rsl) = Tirage.Status switch {
+			CebStatus.CompteEstBon => ("bg-success text-white", "fa-thumbs-up", "Le compte est bon"),
+			CebStatus.CompteApproche => ("bg-secondary text-wheat", "fa-thumbs-down text-wheat", "Compte approché"),
+			_ => (string.Empty, string.Empty, string.Empty)
+		};
+		
+		if (Visible) {
+			await HideAsync();
+		}
+		WithTimer = withTimer;
+		Solution = Tirage.Solutions[ligne];
+		Visible = true;
+		await InvokeAsync(StateHasChanged);
+	}
 
-    public async Task HideAsync() {
-        if (!Visible) return;
-        _visible = false;
-        await InvokeAsync(StateHasChanged);
-    }
+	public async Task HideAsync() {
+		if (!Visible) return;
+		_visible = false;
+		await InvokeAsync(StateHasChanged);
+	}
 
 }

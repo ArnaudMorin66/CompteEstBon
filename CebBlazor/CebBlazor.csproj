@@ -5,9 +5,9 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <NoWarn>1701;1702;8002</NoWarn>
         <UserSecretsId>863459e9-e5ca-4fdd-813d-9a4f7efc30bc</UserSecretsId>
-        <AssemblyVersion>4.8.2.13120</AssemblyVersion>
-        <FileVersion>4.8.2.13120</FileVersion>
-        <Version>4.2.2.20090</Version>
+        <AssemblyVersion>4.8.2.1</AssemblyVersion>
+        <FileVersion>4.8.2.1</FileVersion>
+        <Version>4.2.2.2</Version>
         <Copyright>©️Arnaud Morin</Copyright>
         <Authors>@Arnaud Morin</Authors>
         <SignAssembly>False</SignAssembly>
@@ -24,7 +24,7 @@
     <ItemGroup>
       <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
       <ProjectReference Include="..\Outils\arnaud.morin.outils.csproj" />
-      <ProjectReference Include="..\SFCebOffice\CebExport.csproj" />
+      <ProjectReference Include="..\CebExport\CebExport.csproj" />
     </ItemGroup>
     <ItemGroup>
       <Resource Include="Properties\Resource.resx" />

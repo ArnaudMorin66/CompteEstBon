@@ -9,17 +9,17 @@
 			<img src="favicon.ico" height="32" alt="" class="p-1">
 			<div class="text-center text-uppercase text-danger text-wrap text-truncate ">Compte&nbsp;est&nbsp;bon</div>
 		</div>
-		<span class="e-badge text-white">@($"{datetime:dddd dd MMMM yyyy à HH:mm:ss}")</span>
+		<span class="e-badge text-white">@($"{_datetime:dddd dd MMMM yyyy à HH:mm:ss}")</span>
 	</div>
 
 
 @code {
-	private DateTime datetime;
+	private DateTime _datetime;
 
 	protected override Task OnInitializedAsync() {
 		var timer = new Timer(1000);
 		timer.Elapsed += async (_, e) => {
-			datetime = e.SignalTime;
+			_datetime = e.SignalTime;
 			await InvokeAsync(StateHasChanged);
 		};
 		timer.AutoReset = true;

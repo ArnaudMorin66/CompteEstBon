@@ -1,19 +1,20 @@
 ﻿@using CompteEstBon
 @using SelectionType = Syncfusion.Blazor.Grids.SelectionType
-@inject CebTirage Tirage
-	<div class="border border-secondary border-1 rounded bg-primary mb-1 mt-1" style="height: 32rem;" id="grille">
+@* @inject CebTirage Tirage  *@	
+<div class="border border-secondary border-1 rounded bg-primary mb-1 mt-1" style="height: 32rem;" id="grille">
 		<SfGrid AllowSelection="true"
-		        DataSource="Tirage.Solutions"
-		        EnableAltRow="true"
-		        GridLines="GridLine.Horizontal"
-		        Height="100%"
-		        Width="100%"
-		        ID="solutions"
-		        TValue="CebBase">
-			<GridEvents OnRecordClick="async data => await ShowDetail.InvokeAsync(data.RowData)"
-			            TValue="CebBase">
+				DataSource="Tirage.Solutions"
+				EnableAltRow="true"
+				GridLines="GridLine.Horizontal"
+				Height="100%"
+				Width="100%"
+				ID="solutions"
+				TValue="CebBase">
+			<GridEvents OnRecordClick="async data => await ShowDetail.InvokeAsync(data.RowIndex)"
+						TValue="CebBase">
 			</GridEvents>
-			<GridSelectionSettings CellSelectionMode="CellSelectionMode.Box" Type="SelectionType.Single"></GridSelectionSettings>
+			<GridSelectionSettings CellSelectionMode="CellSelectionMode.Box" 
+			                       Type="SelectionType.Single"></GridSelectionSettings>
 			<GridTemplates>
 				<EmptyRecordTemplate>
 					@if (Tirage.Status == CebStatus.EnCours) {
@@ -59,11 +60,14 @@
 
 #pragma warning disable CS8618
 	[Parameter]
+	public CebTirage Tirage { get; set; }
+	
+	[Parameter]
 	public bool VueVerticale { get; set; }
 
 
 	[Parameter]
-	public EventCallback<CebBase> ShowDetail { get; set; }
+	public EventCallback<int> ShowDetail { get; set; }
 
 	protected override void OnInitialized() {
 		VueVerticale = true;

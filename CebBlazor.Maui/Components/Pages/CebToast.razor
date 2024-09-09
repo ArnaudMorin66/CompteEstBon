@@ -48,9 +48,11 @@
  } 
 @code {
 #pragma warning disable CS8618
+#pragma warning disable BL0007
+	
 	protected Timer Timer = new();
-    [Parameter]
-    public CebTirage Tirage { get; set; }
+	[Parameter]
+	public CebTirage Tirage { get; set; }
 	protected bool WithTimer { get; set; }
 	private bool _visible;
 
@@ -73,7 +75,6 @@
 	private int _duetime;
 
 	[Parameter]
-#pragma warning disable BL0007
 	public int DueTime {
 		get => _duetime;
 		set {
@@ -90,7 +91,7 @@
 	string _rsl;
 	protected override void OnInitialized() => Timer.Elapsed += (_, _) => Visible = false;
 
-	public async Task ShowAsync(CebBase ligne, bool withTimer = true) {
+	public async Task ShowAsync(int ligne, bool withTimer = true) {
 // #pragma warning disable CS8601
 		(_cls, _icn, _rsl) = Tirage.Status switch {
 			CebStatus.CompteEstBon => ("bg-success text-white", "fa-thumbs-up", "Le compte est bon"),
@@ -102,7 +103,7 @@
 			await HideAsync();
 		}
 		WithTimer = withTimer;
-		Solution = ligne;
+		Solution = Tirage.Solutions[ligne];
 		Visible = true;
 		await InvokeAsync(StateHasChanged);
 	}

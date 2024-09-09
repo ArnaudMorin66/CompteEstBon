@@ -23,7 +23,7 @@ svc.AddSingleton(
     new CebSetting {
         AutoCalcul = bool.TryParse(builder.Configuration["AutoCalcul"], out var res) && res
     });
-svc.AddScoped<CebTirage>();
+// svc.AddScoped<CebTirage>();
 SyncfusionLicenseProvider.RegisterLicense(licenseKey: builder.Configuration["sflicense"]);
 
 

@@ -120,7 +120,7 @@
 	</div>
 </div>
 
-<CebSolutions VueVerticale="VueVerticale" Tirage="Tirage" ShowDetail="async solution => await Toast!.ShowAsync(solution, false)"></CebSolutions>
+<CebSolutions VueVerticale="VueVerticale" Tirage="Tirage" ShowDetail="async ligne => await Toast!.ShowAsync(ligne, false)"></CebSolutions>
 <CebFooter></CebFooter>
 <CebToast @ref="Toast" Tirage="Tirage" DueTime="10000"></CebToast>
 
@@ -186,7 +186,7 @@
 		await Tirage.ResolveAsync();
 
 		if (Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) {
-			await Toast.ShowAsync(Tirage.Solutions[0]);
+			await Toast.ShowAsync(0);
 		}
 	}
 
