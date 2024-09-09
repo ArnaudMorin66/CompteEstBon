@@ -1,6 +1,6 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Util.cs" company="">
-//     Author:  
+//     Author:  Arnaud Morin
 //     Copyright (c) . All rights reserved.
 // </copyright>
 //-----------------------------------------------------------------------
@@ -14,7 +14,7 @@ using Microsoft.JSInterop;
 
 using Syncfusion.Blazor;
 
-namespace CebBlazor.Maui.Code;
+namespace CebBlazor.Code;
 
 public static class Util {
 	public static async Task SaveAsAsync(this IJSRuntime js, string filename, MemoryStream data) =>
