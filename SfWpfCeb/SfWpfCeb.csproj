@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
-    <ProjectReference Include="..\SFCebOffice\CebExport.csproj" />
+    <ProjectReference Include="..\CebExport\CebExport.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="favicon.ico" />

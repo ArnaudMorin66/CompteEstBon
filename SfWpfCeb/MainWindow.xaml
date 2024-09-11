@@ -183,7 +183,7 @@
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
                     TabIndex="0"
-                    Text="{Binding Plaques[0], Mode=TwoWay}" />
+                    Text="{Binding Plaques[0], Mode=TwoWay}" Opacity="{Binding ActualHeight, ElementName=LbPlaques, Mode=OneWay}" />
                 <s:ComboBoxAdv
                     x:Name="Plaque2"
                     Grid.Row="0"

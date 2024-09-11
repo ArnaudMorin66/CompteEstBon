@@ -74,8 +74,6 @@ public static class ExportOffice {
 		ws[$"A7:E{l}"].AutofitColumns();
 		ws.ListObjects.Create("TabSolutions", ws[$"A7:E{l}"]).BuiltInTableStyle = styletb;
 		workbook.SaveAs(stream);
-		//stream.Close();
-		engine.Dispose();
 	}
 
 	public static void HtmlStream(this CebTirage tirage, Stream stream) =>
@@ -84,7 +82,7 @@ public static class ExportOffice {
 	public static void WordStream(this CebTirage tirage, Stream stream) => tirage.WordSaveStream(stream);
 
 	public static void WordSaveStream(this CebTirage tirage, Stream stream, FormatType ftype = FormatType.Docx) {
-		WordDocument wd = new();
+		using WordDocument wd = new();
 
 		var sect = wd.AddSection() as WSection;
 		var dotm =
@@ -169,6 +167,5 @@ public static class ExportOffice {
 		tbl.Rows[0].IsHeader = true;
 		wd.Save(stream, ftype);
 		//stream.Close();
-		wd.Dispose();
 	}
 }

@@ -8,9 +8,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompteEstBon", "..\CompteEstBon\CompteEstBon.csproj", "{C71A3E11-EE24-43F3-84AE-812EFF6FAB96}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BFD4FEEC-0F29-48A8-A631-837868673C27}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "arnaud.morin.outils", "..\Outils\arnaud.morin.outils.csproj", "{9AB1676D-13B9-4C95-BFD4-C2162B108DE2}"
 EndProject

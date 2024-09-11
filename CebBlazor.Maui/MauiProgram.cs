@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 using Syncfusion.Blazor;
 using Syncfusion.Licensing;
+using CebBlazor.Maui.Properties;
 
 namespace CebBlazor.Maui;
+
 
 public static class MauiProgram {
 	public static MauiApp CreateMauiApp() {
@@ -14,24 +15,16 @@ public static class MauiProgram {
 			.ConfigureFonts(fonts => {
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 			});
-#if !ANDROID
-
-			builder.Configuration.AddJsonFile("appsettings.json");
-#endif
+		
+		
 		builder.Services.AddMauiBlazorWebView();
-		// builder.Services.AddScoped<CebTirage>();
-#if ANDROID
-		SyncfusionLicenseProvider.RegisterLicense("MzQyMTY2NkAzMjM2MmUzMDJlMzBhWE9sYmVsYkxDZFFkYll5VTRibDFyQ2NEWWQ5RFoybVhtemFpbld2Wm5RPQ==");
-#else
-			SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["sflicense"]);
-#endif
 		builder.Services.AddSyncfusionBlazor();
 
 #if DEBUG
 			builder.Services.AddBlazorWebViewDeveloperTools();
 			builder.Logging.AddDebug();
 #endif
-
+		SyncfusionLicenseProvider.RegisterLicense(Resources.SfLicence);
 		return builder.Build();
 	}
 }

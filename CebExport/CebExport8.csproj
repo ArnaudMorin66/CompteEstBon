@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <RootNamespace>CompteEstBon</RootNamespace>
+        <LangVersion>preview</LangVersion>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>arnaudmorin.snk</AssemblyOriginatorKeyFile>
+        <AssemblyVersion>4.2.8.10362</AssemblyVersion>
+        <FileVersion>4.2.8.10362</FileVersion>
+        <Version>4.2.2.20090</Version>
+        <RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+        <RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+        <EnableNETAnalyzers>False</EnableNETAnalyzers>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DebugType>portable</DebugType>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <DebugType>none</DebugType>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Syncfusion.DocIO.Net.Core" Version="26.2.14" />
+        <PackageReference Include="Syncfusion.XlsIO.Net.Core" Version="26.2.14" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <ProjectReference Include="..\CompteEstBon\CompteEstBon8.csproj" />
+    </ItemGroup>
+
+</Project>

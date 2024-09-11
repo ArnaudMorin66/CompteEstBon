@@ -2,122 +2,118 @@
 @using CebBlazor.Maui.Code
 @using CompteEstBon
 @using Syncfusion.Blazor.SplitButtons
-@* @inject CebTirage Tirage;
- *@
-@inject IJSRuntime Js;
 
 <div class="card text-center border-secondary m-1">
-	<div class="card-text">
-		<div class="row g-0">
-			<div class="col-md-1 bg-primary bg-gradient text-white">
-				<div class="fa-regular">
-					Plaques
-				</div>
-			</div>
-			@foreach (var plq in Tirage.Plaques) {
-				<div class="col-md-1">
-					<SfComboBox TItem="int"
-								TValue="int"
-								@bind-Value="plq.Value"
-								DataSource="@CebPlaque.DistinctPlaques"
-								ShowClearButton="false"
-								AllowFiltering="true"
-								Enabled="Tirage.Status != CebStatus.EnCours">
-					</SfComboBox>
-				</div>
-			}
-			<div class="col-md-1 fa-regular bg-gradient">&nbsp;</div>
-			<div class="col-md-2 bg-primary bg-gradient text-white">
-				<div class="fa-regular">
-					Trouver
-				</div>
-			</div>
-			<div class="col-md-2">
-				<SfNumericTextBox @bind-Value="Tirage.Search"
-								  Max="999"
-								  Min="100"
-								  Format="N0"
-								  Step="1"
-								  TValue="int"
-								  Enabled="Tirage.Status != CebStatus.EnCours">
-				</SfNumericTextBox>
-			</div>
-		</div>
-	</div>
+    <div class="card-text">
+        <div class="row g-0">
+            <div class="col-md-1 bg-primary bg-gradient text-white">
+                <div class="fa-regular">
+                    Plaques
+                </div>
+            </div>
+            @foreach (var plq in Tirage.Plaques) {
+                <div class="col-md-1">
+                    <SfComboBox TItem="int"
+                                TValue="int"
+                                @bind-Value="plq.Value"
+                                DataSource="@CebPlaque.DistinctPlaques"
+                                ShowClearButton="false"
+                                AllowFiltering="true"
+                                Enabled="Tirage.Status != CebStatus.EnCours">
+                    </SfComboBox>
+                </div>
+            }
+            <div class="col-md-1 fa-regular bg-gradient">&nbsp;</div>
+            <div class="col-md-2 bg-primary bg-gradient text-white">
+                <div class="fa-regular">
+                    Trouver
+                </div>
+            </div>
+            <div class="col-md-2">
+                <SfNumericTextBox @bind-Value="Tirage.Search"
+                                  Max="999"
+                                  Min="100"
+                                  Format="N0"
+                                  Step="1"
+                                  TValue="int"
+                                  Enabled="Tirage.Status != CebStatus.EnCours">
+                </SfNumericTextBox>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="border border-secondary border-1 rounded p-1 shadow-lg">
-	<div class="row text-center bg-primary border-secondary border-1 g-0">
-		<div class="col-md">
-			<button id="hasard"
-					class="btn btn-primary border border-secondary w-100 @(Tirage.Status == CebStatus.EnCours ? "disabled" : "")"
-					accesskey="h"
-					title="Tirage aléatoire"
-					role="button"
-					type="button"
-					@onclick="RandomAsync">
-				<i class="fa-solid fa-shuffle"></i>
-			</button>
-		</div>
-		<div class="col-md-3">
-			<div class="btn-group w-100" role="group">
-				<input class="btn-check" type="checkbox" id="autoCheckbox" @bind-value="Auto" accesskey="a">
-				<label class="btn w-100 border   @(Auto ? "btn-warning border-dark" : "btn-dark border-warning text-white")" for="autoCheckbox">Automatique</label>
-				<input class="btn-check" type="checkbox" id="vueGrille" @bind-value="VueVerticale" accesskey="v">
-				<label class="btn border w-100  @(VueVerticale ? "btn-warning border-dark" : "btn-dark border-warning text-white")" for="vueGrille">
-					<i class="fa-solid @(VueVerticale ? "fa-ellipsis-vertical" : "fa-ellipsis")"></i>
-				</label>
-			</div>
-		</div>
-		@if (Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) {
-			<SfDropDownButton IconCss="fa-solid fa-download"
-							  IconPosition="SplitButtonIconPosition.Left"
-							  CssClass="btn btn-primary border border-warning col-md-1">
-				<DropDownMenuItems>
-					<DropDownMenuItem Text="Excel" IconCss="fa-regular fa-file-excel" Id="xlsx"></DropDownMenuItem>
-					<DropDownMenuItem Text="Word" IconCss="fa-regular fa-file-word" Id="docx"></DropDownMenuItem>
-					<DropDownMenuItem Text="Json" IconCss="fa-solid fa-file-export" id="json"></DropDownMenuItem>
-					<DropDownMenuItem Text="XML" IconCss="fa-solid fa-file-export" id="xml"></DropDownMenuItem>
-					<DropDownMenuItem Text="HTML" IconCss="fa-solid fa-file-export" id="html"></DropDownMenuItem>
-				</DropDownMenuItems>
-				<DropDownButtonEvents ItemSelected="@(async args => await Js.ExportAsync(Tirage, args.Item.Id))"></DropDownButtonEvents>
-			</SfDropDownButton>
-		}
-	</div>
+    <div class="row text-center bg-primary border-secondary border-1 g-0">
+        <div class="col-md">
+            <button id="hasard"
+                    class="btn btn-primary border border-secondary w-100 @(Tirage.Status == CebStatus.EnCours ? "disabled" : "")"
+                    accesskey="h"
+                    title="Tirage aléatoire"
+                    role="button"
+                    type="button"
+                    @onclick="RandomAsync">
+                <i class="fa-solid fa-shuffle"></i>
+            </button>
+        </div>
+        <div class="col-md-3">
+            <div class="btn-group w-100" role="group">
+                <input class="btn-check" type="checkbox" id="autoCheckbox" @bind-value="Auto" accesskey="a">
+                <label class="btn w-100 border   @(Auto ? "btn-warning border-dark" : "btn-dark border-warning text-white")" for="autoCheckbox">Automatique</label>
+                <input class="btn-check" type="checkbox" id="vueGrille" @bind-value="VueVerticale" accesskey="v">
+                <label class="btn border w-100  @(VueVerticale ? "btn-warning border-dark" : "btn-dark border-warning text-white")" for="vueGrille">
+                    <i class="fa-solid @(VueVerticale ? "fa-ellipsis-vertical" : "fa-ellipsis")"></i>
+                </label>
+            </div>
+        </div>
+        <SfDropDownButton IconCss="fa-solid fa-download"
+                          Disabled="Tirage.Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche)"
+                          IconPosition="SplitButtonIconPosition.Left"
+                          CssClass="btn btn-primary border border-warning col-md-1">
+            <DropDownMenuItems>
+                <DropDownMenuItem Text="Excel" IconCss="fa-regular fa-file-excel" Id="xlsx"></DropDownMenuItem>
+                <DropDownMenuItem Text="Word" IconCss="fa-regular fa-file-word" Id="docx"></DropDownMenuItem>
+                <DropDownMenuItem Text="Json" IconCss="fa-solid fa-file-export" id="json"></DropDownMenuItem>
+                <DropDownMenuItem Text="XML" IconCss="fa-solid fa-file-export" id="xml"></DropDownMenuItem>
+                <DropDownMenuItem Text="HTML" IconCss="fa-solid fa-file-export" id="html"></DropDownMenuItem>
+            </DropDownMenuItems>
+            <DropDownButtonEvents ItemSelected="@(async args => await Export.ExportAsync(Tirage, args.Item.Id))"></DropDownButtonEvents>
+        </SfDropDownButton>
+    </div>
 </div>
 <div class="card text-center bg-primary bg-gradient border-secondary mt-1" id="statusx">
-	<div class="card-header">
-		<div class="'text-center'">
-			@switch (Tirage.Status) {
-				case CebStatus.EnCours:
-					<div class="bg-info cursor-wait" role="alert">
-						<i class="e-icons e-repeat fa-solid fa-spin-pulse"></i>
-					</div>
-					break;
-				case CebStatus.Invalide:
-					<div class="bg-danger" style="cursor: pointer;" @onclick="RandomAsync" accesskey="r">
-						<i class="fa-solid fa-circle-exclamation fa-beat"></i>&nbsp;Tirage invalide
-					</div>
-					break;
-				case CebStatus.CompteApproche:
-					<div class="bg-secondary text-wheat" style="cursor: pointer;" @onclick="ClearAsync" accesskey="r">
-						<i class="fa-regular fa-thumbs-down"></i>&nbsp;
-						&nbsp;Compte approché:&nbsp;@Tirage.Found,&nbsp;écart:&nbsp;@Tirage.Ecart,&nbsp;@Tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{Tirage.Duree.TotalSeconds:F3}")&nbsp;s
-					</div>
-					break;
-				case CebStatus.CompteEstBon:
-					<div class="bg-success w-100 text-black" style="cursor: pointer;" @onclick="ClearAsync" accesskey="r">
-						<i class="fa-regular fa-thumbs-up"></i>
-						&nbsp;Compte est bon,&nbsp;@(Tirage.Count)&nbsp;solutions&nbsp;en&nbsp;@($"{Tirage.Duree.TotalSeconds:F3}")&nbsp;s
-					</div>
-					break;
-				default:
-					<div class="bg-transparent text-white" style="cursor: pointer;" @onclick="ResolveAsync" accesskey="r">
-						<i class="e-icons e-calculated-member" Title="Résoudre le compte"></i>&nbsp;RÉSOUDRE
-					</div>
-					break;
-			}
-		</div>
-	</div>
+    <div class="card-header">
+        <div class="'text-center'">
+            @switch (Tirage.Status) {
+                case CebStatus.EnCours:
+                    <div class="bg-info cursor-wait" role="alert">
+                        <i class="e-icons e-repeat fa-solid fa-spin-pulse"></i>
+                    </div>
+                    break;
+                case CebStatus.Invalide:
+                    <div class="bg-danger" style="cursor: pointer;" @onclick="RandomAsync" accesskey="r">
+                        <i class="fa-solid fa-circle-exclamation fa-beat"></i>&nbsp;Tirage invalide
+                    </div>
+                    break;
+                case CebStatus.CompteApproche:
+                    <div class="bg-secondary text-wheat" style="cursor: pointer;" @onclick="ClearAsync" accesskey="r">
+                        <i class="fa-regular fa-thumbs-down"></i>&nbsp;
+                        &nbsp;Compte approché:&nbsp;@Tirage.Found,&nbsp;écart:&nbsp;@Tirage.Ecart,&nbsp;@Tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{Tirage.Duree.TotalSeconds:F3}")&nbsp;s
+                    </div>
+                    break;
+                case CebStatus.CompteEstBon:
+                    <div class="bg-success w-100 text-black" style="cursor: pointer;" @onclick="ClearAsync" accesskey="r">
+                        <i class="fa-regular fa-thumbs-up"></i>
+                        &nbsp;Compte est bon,&nbsp;@(Tirage.Count)&nbsp;solutions&nbsp;en&nbsp;@($"{Tirage.Duree.TotalSeconds:F3}")&nbsp;s
+                    </div>
+                    break;
+                default:
+                    <div class="bg-transparent text-white" style="cursor: pointer;" @onclick="ResolveAsync" accesskey="r">
+                        <i class="e-icons e-calculated-member" Title="Résoudre le compte"></i>&nbsp;RÉSOUDRE
+                    </div>
+                    break;
+            }
+        </div>
+    </div>
 </div>
 
 <CebSolutions VueVerticale="VueVerticale" Tirage="Tirage" ShowDetail="async ligne => await Toast!.ShowAsync(ligne, false)"></CebSolutions>
@@ -125,69 +121,69 @@
 <CebToast @ref="Toast" Tirage="Tirage" DueTime="10000"></CebToast>
 
 @code {
-	public CebTirage Tirage { get; init; } = new();
-	private bool _vueVerticale;
+    public CebTirage Tirage { get; init; } = new();
+    private bool _vueVerticale;
 
-	public bool VueVerticale {
-		get => _vueVerticale;
-		set {
-			if (value == _vueVerticale) return;
-			_vueVerticale = value;
-			InvokeAsync(StateHasChanged);
-		}
-	}
+    public bool VueVerticale {
+        get => _vueVerticale;
+        set {
+            if (value == _vueVerticale) return;
+            _vueVerticale = value;
+            InvokeAsync(StateHasChanged);
+        }
+    }
 
-	private bool _auto;
+    private bool _auto;
 
-	bool Auto {
-		get => _auto;
-		set {
-			if (_auto == value) return;
-			_auto = value;
-			InvokeAsync(StateHasChanged);
-			if (_auto && Tirage.Status == CebStatus.Valide) {
-				Task.Run(async () => {
-					await Tirage.ResolveAsync();
-					await InvokeAsync(StateHasChanged);
-				});
-			}
-		}
-	}
+    bool Auto {
+        get => _auto;
+        set {
+            if (_auto == value) return;
+            _auto = value;
+            InvokeAsync(StateHasChanged);
+            if (_auto && Tirage.Status == CebStatus.Valide) {
+                Task.Run(async () => {
+                    await Tirage.ResolveAsync();
+                    await InvokeAsync(StateHasChanged);
+                });
+            }
+        }
+    }
 
 #pragma warning disable CS8618
 #pragma warning disable CS8602
-	public CebToast? Toast { get; set; }
+    public CebToast? Toast { get; set; }
 
-	protected override async Task OnInitializedAsync() {
-		await base.OnInitializedAsync();
-		Tirage.PropertyChanged += async (_, args) => {
-			await Toast.HideAsync();
-			if (!Auto || args.PropertyName.ToLower() != "clear" || Tirage.Status == CebStatus.EnCours) return;
-			await ResolveAsync();
-			await InvokeAsync(StateHasChanged);
-		};
-		Auto = false; //.AutoCalcul;
-		VueVerticale = false;
-		await InvokeAsync(StateHasChanged);
-	}
+    protected override async Task OnInitializedAsync() {
+        await base.OnInitializedAsync();
+        Tirage.PropertyChanged += async (_, args) => {
+            await Toast.HideAsync();
+            if (!Auto || args.PropertyName.ToLower() != "clear" || Tirage.Status == CebStatus.EnCours) return;
+            await ResolveAsync();
+            await InvokeAsync(StateHasChanged);
+        };
+        Auto = false; //.AutoCalcul;
+        VueVerticale = false;
+        await InvokeAsync(StateHasChanged);
+    }
 
-	async Task RandomAsync() {
-		await Toast.HideAsync();
-		await Tirage.RandomAsync();
-	}
+    async Task RandomAsync() {
+        await Toast.HideAsync();
+        await Tirage.RandomAsync();
+    }
 
-	async Task ClearAsync() {
-		await Toast.HideAsync();
-		await Tirage.ClearAsync();
-	}
+    async Task ClearAsync() {
+        await Toast.HideAsync();
+        await Tirage.ClearAsync();
+    }
 
-	async Task ResolveAsync() {
-		await Toast.HideAsync();
-		await Tirage.ResolveAsync();
+    async Task ResolveAsync() {
+        await Toast.HideAsync();
+        await Tirage.ResolveAsync();
 
-		if (Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) {
-			await Toast.ShowAsync(0);
-		}
-	}
+        if (Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) {
+            await Toast.ShowAsync(0);
+        }
+    }
 
 }

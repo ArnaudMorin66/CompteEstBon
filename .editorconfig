@@ -79,7 +79,9 @@ resharper_align_multiline_expression = true
 resharper_align_multiline_parameter = true
 resharper_align_tuple_components = true
 resharper_csharp_align_multiline_expression = false
-resharper_csharp_indent_style = tab
+resharper_csharp_indent_size = 4
+resharper_csharp_indent_style = space
+resharper_csharp_tab_width = 4
 resharper_csharp_wrap_parameters_style = chop_if_long
 resharper_empty_block_style = together_same_line
 resharper_enforce_line_ending_style = true
@@ -115,6 +117,8 @@ resharper_wrap_before_primary_constructor_declaration_rpar = false
 resharper_wrap_enum_declaration = wrap_if_long
 resharper_wrap_object_and_collection_initializer_style = wrap_if_long
 resharper_wrap_property_pattern = wrap_if_long
+resharper_xmldoc_indent_size = 2
+resharper_xmldoc_tab_width = 2
 
 # ReSharper inspection severities
 resharper_arrange_namespace_body_highlighting = suggestion
@@ -131,6 +135,6 @@ resharper_suggest_var_or_type_elsewhere_highlighting = hint
 resharper_suggest_var_or_type_simple_types_highlighting = hint
 
 [*.cs]
-indent_style = tab
-indent_size = tab
+indent_style = space
+indent_size = 4
 tab_width = 4

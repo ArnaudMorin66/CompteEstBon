@@ -14,6 +14,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -33,8 +34,7 @@ using Syncfusion.Windows.Shared;
 namespace CompteEstBon.ViewModel {
     public class ViewTirage : NotificationObject, ICommand {
         private readonly Stopwatch _notifyWatch = new();
-        private readonly TimeSpan _solutionTimer = TimeSpan.FromSeconds(Settings.Default.SolutionTimer);
-
+        
         private bool _auto;
         private Color _background = Color.FromRgb(22, 22, 22);
 
@@ -66,8 +66,6 @@ namespace CompteEstBon.ViewModel {
             DateDispatcher =
                 new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(Settings.Default.SolutionTimer) };
             DateDispatcher.Tick += (_, _) => {
-                if (Popup && _notifyWatch.Elapsed > _solutionTimer)
-                    Popup = false;
 
                 Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
             };
@@ -238,15 +236,23 @@ namespace CompteEstBon.ViewModel {
                     return;
 
                 _popup = value;
-                _notifyWatch.Stop();
-                _notifyWatch.Reset();
                 if (_popup)
-                    _notifyWatch.Start();
+                    StartTimer(5000);
 
                 RaisePropertyChanged(nameof(Popup));
             }
         }
 
+        private void StartTimer(int duetime) {
+            var t = new Timer((state) => {
+                if (state is Timer ti) {
+                    ti.Dispose();
+                    Popup = false;
+                }
+            });
+            t.Change(duetime, 0);
+
+        }
         public string Titre {
             get => _titre;
             set {

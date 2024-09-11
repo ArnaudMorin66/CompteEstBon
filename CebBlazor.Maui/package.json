@@ -15,10 +15,5 @@
   },
   "devDependencies": {
     "sass": "^1.77.8"
-  },
-  "-vs-binding": {
-    "ProjectOpened": [
-      "sass-watch"
-    ]
   }
 }

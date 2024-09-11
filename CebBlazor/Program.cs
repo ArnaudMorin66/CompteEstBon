@@ -1,42 +1,31 @@
-//-----------------------------------------------------------------------
-// <copyright file="Program.cs" company="">
-//     Author:  
-//     Copyright (c) . All rights reserved.
-// </copyright>
-//-----------------------------------------------------------------------
-using CebBlazor.Code;
-
-
-using CompteEstBon;
+using CebBlazor.Components;
 
 using Syncfusion.Blazor;
 using Syncfusion.Licensing;
 
+
 var builder = WebApplication.CreateBuilder(args);
-var svc = builder.Services;
 
-svc.AddRazorPages();
-svc.AddServerSideBlazor();
-svc.AddSyncfusionBlazor();
+// Add services to the container.
+builder.Services.AddRazorComponents()
+  .AddInteractiveServerComponents();
 
-svc.AddSingleton(
-    new CebSetting {
-        AutoCalcul = bool.TryParse(builder.Configuration["AutoCalcul"], out var res) && res
-    });
-// svc.AddScoped<CebTirage>();
+builder.Services.AddSyncfusionBlazor();
 SyncfusionLicenseProvider.RegisterLicense(licenseKey: builder.Configuration["sflicense"]);
 
-
 var app = builder.Build();
+
+// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment()) {
-    app.UseExceptionHandler("/Error");
-    app.UseHsts();
+  app.UseExceptionHandler("/Error", createScopeForErrors: true);
+  // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+  app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
+app.UseAntiforgery();
+app.MapStaticAssets();
+app.MapRazorComponents<App>()
+  .AddInteractiveServerRenderMode();
 
-app.MapBlazorHub();
-app.MapFallbackToPage("/index");
 await app.RunAsync();

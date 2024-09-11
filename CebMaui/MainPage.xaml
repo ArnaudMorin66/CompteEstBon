@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    x:Class="CebMaui.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:hp="clr-namespace:CebMaui.Helpers"
+    xmlns:local="clr-namespace:CebMaui.ViewModel"
+    xmlns:progressBar="clr-namespace:Syncfusion.Maui.ProgressBar;assembly=Syncfusion.Maui.ProgressBar"
+    xmlns:sfb="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+    xmlns:sfg="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
+    xmlns:sfi="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
+    xmlns:sfo="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <hp:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <sfg:DataGridStyle
+                x:Key="GrilleStyle"
+                GridLineColor="{Binding Foreground}"
+                HeaderRowBackground="{StaticResource Gray950}"
+                HeaderRowTextColor="{Binding Foreground}"
+                RowTextColor="{Binding Foreground}" />
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.BindingContext>
+        <local:ViewTirage x:Name="Tirage" />
+    </ContentPage.BindingContext>
+    <ScrollView>
+        <VerticalStackLayout MinimumHeightRequest="60">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <Label
+                    x:Name="LbPlaques"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Text="Plaques"
+                    VerticalTextAlignment="Center" />
+
+
+                <sfi:SfComboBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    IsClearButtonVisible="False"
+                    IsEditable="True"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                    Text="{Binding Plaques[0], Mode=TwoWay}"
+                    TextColor="{AppThemeBinding Light={StaticResource Black},
+                                                Dark={StaticResource White}}" />
+                <sfi:SfComboBox
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    IsClearButtonVisible="False"
+                    IsEditable="True"
+                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                    Text="{Binding Plaques[1], Mode=TwoWay}"
+                    TextColor="{AppThemeBinding Light={StaticResource Black},
+                                                Dark={StaticResource White}}" />
+                <sfi:SfComboBox
+                    Grid.Row="0"
+                    Grid.Column="3"
+                    IsClearButtonVisible="False"
+                    IsEditable="True"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                    Text="{Binding Plaques[2], Mode=TwoWay}"
+                    TextColor="{AppThemeBinding Light={StaticResource Black},
+                                                Dark={StaticResource White}}" />
+                <sfi:SfComboBox
+                    Grid.Row="0"
+                    Grid.Column="4"
+                    IsClearButtonVisible="False"
+                    IsEditable="True"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                    Text="{Binding Plaques[3], Mode=TwoWay}"
+                    TextColor="{AppThemeBinding Light={StaticResource Black},
+                                                Dark={StaticResource White}}" />
+                <sfi:SfComboBox
+                    Grid.Row="0"
+                    Grid.Column="5"
+                    IsClearButtonVisible="False"
+                    IsEditable="True"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                    Text="{Binding Plaques[4], Mode=TwoWay}"
+                    TextColor="{AppThemeBinding Light={StaticResource Black},
+                                                Dark={StaticResource White}}" />
+                <sfi:SfComboBox
+                    Grid.Row="0"
+                    Grid.Column="6"
+                    IsClearButtonVisible="False"
+                    IsEditable="True"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                    Text="{Binding Plaques[5], Mode=TwoWay}"
+                    TextColor="{AppThemeBinding Light={StaticResource Black},
+                                                Dark={StaticResource White}}" />
+                <Label
+                    x:Name="LbCherche"
+                    Grid.Row="0"
+                    Grid.Column="7"
+                    Text="Trouve"
+                    VerticalTextAlignment="Center" />
+                <sfi:SfNumericEntry
+                    x:Name="SearchEntry"
+                    Grid.Row="0"
+                    Grid.Column="8"
+                    CustomFormat="000"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    TextColor="{AppThemeBinding Light={StaticResource Black},
+                                                Dark={StaticResource White}}"
+                    UpDownPlacementMode="InlineVertical"
+                    VerticalOptions="Center"
+                    Value="{Binding Search, Mode=TwoWay}" />
+            </Grid>
+            <Grid ColumnDefinitions="4*,4*,3*,3*" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}">
+                <Button
+                    Grid.Column="0"
+                    BackgroundColor="{StaticResource Gray950}"
+                    BorderColor="{Binding Foreground}"
+                    BorderWidth="1"
+                    Command="{Binding}"
+                    CommandParameter="resolve"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    Text="Résoudre"
+                    TextColor="{Binding Foreground}" />
+
+                <Button
+                    Grid.Column="1"
+                    BackgroundColor="{StaticResource Gray950}"
+                    BorderColor="{Binding Foreground}"
+                    BorderWidth="1"
+                    Command="{Binding}"
+                    CommandParameter="random"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    Text="Hasard"
+                    TextColor="{Binding Foreground}" />
+                <HorizontalStackLayout Grid.Column="2" HorizontalOptions="Fill">
+                    <Label Text="Vertical:" VerticalOptions="Center" />
+                    <sfb:SfSwitch IsOn="{Binding Vertical}" />
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Grid.Column="3">
+                    <Picker
+                        Width="60"
+                        ItemsSource="{x:Static local:ViewTirage.ListeFormats}"
+                        SelectedItem="{Binding FormatExport}" />
+                    <Button
+                        Background="{StaticResource Gray950}"
+                        BorderColor="{Binding Foreground}"
+                        BorderWidth="1"
+                        Command="{Binding}"
+                        CommandParameter="export"
+                        CornerRadius="6"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                        Text="Export"
+                        TextColor="{Binding Foreground}" />
+                </HorizontalStackLayout>
+            </Grid>
+
+            <Grid RowDefinitions="*,*">
+                <CollectionView
+                    x:Name="GrilleVerticale"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    HeightRequest="400"
+                    IsVisible="{Binding Vertical}"
+                    ItemsSource="{Binding Solutions}"
+                    SelectionChanged="GrilleVerticale_OnSelectionChanged"
+                    SelectionMode="Single">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout
+                            HorizontalItemSpacing="2"
+                            Orientation="Vertical"
+                            Span="{OnIdiom Default=4, Phone=2}"
+                            VerticalItemSpacing="2" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border HorizontalOptions="Center">
+                                <RefreshView>
+                                    <CollectionView
+                                        x:Name="GrilleOperations"
+                                        HorizontalOptions="Center"
+                                        ItemsSource="{Binding Operations}"
+                                        SelectionChanged="SelectableItemsView_OnSelectionChanged"
+                                        SelectionMode="Single" />
+                                </RefreshView>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <sfg:SfDataGrid
+                    x:Name="SolutionsData"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Height="400"
+                    AutoGenerateColumnsMode="None"
+                    ColumnWidthMode="Fill"
+                    DefaultStyle="{StaticResource GrilleStyle}"
+                    EnableDataVirtualization="True"
+                    HorizontalScrollBarVisibility="Always"
+                    IsVisible="{Binding Vertical, Converter={StaticResource InverseBooleanConverter}}"
+                    ItemsSource="{Binding Solutions}"
+                    SelectionChanged="SolutionsData_OnSelectionChanged"
+                    SelectionMode="Single"
+                    VerticalOptions="Center"
+                    VerticalScrollBarVisibility="Always">
+
+
+                    <sfg:SfDataGrid.Columns>
+                        <sfg:DataGridTextColumn HeaderText="Opération 1" MappingName="Op1" />
+                        <sfg:DataGridTextColumn HeaderText="Opération 2" MappingName="Op2" />
+                        <sfg:DataGridTextColumn HeaderText="Opération 3" MappingName="Op3" />
+                        <sfg:DataGridTextColumn HeaderText="Opération 4" MappingName="Op4" />
+                        <sfg:DataGridTextColumn HeaderText="Opération 5" MappingName="Op5" />
+                    </sfg:SfDataGrid.Columns>
+                </sfg:SfDataGrid>
+
+                <progressBar:SfCircularProgressBar
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    BackgroundColor="Transparent"
+                    HorizontalOptions="Center"
+                    IsIndeterminate="True"
+                    IsVisible="{Binding IsBusy}"
+                    VerticalOptions="Center"
+                    ZIndex="99" />
+            </Grid>
+
+            <StackLayout Orientation="Horizontal">
+                <Label
+                    FontSize="Large"
+                    HorizontalTextAlignment="Center"
+                    IsVisible="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                    Text="{Binding Result}"
+                    TextColor="{Binding Foreground}" />
+
+            </StackLayout>
+            <sfo:SfPopup
+                IsOpen="{Binding Popup}"
+                ShowFooter="True"
+                ShowHeader="True" />
+        </VerticalStackLayout>
+
+    </ScrollView>
+</ContentPage>
