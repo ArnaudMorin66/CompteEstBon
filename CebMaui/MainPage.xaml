@@ -168,7 +168,42 @@
                         TextColor="{Binding Foreground}" />
                 </HorizontalStackLayout>
             </Grid>
-
+            <Border Padding="2">
+                <Grid
+                    ColumnDefinitions="*,*,*,*"
+                    HeightRequest="50"
+                    VerticalOptions="Center">
+                    <Label
+                        Grid.Column="0"
+                        FontSize="18"
+                        IsVisible="{Binding IsComputed}"
+                        Text="{Binding Result}"
+                        TextColor="{Binding Foreground}"
+                        VerticalOptions="Center" />
+                    <Label
+                        Grid.Column="1"
+                        FontSize="18"
+                        IsVisible="{Binding IsComputed}"
+                        Text="{Binding Found, StringFormat='Trouvé: {0}'}"
+                        TextColor="{Binding Foreground}"
+                        VerticalOptions="Center" />
+                    <Label
+                        Grid.Column="2"
+                        FontSize="18"
+                        IsVisible="{Binding IsComputed}"
+                        Text="{Binding Count, StringFormat='Nombre de solutions: {0}'}"
+                        TextColor="{Binding Foreground}"
+                        VerticalOptions="Center" />
+                    <Label
+                        Grid.Column="3"
+                        FontSize="18"
+                        HorizontalOptions="End"
+                        IsVisible="{Binding IsComputed}"
+                        Text="{Binding Duree.TotalSeconds, StringFormat='Durée: {0:N3} s'}"
+                        TextColor="{Binding Foreground}"
+                        VerticalOptions="Center" />
+                </Grid>
+            </Border>
             <Grid RowDefinitions="*,*">
                 <CollectionView
                     x:Name="GrilleVerticale"
@@ -183,7 +218,8 @@
                         <GridItemsLayout
                             HorizontalItemSpacing="2"
                             Orientation="Vertical"
-                            Span="{OnIdiom Default=4, Phone=2}"
+                            Span="{OnIdiom Default=4,
+                                           Phone=2}"
                             VerticalItemSpacing="2" />
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
@@ -239,19 +275,31 @@
                     ZIndex="99" />
             </Grid>
 
-            <StackLayout Orientation="Horizontal">
-                <Label
-                    FontSize="Large"
-                    HorizontalTextAlignment="Center"
-                    IsVisible="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    Text="{Binding Result}"
-                    TextColor="{Binding Foreground}" />
-
-            </StackLayout>
+            
             <sfo:SfPopup
                 IsOpen="{Binding Popup}"
                 ShowFooter="True"
-                ShowHeader="True" />
+                ShowHeader="True">
+                <sfo:SfPopup.HeaderTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding Result}" TextColor="{Binding Foreground}" FontSize="18" 
+                               VerticalOptions="Center" HorizontalOptions="Center"/>
+                    </DataTemplate>
+                </sfo:SfPopup.HeaderTemplate>
+                <sfo:SfPopup.ContentTemplate><DataTemplate>
+                    <CollectionView ItemsSource="{Binding Solution.Operations}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                </DataTemplate></sfo:SfPopup.ContentTemplate>
+                <sfo:SfPopup.FooterTemplate>
+                    <DataTemplate>
+                        <VerticalStackLayout>
+                            <Label FontSize="15" HorizontalOptions="Center" TextColor="{Binding Foreground}" Text="{Binding Found, StringFormat='Trouvé: {0}'}"/>
+                            <Label FontSize="15" HorizontalOptions="Center" TextColor="{Binding Foreground}" Text="{Binding Count, StringFormat='Nombre de solutions: {0}'}"/>
+                            <Label FontSize="15" HorizontalOptions="Center" TextColor="{Binding Foreground}" Text="{Binding Duree.TotalSeconds, StringFormat='Durée: {0} s'}"/>
+
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </sfo:SfPopup.FooterTemplate>
+            </sfo:SfPopup>
         </VerticalStackLayout>
 
     </ScrollView>

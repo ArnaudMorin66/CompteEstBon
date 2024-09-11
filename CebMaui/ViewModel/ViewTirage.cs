@@ -17,6 +17,8 @@ using System.Windows.Input;
 
 using arnaud.morin.outils;
 
+using CebMaui.Services;
+
 using CompteEstBon;
 
 #endregion
@@ -26,7 +28,15 @@ using CompteEstBon;
 namespace CebMaui.ViewModel;
 
 public class ViewTirage : INotifyPropertyChanged, ICommand {
-    public static List<string> ListeFormats = ["Excel", "Word", "Json", "Xml", "HTML"];
+    public static readonly List<string> ListeFormats = ["Excel", "Word", "Json", "Xml", "HTML"];
+
+    private static readonly Dictionary<string, ExportFile> listExportFiles = new() {
+        ["Excel"] = new("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
+        ["Json"] = new ("json", "application/json"),
+        ["Word"] = new ("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
+        ["Xml"] = new ("xml",  "application/xml"),
+        ["HTML"] = new ("html","text/html")
+    };
 // private readonly Stopwatch _notifyWatch = new();
     private string _formatExport = ListeFormats[0];
 
@@ -112,6 +122,11 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         set => OnPropertyChanged();
     }
 
+    public string Found {
+        get => Tirage.Found;
+        // ReSharper disable once ValueParameterNotUsed
+        set => OnPropertyChanged();
+    }
     public bool Vertical {
         get => _vertical;
         set {
@@ -143,6 +158,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
                 Task.Run(ResolveAsync);
         }
     }
+
 
     public Color Foreground {
         get => _foreground;
@@ -252,7 +268,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 
             case "export":
                 if (Count != 0)
-                    await Task.Run(ExportFichier);
+                    await ExportFichierAsync();
 
                 break;
         }
@@ -277,7 +293,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         UpdateForeground();
         Result = Tirage.Status != CebStatus.Invalide ? "" : "Tirage invalide";
         Popup = false;
-        OnPropertyChanged(nameof(IsComputed), nameof(Duree), nameof(Solutions), nameof(Duree));
+        OnPropertyChanged(nameof(IsComputed), nameof(Duree), nameof(Solutions), nameof(Found), nameof(Count));
     }
 
     private void UpdateData() {
@@ -286,8 +302,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
             foreach (var (p, i) in Tirage.Plaques.Indexed()) Plaques[i] = p.Value;
         }
 
-        OnPropertyChanged(nameof(Plaques));
-        OnPropertyChanged(nameof(Search));
+        OnPropertyChanged(nameof(Plaques), nameof(Search));
         IsBusy = false;
         ClearData();
     }
@@ -313,29 +328,23 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         Solution = sol;
         Popup = true;
     }
+    
 
-    public static (bool Ok, string Path) SaveFileName() =>
-        //var dialog = new SaveFileDialog {
-        //	Title = "Exporter vers...",
-        //	Filter =
-        //		"Excel (*.xlsx)| *.xlsx | Word (*.docx) | *.docx | Json (*.json) | *.json | XML (*.xml) | *.xml ",
-        //	InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
-        //	DefaultExt = ".xlsx",
-        //	FileName = "*.xlsx"
-        //};
-        //// ReSharper disable once PossibleInvalidOperationException
-        //return ((bool)dialog.ShowDialog(), dialog.FileName);
-        (false, string.Empty);
-
-    private void ExportFichier() {
-        //var (ok, path) = SaveFileName();
-        //if (!ok)
-        //	return;
-
-        //IsBusy = true;
-        //if (Tirage.Export(path))
-        //	path.OpenDocument();
-        //IsBusy = false;
+    private async Task ExportFichierAsync() {
+        if (Tirage.Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
+        var typ = listExportFiles[FormatExport];
+        var filename = $"CompteEstBon.{typ.Extension}";
+        await using var mstream = new MemoryStream();
+        Action<MemoryStream> exportStream = typ.Extension switch {
+            "xlsx" => Tirage.ExcelSaveStream,
+            "docx" => Tirage.WordStream,
+            "json" => Tirage.JsonSaveStream,
+            "xml" => Tirage.XmlSaveStream,
+            "html" => Tirage.HtmlStream,
+            _ => throw new NotImplementedException()
+        };
+        exportStream(mstream);
+        SaveService.SaveAndView(filename, typ.ContentType, mstream);
     }
 
 
@@ -379,7 +388,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         await Tirage.ResolveAsync();
         Result = Tirage.Status switch {
             CebStatus.CompteEstBon => "😊 Compte est Bon",
-            CebStatus.CompteApproche => $"😢 Compte approché: {Tirage.Found}, écart: {Tirage.Ecart}",
+            CebStatus.CompteApproche => $"😢 Compte approché",
             CebStatus.Invalide => "🤬 Tirage invalide",
             _ => ""
         };
@@ -389,7 +398,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         UpdateForeground();
         IsBusy = false;
         OnPropertyChanged(nameof(Duree),
-            nameof(Solutions), nameof(Count));
+            nameof(Solutions), nameof(Count), nameof(IsComputed), nameof(Found));
         ShowPopup();
 
         return Tirage.Status;
@@ -398,7 +407,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     #endregion Action
 }
 
-public record ExportFile(string Extension, string Nom) {
+public record ExportFile(string Extension, string ContentType) {
     public string Extension = Extension;
-    public string Nom = Nom;
+    public string ContentType = ContentType;
 }
