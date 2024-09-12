@@ -51,7 +51,7 @@ public static partial class SaveService
 			await outstream.FlushAsync();
 		}
 		//Create message dialog box. 
-		MessageDialog msgDialog = new("Voulez vous voir le document?", "Création du ficher correct");
+		MessageDialog msgDialog = new("Voulez vous voir le document?", "Chargement terminé");
 		msgDialog.Commands.Add(new UICommand("Oui",
 			(_) => { Task.Run(() => Windows.System.Launcher.LaunchFileAsync(stFile)); }));
 		UICommand noCmd = new("Non");

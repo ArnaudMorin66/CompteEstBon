@@ -21,6 +21,8 @@ using CebMaui.Services;
 
 using CompteEstBon;
 
+using Syncfusion.Maui.Themes;
+
 #endregion
 
 #pragma warning disable CS0067
@@ -68,7 +70,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 
     private bool _vertical;
 
-
+    
     /// <summary>
     ///     Initialisation
     /// </summary>
@@ -87,7 +89,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
                 await ResolveAsync();
         };
         Auto = false;
-
+InverseTheme();
         UpdateData();
         Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
     }
@@ -103,6 +105,35 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         }
     }
 
+    private string _theme;
+
+    public string Theme {
+        get => _theme;
+        set {
+            if (_theme == value) return;
+            _theme = value;
+            UpdateForeground();
+            OnPropertyChanged();
+        }
+    }
+
+    private void InverseTheme() {
+        ICollection<ResourceDictionary> mergedDictionaries = Application.Current!.Resources.MergedDictionaries;
+        if (mergedDictionaries != null) {
+            var theme = mergedDictionaries.OfType<SyncfusionThemeResourceDictionary>().FirstOrDefault();
+            if (theme != null) {
+                if (theme.VisualTheme is SfVisuals.MaterialDark) {
+                    Theme = "Light";
+                    theme.VisualTheme = SfVisuals.MaterialLight;
+                    Application.Current.UserAppTheme = AppTheme.Light;
+                } else {
+                    theme.VisualTheme = SfVisuals.MaterialDark;
+                    Application.Current.UserAppTheme = AppTheme.Dark;
+                    Theme = "Dark";
+                }
+            }
+        }
+    }
     public static IEnumerable<int> ListePlaques => CebPlaque.DistinctPlaques;
 
     public CebTirage Tirage { get; } = new();
@@ -271,6 +302,9 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
                     await ExportFichierAsync();
 
                 break;
+            case "theme":
+                InverseTheme();
+                break;
         }
     }
 
@@ -307,16 +341,31 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         ClearData();
     }
 
-    private void UpdateForeground() => (Foreground, _background) =
-        Tirage.Status switch {
-            CebStatus.Indefini => (Colors.Blue, Colors.Gray),
-            CebStatus.Valide => (Colors.White, Colors.SlateGray),
-            CebStatus.EnCours => (Colors.Aqua, Colors.Grey),
-            CebStatus.CompteEstBon => (Colors.SpringGreen, Color.FromArgb("141414")),
-            CebStatus.CompteApproche => (Colors.Orange, Color.FromArgb("141414")),
-            CebStatus.Invalide => (Colors.White, Colors.Red),
-            _ => throw new NotImplementedException()
-        };
+    private void UpdateForeground() {
+        if (Theme == "Dark") {
+            (Foreground, _background) =
+                Tirage.Status switch {
+                    CebStatus.Indefini => (Colors.Blue, Colors.Gray),
+                    CebStatus.Valide => (Colors.White, Colors.SlateGray),
+                    CebStatus.EnCours => (Colors.Aqua, Colors.Grey),
+                    CebStatus.CompteEstBon => (Colors.SpringGreen, Color.FromArgb("141414")),
+                    CebStatus.CompteApproche => (Colors.Orange, Color.FromArgb("141414")),
+                    CebStatus.Invalide => (Colors.White, Colors.Red),
+                    _ => throw new NotImplementedException()
+                };
+        } else {
+            (Foreground, _background) =
+                        Tirage.Status switch {
+                CebStatus.Indefini => (Colors.SlateGrey, Colors.Gray),
+                CebStatus.Valide => (Colors.Black, Colors.Beige),
+                CebStatus.EnCours => (Colors.Aqua, Colors.Grey),
+                CebStatus.CompteEstBon => (Colors.DarkSlateGray, Colors.Azure),
+                CebStatus.CompteApproche => (Colors.IndianRed, Colors.Azure),
+                CebStatus.Invalide => (Colors.White, Colors.Red),
+                _ => throw new NotImplementedException()
+            };
+        }
+    }
 
     public void ShowPopup(int index = 0) {
         if (index < 0)

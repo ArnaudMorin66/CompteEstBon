@@ -1,11 +1,11 @@
 ﻿namespace CebMaui {
     public partial class App : Application {
         public App() {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzQ2MzY0NkAzMjM2MmUzMDJlMzBQNTJITjhiTlZoS2YrVDFaT3JZTk4xWS9xRUkvUEQ1L01TU2c1T3lnQ2UwPQ==");
-            UserAppTheme = AppTheme.Dark;
+            UserAppTheme = AppTheme.Light;
             InitializeComponent();
 
-            MainPage = new AppShell();
+            // MainPage = new AppShell();
+            MainPage = new MainPage();
         }
     }
 }

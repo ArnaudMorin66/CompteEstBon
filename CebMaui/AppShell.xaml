@@ -5,10 +5,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:CebMaui"
     Shell.FlyoutBehavior="Disabled"
+    Background="{x:StaticResource OffBlack}"
     Title="CebMaui">
 
     <ShellContent
-        Title="Home"
+        Title="Le Compte est bon"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
 
