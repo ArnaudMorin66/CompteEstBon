@@ -89,7 +89,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
                 await ResolveAsync();
         };
         Auto = false;
-InverseTheme();
+        ThemeDark = true;
         UpdateData();
         Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
     }
@@ -104,35 +104,33 @@ InverseTheme();
             OnPropertyChanged();
         }
     }
+// 
+    private bool _themeDark = true;
 
-    private string _theme;
-
-    public string Theme {
-        get => _theme;
+    public bool ThemeDark {
+        get => _themeDark;
         set {
-            if (_theme == value) return;
-            _theme = value;
-            UpdateForeground();
+            if (_themeDark == value) return;
+            _themeDark = value;
+            InverseTheme();
+            //UpdateForeground();
             OnPropertyChanged();
         }
     }
 
     private void InverseTheme() {
-        ICollection<ResourceDictionary> mergedDictionaries = Application.Current!.Resources.MergedDictionaries;
-        if (mergedDictionaries != null) {
-            var theme = mergedDictionaries.OfType<SyncfusionThemeResourceDictionary>().FirstOrDefault();
-            if (theme != null) {
-                if (theme.VisualTheme is SfVisuals.MaterialDark) {
-                    Theme = "Light";
-                    theme.VisualTheme = SfVisuals.MaterialLight;
-                    Application.Current.UserAppTheme = AppTheme.Light;
-                } else {
-                    theme.VisualTheme = SfVisuals.MaterialDark;
-                    Application.Current.UserAppTheme = AppTheme.Dark;
-                    Theme = "Dark";
-                }
-            }
+        var mergedDictionaries = Application.Current!.Resources.MergedDictionaries;
+        var theme = mergedDictionaries?.OfType<SyncfusionThemeResourceDictionary>().FirstOrDefault();
+        if (theme == null) return;
+        if (ThemeDark) {
+            theme.VisualTheme = SfVisuals.MaterialDark;
+            Application.Current.UserAppTheme = AppTheme.Dark;
+        } else {
+            theme.VisualTheme = SfVisuals.MaterialLight;
+            Application.Current.UserAppTheme = AppTheme.Light;
         }
+
+        UpdateForeground();
     }
     public static IEnumerable<int> ListePlaques => CebPlaque.DistinctPlaques;
 
@@ -236,7 +234,7 @@ InverseTheme();
 
 
     public bool IsComputed {
-        get => Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche;
+        get => Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche or CebStatus.Invalide;
         // ReSharper disable once ValueParameterNotUsed
         set => OnPropertyChanged();
     }
@@ -303,7 +301,10 @@ InverseTheme();
 
                 break;
             case "theme":
-                InverseTheme();
+                ThemeDark = !ThemeDark;
+                break;
+            case "vertical":
+                Vertical = !Vertical;
                 break;
         }
     }
@@ -314,10 +315,9 @@ InverseTheme();
 
     private void DelayPopup(int duetime) {
         _timer = new Timer(state => {
-            if (state is Timer ti) {
-                ti.Dispose();
-                Popup = false;
-            }
+            if (state is not Timer ti) return;
+            ti.Dispose();
+            Popup = false;
         });
         _timer.Change(duetime, 0);
     }
@@ -342,29 +342,16 @@ InverseTheme();
     }
 
     private void UpdateForeground() {
-        if (Theme == "Dark") {
-            (Foreground, _background) =
+            Foreground =
                 Tirage.Status switch {
-                    CebStatus.Indefini => (Colors.Blue, Colors.Gray),
-                    CebStatus.Valide => (Colors.White, Colors.SlateGray),
-                    CebStatus.EnCours => (Colors.Aqua, Colors.Grey),
-                    CebStatus.CompteEstBon => (Colors.SpringGreen, Color.FromArgb("141414")),
-                    CebStatus.CompteApproche => (Colors.Orange, Color.FromArgb("141414")),
-                    CebStatus.Invalide => (Colors.White, Colors.Red),
+                    CebStatus.Indefini => Colors.Blue,
+                    CebStatus.Valide => Colors.White,
+                    CebStatus.EnCours => Colors.Aqua,
+                    CebStatus.CompteEstBon => Colors.SpringGreen,
+                    CebStatus.CompteApproche => Colors.Orange,
+                    CebStatus.Invalide => Colors.Red,
                     _ => throw new NotImplementedException()
                 };
-        } else {
-            (Foreground, _background) =
-                        Tirage.Status switch {
-                CebStatus.Indefini => (Colors.SlateGrey, Colors.Gray),
-                CebStatus.Valide => (Colors.Black, Colors.Beige),
-                CebStatus.EnCours => (Colors.Aqua, Colors.Grey),
-                CebStatus.CompteEstBon => (Colors.DarkSlateGray, Colors.Azure),
-                CebStatus.CompteApproche => (Colors.IndianRed, Colors.Azure),
-                CebStatus.Invalide => (Colors.White, Colors.Red),
-                _ => throw new NotImplementedException()
-            };
-        }
     }
 
     public void ShowPopup(int index = 0) {
@@ -381,6 +368,7 @@ InverseTheme();
 
     private async Task ExportFichierAsync() {
         if (Tirage.Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
+        
         var typ = listExportFiles[FormatExport];
         var filename = $"CompteEstBon.{typ.Extension}";
         await using var mstream = new MemoryStream();

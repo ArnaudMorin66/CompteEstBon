@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Reflection;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+using Microsoft.Extensions.Logging;
 
 using Syncfusion.Maui.Core.Hosting;
 
@@ -7,8 +11,17 @@ namespace CebMaui;
 public static class MauiProgram {
 
     public static MauiApp CreateMauiApp() {
-        Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(
-            Properties.Resource.SfLicense);
+        var assembly = Assembly.GetExecutingAssembly();
+        using var stream = assembly.GetManifestResourceStream("CebMaui.Resources.appsettings.json");
+
+        var config = new ConfigurationBuilder()
+            .AddJsonStream(stream!)
+            .Build();
+
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(config["sflicense"]);
+        
+
+
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()

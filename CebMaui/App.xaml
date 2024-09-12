@@ -10,7 +10,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
-                <syncTheme:SyncfusionThemeResourceDictionary VisualTheme="MaterialLight" />
+                <syncTheme:SyncfusionThemeResourceDictionary VisualTheme="MaterialDark" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
