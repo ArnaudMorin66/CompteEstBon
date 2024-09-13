@@ -10,14 +10,16 @@
     xmlns:sfg="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
     xmlns:sfi="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
     xmlns:sfo="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
-    xmlns:sfu="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core">
+    xmlns:sfu="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core" 
+    xmlns:sfk="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
+    Title="Le Compte est bon">
     <ContentPage.Resources>
         <ResourceDictionary>
             <sfc:InvertedBoolConverter x:Key="InverseBooleanConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.BindingContext>
-        <local:ViewTirage x:Name="Tirage" />
+        <local:ViewTirage x:Name="ViewTirage" />
     </ContentPage.BindingContext>
     <ScrollView>
         <VerticalStackLayout MinimumHeightRequest="60">
@@ -36,11 +38,11 @@
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="1"
+                        ShowBorder="{AppThemeBinding Dark=False, Light=True}"
                         HorizontalTextAlignment="Center"
                         IsClearButtonVisible="False"
                         IsEditable="True"
                         ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                        ShowBorder="False"
                         Text="{Binding Plaques[0]}" />
 
 
@@ -52,44 +54,43 @@
                         IsClearButtonVisible="False"
                         IsEditable="True"
                         ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                        ShowBorder="False"
-                        Stroke="Aqua"
+                        ShowBorder="{AppThemeBinding Dark=False, Light=True}"
                         Text="{Binding Plaques[1], Mode=TwoWay}" />
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="3"
                         HorizontalTextAlignment="Center"
                         IsClearButtonVisible="False"
+                        ShowBorder="{AppThemeBinding Dark=False, Light=True}"
                         IsEditable="True"
                         ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                        ShowBorder="False"
                         Text="{Binding Plaques[2], Mode=TwoWay}" />
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="4"
+                        ShowBorder="{AppThemeBinding Dark=False, Light=True}"
                         HorizontalTextAlignment="Center"
                         IsClearButtonVisible="False"
                         IsEditable="True"
                         ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                        ShowBorder="False"
                         Text="{Binding Plaques[3], Mode=TwoWay}" />
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="5"
+                        ShowBorder="{AppThemeBinding Dark=False, Light=True}"
                         HorizontalTextAlignment="Center"
                         IsClearButtonVisible="False"
                         IsEditable="True"
                         ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                        ShowBorder="False"
                         Text="{Binding Plaques[4], Mode=TwoWay}" />
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="6"
+                        ShowBorder="{AppThemeBinding Dark=False, Light=True}"
                         HorizontalTextAlignment="Center"
                         IsClearButtonVisible="False"
                         IsEditable="True"
                         ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                        ShowBorder="False"
                         Text="{Binding Plaques[5], Mode=TwoWay}" />
                     <Label
                         x:Name="LbCherche"
@@ -101,9 +102,9 @@
                         x:Name="SearchEntry"
                         Grid.Row="0"
                         Grid.Column="8"
+                        ShowBorder="{AppThemeBinding Dark=False, Light=True}"
                         CustomFormat="000"
                         HorizontalTextAlignment="Center"
-                        ShowBorder="False"
                         UpDownPlacementMode="InlineVertical"
                         VerticalOptions="Center"
                         Value="{Binding Search, Mode=TwoWay}" />
@@ -114,6 +115,7 @@
                     Grid.Column="0"
                     Margin="1"
                     Padding="1"
+                    CornerRadius="5"
                     Command="{Binding}"
                     CommandParameter="resolve"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
@@ -123,6 +125,7 @@
                     Grid.Column="1"
                     Margin="1"
                     Padding="1"
+                    CornerRadius="5"
                     Command="{Binding}"
                     CommandParameter="random"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
@@ -136,10 +139,11 @@
                         Grid.Column="0"
                         BackgroundColor="Transparent"
                         FontAttributes="Bold"
-                        HorizontalOptions="End"
-                        Text="Vertical:"
+                        HorizontalTextAlignment="End"
+                        HorizontalOptions="Fill"
+                        Text="Grille:"
                         VerticalOptions="Center" />
-                    <sfb:SfSwitch Grid.Column="1" IsOn="{Binding Vertical}" />
+                    <sfb:SfSwitch Grid.Column="1"  IsOn="{Binding VueGrille}" />
                 </Grid>
                 <Grid Grid.Column="3" ColumnDefinitions="*,*">
                     <Picker
@@ -147,10 +151,12 @@
                         Width="60"
                         ItemsSource="{x:Static local:ViewTirage.ListeFormats}"
                         SelectedItem="{Binding FormatExport}" />
+
                     <sfb:SfButton
                         Grid.Column="1"
                         Margin="1"
                         Padding="1"
+                        CornerRadius="5"
                         Command="{Binding}"
                         CommandParameter="export"
                         HorizontalOptions="Fill"
@@ -204,8 +210,7 @@
                     x:Name="GrilleVerticale"
                     Grid.Row="0"
                     Grid.Column="0"
-                    HeightRequest="400"
-                    IsVisible="{Binding Vertical}"
+                    IsVisible="{Binding VueGrille}"
                     ItemsSource="{Binding Solutions}"
                     SelectionChanged="GrilleVerticale_OnSelectionChanged"
                     SelectionMode="Single">
@@ -239,20 +244,19 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
+
                 <sfg:SfDataGrid
                     x:Name="SolutionsData"
                     Grid.Row="0"
                     Grid.Column="0"
-                    Height="400"
                     AutoGenerateColumnsMode="None"
                     ColumnWidthMode="Fill"
-                    EnableDataVirtualization="True"
+                    
                     HorizontalScrollBarVisibility="Always"
-                    IsVisible="{Binding Vertical, Converter={StaticResource InverseBooleanConverter}}"
+                    IsVisible="{Binding VueGrille, Converter={StaticResource InverseBooleanConverter}}"
                     ItemsSource="{Binding Solutions}"
                     SelectionChanged="SolutionsData_OnSelectionChanged"
                     SelectionMode="Single"
-                    VerticalOptions="Center"
                     VerticalScrollBarVisibility="Always">
 
 
@@ -358,8 +362,8 @@
                 </MenuFlyoutItem>
                 <MenuFlyoutItem
                     Command="{Binding}"
-                    CommandParameter="vertical"
-                    Text="Inverser Vertical">
+                    CommandParameter="vue"
+                    Text="Inverser vue">
                     <MenuFlyoutItem.KeyboardAccelerators>
                         <KeyboardAccelerator Key="V" Modifiers="Ctrl" />
                     </MenuFlyoutItem.KeyboardAccelerators>

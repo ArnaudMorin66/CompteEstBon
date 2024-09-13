@@ -32,13 +32,13 @@ namespace CebMaui.ViewModel;
 public class ViewTirage : INotifyPropertyChanged, ICommand {
     public static readonly List<string> ListeFormats = ["Excel", "Word", "Json", "Xml", "HTML"];
 
-    private static readonly Dictionary<string, ExportFile> listExportFiles = new() {
-        ["Excel"] = new("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
-        ["Json"] = new ("json", "application/json"),
-        ["Word"] = new ("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
-        ["Xml"] = new ("xml",  "application/xml"),
-        ["HTML"] = new ("html","text/html")
+    private static readonly Dictionary<string, ExportFile> ListExportFiles = new() {
+        ["Excel"] = new ExportFile("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
+        ["Word"] = new ExportFile("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
+        ["Json"] = new ExportFile("json", "application/json"), ["Xml"] = new ExportFile("xml", "application/xml"),
+        ["HTML"] = new ExportFile("html", "text/html")
     };
+
 // private readonly Stopwatch _notifyWatch = new();
     private string _formatExport = ListeFormats[0];
 
@@ -68,9 +68,9 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 
     private string _titre = "Jeu du Compte Est Bon";
 
-    private bool _vertical;
+    private bool _vueGrille;
 
-    
+
     /// <summary>
     ///     Initialisation
     /// </summary>
@@ -78,7 +78,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     /// </returns>
     public ViewTirage() {
         Plaques.CollectionChanged += async (_, e) => {
-            if (e.Action != NotifyCollectionChangedAction.Replace || IsBusy)
+            if (e is not { Action: NotifyCollectionChangedAction.Replace } || IsBusy)
                 return;
 
             var i = e.NewStartingIndex;
@@ -104,6 +104,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
             OnPropertyChanged();
         }
     }
+
 // 
     private bool _themeDark = true;
 
@@ -112,26 +113,24 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         set {
             if (_themeDark == value) return;
             _themeDark = value;
-            InverseTheme();
-            //UpdateForeground();
+            var mergedDictionaries = Application.Current!.Resources.MergedDictionaries;
+            var theme = mergedDictionaries?.OfType<SyncfusionThemeResourceDictionary>().FirstOrDefault();
+            if (theme == null) return;
+            if (_themeDark) {
+                theme.VisualTheme = SfVisuals.MaterialDark;
+                Application.Current.UserAppTheme = AppTheme.Dark;
+            } else {
+                theme.VisualTheme = SfVisuals.MaterialLight;
+                Application.Current.UserAppTheme = AppTheme.Light;
+            }
+
+            UpdateForeground();
             OnPropertyChanged();
         }
     }
 
-    private void InverseTheme() {
-        var mergedDictionaries = Application.Current!.Resources.MergedDictionaries;
-        var theme = mergedDictionaries?.OfType<SyncfusionThemeResourceDictionary>().FirstOrDefault();
-        if (theme == null) return;
-        if (ThemeDark) {
-            theme.VisualTheme = SfVisuals.MaterialDark;
-            Application.Current.UserAppTheme = AppTheme.Dark;
-        } else {
-            theme.VisualTheme = SfVisuals.MaterialLight;
-            Application.Current.UserAppTheme = AppTheme.Light;
-        }
 
-        UpdateForeground();
-    }
+
     public static IEnumerable<int> ListePlaques => CebPlaque.DistinctPlaques;
 
     public CebTirage Tirage { get; } = new();
@@ -156,11 +155,12 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         // ReSharper disable once ValueParameterNotUsed
         set => OnPropertyChanged();
     }
-    public bool Vertical {
-        get => _vertical;
+
+    public bool VueGrille {
+        get => _vueGrille;
         set {
-            if (_vertical == value) return;
-            _vertical = value;
+            if (_vueGrille == value) return;
+            _vueGrille = value;
             OnPropertyChanged();
         }
     }
@@ -303,8 +303,8 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
             case "theme":
                 ThemeDark = !ThemeDark;
                 break;
-            case "vertical":
-                Vertical = !Vertical;
+            case "vue":
+                VueGrille = !VueGrille;
                 break;
         }
     }
@@ -341,18 +341,16 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         ClearData();
     }
 
-    private void UpdateForeground() {
-            Foreground =
-                Tirage.Status switch {
-                    CebStatus.Indefini => Colors.Blue,
-                    CebStatus.Valide => Colors.White,
-                    CebStatus.EnCours => Colors.Aqua,
-                    CebStatus.CompteEstBon => Colors.SpringGreen,
-                    CebStatus.CompteApproche => Colors.Orange,
-                    CebStatus.Invalide => Colors.Red,
-                    _ => throw new NotImplementedException()
-                };
-    }
+    private void UpdateForeground() => Foreground =
+        Tirage.Status switch {
+            CebStatus.Indefini => Colors.Blue,
+            CebStatus.Valide => Colors.White,
+            CebStatus.EnCours => Colors.Aqua,
+            CebStatus.CompteEstBon => Colors.SpringGreen,
+            CebStatus.CompteApproche => Colors.Orange,
+            CebStatus.Invalide => Colors.Red,
+            _ => throw new NotImplementedException()
+        };
 
     public void ShowPopup(int index = 0) {
         if (index < 0)
@@ -364,12 +362,12 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         Solution = sol;
         Popup = true;
     }
-    
+
 
     private async Task ExportFichierAsync() {
         if (Tirage.Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
-        
-        var typ = listExportFiles[FormatExport];
+
+        var typ = ListExportFiles[FormatExport];
         var filename = $"CompteEstBon.{typ.Extension}";
         await using var mstream = new MemoryStream();
         Action<MemoryStream> exportStream = typ.Extension switch {
