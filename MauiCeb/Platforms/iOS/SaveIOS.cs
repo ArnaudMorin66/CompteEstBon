@@ -9,7 +9,7 @@
 using QuickLook;
 
 using UIKit;
-
+#pragma warning disable
 // ReSharper disable once CheckNamespace
 namespace MauiCeb.Services;
 

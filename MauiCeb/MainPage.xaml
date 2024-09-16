@@ -1,184 +1,429 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-
-<ContentPage
-    x:Class="MauiCeb.MainPage"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:buttons="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
-    xmlns:editors="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
-    xmlns:hp="clr-namespace:MauiCeb.Helpers"
-    xmlns:local="clr-namespace:MauiCeb.ViewModel"
-    xmlns:progressBar="clr-namespace:Syncfusion.Maui.ProgressBar;assembly=Syncfusion.Maui.ProgressBar"
-    xmlns:picker="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
-    xmlns:sfgrid="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:local="clr-namespace:MauiCeb.ViewModel"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiCeb.MainPage">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <hp:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <!--<sfc:InvertedBoolConverter x:Key="InverseBooleanConverter" />-->
+            <!--<sfc:ColorToBrushConverter x:Key="ColorToBrushConverter"></sfc:ColorToBrushConverter>-->
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.BindingContext>
-        <local:ViewTirage x:Name="Tirage" />
+        <local:ViewTirage x:Name="ViewTirage" />
     </ContentPage.BindingContext>
     <ScrollView>
-        <StackLayout MinimumHeightRequest="60" Orientation="Vertical">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="3*" />
-                </Grid.ColumnDefinitions>
-                <Label
-                    x:Name="LbPlaques"
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Text="Plaques"
-                    VerticalTextAlignment="Center" />
-                
-                                 
-                <editors:SfComboBox
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    IsClearButtonVisible="False"
-                    IsEditable="True"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                    Text="{Binding Plaques[0], Mode=TwoWay}"
-                    TextColor="{AppThemeBinding Light={StaticResource Black},
-                                                Dark={StaticResource White}}" />
-                <editors:SfComboBox
-                    Grid.Row="0"
-                    Grid.Column="2"
-                    IsClearButtonVisible="False"
-                    IsEditable="True"
-                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                    Text="{Binding Plaques[1], Mode=TwoWay}"
-                    TextColor="{AppThemeBinding Light={StaticResource Black},
-                                                Dark={StaticResource White}}" />
-                <editors:SfComboBox
-                    Grid.Row="0"
-                    Grid.Column="3"
-                    IsClearButtonVisible="False"
-                    IsEditable="True"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                    Text="{Binding Plaques[2], Mode=TwoWay}"
-                    TextColor="{AppThemeBinding Light={StaticResource Black},
-                                                Dark={StaticResource White}}" />
-                <editors:SfComboBox
-                    Grid.Row="0"
-                    Grid.Column="4"
-                    IsClearButtonVisible="False"
-                    IsEditable="True"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                    Text="{Binding Plaques[3], Mode=TwoWay}"
-                    TextColor="{AppThemeBinding Light={StaticResource Black},
-                                                Dark={StaticResource White}}" />
-                <editors:SfComboBox
-                    Grid.Row="0"
-                    Grid.Column="5"
-                    IsClearButtonVisible="False"
-                    IsEditable="True"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                    Text="{Binding Plaques[4], Mode=TwoWay}"
-                    TextColor="{AppThemeBinding Light={StaticResource Black},
-                                                Dark={StaticResource White}}" />
-                <editors:SfComboBox
-                    Grid.Row="0"
-                    Grid.Column="6"
-                    IsClearButtonVisible="False"
-                    IsEditable="True"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                    Text="{Binding Plaques[5], Mode=TwoWay}"
-                    TextColor="{AppThemeBinding Light={StaticResource Black},
-                                                Dark={StaticResource White}}" />
-                <Label
-                    x:Name="LbCherche"
-                    Grid.Row="0"
-                    Grid.Column="7"
-                    Text="Trouve"
-                    VerticalTextAlignment="Center" />
-                <editors:SfNumericEntry
-                    x:Name="SearchEntry"
-                    Grid.Row="0"
-                    Grid.Column="8"
-                    CustomFormat="000"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    TextColor="{AppThemeBinding Light={StaticResource Black},
-                                                Dark={StaticResource White}}"
-                    UpDownPlacementMode="InlineVertical"
-                    VerticalOptions="Center"
-                    Value="{Binding Search, Mode=TwoWay}" />
-            </Grid>
-            <StackLayout Orientation="Horizontal">
+        <VerticalStackLayout>
+            <Border
+                Margin="2"
+                Padding="4"
+                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}">
+                <Grid ColumnDefinitions="1*,2*,2*,2*,2*,2*,2*,1*,3*">
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Text="Plaques"
+                        VerticalTextAlignment="Center" />
 
-                <buttons:SfButton
-                    BackgroundColor="{Binding Background}"
+                    <Picker
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        HorizontalTextAlignment="Center"
+                        SelectedItem="{Binding Tirage.Plaques[0].Value, Mode=TwoWay}">
+                        <Picker.ItemsSource>
+                            <x:Array>
+                                <x:Type TypeName="string"></x:Type>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                        
+
+
+                    <Picker
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        HorizontalTextAlignment="Center"
+                        ItemsSource="{x:Static Member=local:ViewTirage.ListePlaques}"
+                        SelectedItem="{Binding Tirage.Plaques[1].Value, Mode=TwoWay}" />
+
+                    <Picker
+                        Grid.Row="0"
+                        Grid.Column="3"
+                        HorizontalTextAlignment="Center"
+                        ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                        SelectedItem="{Binding Tirage.Plaques[2].Value, Mode=TwoWay}" />
+
+                    <Picker
+                        Grid.Row="0"
+                        Grid.Column="4"
+                        HorizontalTextAlignment="Center"
+                        ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                        SelectedItem="{Binding Tirage.Plaques[3].Value, Mode=TwoWay}" />
+
+                    <Picker
+                        Grid.Row="0"
+                        Grid.Column="5"
+                        HorizontalTextAlignment="Center"
+                        ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                        SelectedItem="{Binding Tirage.Plaques[4].Value, Mode=TwoWay}" />
+
+                    <Picker
+                        Grid.Row="0"
+                        Grid.Column="6"
+                        HorizontalTextAlignment="Center"
+                        ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
+                        SelectedItem="{Binding Tirage.Plaques[5].Value, Mode=TwoWay}" />
+
+                    <Label
+                        x:Name="LbCherche"
+                        Grid.Row="0"
+                        Grid.Column="7"
+                        Text="Trouve"
+                        VerticalTextAlignment="Center" />
+                    <Entry
+                        x:Name="SearchEntry"
+                        Grid.Row="0"
+                        Grid.Column="8"
+                        
+                        HorizontalTextAlignment="Center"
+                        VerticalOptions="Center"
+                        Text="{Binding Tirage.Search, Mode=TwoWay}" />
+                </Grid>
+            </Border>
+            <Grid ColumnDefinitions="*,*,*,*,*,*" IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}">
+                <Button
+                    Grid.Column="0"
+                    Margin="1"
+                    Padding="1"
+                    
+                    BorderColor="{Binding Foreground}"
+                    BorderWidth="0.6"
                     Command="{Binding}"
                     CommandParameter="resolve"
+                    CornerRadius="5"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    Text="Résoudre" />
+                    Text="Résoudre"/>
 
-                <buttons:SfButton
-                    BackgroundColor="{Binding Background}"
+                <Button
+                    Grid.Column="1"
+                    Margin="1"
+                    Padding="1"
+                    BorderColor="{Binding Foreground}"
+                    BorderWidth="0.6"
                     Command="{Binding}"
                     CommandParameter="random"
+                    CornerRadius="5"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     Text="Hasard" />
+                <Grid
+                    Grid.Column="2"
+                    ColumnDefinitions="*,2*"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Center">
+                    <Label
+                        Grid.Column="0"
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Fill"
+                        HorizontalTextAlignment="End"
+                        Text="Grille:"
+                        VerticalOptions="Center" />
+                    <Switch Grid.Column="1" IsToggled="{Binding VueGrille}" />
+                </Grid>
+                <Grid Grid.Column="3" ColumnDefinitions="*,*">
+                    <Picker
+                        x:Name="PickerFormat"
+                        Grid.Column="0"
+                        ItemsSource="{x:Static local:ViewTirage.ListeFormats}"
+                        SelectedIndex="{Binding IndexExport}" />
 
-            </StackLayout>
+                    <Button
+                        Grid.Column="1"
+                        Margin="1"
+                        Padding="1"
+                        BorderColor="{Binding Foreground}"
+                        BorderWidth="0.6"
+                        Command="{Binding}"
+                        CommandParameter="export"
+                        CornerRadius="5"
+                        HorizontalOptions="Fill"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
+                        Text="Export" />
 
-            <Grid>
-                <sfgrid:SfDataGrid
+                </Grid>
+                <HorizontalStackLayout Grid.Column="4" VerticalOptions="Center">
+                    <Label Text="Thème sombre:" VerticalTextAlignment="Center" />
+                    <Switch IsToggled="{Binding ThemeDark}" />
+                </HorizontalStackLayout>
+                <Grid
+                    Grid.Column="5"
+                    ColumnDefinitions="*,2*"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Center">
+                    <Label
+                        Grid.Column="0"
+                        BackgroundColor="Transparent"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Fill"
+                        HorizontalTextAlignment="End"
+                        Text="Auto:"
+                        VerticalOptions="Center" />
+                    <Switch Grid.Column="1" IsToggled="{Binding Auto}" />
+                </Grid>
+            </Grid>
+            <Border Padding="2">
+                <Grid
+                    ColumnDefinitions="*,*,*,*"
+                    HeightRequest="50"
+                    VerticalOptions="Center">
+                    <Label
+                        Grid.Column="0"
+                        FontSize="18"
+                        IsVisible="{Binding IsComputed}"
+                        Text="{Binding Result}"
+                        TextColor="{Binding Foreground}"
+                        VerticalOptions="Center" />
+                    <Label
+                        Grid.Column="1"
+                        FontSize="18"
+                        IsVisible="{Binding IsComputed}"
+                        Text="{Binding Tirage.Found, StringFormat='Trouvé: {0}'}"
+                        TextColor="{Binding Foreground}"
+                        VerticalOptions="Center" />
+                    <Label
+                        Grid.Column="2"
+                        FontSize="18"
+                        IsVisible="{Binding IsComputed}"
+                        Text="{Binding Tirage.Count, StringFormat='Nombre de solutions: {0}'}"
+                        TextColor="{Binding Foreground}"
+                        VerticalOptions="Center" />
+                    <Label
+                        Grid.Column="3"
+                        FontSize="18"
+                        HorizontalOptions="End"
+                        IsVisible="{Binding IsComputed}"
+                        Text="{Binding Tirage.Duree.TotalSeconds, StringFormat='Durée: {0:N3} s'}"
+                        TextColor="{Binding Foreground}"
+                        VerticalOptions="Center" />
+                </Grid>
+            </Border>
+            <Grid RowDefinitions="*">
+                <CollectionView
+                    x:Name="GrilleVerticale"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    HeightRequest="400"
+                    IsVisible="{Binding VueGrille}"
+                    ItemSizingStrategy="MeasureAllItems"
+                    ItemsSource="{Binding Tirage.Solutions}"
+                    ItemsUpdatingScrollMode="KeepScrollOffset"
+                    SelectionMode="Single"
+                    VerticalScrollBarVisibility="Always">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout
+                            HorizontalItemSpacing="2"
+                            Orientation="Vertical"
+                            Span="{OnIdiom Default=4,
+                                           Phone=2}"
+                            VerticalItemSpacing="2" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+
+                            <Border HeightRequest="100" HorizontalOptions="Center">
+                                <CollectionView
+                                    x:Name="GrilleOperations"
+                                    HorizontalOptions="Center"
+                                    ItemsSource="{Binding Operations}"
+                                    SelectionMode="Single">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Label
+                                                HorizontalTextAlignment="Center"
+                                                Text="{Binding}"
+                                                TextColor="{AppThemeBinding Dark={StaticResource White},
+                                                                            Light={StaticResource OffBlack}}" />
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+
+                            </Border>
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!--<sfg:SfDataGrid
                     x:Name="SolutionsData"
                     Grid.Row="0"
                     Grid.Column="0"
-                    Height="400"
                     AutoGenerateColumnsMode="None"
                     ColumnWidthMode="Fill"
-                    EnableDataVirtualization="True"
                     HorizontalScrollBarVisibility="Always"
-                    IsVisible="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    ItemsSource="{Binding Solutions}"
-                    VerticalOptions="Center"
+                    IsVisible="{Binding VueGrille, Converter={StaticResource InverseBooleanConverter}}"
+                    ItemsSource="{Binding Tirage.Solutions}"
+                    SelectionChanged="SolutionsData_OnSelectionChanged"
+                    SelectionMode="Single"
                     VerticalScrollBarVisibility="Always">
 
-                    <sfgrid:SfDataGrid.Columns>
-                        <sfgrid:DataGridTextColumn HeaderText="Opération 1" MappingName="Op1" />
-                        <sfgrid:DataGridTextColumn HeaderText="Opération 2" MappingName="Op2" />
-                        <sfgrid:DataGridTextColumn HeaderText="Opération 3" MappingName="Op3" />
-                        <sfgrid:DataGridTextColumn HeaderText="Opération 4" MappingName="Op4" />
-                        <sfgrid:DataGridTextColumn HeaderText="Opération 5" MappingName="Op5" />
-                    </sfgrid:SfDataGrid.Columns>
-                </sfgrid:SfDataGrid>
 
-                <progressBar:SfCircularProgressBar
+                    <sfg:SfDataGrid.Columns>
+                        <sfg:DataGridTextColumn HeaderText="Opération 1" MappingName="Op1" />
+                        <sfg:DataGridTextColumn HeaderText="Opération 2" MappingName="Op2" />
+                        <sfg:DataGridTextColumn HeaderText="Opération 3" MappingName="Op3" />
+                        <sfg:DataGridTextColumn HeaderText="Opération 4" MappingName="Op4" />
+                        <sfg:DataGridTextColumn HeaderText="Opération 5" MappingName="Op5" />
+                    </sfg:SfDataGrid.Columns>
+                </sfg:SfDataGrid>
+                <sfu:SfBusyIndicator
+                    x:Name="Busyindicator"
+                    Title="recherche..."
                     Grid.Row="0"
                     Grid.Column="0"
-                    IsIndeterminate="True"
+                    AnimationType="DoubleCircle"
+                    HeightRequest="400"
+                    IndicatorColor="Blue"
+                    IsRunning="{Binding IsBusy}"
                     IsVisible="{Binding IsBusy}"
-                    ZIndex="99" />
+                    OverlayFill="transparent"
+                    SizeFactor="0.7"
+                    TextColor="Yellow" /> -->
             </Grid>
+            <VerticalStackLayout VerticalOptions="End">
+                <Border BackgroundColor="{StaticResource Gray500}">
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="18"
+                        HorizontalTextAlignment="Center"
+                        Text="Le Compte est bon"
+                        TextColor="Yellow" />
+                </Border>
+            </VerticalStackLayout>
+            <!--<sfo:SfPopup
+                HeightRequest="280"
+                IsOpen="{Binding Popup}"
+                ShowFooter="True"
+                ShowHeader="True"
+                VerticalOptions="Fill">
+                <sfo:SfPopup.HeaderTemplate>
+                    <DataTemplate>
+                        <VerticalStackLayout VerticalOptions="CenterAndExpand">
+                            <Label
+                                FontSize="18"
+                                HorizontalOptions="Center"
+                                Text="{Binding Result}"
+                                VerticalOptions="Center" />
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </sfo:SfPopup.HeaderTemplate>
+                <sfo:SfPopup.ContentTemplate>
+                    <DataTemplate>
+                        <VerticalStackLayout>
+                            <CollectionView
+                                HorizontalOptions="Center"
+                                ItemsSource="{Binding Solution.Operations}"
+                                VerticalOptions="Center">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label HorizontalTextAlignment="Center" Text="{Binding}" />
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </sfo:SfPopup.ContentTemplate>
+                <sfo:SfPopup.FooterTemplate>
+                    <DataTemplate>
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label
+                                FontSize="15"
+                                HorizontalOptions="Center"
+                                Text="{Binding Tirage.Found, StringFormat='Trouvé: {0}'}" />
+                            <Label
+                                FontSize="15"
+                                HorizontalOptions="Center"
+                                Text="{Binding Tirage.Count, StringFormat='Nombre de solutions: {0}'}" />
+                            <Label
+                                FontSize="15"
+                                HorizontalOptions="Center"
+                                Text="{Binding Tirage.Duree.TotalSeconds, StringFormat='Durée: {0:N3} s'}" />
+                        </VerticalStackLayout>
+                    </DataTemplate>
+                </sfo:SfPopup.FooterTemplate>
+            </sfo:SfPopup>-->
+        </VerticalStackLayout>
+        <FlyoutBase.ContextFlyout>
+            <MenuFlyout>
+                <MenuFlyoutItem
+                    Command="{Binding}"
+                    CommandParameter="random"
+                    Text="Hasard">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="H" Modifiers="Ctrl" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+                <MenuFlyoutItem
+                    Command="{Binding}"
+                    CommandParameter="resolve"
+                    Text="Résoudre">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="R" Modifiers="Ctrl" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+                <MenuFlyoutSeparator />
 
-            <StackLayout Orientation="Horizontal">
-                <Label
-                    FontSize="Large"
-                    HorizontalTextAlignment="Center"
-                    IsVisible="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
-                    Text="{Binding Result}"
-                    TextColor="{Binding Foreground}" />
+                <MenuFlyoutSubItem
+                    Command="{Binding}"
+                    CommandParameter="export"
+                    Text="Export">
+                    <MenuFlyoutItem
+                        Command="{Binding}"
+                        CommandParameter="excel"
+                        Text="Excel" />
+                    <MenuFlyoutItem
+                        Command="{Binding}"
+                        CommandParameter="Word"
+                        Text="Word" />
+                    <MenuFlyoutItem
+                        Command="{Binding}"
+                        CommandParameter="json"
+                        Text="Json" />
+                    <MenuFlyoutItem
+                        Command="{Binding}"
+                        CommandParameter="xml"
+                        Text="Xml" />
+                    <MenuFlyoutItem
+                        Command="{Binding}"
+                        CommandParameter="html"
+                        Text="Html" />
+                </MenuFlyoutSubItem>
+                <MenuFlyoutItem
+                    Command="{Binding}"
+                    CommandParameter="vue"
+                    Text="Inverser vue">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="V" Modifiers="Ctrl" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+                <MenuFlyoutItem
+                    Command="{Binding}"
+                    CommandParameter="theme"
+                    Text="Modifier le theme">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="T" Modifiers="Ctrl" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+                <MenuFlyoutItem
+                    Command="{Binding}"
+                    CommandParameter="auto"
+                    Text="Mode Auto">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="A" Modifiers="Ctrl" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
 
-            </StackLayout>
-
-        </StackLayout>
-
+            </MenuFlyout>
+        </FlyoutBase.ContextFlyout>
     </ScrollView>
+
 </ContentPage>

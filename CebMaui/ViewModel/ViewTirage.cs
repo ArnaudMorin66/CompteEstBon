@@ -7,8 +7,6 @@
 
 #region Using
 
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -30,31 +28,16 @@ using Syncfusion.Maui.Themes;
 namespace CebMaui.ViewModel;
 
 public class ViewTirage : INotifyPropertyChanged, ICommand {
-    public static readonly List<string> ListeFormats = ["Excel", "Word", "Json", "Xml", "HTML"];
+    public static readonly string[] ListeFormats = ["Excel", "Word", "Json", "Xml", "HTML"];
 
-    private static readonly Dictionary<string, ExportFile> ListExportFiles = new() {
-        ["Excel"] = new ExportFile("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
-        ["Word"] = new ExportFile("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
-        ["Json"] = new ExportFile("json", "application/json"), ["Xml"] = new ExportFile("xml", "application/xml"),
-        ["HTML"] = new ExportFile("html", "text/html")
-    };
-
-// private readonly Stopwatch _notifyWatch = new();
-    private string _formatExport = ListeFormats[0];
-
-    public string FormatExport {
-        get => _formatExport;
-        set {
-            if (_formatExport == value) return;
-            _formatExport = value;
-            OnPropertyChanged();
-        }
-    }
 
     private bool _auto;
     private Color _background = Color.FromRgb(22, 22, 22);
 
     private Color _foreground = Colors.White;
+
+    // private readonly Stopwatch _notifyWatch = new();
+    private int _indexExport;
 
     private bool _isBusy;
 
@@ -64,12 +47,13 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     private string _result = "Résoudre";
 
     private CebBase _solution = null!;
+
+// 
+    private bool _themeDark = true;
     private Timer? _timer;
 
-    private string _titre = "Jeu du Compte Est Bon";
 
     private bool _vueGrille;
-
 
     /// <summary>
     ///     Initialisation
@@ -77,21 +61,24 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     /// <returns>
     /// </returns>
     public ViewTirage() {
-        Plaques.CollectionChanged += async (_, e) => {
-            if (e is not { Action: NotifyCollectionChangedAction.Replace } || IsBusy)
-                return;
-
-            var i = e.NewStartingIndex;
-            Tirage.Plaques[i].Value = Plaques[i];
-            await ClearAsync();
-
-            if (Auto)
-                await ResolveAsync();
-        };
         Auto = false;
         ThemeDark = true;
-        UpdateData();
-        Titre = $"{Result} - {DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}";
+        Tirage.PropertyChanged += (_, args) => {
+            if (args.PropertyName != "Clear") return;
+            ClearData();
+            if (Auto)
+                Task.Run(ResolveAsync);
+        };
+        ClearData();
+    }
+
+    public int IndexExport {
+        get => _indexExport;
+        set {
+            if (_indexExport == value) return;
+            _indexExport = value;
+            OnPropertyChanged();
+        }
     }
 
     public static string DotnetVersion =>
@@ -104,9 +91,6 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
             OnPropertyChanged();
         }
     }
-
-// 
-    private bool _themeDark = true;
 
     public bool ThemeDark {
         get => _themeDark;
@@ -130,31 +114,10 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     }
 
 
-
     public static IEnumerable<int> ListePlaques => CebPlaque.DistinctPlaques;
 
     public CebTirage Tirage { get; } = new();
 
-    public ObservableCollection<int> Plaques { get; } = [0, 0, 0, 0, 0, 0];
-
-    public IEnumerable<CebBase> Solutions {
-        get => Tirage.Solutions;
-        // ReSharper disable once ValueParameterNotUsed
-        set => OnPropertyChanged(nameof(Solutions), nameof(Count));
-    }
-
-
-    public TimeSpan Duree {
-        get => Tirage.Duree;
-        // ReSharper disable once ValueParameterNotUsed
-        set => OnPropertyChanged();
-    }
-
-    public string Found {
-        get => Tirage.Found;
-        // ReSharper disable once ValueParameterNotUsed
-        set => OnPropertyChanged();
-    }
 
     public bool VueGrille {
         get => _vueGrille;
@@ -171,20 +134,6 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         set {
             _solution = value;
             OnPropertyChanged();
-        }
-    }
-
-    public int Search {
-        get => Tirage.Search;
-        set {
-            if (Tirage.Search == value)
-                return;
-
-            Tirage.Search = value;
-            OnPropertyChanged();
-            ClearData();
-            if (Auto && Tirage.Status == CebStatus.Valide)
-                Task.Run(ResolveAsync);
         }
     }
 
@@ -239,11 +188,6 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         set => OnPropertyChanged();
     }
 
-    public int Count {
-        get => Tirage.Count;
-        // ReSharper disable once ValueParameterNotUsed
-        set => OnPropertyChanged();
-    }
 
     public bool Popup {
         get => _popup;
@@ -261,16 +205,9 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         }
     }
 
-    public string Titre {
-        get => _titre;
-        set {
-            _titre = value;
-            OnPropertyChanged();
-        }
-    }
 
     public bool CanExecute(object? parameter) => true;
-
+#pragma warning disable CA1862
     public async void Execute(object? parameter) {
         var cmd = (parameter as string)?.ToLower();
         switch (cmd) {
@@ -296,7 +233,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
                 break;
 
             case "export":
-                if (Count != 0)
+                if (Tirage.Count != 0)
                     await ExportFichierAsync();
 
                 break;
@@ -306,6 +243,19 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
             case "vue":
                 VueGrille = !VueGrille;
                 break;
+            case "auto":
+                Auto = !Auto;
+                break;
+            default:
+                //if (ListeFormats.Any(p => p.ToLower() == cmd)) {
+                    var (elt, i) = ListeFormats.Indexed().FirstOrDefault(elt => elt.Item1.ToLower() == cmd);
+                        if (elt != null) {
+                    IndexExport = i;
+                        if (Tirage.Count != 0) await ExportFichierAsync();
+                        break;
+                }
+                break;
+                    
         }
     }
 
@@ -327,19 +277,9 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         UpdateForeground();
         Result = Tirage.Status != CebStatus.Invalide ? "" : "Tirage invalide";
         Popup = false;
-        OnPropertyChanged(nameof(IsComputed), nameof(Duree), nameof(Solutions), nameof(Found), nameof(Count));
+        OnPropertyChanged(nameof(IsComputed), nameof(Tirage), "plq");
     }
 
-    private void UpdateData() {
-        IsBusy = true;
-        lock (Plaques) {
-            foreach (var (p, i) in Tirage.Plaques.Indexed()) Plaques[i] = p.Value;
-        }
-
-        OnPropertyChanged(nameof(Plaques), nameof(Search));
-        IsBusy = false;
-        ClearData();
-    }
 
     private void UpdateForeground() => Foreground =
         Tirage.Status switch {
@@ -367,10 +307,17 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     private async Task ExportFichierAsync() {
         if (Tirage.Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
 
-        var typ = ListExportFiles[FormatExport];
-        var filename = $"CompteEstBon.{typ.Extension}";
-        await using var mstream = new MemoryStream();
-        Action<MemoryStream> exportStream = typ.Extension switch {
+
+        var (extension, contentType) =
+            IndexExport switch {
+                0 => ("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
+                1 => ("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
+                2 => ("json", "application/json"),
+                3 => ("xml", "application/xml"),
+                4 => ("html", "text/html"),
+                _ => throw new NotImplementedException()
+            };
+        Action<MemoryStream> exportStream = extension switch {
             "xlsx" => Tirage.ExcelSaveStream,
             "docx" => Tirage.WordStream,
             "json" => Tirage.JsonSaveStream,
@@ -378,8 +325,10 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
             "html" => Tirage.HtmlStream,
             _ => throw new NotImplementedException()
         };
+        await using var mstream = new MemoryStream();
         exportStream(mstream);
-        SaveService.SaveAndView(filename, typ.ContentType, mstream);
+
+        SaveService.SaveAndView($"CompteEstBon.{extension}", contentType, mstream);
     }
 
 
@@ -390,12 +339,6 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         foreach (var property in properties) PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
     }
 
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null) {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
-    }
 
     #region Action
 
@@ -408,7 +351,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 
     public async ValueTask RandomAsync() {
         await Tirage.RandomAsync();
-        UpdateData();
+        ClearData();
         if (Auto)
             await ResolveAsync();
     }
@@ -423,7 +366,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         await Tirage.ResolveAsync();
         Result = Tirage.Status switch {
             CebStatus.CompteEstBon => "😊 Compte est Bon",
-            CebStatus.CompteApproche => $"😢 Compte approché",
+            CebStatus.CompteApproche => "\ud83d\ude22 Compte approché",
             CebStatus.Invalide => "🤬 Tirage invalide",
             _ => ""
         };
@@ -432,8 +375,8 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 
         UpdateForeground();
         IsBusy = false;
-        OnPropertyChanged(nameof(Duree),
-            nameof(Solutions), nameof(Count), nameof(IsComputed), nameof(Found));
+        OnPropertyChanged(nameof(Tirage),
+            nameof(IsComputed));
         ShowPopup();
 
         return Tirage.Status;
@@ -443,6 +386,6 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 }
 
 public record ExportFile(string Extension, string ContentType) {
-    public string Extension = Extension;
     public string ContentType = ContentType;
+    public string Extension = Extension;
 }

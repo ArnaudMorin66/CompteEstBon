@@ -6,7 +6,8 @@
 // applicable laws. 
 #endregion
 using QuickLook;
-
+#pragma warning disable
+// ReSharper disable once CheckNamespace
 namespace  MauiCeb.Services ;
 	
 

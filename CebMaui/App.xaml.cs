@@ -4,8 +4,9 @@
             UserAppTheme = AppTheme.Dark;
             InitializeComponent();
 
-            MainPage = new MainPage();
-            
+            //MainPage = new MainPage();
+            MainPage = new AppShell();
+
         }
     }
 }

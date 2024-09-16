@@ -49,11 +49,11 @@ public partial class MainWindow {
         SolutionsData.SelectedIndex);
 
     private void TbMoins_Click(object sender, RoutedEventArgs e) {
-        ViewTirage.Search = Math.Max(ViewTirage.Search - 1, 100);
+        ViewTirage.Tirage.Search = Math.Max(ViewTirage.Tirage.Search - 1, 100);
     }
 
     private void TbPlus_Click(object sender, RoutedEventArgs e) {
-        ViewTirage.Search = Math.Min(ViewTirage.Search + 1, 999);
+        ViewTirage.Tirage.Search = Math.Min(ViewTirage.Tirage.Search + 1, 999);
     }
 
     private void TxtSearch_LostFocus(object sender, RoutedEventArgs e) {
@@ -77,4 +77,15 @@ public partial class MainWindow {
         element.RaiseEvent(
             new MouseButtonEventArgs(e.MouseDevice, e.Timestamp, MouseButton.Left) { RoutedEvent = MouseDownEvent });
     }
-}
+
+
+    private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e) {
+        if (sender is ListView { DataContext: CebBase sol }) {
+            ViewTirage.ShowNotify(sol);
+            return;
+        }
+        if (sender is ListView list)
+            ViewTirage.ShowNotify(list.SelectedIndex);
+    }
+    }
+

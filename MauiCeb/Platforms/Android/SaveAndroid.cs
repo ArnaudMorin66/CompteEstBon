@@ -9,13 +9,14 @@ using Android.Content;
 using Android.OS;
 using Java.IO;
 
+// ReSharper disable once CheckNamespace
 namespace MauiCeb.Services;
 
 public static partial class SaveService
 {
 	public static partial void SaveAndView(string filename, string contentType, MemoryStream stream)
 	{
-		var root = Android.OS.Environment.IsExternalStorageEmulated ? Android.App.Application.Context!.GetExternalFilesDir(Android.OS.Environment.DirectoryDownloads)!.AbsolutePath : System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+		var root = Android.OS.Environment.IsExternalStorageEmulated ? Android.App.Application.Context.GetExternalFilesDir(Android.OS.Environment.DirectoryDownloads)!.AbsolutePath : System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
 
 		Java.IO.File myDir = new(root + "/CebBlazor");
 		myDir.Mkdir();

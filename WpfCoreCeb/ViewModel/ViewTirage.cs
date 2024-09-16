@@ -36,8 +36,7 @@ namespace CompteEstBon.ViewModel {
         private Color _foreground = Colors.White;
         private bool _isBusy;
         private char _modeView = '…';
-
-        private bool _mongodb;
+        
         private bool _popup;
 
         private string _result = "Résoudre";
@@ -65,19 +64,18 @@ namespace CompteEstBon.ViewModel {
                 Titre = $"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}\t{Result}";
             };
             IsBusy = false;
-            Plaques.CollectionChanged += (_, e) => {
-                if (e.Action != NotifyCollectionChangedAction.Replace || IsBusy) {
-                    return;
-                }
-
-                var i = e.NewStartingIndex;
-                Tirage.Plaques[i].Value = Plaques[i];
-                Task.Run(ClearAsync);
-            };
+            
 
             Background = ThemeColors["Sombre"];
             Auto = Settings.Default.AutoCalcul;
-            UpdateData();
+            Tirage.PropertyChanged += (sender, args) => {
+                if (args.PropertyName == "Clear") {
+                    ClearData();
+                    if (Auto)
+                        Task.Run(ResolveAsync);
+                }
+            };
+            ClearData();
 
             Titre = $"{DateTime.Now:dddd dd MMMM yyyy à HH:mm:ss}\t😊 Le compte est bon";
             DateDispatcher.Start();
@@ -115,17 +113,7 @@ namespace CompteEstBon.ViewModel {
             }
         }
 
-        public bool MongoDb {
-            get => _mongodb;
-            set {
-                if (_mongodb == value) {
-                    return;
-                }
 
-                _mongodb = value;
-                NotifiedChanged();
-            }
-        }
 
 
         public string Theme {
@@ -144,14 +132,8 @@ namespace CompteEstBon.ViewModel {
         public CebTirage Tirage { get; set; } = new();
 
         public static IEnumerable<int> ListePlaques { get; } = CebPlaque.DistinctPlaques;
+        
 
-        public ObservableCollection<int> Plaques { get; } = [0, 0, 0, 0, 0, 0];
-
-        public TimeSpan Duree {
-            get => Tirage.Duree;
-            // ReSharper disable once ValueParameterNotUsed
-            set => NotifiedChanged();
-        }
 
         public bool Vertical {
             get => _vertical;
@@ -177,25 +159,9 @@ namespace CompteEstBon.ViewModel {
                 NotifiedChanged();
             }
         }
+        
 
-        public IEnumerable<CebBase> Solutions => Tirage.Solutions;
-
-        public int Search {
-            get => Tirage.Search;
-            set {
-                if (Tirage.Search == value)
-                    return;
-
-                Tirage.Search = value;
-                NotifiedChanged();
-                ClearData();
-                if (!IsBusy && Auto && Tirage.Status == CebStatus.Valide)
-                    Task.Run(ResolveAsync);
-            }
-        }
-
-        public CebStatus Status => Tirage.Status;
-
+        
         public string Result {
             get => _result;
             set {
@@ -208,7 +174,7 @@ namespace CompteEstBon.ViewModel {
             }
         }
 
-        public bool IsComputed => Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche;
+        public bool IsComputed => Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche or CebStatus.Invalide;
 
         public Color Foreground {
             get => _foreground;
@@ -338,31 +304,28 @@ namespace CompteEstBon.ViewModel {
 
         private void ClearData() {
             Solution = null;
-            NotifiedChanged(nameof(Solutions), nameof(Duree));
+            
 
             Result = Tirage.Status != CebStatus.Invalide ? "Jeu du Compte Est Bon" : "Tirage invalide";
             Popup = false;
             NotifiedChanged(nameof(IsComputed));
+            NotifiedChanged(nameof(Tirage));
         }
 
-        private void UpdateData() {
-            IsBusy = true;
-            foreach (var (p, i) in Tirage.Plaques.Indexed()) {
-                Plaques[i] = p.Value;
-            }
-
-            NotifiedChanged(nameof(Search));
-            IsBusy = false;
-            ClearData();
-        }
+        
+        
 
         public void ShowNotify(int index = 0) {
             if (index >= 0 && Tirage.Solutions!.Count != 0 && index < Tirage.Count) {
-                Solution = Tirage.Solutions.ElementAt(index);
-                Popup = true;
+ShowNotify(Tirage.Solutions.ElementAt(index));
+
             }
         }
 
+        public void ShowNotify(CebBase sol) {
+            Solution = sol;
+            Popup = true;
+        }
         #region Action
         public async Task ClearAsync() {
             await Tirage.ClearAsync();
@@ -373,13 +336,11 @@ namespace CompteEstBon.ViewModel {
 
         public async Task RandomAsync() {
             await Tirage.RandomAsync();
-            UpdateData();
+            ClearData();
             if (Auto && Tirage.Status == CebStatus.Valide)
                 await ResolveAsync();
         }
 
-
-        public int Count => Tirage.Count;
 
         public async Task ResolveAsync() {
             IsBusy = true;
@@ -394,14 +355,14 @@ namespace CompteEstBon.ViewModel {
             };
 
             Solution = Tirage.Solutions![0];
-            NotifiedChanged(nameof(Duree), nameof(Count), nameof(Solutions));
+            NotifiedChanged(nameof(Tirage));
             
 
             IsBusy = false;
 
             ShowNotify();
             // ReSharper disable once ExplicitCallerInfoArgument
-            NotifiedChanged(nameof(Status));
+            
             NotifiedChanged(nameof(IsComputed));
         }
 

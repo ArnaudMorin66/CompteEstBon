@@ -9,7 +9,7 @@ using Foundation;
 using QuickLook;
 
 using UIKit;
-
+#pragma warning disable
 namespace MauiCeb.Services
 {
 	public static partial class SaveService

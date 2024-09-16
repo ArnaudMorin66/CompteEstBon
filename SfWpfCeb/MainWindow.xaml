@@ -183,7 +183,7 @@
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
                     TabIndex="0"
-                    Text="{Binding Plaques[0], Mode=TwoWay}" Opacity="{Binding ActualHeight, ElementName=LbPlaques, Mode=OneWay}" />
+                    Text="{Binding Tirage.Plaques[0].Value, Mode=TwoWay}" Opacity="{Binding ActualHeight, ElementName=LbPlaques, Mode=OneWay}" />
                 <s:ComboBoxAdv
                     x:Name="Plaque2"
                     Grid.Row="0"
@@ -200,7 +200,7 @@
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
                     TabIndex="1"
-                    Text="{Binding Plaques[1], Mode=TwoWay}" />
+                    Text="{Binding Tirage.Plaques[1].Value, Mode=TwoWay}" />
                 <s:ComboBoxAdv
                     x:Name="Plaque3"
                     Grid.Row="0"
@@ -217,7 +217,7 @@
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
                     TabIndex="2"
-                    Text="{Binding Plaques[2], Mode=TwoWay}" />
+                    Text="{Binding Tirage.Plaques[2].Value, Mode=TwoWay}" />
                 <s:ComboBoxAdv
                     x:Name="Plaque4"
                     Grid.Row="0"
@@ -234,7 +234,7 @@
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
                     TabIndex="3"
-                    Text="{Binding Plaques[3], Mode=TwoWay}" />
+                    Text="{Binding Tirage.Plaques[3].Value, Mode=TwoWay}" />
                 <s:ComboBoxAdv
                     x:Name="Plaque5"
                     Grid.Row="0"
@@ -251,7 +251,7 @@
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
                     TabIndex="6"
-                    Text="{Binding Plaques[4], Mode=TwoWay}" />
+                    Text="{Binding Tirage.Plaques[4].Value, Mode=TwoWay}" />
                 <s:ComboBoxAdv
                     x:Name="Plaque6"
                     Grid.Row="0"
@@ -268,7 +268,7 @@
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     ItemsSource="{x:Static mdl:ViewTirage.ListePlaques}"
                     TabIndex="5"
-                    Text="{Binding Plaques[5], Mode=TwoWay}" />
+                    Text="{Binding Tirage.Plaques[5].Value, Mode=TwoWay}" />
                 <Label
                     x:Name="LbSearch"
                     Grid.Row="0"
@@ -301,7 +301,7 @@
                     NumberDecimalDigits="0"
                     TabIndex="6"
                     TextAlignment="Center"
-                    Value="{Binding Search, Mode=TwoWay}" />
+                    Value="{Binding Tirage.Search, Mode=TwoWay}" />
             </Grid>
         </Border>
         <s:ButtonAdv
@@ -361,7 +361,7 @@
             Foreground="{DynamicResource TextForegroundBrush}"
             HeaderRowHeight="0"
             IsTabStop="True"
-            ItemsSource="{Binding Solutions}"
+            ItemsSource="{Binding Tirage.Solutions}"
             QueryRowHeight="SolutionsData_QueryRowHeight"
             RowSelectionBrush="{DynamicResource TextForegroundBrush}"
             SelectionChanged="SolutionsData_SelectionChanged"
@@ -468,7 +468,7 @@
                     x:Name="TextBlock2"
                     Foreground="{DynamicResource TextForegroundBrush}"
                     Visibility="{Binding IsComputed, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <Run Text="{Binding Count, Mode=OneWay}" />
+                    <Run Text="{Binding Tirage.Count, Mode=OneWay}" />
                     <Run Text=" solutions" />
                 </TextBlock>
             </StatusBarItem>
@@ -476,7 +476,7 @@
                 <TextBlock
                     x:Name="TextBlock3"
                     Foreground="{DynamicResource TextForegroundBrush}"
-                    Text="{Binding Duree.TotalSeconds, Mode=OneWay, StringFormat=Durée: {0:N3}}"
+                    Text="{Binding Tirage.Duree.TotalSeconds, Mode=OneWay, StringFormat=Durée: {0:N3}}"
                     Visibility="{Binding IsComputed, Converter={StaticResource BoolToVisibilityConverter}}" />
             </StatusBarItem>
             <StatusBarItem Grid.Column="4">
@@ -507,19 +507,6 @@
                     Label="Auto"
                     ToolTipService.ToolTip="Mode auto" />
             </StatusBarItem>
-            <StatusBarItem Grid.Column="6">
-                <s:ButtonAdv
-                    HorizontalAlignment="Stretch"
-                    Background="{DynamicResource TextBackgroundBrush}"
-                    BorderThickness="0"
-                    IconHeight="0"
-                    IconWidth="0"
-                    IsCheckable="True"
-                    IsChecked="{Binding MongoDb}"
-                    Label="Mongo"
-                    SizeMode="Normal"
-                    ToolTipService.ToolTip="Sauvegarde dans Mongo" />
-            </StatusBarItem>
             <StatusBarItem Grid.Column="7">
                 <s:ButtonAdv
                     Background="{DynamicResource TextBackgroundBrush}"
@@ -534,7 +521,9 @@
             </StatusBarItem>
 
         </StatusBar>
-        <!--  ReSharper disable once Xaml.MissingGridIndex  -->
+        
+        <!-- ReSharper disable once Xaml.MissingGridIndex -->
+        <!-- ReSharper disable once Xaml.MissingGridIndex -->
         <Popup
             Width="480"
             Height="200"
@@ -587,7 +576,7 @@
                         FontWeight="Medium"
                         Foreground="{DynamicResource TextForegroundBrush}"
                         TextAlignment="Center">
-                        <Run Text="{Binding Count, Mode=OneWay}" />
+                        <Run Text="{Binding Tirage.Count, Mode=OneWay}" />
                         <Run Text=" solutions" />
                     </TextBlock>
                     <TextBlock
@@ -596,7 +585,7 @@
                         FontSize="10"
                         FontWeight="Medium"
                         Foreground="{DynamicResource TextForegroundBrush}"
-                        Text="{Binding Duree.TotalSeconds, Mode=OneWay, StringFormat=Durée: {0:N3}}"
+                        Text="{Binding Tirage.Duree.TotalSeconds, Mode=OneWay, StringFormat=Durée: {0:N3}}"
                         TextAlignment="Center" />
                 </StackPanel>
             </Border>

@@ -42,6 +42,10 @@
     <ItemGroup>
         <!-- App Icon -->
         <MauiIcon Include="Resources\AppIcon\appicon.png" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+        <MauiIcon Include="Resources\Images\appshell.png">
+          <Color>#512BD4</Color>
+          <ForegroundFile>Resources\AppIcon\appiconfg.svg</ForegroundFile>
+        </MauiIcon>
 
         <!-- Splash Screen -->
         <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
@@ -56,12 +60,20 @@
         <!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
         <MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
+
+    <ItemGroup>
+      <MauiImage Remove="Resources\Images\appshell.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\Images\appshell.png" />
+    </ItemGroup>
     
     
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.82" />
-        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.82" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
         <PackageReference Include="Syncfusion.Maui.Core" Version="26.2.14" />
         <PackageReference Include="Syncfusion.Maui.DataGrid" Version="26.2.14" />
@@ -72,7 +84,7 @@
         <PackageReference Include="Syncfusion.Maui.Picker" Version="26.2.14" />
         <PackageReference Include="Syncfusion.Maui.ProgressBar" Version="26.2.14" />
         <PackageReference Include="System.Text.Json" Version="8.0.4" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
 
 
     </ItemGroup>
@@ -96,6 +108,9 @@
       </EmbeddedResource>
     </ItemGroup>
     <ItemGroup>
+      <MauiXaml Update="AppShell.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
       <MauiXaml Update="Themes\DarkTheme.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>

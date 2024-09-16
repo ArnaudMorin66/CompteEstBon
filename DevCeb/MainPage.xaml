@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:dx="http://schemas.devexpress.com/maui"
+             xmlns:local="clr-namespace:DevCeb.ViewModel"
+             x:Class="DevCeb.MainPage">
+    <ContentPage.BindingContext>
+        <local:ViewTirage x:Name="ViewTirage" />
+    </ContentPage.BindingContext>
+    <ScrollView>
+        <VerticalStackLayout>
+            <dx:DXButton
+                Margin="1"
+                Padding="1"
+                BorderThickness="0.6"
+                CornerRadius="5"
+                Content="Resoudre"/>
+           
+        </VerticalStackLayout>
+        <!--<FlyoutBase.ContextFlyout>
+            <MenuFlyout>
+                <MenuFlyoutItem
+                    Command="{Binding}"
+                    CommandParameter="random"
+                    Text="Hasard">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="H" Modifiers="Ctrl" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+                <MenuFlyoutItem
+                    Command="{Binding}"
+                    CommandParameter="resolve"
+                    Text="Résoudre">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="R" Modifiers="Ctrl" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+                <MenuFlyoutSeparator />
+
+                <MenuFlyoutSubItem
+                    Command="{Binding}"
+                    CommandParameter="export"
+                    Text="Export">
+                    <MenuFlyoutItem
+                        Command="{Binding}"
+                        CommandParameter="excel"
+                        Text="Excel" />
+                    <MenuFlyoutItem
+                        Command="{Binding}"
+                        CommandParameter="Word"
+                        Text="Word" />
+                    <MenuFlyoutItem
+                        Command="{Binding}"
+                        CommandParameter="json"
+                        Text="Json" />
+                    <MenuFlyoutItem
+                        Command="{Binding}"
+                        CommandParameter="xml"
+                        Text="Xml" />
+                    <MenuFlyoutItem
+                        Command="{Binding}"
+                        CommandParameter="html"
+                        Text="Html" />
+                </MenuFlyoutSubItem>
+                <MenuFlyoutItem
+                    Command="{Binding}"
+                    CommandParameter="vue"
+                    Text="Inverser vue">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="V" Modifiers="Ctrl" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+                <MenuFlyoutItem
+                    Command="{Binding}"
+                    CommandParameter="theme"
+                    Text="Modifier le theme">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="T" Modifiers="Ctrl" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+                <MenuFlyoutItem
+                    Command="{Binding}"
+                    CommandParameter="auto"
+                    Text="Mode Auto">
+                    <MenuFlyoutItem.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="A" Modifiers="Ctrl" />
+                    </MenuFlyoutItem.KeyboardAccelerators>
+                </MenuFlyoutItem>
+
+            </MenuFlyout>
+        </FlyoutBase.ContextFlyout>-->
+
+    </ScrollView>
+
+</ContentPage>
