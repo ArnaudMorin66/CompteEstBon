@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net8.0-android;net8.0-ios;net8.0-maccatalyst</TargetFrameworks>
-        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
+        <TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
+        <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
         <!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
-        <!-- <TargetFrameworks>$(TargetFrameworks);net8.0-tizen</TargetFrameworks> -->
+        <!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
 
         <!-- Note for MacCatalyst:
         The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
@@ -71,27 +71,28 @@
     
     
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.82" />
-        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.82" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-        <PackageReference Include="Syncfusion.Maui.Core" Version="26.2.14" />
-        <PackageReference Include="Syncfusion.Maui.DataGrid" Version="26.2.14" />
-        <PackageReference Include="Syncfusion.Maui.Inputs" Version="26.2.14" />
-        <PackageReference Include="Syncfusion.Maui.Buttons" version="26.2.14" />
-        <PackageReference Include="Syncfusion.Maui.ListView" Version="26.2.14" />
-        <PackageReference Include="Syncfusion.Maui.Popup" Version="26.2.14" />
-        <PackageReference Include="Syncfusion.Maui.Picker" Version="26.2.14" />
-        <PackageReference Include="Syncfusion.Maui.ProgressBar" Version="26.2.14" />
-        <PackageReference Include="System.Text.Json" Version="8.0.4" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0-rc.1.24431.7" />
+        <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.0-rc.1.24453.9" />
+        <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.0-rc.1.24453.9" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0-rc.1.24431.7" />
+        <PackageReference Include="Syncfusion.Maui.Core" Version="27.1.48" />
+        <PackageReference Include="Syncfusion.Maui.DataGrid" Version="27.1.48" />
+        <PackageReference Include="Syncfusion.Maui.Inputs" Version="27.1.48" />
+        <PackageReference Include="Syncfusion.Maui.Buttons" version="27.1.48" />
+        <PackageReference Include="Syncfusion.Maui.ListView" Version="27.1.48" />
+        <PackageReference Include="Syncfusion.Maui.Popup" Version="27.1.48" />
+        <PackageReference Include="Syncfusion.Maui.Picker" Version="27.1.48" />
+        <PackageReference Include="Syncfusion.Maui.ProgressBar" Version="27.1.48" />
+        <PackageReference Include="Syncfusion.Maui.PullToRefresh" Version="27.1.48" />
+        <PackageReference Include="System.Text.Json" Version="9.0.0-rc.1.24431.7" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0-rc.1.24431.7" />
 
 
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\CebExport\CebExport8.csproj" />
-      <ProjectReference Include="..\CompteEstBon\CompteEstBon8.csproj" />
-      <ProjectReference Include="..\Outils\arnaud.morin.outils8.csproj" />
+      <ProjectReference Include="..\CebExport\CebExport.csproj" />
+      <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
+      <ProjectReference Include="..\Outils\arnaud.morin.outils.csproj" />
     </ItemGroup>
     <ItemGroup>
       <Compile Update="Properties\Resource.Designer.cs">

@@ -287,8 +287,8 @@ public ICommand ExportsCommmand { get; init; }
             CebStatus.Indefini => Colors.Blue,
             CebStatus.Valide => Colors.White,
             CebStatus.EnCours => Colors.Aqua,
-            CebStatus.CompteEstBon => Colors.SpringGreen,
-            CebStatus.CompteApproche => Colors.Orange,
+            CebStatus.CompteEstBon => ThemeDark? Colors.SpringGreen:Colors.DarkSlateGray,
+            CebStatus.CompteApproche => ThemeDark ? Colors.Orange: Colors.OrangeRed,
             CebStatus.Invalide => Colors.Red,
             _ => throw new NotImplementedException()
         };

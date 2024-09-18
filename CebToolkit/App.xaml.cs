@@ -1,10 +1,10 @@
 ﻿namespace CebToolkit {
     public partial class App : Application {
         public App() {
-            UserAppTheme = AppTheme.Dark;
+             UserAppTheme = AppTheme.Dark;
             InitializeComponent();
-            //MainPage = new AppShell();
-            MainPage = new MainPage();
         }
+
+        protected override Window CreateWindow(IActivationState? activationState) => new(new MainPage()){ Title = "Le Compte Est Bon"};
     }
 }

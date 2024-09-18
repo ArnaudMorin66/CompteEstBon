@@ -5,8 +5,10 @@
             InitializeComponent();
 
             //MainPage = new MainPage();
-            MainPage = new AppShell();
+            
 
         }
+
+        protected override Window CreateWindow(IActivationState? activationState) => new(new AppShell()){Title = "Le Compte Est Bon"};
     }
 }

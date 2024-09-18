@@ -27,105 +27,72 @@ public partial class MainPage {
 
     public ViewTirage ViewTirage { get; } = new();
 
-    public ScrollView MainScrollView() => new() {
-        BindingContext = ViewTirage, 
-        Content =
-            new VerticalStackLayout {
-                Children = {
-                    VueSaisie,
-                    VueResultat, 
-                    VueAction,
-                    VueSolutions,
-                    VuePopup
+    private View VueSolutions => 
+        new Grid {
+            RowDefinitions = Rows.Define(Star),
+            Children = { VueGollectionSolutions, VueDataGridSolutions, VueBuzyindicator }
+        };
+
+    public View VueSaisie {
+        get {
+            var vue = new Grid() {
+                    ColumnDefinitions = Columns.Define(
+                        Star, Stars(2), Stars(2), Stars(2), Stars(2), Stars(2), Stars(2), Star, Stars(3))
                 }
-            }
-    };
+                .CenterVertical();
+            vue.Add(new Label()
+                    .Text("Plaques")
+                    .Margin(2)
+                    .CenterVertical()
+                    .Start()
+                    .Column(0));
+            AddPlaques(vue);
 
-    private Grid VueSolutions => new() {
-        RowDefinitions = Rows.Define(Star),
-        Children = { VueGollectionSolutions, VueDataGridSolutions, VueBuzyindicator }
-    };
-
-    private Border VueSaisie => new Border()
-        .Margin(new Thickness(2, 4))
-        .Bind(IsEnabledProperty,
-            nameof(ViewTirage.IsBusy), BindingMode.OneWay, _invertedBoolConverter)
-        .Invoke(b => b.Content = new Grid()
-            .CenterVertical()
-            .Invoke(g => {
-                g.ColumnDefinitions = Columns.Define(
-                    Star, Stars(2), Stars(2), Stars(2), Stars(2), Stars(2), Stars(2), Star, Stars(3));
-
-                g.Add(
-                    new Label()
-                        .Text("Plaques")
-                        .Margin(2)
-                        .CenterVertical()
-                        .Start()
-                        .Column(0));
-                AddPlaques(g);
-                
-                g.Add(new Label().Text("Trouvé").CenterVertical().Column(7));
-                g.Add(new SfNumericEntry {
-                        CustomFormat = "000", Maximum = 999, Minimum = 100,
-                        HorizontalTextAlignment = TextAlignment.Center,
-                        UpDownPlacementMode = NumericEntryUpDownPlacementMode.InlineVertical
-                    }
-                    .CenterHorizontal()
-                    .Bind(SfNumericEntry.ShowBorderProperty, nameof(ViewTirage.ThemeDark), BindingMode.Default,
-                        _invertedBoolConverter)
-                    .Column(9).Bind(SfNumericEntry.ValueProperty, "Tirage.Search"));
-            }));
-
-    private View AddPlaques(Grid g) {
-        var comboStyle = new Style<SfComboBox>();
-        comboStyle.Add(DropDownListBase.ItemsSourceProperty, ViewTirage.ListePlaques);
-        comboStyle.Add(SfComboBox.HorizontalTextAlignmentProperty, TextAlignment.Center);
-        comboStyle.Add(SfDropdownEntry.IsClearButtonVisibleProperty, false);
-        comboStyle.AddAppThemeBinding(SfComboBox.ShowBorderProperty, true, false);
-        comboStyle.Add(SfDropdownEntry.TextColorProperty, ViewTirage.Foreground);
-
-        for (var i = 0; i < 6; i++)
-            g.Add(
-                new SfComboBox().Style(comboStyle)
-                    .Bind(DropDownListBase.TextProperty, $"Tirage.Plaques[{i}].Value",
-                        BindingMode.TwoWay)
-                    .Column(i + 1));
-        return g;
+            vue.Add(new Label().Text("Chercher").CenterVertical().Column(7));
+            vue.Add(new SfNumericEntry {
+                    CustomFormat = "000", Maximum = 999, Minimum = 100, HorizontalTextAlignment = TextAlignment.Center,
+                    UpDownPlacementMode = NumericEntryUpDownPlacementMode.InlineVertical
+                }
+                .CenterHorizontal()
+                .Bind(SfNumericEntry.ShowBorderProperty, nameof(ViewTirage.ThemeDark), BindingMode.Default,
+                    _invertedBoolConverter)
+                .Column(9).Bind(SfNumericEntry.ValueProperty, "Tirage.Search"));
+        
+        return vue;
+    }
     }
 
-    private Grid VueAction => new Grid {
-        ColumnDefinitions = Columns.Define(
-            GridLength.Star, GridLength.Star, GridLength.Star,
-            GridLength.Star, GridLength.Star, GridLength.Star),
-        Children = {
-            new Button()
-                .Text("Résoudre")
-                .Bind(Button.CommandProperty)
-                .Invoke(b => {
-                    b.CornerRadius = 5;
-                    b.CommandParameter = "resolve";
-                })
-                .Margin(2)
-                .Column(0),
-            new Button()
-                .Bind(Button.CommandProperty)
-                .Text("Hasard")
-                .Invoke(b => {
-                    b.CornerRadius = 5;
-                    b.CommandParameter = "random";
-                })
-                .Margin(2)
-                .Column(1),
-            VueGridGrille.Column(2), 
-            VueExport.Column(3), 
-            VueTheme.Column(4), 
-            VueAuto.Column(5)
-        }
-    }.Bind(IsEnabledProperty, nameof(ViewTirage.IsBusy), BindingMode.Default, _invertedBoolConverter);
+
+    private View VueAction => new Grid {
+            ColumnDefinitions = Columns.Define(
+                GridLength.Star, GridLength.Star, GridLength.Star,
+                GridLength.Star, GridLength.Star, GridLength.Star),
+            Children = {
+                new Button()
+                    .Text("Résoudre")
+                    .Bind(Button.CommandProperty)
+                    .Invoke(b => {
+                        b.CornerRadius = 5;
+                        b.CommandParameter = "resolve";
+                    })
+                    .Margin(2)
+                    .Column(0),
+                new Button()
+                    .Bind(Button.CommandProperty)
+                    .Text("Hasard")
+                    .Invoke(b => {
+                        b.CornerRadius = 5;
+                        b.CommandParameter = "random";
+                    })
+                    .Margin(2)
+                    .Column(1),
+                VueGridGrille.Column(2), VueExport.Column(3), VueTheme.Column(4), VueAuto.Column(5)
+            }
+        };
 
 
-    private Grid VueGridGrille => new() {
+
+private Grid VueGridGrille => new() {
         ColumnDefinitions =
             Columns.Define(GridLength.Star, new GridLength(2, GridUnitType.Star)),
         HorizontalOptions = LayoutOptions.Fill, VerticalOptions = LayoutOptions.Center, Children = {
@@ -178,7 +145,7 @@ public partial class MainPage {
             ItemsUpdatingScrollMode = ItemsUpdatingScrollMode.KeepScrollOffset, SelectionMode = SelectionMode.Single,
             VerticalScrollBarVisibility = ScrollBarVisibility.Always,
             ItemsLayout = new GridItemsLayout(ItemsLayoutOrientation.Vertical) { Span = 4 },
-            ItemTemplate = new DataTemplate(() => VueSolutionsDetail),
+            ItemTemplate = new DataTemplate(() =>  VueSolutionsDetail)
         }
         .Bind(IsVisibleProperty, nameof(ViewTirage.VueGrille))
         .Bind(ItemsView.ItemsSourceProperty, "Tirage.Solutions")
@@ -187,26 +154,22 @@ public partial class MainPage {
         });
 
 
-    private Border VueSolutionsDetail => new() {
-        Content =
-            new CollectionView {
-                    HeightRequest = 100, 
-                    HorizontalOptions = LayoutOptions.Center, 
-                    SelectionMode = SelectionMode.Single,
-                    ItemTemplate = new DataTemplate(() => new Label(){HorizontalTextAlignment = TextAlignment.Center}.Bind(Label.TextProperty)),
-                }.Bind(ItemsView.ItemsSourceProperty, "Operations")
-                .Invoke(collection => collection.SelectionChanged += (sender, _) => {
-                    if (sender is CollectionView { BindingContext: CebBase sol })
-                        ViewTirage.ShowPopup(sol);
-                })
-    };
+    private Border VueSolutionsDetail => Borderize(
+        new CollectionView {
+                HeightRequest = 100, HorizontalOptions = LayoutOptions.Center, SelectionMode = SelectionMode.Single,
+                ItemTemplate = new DataTemplate(() =>
+                    new Label { HorizontalTextAlignment = TextAlignment.Center }.Bind(Label.TextProperty))
+            }.Bind(ItemsView.ItemsSourceProperty, "Operations")
+            .Invoke(collection => collection.SelectionChanged += (sender, _) => {
+                if (sender is CollectionView { BindingContext: CebBase sol })
+                    ViewTirage.ShowPopup(sol);
+            }));
 
 
     private SfDataGrid VueDataGridSolutions => new SfDataGrid {
             HeightRequest = 400, AutoGenerateColumnsMode = AutoGenerateColumnsMode.None,
             HorizontalScrollBarVisibility = ScrollBarVisibility.Always, ColumnWidthMode = ColumnWidthMode.Fill,
-            SelectionMode = DataGridSelectionMode.Single,
-            EnableDataVirtualization = true,
+            SelectionMode = DataGridSelectionMode.Single, EnableDataVirtualization = true,
             Columns = [
                 new DataGridTextColumn { HeaderText = "Opération 1", MappingName = "Op1" },
                 new DataGridTextColumn { HeaderText = "Opération 2", MappingName = "Op2" },
@@ -221,7 +184,6 @@ public partial class MainPage {
             if (sender is SfDataGrid { SelectedRow: CebBase sol })
                 ViewTirage.ShowPopup(sol);
         });
-        
 
 
     private SfBusyIndicator VueBuzyindicator => new SfBusyIndicator {
@@ -249,10 +211,8 @@ public partial class MainPage {
                                     .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
                             }
                         },
-                        new BoxView() {
-                            HeightRequest = 2,
-                            CornerRadius = 0
-                        }.Bind(BoxView.ColorProperty, nameof(ViewTirage.Foreground)),
+                        new BoxView { HeightRequest = 2, CornerRadius = 0 }.Bind(BoxView.ColorProperty,
+                            nameof(ViewTirage.Foreground)),
                         new VerticalStackLayout {
                             VerticalOptions = LayoutOptions.Center, Children = {
                                 new CollectionView {
@@ -262,10 +222,8 @@ public partial class MainPage {
                                 }.Bind(ItemsView.ItemsSourceProperty, "Solution.Operations")
                             }
                         },
-                        new BoxView() {
-                            HeightRequest = 2,
-                            CornerRadius = 0
-                        }.Bind(BoxView.ColorProperty, nameof(ViewTirage.Foreground)),
+                        new BoxView { HeightRequest = 2, CornerRadius = 0 }.Bind(BoxView.ColorProperty,
+                            nameof(ViewTirage.Foreground)),
                         new VerticalStackLayout {
                             HorizontalOptions = LayoutOptions.Fill, Children = {
                                 new VerticalStackLayout {
@@ -307,9 +265,8 @@ public partial class MainPage {
         }
         .Bind(SfPopup.IsOpenProperty, nameof(ViewTirage.Popup));
 
-    private Border VueResultat => new() {
-        Padding = 2, 
-        Content = new Grid {
+    private View VueResultat => 
+        new Grid {
             ColumnDefinitions = Columns.Define(Star, Star, Star, Star), HeightRequest = 50,
             VerticalOptions = LayoutOptions.Center, Children = {
                 new Label { VerticalOptions = LayoutOptions.Center }
@@ -337,8 +294,37 @@ public partial class MainPage {
                     .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
                     .Column(3)
             }
-        }
+        };
+
+    public Border Borderize(View content) => new Border { StrokeThickness = 0.5}
+        .Content(content)
+        .Margin(new Thickness(2, 4))
+        .Bind(IsEnabledProperty,
+            nameof(ViewTirage.IsBusy), BindingMode.OneWay, _invertedBoolConverter)
+        .Bind(Border.StrokeProperty, nameof(ViewTirage.Foreground));
+
+    public ScrollView MainScrollView() => new() {
+        BindingContext = ViewTirage, Content =
+            new VerticalStackLayout { Children = {
+                Borderize( VueSaisie), Borderize( VueResultat), Borderize( VueAction), Borderize( VueSolutions), VuePopup
+            } }
     };
+
+    private void AddPlaques(Grid g) {
+        var comboStyle = new Style<SfComboBox>();
+        comboStyle.Add(DropDownListBase.ItemsSourceProperty, ViewTirage.ListePlaques);
+        comboStyle.Add(SfComboBox.HorizontalTextAlignmentProperty, TextAlignment.Center);
+        comboStyle.Add(SfDropdownEntry.IsClearButtonVisibleProperty, false);
+        comboStyle.AddAppThemeBinding(SfComboBox.ShowBorderProperty, true, false);
+        comboStyle.Add(SfDropdownEntry.TextColorProperty, ViewTirage.Foreground);
+
+        for (var i = 0; i < 6; i++)
+            g.Add(
+                new SfComboBox().Style(comboStyle)
+                    .Bind(DropDownListBase.TextProperty, $"Tirage.Plaques[{i}].Value",
+                        BindingMode.TwoWay)
+                    .Column(i + 1));
+    }
 
     public void DefineMenuContestuel(BindableObject bindable) {
         var menu = new MenuFlyout {
@@ -396,4 +382,14 @@ public partial class MainPage {
         };
         FlyoutBase.SetContextFlyout(bindable, menu);
     }
+}
+
+internal static class MainPageExtentions {
+    public static Border Content(this Border border, View content) {
+        border.Content=content;
+        return border;
+    }
+    
+
+    
 }
