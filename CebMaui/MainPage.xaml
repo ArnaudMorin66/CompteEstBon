@@ -12,10 +12,19 @@
     xmlns:sfk="clr-namespace:Syncfusion.Maui.Picker;assembly=Syncfusion.Maui.Picker"
     xmlns:sfo="clr-namespace:Syncfusion.Maui.Popup;assembly=Syncfusion.Maui.Popup"
     xmlns:sfu="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
+    xmlns:sfv="clr-namespace:Syncfusion.Maui.ListView;assembly=Syncfusion.Maui.ListView"
     Title="Le Compte est bon">
     <ContentPage.Resources>
         <ResourceDictionary>
             <sfc:InvertedBoolConverter x:Key="InverseBooleanConverter" />
+            <Style x:Key="ComboPlqStyle" TargetType="sfi:SfComboBox">
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="IsClearButtonVisible" Value="False" />
+                <Setter Property="IsEditable" Value="True" />
+                <Setter Property="BackgroundColor" Value=" Blue" />
+                <Setter Property="ItemsSource" Value="{x:Static Member=local:ViewTirage.ListePlaques}" />
+                <Setter Property="ShowBorder" Value="{AppThemeBinding Dark=False, Light=True}" />
+            </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.BindingContext>
@@ -34,74 +43,42 @@
                         Text="Plaques"
                         VerticalTextAlignment="Center" />
 
+
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="1"
-                        HorizontalTextAlignment="Center"
-                        IsClearButtonVisible="False"
-                        IsEditable="True"
-                        ItemsSource="{x:Static Member=local:ViewTirage.ListePlaques}"
-                        ShowBorder="{AppThemeBinding Dark=False,
-                                                     Light=True}"
+                        Style="{StaticResource ComboPlqStyle}"
                         Text="{Binding Tirage.Plaques[0].Value, Mode=TwoWay}" />
-
 
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="2"
-                        DropDownStrokeThickness="2"
-                        HorizontalTextAlignment="Center"
-                        IsClearButtonVisible="False"
-                        IsEditable="True"
-                        ItemsSource="{x:Static Member=local:ViewTirage.ListePlaques}"
-                        ShowBorder="{AppThemeBinding Dark=False,
-                                                     Light=True}"
+                        Style="{StaticResource ComboPlqStyle}"
                         Text="{Binding Tirage.Plaques[1].Value, Mode=TwoWay}" />
 
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="3"
-                        HorizontalTextAlignment="Center"
-                        IsClearButtonVisible="False"
-                        IsEditable="True"
-                        ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                        ShowBorder="{AppThemeBinding Dark=False,
-                                                     Light=True}"
+                        Style="{StaticResource ComboPlqStyle}"
                         Text="{Binding Tirage.Plaques[2].Value, Mode=TwoWay}" />
 
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="4"
-                        HorizontalTextAlignment="Center"
-                        IsClearButtonVisible="False"
-                        IsEditable="True"
-                        ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                        ShowBorder="{AppThemeBinding Dark=False,
-                                                     Light=True}"
+                        Style="{StaticResource ComboPlqStyle}"
                         Text="{Binding Tirage.Plaques[3].Value, Mode=TwoWay}" />
 
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="5"
-                        HorizontalTextAlignment="Center"
-                        IsClearButtonVisible="False"
-                        IsEditable="True"
-                        ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                        ShowBorder="{AppThemeBinding Dark=False,
-                                                     Light=True}"
+                        Style="{StaticResource ComboPlqStyle}"
                         Text="{Binding Tirage.Plaques[4].Value, Mode=TwoWay}" />
 
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="6"
-                        HorizontalTextAlignment="Center"
-                        IsClearButtonVisible="False"
-                        IsEditable="True"
-                        ItemsSource="{x:Static local:ViewTirage.ListePlaques}"
-                        ShowBorder="{AppThemeBinding Dark=False,
-                                                     Light=True}"
+                        Style="{StaticResource ComboPlqStyle}"
                         Text="{Binding Tirage.Plaques[5].Value, Mode=TwoWay}" />
-
                     <Label
                         x:Name="LbCherche"
                         Grid.Row="0"
@@ -133,7 +110,6 @@
                     Command="{Binding}"
                     CommandParameter="resolve"
                     CornerRadius="5"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     Text="Résoudre" />
 
                 <Button
@@ -145,7 +121,6 @@
                     Command="{Binding}"
                     CommandParameter="random"
                     CornerRadius="5"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                     Text="Hasard" />
                 <Grid
                     Grid.Column="2"
@@ -179,7 +154,6 @@
                         CommandParameter="export"
                         CornerRadius="5"
                         HorizontalOptions="Fill"
-                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}"
                         Text="Export" />
 
                 </Grid>
@@ -262,7 +236,6 @@
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-
                             <Border HeightRequest="100" HorizontalOptions="Center">
                                 <CollectionView
                                     x:Name="GrilleOperations"
@@ -287,7 +260,6 @@
                 </CollectionView>
 
                 <sfg:SfDataGrid
-                    x:Name="SolutionsData"
                     Grid.Row="0"
                     Grid.Column="0"
                     AutoGenerateColumnsMode="None"
@@ -298,8 +270,6 @@
                     SelectionChanged="SolutionsData_OnSelectionChanged"
                     SelectionMode="Single"
                     VerticalScrollBarVisibility="Always">
-
-
                     <sfg:SfDataGrid.Columns>
                         <sfg:DataGridTextColumn HeaderText="Opération 1" MappingName="Op1" />
                         <sfg:DataGridTextColumn HeaderText="Opération 2" MappingName="Op2" />
@@ -309,7 +279,6 @@
                     </sfg:SfDataGrid.Columns>
                 </sfg:SfDataGrid>
                 <sfu:SfBusyIndicator
-                    x:Name="Busyindicator"
                     Title="recherche..."
                     Grid.Row="0"
                     Grid.Column="0"
@@ -345,13 +314,14 @@
                             <VerticalStackLayout Padding="2" VerticalOptions="Start">
                                 <Label
                                     FontSize="18"
-                                    TextColor="{Binding Foreground}"
                                     HorizontalOptions="Center"
                                     Text="{Binding Result}"
+                                    TextColor="{Binding Foreground}"
                                     VerticalOptions="Center" />
                             </VerticalStackLayout>
-                            <Line StrokeThickness="0.8"
+                            <Line
                                 Stroke="{Binding Foreground}"
+                                StrokeThickness="0.8"
                                 X1="0"
                                 X2="{Binding Height, Source={x:Reference Name=ScrollView}}"
                                 Y1="0"
@@ -370,8 +340,8 @@
                                 </CollectionView>
                             </VerticalStackLayout>
                             <Line
-                                StrokeThickness="0.8" 
                                 Stroke="{Binding Foreground}"
+                                StrokeThickness="0.8"
                                 X1="0"
                                 X2="{Binding Height, Source={x:Reference Name=ScrollView}}"
                                 Y1="0"

@@ -13,9 +13,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows.Input;
 
-using arnaud.morin.outils;
+using CebToolkit.Services;
 
-using CebMaui.Services;
 
 using CompteEstBon;
 
@@ -25,7 +24,7 @@ using Syncfusion.Maui.Themes;
 
 #pragma warning disable CS0067
 // ReSharper disable EnforceIfStatementBraces
-namespace CebMaui.ViewModel;
+namespace CebToolkit.ViewModel;
 
 public class ViewTirage : INotifyPropertyChanged, ICommand {
     public static readonly string[] ListeFormats = ["Excel", "Word", "Json", "Xml", "HTML"];
@@ -37,7 +36,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     private Color _foreground = Colors.White;
 
     // private readonly Stopwatch _notifyWatch = new();
-    private int _indexExport;
+    private string _fmtExport;
 
     private bool _isBusy;
 
@@ -69,14 +68,27 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
             if (Auto)
                 Task.Run(ResolveAsync);
         };
+        _fmtExport = "Excel";
+        ExportsCommmand = new Command<string>((format) => {
+            if (format == "")
+                format = FmtExport;
+#pragma warning disable CA1862
+            var elt = ListeFormats.FirstOrDefault(elt => elt.ToLower() == format.ToLower());
+            if (elt != null) {
+                FmtExport = elt;
+                if (Tirage.Count != 0) Task.Run(() => ExportFichierAsync(elt));
+
+            }
+        });
+            
         ClearData();
     }
 
-    public int IndexExport {
-        get => _indexExport;
+    public string FmtExport {
+        get => _fmtExport;
         set {
-            if (_indexExport == value) return;
-            _indexExport = value;
+            if (_fmtExport== value) return;
+            _fmtExport = value;
             OnPropertyChanged();
         }
     }
@@ -113,7 +125,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         }
     }
 
-
+public ICommand ExportsCommmand { get; init; } 
     public static IEnumerable<int> ListePlaques => CebPlaque.DistinctPlaques;
 
     public CebTirage Tirage { get; } = new();
@@ -207,7 +219,6 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 
 
     public bool CanExecute(object? parameter) => true;
-#pragma warning disable CA1862
     public async void Execute(object? parameter) {
         var cmd = (parameter as string)?.ToLower();
         switch (cmd) {
@@ -234,7 +245,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 
             case "export":
                 if (Tirage.Count != 0)
-                    await ExportFichierAsync();
+                    await ExportFichierAsync(FmtExport);
 
                 break;
             case "theme":
@@ -245,16 +256,6 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
                 break;
             case "auto":
                 Auto = !Auto;
-                break;
-            default:
-                //if (ListeFormats.Any(p => p.ToLower() == cmd)) {
-                var (elt, i) = ListeFormats.Indexed().FirstOrDefault(elt => elt.Item1.ToLower() == cmd);
-                if (elt != null) {
-                    IndexExport = i;
-                    if (Tirage.Count != 0) await ExportFichierAsync();
-                    break;
-                }
-
                 break;
         }
     }
@@ -304,17 +305,17 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     }
 
 
-    private async Task ExportFichierAsync() {
+    private async Task ExportFichierAsync(string fmt) {
         if (Tirage.Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
 
 
         var (extension, contentType) =
-            IndexExport switch {
-                0 => ("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
-                1 => ("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
-                2 => ("json", "application/json"),
-                3 => ("xml", "application/xml"),
-                4 => ("html", "text/html"),
+fmt.ToLower() switch {
+"excel" => ("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
+                "word" => ("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
+                "json" => ("json", "application/json"),
+"xml"  => ("xml", "application/xml"),
+"html" => ("html", "text/html"),
                 _ => throw new NotImplementedException()
             };
         Action<MemoryStream> exportStream = extension switch {

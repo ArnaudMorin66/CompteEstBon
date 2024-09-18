@@ -1,4 +1,6 @@
-﻿using CompteEstBon;
+﻿using System.ComponentModel;
+
+using CompteEstBon;
 
 using Syncfusion.Maui.DataGrid;
 using Syncfusion.Maui.ListView;
@@ -9,7 +11,8 @@ public partial class MainPage : ContentPage {
     public MainPage() => InitializeComponent();
 
     private void SolutionsData_OnSelectionChanged(object? sender, DataGridSelectionChangedEventArgs e) {
-        if (SolutionsData.SelectedRow is CebBase sol) ViewTirage.ShowPopup(sol);
+        if (sender is SfDataGrid { SelectedRow: CebBase sol })
+            ViewTirage.ShowPopup(sol);
     }
 
     private void GrilleVerticale_OnSelectionChanged(object? sender, SelectionChangedEventArgs e) {
@@ -29,5 +32,10 @@ public partial class MainPage : ContentPage {
 
     private void DropDownListBase_OnSelectionChanged(object? sender, Syncfusion.Maui.Inputs.SelectionChangedEventArgs e) {
         ViewTirage.Tirage.Clear();
+    }
+
+
+    private void BindableObject_OnPropertyChanged(object? sender, PropertyChangedEventArgs e) {
+        Console.WriteLine("modified");
     }
 }
