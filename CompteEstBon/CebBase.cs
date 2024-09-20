@@ -85,26 +85,26 @@ public abstract class CebBase {
 	/// <param name="b"></param>
 	// public static implicit operator CebDetail(CebBase b) => b.Detail;
 
-	public string Op1 => (Operations.Count > 0 ) ? Operations[0]:"";
+	public string? Op1 => (Operations.Count > 0 ) ? Operations[0]:null;
 
 	/// <summary>
 	///     Opération 2
 	/// </summary>
-	public string Op2=>(Operations.Count > 1 ) ? Operations[1]:"";
+	public string? Op2=>(Operations.Count > 1 ) ? Operations[1]:null;
 
 	/// <summary>
 	///     Opération 2
 	/// </summary>
-	public string Op3 => (Operations.Count > 2) ? Operations[2] : "";
+	public string? Op3 => (Operations.Count > 2) ? Operations[2] : null;
 
 	/// <summary>
 	///     Opération 4
 	/// </summary>
-	public string Op4 => (Operations.Count > 3) ? Operations[3] : "";
+	public string? Op4 => (Operations.Count > 3) ? Operations[3] : null;
 
 	/// <summary>
 	///     Opération 5
 	/// </summary>
-	public string Op5 => (Operations.Count > 4) ? Operations[4] : "";
+	public string? Op5 => (Operations.Count > 4) ? Operations[4] : null;
 
 }

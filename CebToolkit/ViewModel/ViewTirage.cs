@@ -13,12 +13,17 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows.Input;
 
-using CebToolkit.Services;
-
+using CommunityToolkit.Maui.Storage;
 
 using CompteEstBon;
 
 using Syncfusion.Maui.Themes;
+
+
+#if WINDOWS
+using Windows.Storage;
+using Launcher = Windows.System.Launcher;
+#endif
 
 #endregion
 
@@ -33,10 +38,10 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     private bool _auto;
     private Color _background = Color.FromRgb(22, 22, 22);
 
-    private Color _foreground = Colors.White;
-
     // private readonly Stopwatch _notifyWatch = new();
     private string _fmtExport;
+
+    private Color _foreground = Colors.White;
 
     private bool _isBusy;
 
@@ -69,25 +74,26 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
                 Task.Run(ResolveAsync);
         };
         _fmtExport = "Excel";
-        ExportsCommmand = new Command<string>((format) => {
-            if (format == "")
+        ExportsCommmand = new Command<string>(format => {
+            if (string.IsNullOrEmpty( format))
+                format = FmtExport;
+            if (format == "export")
                 format = FmtExport;
 #pragma warning disable CA1862
             var elt = ListeFormats.FirstOrDefault(elt => elt.ToLower() == format.ToLower());
             if (elt != null) {
                 FmtExport = elt;
                 if (Tirage.Count != 0) Task.Run(() => ExportFichierAsync(elt));
-
             }
         });
-            
+
         ClearData();
     }
 
     public string FmtExport {
         get => _fmtExport;
         set {
-            if (_fmtExport== value) return;
+            if (_fmtExport == value) return;
             _fmtExport = value;
             OnPropertyChanged();
         }
@@ -125,7 +131,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         }
     }
 
-public ICommand ExportsCommmand { get; init; } 
+    public ICommand ExportsCommmand { get; init; }
     public static IEnumerable<int> ListePlaques => CebPlaque.DistinctPlaques;
 
     public CebTirage Tirage { get; } = new();
@@ -219,6 +225,7 @@ public ICommand ExportsCommmand { get; init; }
 
 
     public bool CanExecute(object? parameter) => true;
+
     public async void Execute(object? parameter) {
         var cmd = (parameter as string)?.ToLower();
         switch (cmd) {
@@ -287,8 +294,8 @@ public ICommand ExportsCommmand { get; init; }
             CebStatus.Indefini => Colors.Blue,
             CebStatus.Valide => Colors.White,
             CebStatus.EnCours => Colors.Aqua,
-            CebStatus.CompteEstBon => ThemeDark? Colors.SpringGreen:Colors.DarkSlateGray,
-            CebStatus.CompteApproche => ThemeDark ? Colors.Orange: Colors.OrangeRed,
+            CebStatus.CompteEstBon => ThemeDark ? Colors.SpringGreen : Colors.DarkSlateGray,
+            CebStatus.CompteApproche => ThemeDark ? Colors.Orange : Colors.OrangeRed,
             CebStatus.Invalide => Colors.Red,
             _ => throw new NotImplementedException()
         };
@@ -308,14 +315,13 @@ public ICommand ExportsCommmand { get; init; }
     private async Task ExportFichierAsync(string fmt) {
         if (Tirage.Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
 
-
-        var (extension, contentType) =
-fmt.ToLower() switch {
-"excel" => ("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
-                "word" => ("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
-                "json" => ("json", "application/json"),
-"xml"  => ("xml", "application/xml"),
-"html" => ("html", "text/html"),
+        var extension =
+            fmt.ToLower() switch {
+                "excel" => "xlsx",
+                "word" => "docx",
+                "json" => "json",
+                "xml" => "xml",
+                "html" => "html",
                 _ => throw new NotImplementedException()
             };
         Action<MemoryStream> exportStream = extension switch {
@@ -329,7 +335,11 @@ fmt.ToLower() switch {
         await using var mstream = new MemoryStream();
         exportStream(mstream);
 
-        SaveService.SaveAndView($"CompteEstBon.{extension}", contentType, mstream);
+        var fileresult = await FileSaver.Default.SaveAsync($"CompteEstBon.{extension}", mstream);
+#if WINDOWS
+        if (fileresult.IsSuccessful)
+            await ShowFile(fileresult.FilePath);
+#endif
     }
 
 
@@ -337,7 +347,7 @@ fmt.ToLower() switch {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     protected virtual void OnPropertyChanged(params string[] properties) {
-        foreach (var property in properties) PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+        foreach (var property in properties) OnPropertyChanged(property); 
     }
 
 
@@ -384,9 +394,14 @@ fmt.ToLower() switch {
     }
 
     #endregion Action
-}
 
-public record ExportFile(string Extension, string ContentType) {
-    public string ContentType = ContentType;
-    public string Extension = Extension;
+#if WINDOWS
+    private async Task ShowFile(string filename) {
+        await MainThread.InvokeOnMainThreadAsync(async () => {
+            if (await Application.Current!.Windows[0].Page!
+                    .DisplayAlert("Le Compte est Bon", "Afficher le fichier", "Oui", "Non"))
+                await Launcher.LaunchFileAsync(await StorageFile.GetFileFromPathAsync(filename));
+        });
+    }
+#endif
 }

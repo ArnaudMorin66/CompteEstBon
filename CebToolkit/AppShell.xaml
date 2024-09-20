@@ -6,8 +6,9 @@
     xmlns:local="clr-namespace:CebToolkit"
     Title="Compte est bon">
 
-    <ShellContent
-        Title="Compte est bon"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Icon="appshell.png" />
+    <ShellContent Route="ceb"
+                  
+                  Title="Monkeys"
+                  Icon="monkey.png"
+                  ContentTemplate="{DataTemplate local:MainPage}" />
 </Shell>
