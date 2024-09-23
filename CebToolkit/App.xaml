@@ -3,7 +3,7 @@
     x:Class="CebToolkit.App"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:CebToolkit"
+    xmlns:local="clr-namespace:CebToolkit" 
     xmlns:syncTheme="clr-namespace:Syncfusion.Maui.Themes;assembly=Syncfusion.Maui.Core">
     <Application.Resources>
         <ResourceDictionary>

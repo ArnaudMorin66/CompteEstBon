@@ -25,6 +25,7 @@
                 <Setter Property="ItemsSource" Value="{x:Static Member=local:ViewTirage.ListePlaques}" />
                 <Setter Property="ShowBorder" Value="{AppThemeBinding Dark=False, Light=True}" />
             </Style>
+            
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.BindingContext>
@@ -406,8 +407,11 @@
                         StrokeThickness="2" />
                 </sfo:SfPopup.PopupStyle>
             </sfo:SfPopup>
-        </VerticalStackLayout>
+            <TitleBar Icon="favicon.ico" Title="Le Compte Est Bon()">
 
+            </TitleBar>
+        </VerticalStackLayout>
+        
         <FlyoutBase.ContextFlyout>
             <MenuFlyout>
                 <MenuFlyoutItem

@@ -1,8 +1,10 @@
-﻿namespace CebToolkit {
-    public partial class AppShell : Shell {
-        public AppShell() {
-            InitializeComponent();
+﻿namespace CebToolkit;
+
+public partial class AppShell : Shell {
+    public AppShell() {
+        InitializeComponent();
             
-        }
+
+
     }
 }

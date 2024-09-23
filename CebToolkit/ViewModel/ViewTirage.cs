@@ -17,10 +17,13 @@ using CommunityToolkit.Maui.Storage;
 
 using CompteEstBon;
 
+
 using Syncfusion.Maui.Themes;
 
 
 #if WINDOWS
+using Microsoft.Win32;
+
 using Windows.Storage;
 using Launcher = Windows.System.Launcher;
 #endif
@@ -56,7 +59,13 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     private bool _themeDark = true;
     private Timer? _timer;
 
-
+#if WINDOWS
+    private static bool IsLightTheme() {
+        using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+        var value = key?.GetValue("AppsUseLightTheme");
+        return value is int i && i > 0;
+    }
+#endif
     private bool _vueGrille;
 
     /// <summary>
@@ -66,7 +75,11 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     /// </returns>
     public ViewTirage() {
         Auto = false;
+#if WINDOWS
+        ThemeDark = !IsLightTheme();
+#else
         ThemeDark = true;
+#endif
         Tirage.PropertyChanged += (_, args) => {
             if (args.PropertyName != "Clear") return;
             ClearData();
@@ -334,7 +347,8 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         };
         await using var mstream = new MemoryStream();
         exportStream(mstream);
-
+#pragma warning disable CA1416
+        // ReSharper disable once UnusedVariable
         var fileresult = await FileSaver.Default.SaveAsync($"CompteEstBon.{extension}", mstream);
 #if WINDOWS
         if (fileresult.IsSuccessful)
