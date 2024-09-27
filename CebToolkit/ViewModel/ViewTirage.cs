@@ -36,15 +36,7 @@ namespace CebToolkit.ViewModel;
 public partial class ViewTirage : ObservableObject {
     public static readonly string[] ListeFormats = ["Excel", "Word", "Json", "Xml", "HTML"];
 
-    
-    private Color _background = Color.FromRgb(22, 22, 22);
-
-    // private readonly Stopwatch _notifyWatch = new();
-    private string _fmtExport;
-    
-
 // 
-    private bool _themeDark = true;
     private Timer? _timer;
 #if WINDOWS
     private Timer? _timerDay;
@@ -92,8 +84,9 @@ public partial class ViewTirage : ObservableObject {
 #if WINDOWS
     ~ViewTirage() {
         TimerDay?.Dispose();
-    }    
+    }
 #endif
+    private string _fmtExport;
     public string FmtExport {
         get => _fmtExport;
         set => SetProperty(ref _fmtExport, value);
@@ -103,10 +96,13 @@ public partial class ViewTirage : ObservableObject {
     public static string DotnetVersion =>
         $"Version: {Assembly.GetExecutingAssembly().GetName().Version}, {RuntimeInformation.FrameworkDescription}";
 
+    private Color _background = Color.FromRgb(22, 22, 22);
     public Color Background {
         get => _background;
         set => SetProperty(ref _background, value);
 }
+
+    private bool _themeDark = true;
 
     public bool ThemeDark {
         get => _themeDark;
