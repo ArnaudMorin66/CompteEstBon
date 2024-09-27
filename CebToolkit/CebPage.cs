@@ -126,7 +126,7 @@ public class  CebPage : ContentPage {
                     ItemsSource = ViewTirage.ListeFormats
                 }
                 .BackgroundColor(Colors.Transparent)
-                .Bind(Picker.SelectedItemProperty, nameof(ViewTirage.FmtExport), BindingMode.TwoWay)
+                .Bind(Picker.SelectedItemProperty,  nameof(ViewTirage.FmtExport), BindingMode.TwoWay)
                 .Column(0),
             
             new Button()
@@ -288,7 +288,7 @@ public class  CebPage : ContentPage {
                             .FontSize(24)
                             .CenterHorizontal()
                             .CenterVertical()
-                            .Bind(Label.TextProperty, nameof(ViewTirage.Result))
+                            .Bind(Label.TextProperty, "Result")
                             .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
                     }
                 },

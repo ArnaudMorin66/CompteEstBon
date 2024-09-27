@@ -7,9 +7,6 @@
 
 #region Using
 
-using System.Reflection;
-using System.Runtime.InteropServices;
-
 using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -25,6 +22,7 @@ using Microsoft.Win32;
 
 using Windows.Storage;
 using Launcher = Windows.System.Launcher;
+// ReSharper disable InconsistentNaming
 #endif
 
 #endregion
@@ -35,26 +33,12 @@ namespace CebToolkit.ViewModel;
 
 public partial class ViewTirage : ObservableObject {
     public static readonly string[] ListeFormats = ["Excel", "Word", "Json", "Xml", "HTML"];
+    public static IEnumerable<int> ListePlaques => CebPlaque.DistinctPlaques;
+    public CebTirage Tirage { get; } = new();
 
-// 
+    // 
     private Timer? _timer;
-#if WINDOWS
-    private Timer? _timerDay;
-
-    public Timer? TimerDay {
-        get => _timerDay;
-        set => SetProperty(ref _timerDay, value);
-    }
-
     
-
-    private static bool IsLightTheme() {
-        using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
-        var value = key?.GetValue("AppsUseLightTheme");
-        return value is int i && i > 0;
-    }
-#endif
-
     /// <summary>
     ///     Initialisation
     /// </summary>
@@ -74,45 +58,32 @@ public partial class ViewTirage : ObservableObject {
             if (Auto)
                 Task.Run(ResolveAsync);
         };
-        _fmtExport = "Excel";
+        fmtExport = "Excel";
         
 #if WINDOWS
-        TimerDay = new Timer((_) => Date = DateTime.Now, null,1000, 1000);
+        timerDay = new Timer((_) => Date = DateTime.Now, null,1000, 1000);
 #endif
         ClearData();
     }
 #if WINDOWS
-    ~ViewTirage() {
-        TimerDay?.Dispose();
+    [ObservableProperty] public Timer? timerDay;
+    private static bool IsLightTheme() {
+        using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+        var value = key?.GetValue("AppsUseLightTheme");
+        return value is int and > 0;
     }
 #endif
-    private string _fmtExport;
-    public string FmtExport {
-        get => _fmtExport;
-        set => SetProperty(ref _fmtExport, value);
+
+    [ObservableProperty] public string fmtExport;
+    [ObservableProperty] public string result = "Résoudre";
+    [ObservableProperty] public Color background = Color.FromRgb(22, 22, 22);
+    [ObservableProperty] public bool themeDark;
+    partial void OnThemeDarkChanged(bool value) {
         
-    }
-
-    public static string DotnetVersion =>
-        $"Version: {Assembly.GetExecutingAssembly().GetName().Version}, {RuntimeInformation.FrameworkDescription}";
-
-    private Color _background = Color.FromRgb(22, 22, 22);
-    public Color Background {
-        get => _background;
-        set => SetProperty(ref _background, value);
-}
-
-    private bool _themeDark = true;
-
-    public bool ThemeDark {
-        get => _themeDark;
-        set {
-            if (_themeDark == value) return;
-            _themeDark = value;
             var mergedDictionaries = Application.Current!.Resources.MergedDictionaries;
             var theme = mergedDictionaries?.OfType<SyncfusionThemeResourceDictionary>().FirstOrDefault();
-            if (theme == null) return;
-            if (_themeDark) {
+            if (theme is null) return;
+            if (value) {
                 theme.VisualTheme = SfVisuals.MaterialDark;
                 Application.Current.UserAppTheme = AppTheme.Dark;
             } else {
@@ -121,87 +92,26 @@ public partial class ViewTirage : ObservableObject {
             }
 
             UpdateForeground();
-            OnPropertyChanged();
         }
-    }
-
-    // public ICommand ExportsCommmand { get; init; }
-    public static IEnumerable<int> ListePlaques => CebPlaque.DistinctPlaques;
-
-    public CebTirage Tirage { get; } = new();
-
-    private bool _vueGrille;
-    public bool VueGrille {
-        get => _vueGrille;
-        set => SetProperty(ref _vueGrille, value);
-    }
-
-    private CebBase _solution = null!;
-
-    public CebBase Solution {
-        get => _solution;
-        set => SetProperty(ref _solution, value);
-    }
-
-    private Color _foreground = Colors.White;
-
-    public Color Foreground {
-        get => _foreground;
-        set => SetProperty(ref _foreground, value);
-        
-    }
-
-    private string _result = "Résoudre";
-
-    public string Result {
-        get => _result;
-        set => SetProperty(ref _result, value);
-    }
-
-    private bool _isBusy;
-    public bool IsBusy {
-        get => _isBusy;
-        set => SetProperty(ref _isBusy, value);
-    }
     
-    private bool _auto;
-    public bool Auto {
-        get => _auto;
-        set {
-            if (SetProperty(ref _auto, value) && Tirage.Status == CebStatus.Valide && Auto) Task.Run(ResolveAsync);
-        }
-    }
-
-    private bool _isComputed;
-    public bool IsComputed {
-        get => _isComputed; 
-        // ReSharper disable once ValueParameterNotUsed
-        set => SetProperty(ref _isComputed, value);
-    }
-
-private bool _popup;
-public bool Popup {
-    get => _popup;
-    set {
-        if (!SetProperty(ref _popup, value)) return;
+    [ObservableProperty] public bool vueGrille;
+    [ObservableProperty] public CebBase? solution=null;
+    [ObservableProperty] public Color foreground = Colors.White;
+    [ObservableProperty] public bool isBusy;
+    [ObservableProperty] public bool auto;
+    [ObservableProperty] public bool isComputed;
+    [ObservableProperty] public bool popup;
+    partial void OnPopupChanged(bool value)
+    {
         if (value)
             DelayPopup(5000);
         else
             _timer?.Dispose();
     }
-}
-
 #if WINDOWS
-    private DateTime _date;
-
-    public DateTime Date {
-        get => _date;
-        set => SetProperty(ref _date, value);
-    }
-    
-
+    [ObservableProperty] public DateTime date;
 #endif
-    
+
     [RelayCommand]
     public async Task Ceb(object? parameter) {
         var cmd = (parameter as string)?.ToLower();
@@ -243,10 +153,7 @@ public bool Popup {
                 break;
         }
     }
-
-    public event EventHandler? CanExecuteChanged;
-
-    //public event PropertyChangedEventHandler? PropertyChanged;
+    
 
     private void DelayPopup(int duetime) {
         _timer = new Timer(state => {
@@ -339,10 +246,7 @@ public bool Popup {
             await ShowFile(fileresult.FilePath);
 #endif
     }
-
-
-    //protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
-    //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    
 
     
 
