@@ -3,9 +3,230 @@
     x:Class="CebMaui.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:sfb="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
+    xmlns:sfg="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
+    xmlns:sfi="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
     xmlns:local="clr-namespace:CebMaui"
     x:Name="Shell" NavBarIsVisible="False"
     Title="Compte est bon">
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Style TargetType="sfb:SfSwitch">
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <Setter.Value>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Off">
+                                    <VisualState.Setters>
+                                        <Setter Property="SwitchSettings">
+                                            <Setter.Value>
+                                                <sfb:SwitchSettings
+                                                ThumbBackground="#A19F9D"
+                                                ThumbCornerRadius="6"
+                                                ThumbHeightRequest="11"
+                                                ThumbStroke="#A19F9D"
+                                                ThumbWidthRequest="11"
+                                                TrackBackground="Transparent"
+                                                TrackHeightRequest="19"
+                                                TrackStroke="#A19F9D"
+                                                ThumbStrokeThickness="1"
+                                                TrackStrokeThickness="1"
+                                                TrackWidthRequest="39" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="OffPressed">
+                                    <VisualState.Setters>
+                                        <Setter Property="SwitchSettings">
+                                            <Setter.Value>
+                                                <sfb:SwitchSettings
+                                        ThumbBackground="#A19F9D"
+                                        ThumbCornerRadius="7"
+                                        ThumbHeightRequest="13"
+                                        ThumbStroke="#A19F9D"
+                                        ThumbWidthRequest="13"
+                                        TrackBackground="Transparent"
+                                        TrackHeightRequest="19"
+                                        TrackStroke="#A19F9D"
+                                        ThumbStrokeThickness="1"
+                                        TrackStrokeThickness="1"
+                                        TrackWidthRequest="39" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="OffHovered">
+                                    <VisualState.Setters>
+                                        <Setter Property="SwitchSettings">
+                                            <Setter.Value>
+                                                <sfb:SwitchSettings
+                                        ThumbBackground="#A19F9D"
+                                        ThumbCornerRadius="7"
+                                        ThumbHeightRequest="13"
+                                        ThumbStroke="#A19F9D"
+                                        ThumbWidthRequest="13"
+                                        TrackBackground="Transparent"
+                                        TrackHeightRequest="19"
+                                        TrackStroke="#A19F9D"
+                                        ThumbStrokeThickness="1"
+                                        TrackStrokeThickness="1"
+                                        TrackWidthRequest="39" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="On">
+                                    <VisualState.Setters>
+                                        <Setter Property="SwitchSettings">
+                                            <Setter.Value>
+                                                <sfb:SwitchSettings
+                                        ThumbBackground="#1B1A19"
+                                        ThumbCornerRadius="6"
+                                        ThumbHeightRequest="11"
+                                        ThumbStroke="#1B1A19"
+                                        ThumbWidthRequest="11"
+                                        TrackBackground="#0078D4"
+                                        TrackHeightRequest="19"
+                                        TrackStroke="#0078D4"
+                                        ThumbStrokeThickness="1"
+                                        TrackStrokeThickness="1"
+                                        TrackWidthRequest="39" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="OnPressed">
+                                    <VisualState.Setters>
+                                        <Setter Property="SwitchSettings">
+                                            <Setter.Value>
+                                                <sfb:SwitchSettings
+                                        ThumbBackground="#1B1A19"
+                                        ThumbCornerRadius="7"
+                                        ThumbHeightRequest="13"
+                                        ThumbStroke="#1B1A19"
+                                        ThumbWidthRequest="13"
+                                        TrackBackground="#0078D4"
+                                        TrackHeightRequest="19"
+                                        TrackStroke="#0078D4"
+                                        ThumbStrokeThickness="1"
+                                        TrackStrokeThickness="1"
+                                        TrackWidthRequest="39" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="OnHovered">
+                                    <VisualState.Setters>
+                                        <Setter Property="SwitchSettings">
+                                            <Setter.Value>
+                                                <sfb:SwitchSettings
+                                         ThumbBackground="#1B1A19"
+                                         ThumbCornerRadius="7"
+                                         ThumbHeightRequest="13"
+                                         ThumbStroke="#1B1A19"
+                                         ThumbWidthRequest="13"
+                                         TrackBackground="#0078D4"
+                                         TrackHeightRequest="19"
+                                         TrackStroke="#0078D4"
+                                         ThumbStrokeThickness="1"
+                                         TrackStrokeThickness="1"
+                                         TrackWidthRequest="39" />
+                                            </Setter.Value>
+                                        </Setter>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="TextColor" Value="{Binding Foreground}"/>
+                <Setter Property="CornerRadius" Value="2"/>
+                <Setter Property="Margin" Value="2"/>
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <Setter.Value>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark=DarkSlateGrey, Light=#8fbc8f}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Checked">
+                                    <VisualState.Setters>
+                                        <Setter Property="Background" Value="Green"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Hovered">
+                                    <VisualState.Setters>
+                                        <Setter Property="Background" Value="DeepSkyBlue"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Property="Background" Value="{StaticResource SecondaryBrush}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Property="Background" Value="#BFC3C7"/>
+                                        <Setter Property="TextColor" Value="Black"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="sfi:SfComboBox" x:Key="SfComboboxStyle">
+                <Setter Property="HorizontalTextAlignment" Value="Center"/>
+                <Setter Property="IsClearButtonVisible" Value="False"/>
+                <Setter Property="ShowBorder" Value="{AppThemeBinding Dark=False, Light=True}"/>
+                <Setter Property="TextColor" Value="{Binding Foreground}"/>
+            </Style>
+            <Style TargetType="Picker">
+                <Setter Property="Margin" Value="2"/>
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <Setter.Value>
+                        <VisualStateGroupList>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark=#1F1F1F, Light=#708090}"/>
+                                        <Setter Property="Margin" Value="2"/>
+                                        <Setter Property="TextColor" Value="White"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Checked">
+                                    <VisualState.Setters>
+                                        <Setter Property="Background" Value="Green"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Hovered">
+                                    <VisualState.Setters>
+                                        <Setter Property="Background" Value="DeepSkyBlue"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Property="Background" Value="{StaticResource SecondaryBrush}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Property="Background" Value="#BFC3C7"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateGroupList>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Shell.Resources>
+
     <FlyoutItem FlyoutDisplayOptions="AsSingleItem">
 
         <ShellContent

@@ -11,6 +11,7 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
                 <syncTheme:SyncfusionThemeResourceDictionary VisualTheme="MaterialDark" />
+                <ResourceDictionary Source="Resources/Styles/MainDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

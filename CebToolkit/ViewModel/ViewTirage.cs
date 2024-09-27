@@ -14,6 +14,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Input;
 
 using CommunityToolkit.Maui.Storage;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 using CompteEstBon;
 
@@ -34,7 +35,7 @@ using Launcher = Windows.System.Launcher;
 // ReSharper disable EnforceIfStatementBraces
 namespace CebToolkit.ViewModel;
 
-public class ViewTirage : INotifyPropertyChanged, ICommand {
+public partial class ViewTirage : ObservableObject, ICommand {
     public static readonly string[] ListeFormats = ["Excel", "Word", "Json", "Xml", "HTML"];
 
 
@@ -49,7 +50,6 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     private bool _isBusy;
 
 
-    private bool _popup;
 
     private string _result = "Résoudre";
 
@@ -58,8 +58,19 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 // 
     private bool _themeDark = true;
     private Timer? _timer;
-
 #if WINDOWS
+    private Timer? _timerDay;
+
+    public Timer? TimerDay {
+        get => _timerDay;
+        set  {
+        if (value == _timerDay) return;
+        _timerDay = value;
+        OnPropertyChanged();
+    }
+}
+    
+
     private static bool IsLightTheme() {
         using var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
         var value = key?.GetValue("AppsUseLightTheme");
@@ -72,7 +83,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     ///     Initialisation
     /// </summary>
     /// <returns>
-    /// </returns>
+    /// </returns>B
     public ViewTirage() {
         Auto = false;
 #if WINDOWS
@@ -99,10 +110,16 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
                 if (Tirage.Count != 0) Task.Run(() => ExportFichierAsync(elt));
             }
         });
-
+#if WINDOWS
+        TimerDay = new Timer((_) => Date = DateTime.Now, null,1000, 1000);
+#endif
         ClearData();
     }
-
+#if WINDOWS
+    ~ViewTirage() {
+        TimerDay?.Dispose();
+    }    
+#endif
     public string FmtExport {
         get => _fmtExport;
         set {
@@ -219,24 +236,34 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         set => OnPropertyChanged();
     }
 
+private bool _popup;
 
-    public bool Popup {
-        get => _popup;
+public bool Popup {
+    get => _popup;
+    set {
+        if (_popup == value) return;
+        _popup = value;
+        OnPropertyChanged();
+        if (value)
+            DelayPopup(5000);
+        else
+            _timer?.Dispose();
+    }
+}
+
+#if WINDOWS
+    private DateTime _date;
+
+    public DateTime Date {
+        get => _date;
         set {
-            if (_popup == value)
-                return;
-
-            _popup = value;
-            if (_popup)
-                DelayPopup(5000);
-            else
-                _timer?.Dispose();
-
+            if (_date == value) return;
+            _date = value;
             OnPropertyChanged();
         }
     }
 
-
+#endif
     public bool CanExecute(object? parameter) => true;
 
     public async void Execute(object? parameter) {
@@ -282,13 +309,13 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 
     public event EventHandler? CanExecuteChanged;
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+    //public event PropertyChangedEventHandler? PropertyChanged;
 
     private void DelayPopup(int duetime) {
         _timer = new Timer(state => {
             if (state is not Timer ti) return;
             ti.Dispose();
-            Popup = false;
+             Popup = false;
         });
         _timer.Change(duetime, 0);
     }
@@ -296,9 +323,9 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     private void ClearData() {
         Solution = null!;
         UpdateForeground();
-        Result = Tirage.Status != CebStatus.Invalide ? "" : "Tirage invalide";
+        Result = Tirage.Status != CebStatus.Invalide ? "Le Compte Est Bon" : "Tirage invalide";
         Popup = false;
-        OnPropertyChanged(nameof(IsComputed), nameof(Tirage));
+         OnPropertiesChanged(nameof(IsComputed), nameof(Tirage));
     }
 
 
@@ -327,25 +354,35 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 
     private async Task ExportFichierAsync(string fmt) {
         if (Tirage.Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
+        string extension;
+        Action<Stream> exportStream; 
+        switch (fmt.ToLower()) {
+            case "excel":
+                extension = "xlsx";
+                exportStream = Tirage.ExcelSaveStream;
+                break;
+            case "word":
+                extension = "docx";
+                exportStream = Tirage.WordSaveStream;
+                break;
+            case "json":
+                extension = "json";
+                exportStream= Tirage.JsonSaveStream;
+                break;
+            case "xml":
+                extension = "xml";
+                exportStream = Tirage.XmlSaveStream;
+                break;
+            case "html":
+                extension = "html";
+                exportStream = Tirage.HtmlSaveStream;
+                break;
+            default:
+                throw new NotImplementedException();
 
-        var extension =
-            fmt.ToLower() switch {
-                "excel" => "xlsx",
-                "word" => "docx",
-                "json" => "json",
-                "xml" => "xml",
-                "html" => "html",
-                _ => throw new NotImplementedException()
-            };
-        Action<MemoryStream> exportStream = extension switch {
-            "xlsx" => Tirage.ExcelSaveStream,
-            "docx" => Tirage.WordStream,
-            "json" => Tirage.JsonSaveStream,
-            "xml" => Tirage.XmlSaveStream,
-            "html" => Tirage.HtmlStream,
-            _ => throw new NotImplementedException()
-        };
-        await using var mstream = new MemoryStream();
+
+        }
+                await using var mstream = new MemoryStream();
         exportStream(mstream);
 #pragma warning disable CA1416
         // ReSharper disable once UnusedVariable
@@ -357,13 +394,10 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
     }
 
 
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    //protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
+    //    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-    protected virtual void OnPropertyChanged(params string[] properties) {
-        foreach (var property in properties) OnPropertyChanged(property); 
-    }
-
+    
 
     #region Action
 
@@ -400,13 +434,17 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
 
         UpdateForeground();
         IsBusy = false;
-        OnPropertyChanged(nameof(Tirage),
-            nameof(IsComputed));
+        OnPropertiesChanged(nameof(Tirage), nameof(IsComputed));
         ShowPopup();
 
         return Tirage.Status;
     }
 
+    public void OnPropertiesChanged(params string[] properties) {
+        foreach (var property in properties) {
+            OnPropertyChanged(property);
+        }
+    }
     #endregion Action
 
 #if WINDOWS
@@ -418,4 +456,13 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         });
     }
 #endif
+    // public event PropertyChangedEventHandler? PropertyChanged;
+
+
+    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null) {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
+    }
 }

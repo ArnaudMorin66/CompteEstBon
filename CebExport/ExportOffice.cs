@@ -76,12 +76,12 @@ public static class ExportOffice {
 		workbook.SaveAs(stream);
 	}
 
-	public static void HtmlStream(this CebTirage tirage, Stream stream) =>
-		tirage.WordSaveStream(stream, FormatType.Html);
+	public static void HtmlSaveStream(this CebTirage tirage, Stream stream) =>
+		tirage.WordStream(stream, FormatType.Html);
 
-	public static void WordStream(this CebTirage tirage, Stream stream) => tirage.WordSaveStream(stream);
+	public static void WordSaveStream(this CebTirage tirage, Stream stream) => tirage.WordStream(stream);
 
-	public static void WordSaveStream(this CebTirage tirage, Stream stream, FormatType ftype = FormatType.Docx) {
+	public static void WordStream(this CebTirage tirage, Stream stream, FormatType ftype = FormatType.Docx) {
 		using WordDocument wd = new();
 
 		var sect = wd.AddSection() as WSection;

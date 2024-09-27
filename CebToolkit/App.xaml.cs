@@ -10,7 +10,7 @@ public partial class App {
     }
 
     protected override Window CreateWindow(IActivationState? activationState) => new(new AppShell()) {
-        TitleBar = VueTitleBar,
+        
     };
 
     private TitleBar VueTitleBar => new TitleBar() {

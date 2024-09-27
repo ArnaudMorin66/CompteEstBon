@@ -69,7 +69,7 @@ public static class CebSerialize {
 	/// <param name="file"></param>
 	public static void SaveDocx(this CebTirage tirage, FileInfo file) {
 		using var stream = file.Create();
-		tirage.WordSaveStream(stream, file.Extension == ".html" ? FormatType.Html : FormatType.Docx);
+		tirage.WordStream(stream, file.Extension == ".html" ? FormatType.Html : FormatType.Docx);
 	}
 
 	/// <summary>

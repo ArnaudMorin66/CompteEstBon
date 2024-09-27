@@ -21,7 +21,7 @@ namespace CompteEstBon;
 /// <summary>
 ///     Gestion tirage Compte est bon
 /// </summary>
-public sealed class CebTirage : INotifyPropertyChanged {
+public sealed class CebTirage:  INotifyPropertyChanged {
 	private static readonly Random Rnd = System.Random.Shared;
 
 	private readonly List<CebBase> _solutions = [];

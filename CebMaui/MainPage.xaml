@@ -16,16 +16,10 @@
     Title="Le Compte est bon">
     <ContentPage.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/MainDictionary.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
             <sfc:InvertedBoolConverter x:Key="InverseBooleanConverter" />
-            <Style x:Key="ComboPlqStyle" TargetType="sfi:SfComboBox">
-                <Setter Property="HorizontalTextAlignment" Value="Center" />
-                <Setter Property="IsClearButtonVisible" Value="False" />
-                <Setter Property="IsEditable" Value="True" />
-                <Setter Property="BackgroundColor" Value=" Blue" />
-                <Setter Property="ItemsSource" Value="{x:Static Member=local:ViewTirage.ListePlaques}" />
-                <Setter Property="ShowBorder" Value="{AppThemeBinding Dark=False, Light=True}" />
-            </Style>
-            
         </ResourceDictionary>
     </ContentPage.Resources>
     <ContentPage.BindingContext>
@@ -37,7 +31,7 @@
                 Margin="2"
                 Padding="4"
                 IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBooleanConverter}}">
-                <Grid ColumnDefinitions="1*,2*,2*,2*,2*,2*,2*,1*,3*">
+                <Grid ColumnDefinitions="1*,2*,2*,2*,2*,2*,2*,1*,2*">
                     <Label
                         Grid.Row="0"
                         Grid.Column="0"
@@ -48,37 +42,37 @@
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="1"
-                        Style="{StaticResource ComboPlqStyle}"
+                        Style="{StaticResource SfComboboxStyle}"
                         Text="{Binding Tirage.Plaques[0].Value, Mode=TwoWay}" />
 
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="2"
-                        Style="{StaticResource ComboPlqStyle}"
+                        Style="{StaticResource SfComboboxStyle}"
                         Text="{Binding Tirage.Plaques[1].Value, Mode=TwoWay}" />
 
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="3"
-                        Style="{StaticResource ComboPlqStyle}"
+                        Style="{StaticResource SfComboboxStyle}"
                         Text="{Binding Tirage.Plaques[2].Value, Mode=TwoWay}" />
 
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="4"
-                        Style="{StaticResource ComboPlqStyle}"
+                        Style="{StaticResource SfComboboxStyle}"
                         Text="{Binding Tirage.Plaques[3].Value, Mode=TwoWay}" />
 
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="5"
-                        Style="{StaticResource ComboPlqStyle}"
+                        Style="{StaticResource SfComboboxStyle}"
                         Text="{Binding Tirage.Plaques[4].Value, Mode=TwoWay}" />
 
                     <sfi:SfComboBox
                         Grid.Row="0"
                         Grid.Column="6"
-                        Style="{StaticResource ComboPlqStyle}"
+                        Style="{StaticResource SfComboboxStyle}"
                         Text="{Binding Tirage.Plaques[5].Value, Mode=TwoWay}" />
                     <Label
                         x:Name="LbCherche"
@@ -96,6 +90,7 @@
                         Minimum="100"
                         ShowBorder="{AppThemeBinding Dark=False,
                                                      Light=True}"
+                        TextColor="{Binding Foreground}"
                         UpDownPlacementMode="InlineVertical"
                         VerticalOptions="Center"
                         Value="{Binding Tirage.Search, Mode=TwoWay}" />
@@ -178,29 +173,26 @@
                     <sfb:SfSwitch Grid.Column="1" IsOn="{Binding Auto}" />
                 </Grid>
             </Grid>
-            <Border Padding="2">
-                <Grid
+            <Border Padding="2" MinimumHeightRequest="50">
+                <Grid IsVisible="{Binding IsComputed}"
                     ColumnDefinitions="*,*,*,*"
                     HeightRequest="50"
                     VerticalOptions="Center">
                     <Label
                         Grid.Column="0"
                         FontSize="18"
-                        IsVisible="{Binding IsComputed}"
                         Text="{Binding Result}"
                         TextColor="{Binding Foreground}"
                         VerticalOptions="Center" />
                     <Label
                         Grid.Column="1"
                         FontSize="18"
-                        IsVisible="{Binding IsComputed}"
                         Text="{Binding Tirage.Found, StringFormat='Trouvé: {0}'}"
                         TextColor="{Binding Foreground}"
                         VerticalOptions="Center" />
                     <Label
                         Grid.Column="2"
                         FontSize="18"
-                        IsVisible="{Binding IsComputed}"
                         Text="{Binding Tirage.Count, StringFormat='Nombre de solutions: {0}'}"
                         TextColor="{Binding Foreground}"
                         VerticalOptions="Center" />
@@ -208,7 +200,6 @@
                         Grid.Column="3"
                         FontSize="18"
                         HorizontalOptions="End"
-                        IsVisible="{Binding IsComputed}"
                         Text="{Binding Tirage.Duree.TotalSeconds, StringFormat='Durée: {0:N3} s'}"
                         TextColor="{Binding Foreground}"
                         VerticalOptions="Center" />
@@ -242,6 +233,7 @@
                                     x:Name="GrilleOperations"
                                     HorizontalOptions="Center"
                                     ItemsSource="{Binding Operations}"
+                                    BackgroundColor="{AppThemeBinding Light=CadetBlue,Dark=#2f4f4f}"
                                     SelectionChanged="SelectableItemsView_OnSelectionChanged"
                                     SelectionMode="Single">
                                     <CollectionView.ItemTemplate>
@@ -278,6 +270,13 @@
                         <sfg:DataGridTextColumn HeaderText="Opération 4" MappingName="Op4" />
                         <sfg:DataGridTextColumn HeaderText="Opération 5" MappingName="Op5" />
                     </sfg:SfDataGrid.Columns>
+                    <sfg:SfDataGrid.DefaultStyle>
+                        <sfg:DataGridStyle RowTextColor="{Binding Foreground}"
+                                           AlternateRowBackground="{AppThemeBinding Light=DarkSeaGreen, Dark=DarkSlateGray }"
+                                           HeaderRowBackground="{AppThemeBinding Light=SlateGrey, Dark=DarkGreen}"
+                                           HeaderRowTextColor="{AppThemeBinding Light=Yellow, Dark=White}"/>
+                        
+                    </sfg:SfDataGrid.DefaultStyle>
                 </sfg:SfDataGrid>
                 <sfu:SfBusyIndicator
                     Title="recherche..."
@@ -320,13 +319,10 @@
                                     TextColor="{Binding Foreground}"
                                     VerticalOptions="Center" />
                             </VerticalStackLayout>
-                            <Line
-                                Stroke="{Binding Foreground}"
-                                StrokeThickness="0.8"
-                                X1="0"
-                                X2="{Binding Height, Source={x:Reference Name=ScrollView}}"
-                                Y1="0"
-                                Y2="0" />
+                            <BoxView
+                                BackgroundColor="{Binding Foreground}"
+                                CornerRadius="0"
+                                HeightRequest="2"/>
                             <VerticalStackLayout VerticalOptions="Center">
                                 <CollectionView
                                     Margin="4"
@@ -340,13 +336,10 @@
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>
                             </VerticalStackLayout>
-                            <Line
-                                Stroke="{Binding Foreground}"
-                                StrokeThickness="0.8"
-                                X1="0"
-                                X2="{Binding Height, Source={x:Reference Name=ScrollView}}"
-                                Y1="0"
-                                Y2="0" />
+                            <BoxView
+                                BackgroundColor="{Binding Foreground}"
+                                CornerRadius="0"
+                                HeightRequest="2"/>
                             <VerticalStackLayout HorizontalOptions="Center">
                                 <Grid
                                     ColumnDefinitions="*,*"
@@ -356,45 +349,49 @@
                                     <Label
                                         Grid.Row="0"
                                         Grid.Column="0"
+                                        Grid.ColumnSpan="2"
                                         FontSize="15"
-                                        HorizontalTextAlignment="Start"
-                                        Text="Trouvé:}"
-                                        TextColor="{Binding Foreground}" />
-                                    <Label
-                                        Grid.Row="0"
-                                        Grid.Column="1"
-                                        FontSize="15"
-                                        HorizontalTextAlignment="End"
-                                        Text="{Binding Tirage.Found}"
-                                        TextColor="{Binding Foreground}" />
+                                        HorizontalOptions="Center">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Trouvé = "  />
+                                                <Span/>
+                                                <Span Text="{Binding Tirage.Found}"
+                                                      TextColor="{Binding Foreground}"/>
+                                            </FormattedString>
+                                            
+                                        </Label.FormattedText>
+                                    </Label>
                                     <Label
                                         Grid.Row="1"
                                         Grid.Column="0"
+                                        Grid.ColumnSpan="2"
                                         FontSize="15"
-                                        HorizontalTextAlignment="Start"
-                                        Text="Nombre de solutions:"
-                                        TextColor="{Binding Foreground}" />
-                                    <Label
-                                        Grid.Row="1"
-                                        Grid.Column="1"
-                                        FontSize="15"
-                                        HorizontalTextAlignment="End"
-                                        Text="{Binding Tirage.Count}"
-                                        TextColor="{Binding Foreground}" />
+                                        HorizontalOptions="Center">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Nombre de solutions = "  />
+                                                <Span Text="{Binding Tirage.Count}"
+                                                      TextColor="{Binding Foreground}"/>
+                                            </FormattedString>
+
+                                        </Label.FormattedText>
+                                    </Label>
                                     <Label
                                         Grid.Row="2"
                                         Grid.Column="0"
+                                        Grid.ColumnSpan="2"
                                         FontSize="15"
-                                        HorizontalTextAlignment="Start"
-                                        Text="Durée:"
-                                        TextColor="{Binding Foreground}" />
-                                    <Label
-                                        Grid.Row="2"
-                                        Grid.Column="1"
-                                        FontSize="15"
-                                        HorizontalTextAlignment="End"
-                                        Text="{Binding Tirage.Duree.TotalSeconds, StringFormat='{0:N3} s'}"
-                                        TextColor="{Binding Foreground}" />
+                                        HorizontalOptions="Center">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Durée = "  />
+                                                <Span Text="{Binding Tirage.Duree.TotalSeconds, StringFormat='{0:N3} s'}"
+                                                      TextColor="{Binding Foreground}"/>
+                                            </FormattedString>
+
+                                        </Label.FormattedText>
+                                    </Label>
                                 </Grid>
                             </VerticalStackLayout>
                         </VerticalStackLayout>
