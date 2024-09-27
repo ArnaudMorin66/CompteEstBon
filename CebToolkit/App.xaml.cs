@@ -9,15 +9,5 @@ public partial class App {
         CultureInfo.CurrentUICulture = new CultureInfo("fr-FR");
     }
 
-    protected override Window CreateWindow(IActivationState? activationState) => new(new AppShell()) {
-        
-    };
-
-    private TitleBar VueTitleBar => new TitleBar() {
-        Title = "Compte Est Bon",
-        Icon = "favicon.ico",
-        ForegroundColor = Colors.White,
-        HorizontalOptions = LayoutOptions.Center,
-
-    };
+    protected override Window CreateWindow(IActivationState? activationState) => new(new AppShell()) { };
 }

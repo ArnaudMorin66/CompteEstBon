@@ -7,14 +7,12 @@
 
 #region Using
 
-using System.ComponentModel;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Windows.Input;
 
 using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 using CompteEstBon;
 
@@ -35,25 +33,15 @@ using Launcher = Windows.System.Launcher;
 // ReSharper disable EnforceIfStatementBraces
 namespace CebToolkit.ViewModel;
 
-public partial class ViewTirage : ObservableObject, ICommand {
+public partial class ViewTirage : ObservableObject {
     public static readonly string[] ListeFormats = ["Excel", "Word", "Json", "Xml", "HTML"];
 
-
-    private bool _auto;
+    
     private Color _background = Color.FromRgb(22, 22, 22);
 
     // private readonly Stopwatch _notifyWatch = new();
     private string _fmtExport;
-
-    private Color _foreground = Colors.White;
-
-    private bool _isBusy;
-
-
-
-    private string _result = "Résoudre";
-
-    private CebBase _solution = null!;
+    
 
 // 
     private bool _themeDark = true;
@@ -63,12 +51,9 @@ public partial class ViewTirage : ObservableObject, ICommand {
 
     public Timer? TimerDay {
         get => _timerDay;
-        set  {
-        if (value == _timerDay) return;
-        _timerDay = value;
-        OnPropertyChanged();
+        set => SetProperty(ref _timerDay, value);
     }
-}
+
     
 
     private static bool IsLightTheme() {
@@ -77,13 +62,12 @@ public partial class ViewTirage : ObservableObject, ICommand {
         return value is int i && i > 0;
     }
 #endif
-    private bool _vueGrille;
 
     /// <summary>
     ///     Initialisation
     /// </summary>
     /// <returns>
-    /// </returns>B
+    /// </returns>
     public ViewTirage() {
         Auto = false;
 #if WINDOWS
@@ -94,22 +78,12 @@ public partial class ViewTirage : ObservableObject, ICommand {
         Tirage.PropertyChanged += (_, args) => {
             if (args.PropertyName != "Clear") return;
             ClearData();
+            
             if (Auto)
                 Task.Run(ResolveAsync);
         };
         _fmtExport = "Excel";
-        ExportsCommmand = new Command<string>(format => {
-            if (string.IsNullOrEmpty( format))
-                format = FmtExport;
-            if (format == "export")
-                format = FmtExport;
-#pragma warning disable CA1862
-            var elt = ListeFormats.FirstOrDefault(elt => elt.ToLower() == format.ToLower());
-            if (elt != null) {
-                FmtExport = elt;
-                if (Tirage.Count != 0) Task.Run(() => ExportFichierAsync(elt));
-            }
-        });
+        
 #if WINDOWS
         TimerDay = new Timer((_) => Date = DateTime.Now, null,1000, 1000);
 #endif
@@ -122,11 +96,8 @@ public partial class ViewTirage : ObservableObject, ICommand {
 #endif
     public string FmtExport {
         get => _fmtExport;
-        set {
-            if (_fmtExport == value) return;
-            _fmtExport = value;
-            OnPropertyChanged();
-        }
+        set => SetProperty(ref _fmtExport, value);
+        
     }
 
     public static string DotnetVersion =>
@@ -134,11 +105,8 @@ public partial class ViewTirage : ObservableObject, ICommand {
 
     public Color Background {
         get => _background;
-        set {
-            _background = value;
-            OnPropertyChanged();
-        }
-    }
+        set => SetProperty(ref _background, value);
+}
 
     public bool ThemeDark {
         get => _themeDark;
@@ -161,89 +129,65 @@ public partial class ViewTirage : ObservableObject, ICommand {
         }
     }
 
-    public ICommand ExportsCommmand { get; init; }
+    // public ICommand ExportsCommmand { get; init; }
     public static IEnumerable<int> ListePlaques => CebPlaque.DistinctPlaques;
 
     public CebTirage Tirage { get; } = new();
 
-
+    private bool _vueGrille;
     public bool VueGrille {
         get => _vueGrille;
-        set {
-            if (_vueGrille == value) return;
-            _vueGrille = value;
-            OnPropertyChanged();
-        }
+        set => SetProperty(ref _vueGrille, value);
     }
 
+    private CebBase _solution = null!;
 
     public CebBase Solution {
         get => _solution;
-        set {
-            _solution = value;
-            OnPropertyChanged();
-        }
+        set => SetProperty(ref _solution, value);
     }
 
+    private Color _foreground = Colors.White;
 
     public Color Foreground {
         get => _foreground;
-        set {
-            _foreground = value;
-            OnPropertyChanged();
-        }
+        set => SetProperty(ref _foreground, value);
+        
     }
+
+    private string _result = "Résoudre";
 
     public string Result {
         get => _result;
-        set {
-            if (value == _result)
-                return;
-
-            _result = value;
-            OnPropertyChanged();
-        }
+        set => SetProperty(ref _result, value);
     }
 
+    private bool _isBusy;
     public bool IsBusy {
         get => _isBusy;
-        set {
-            if (_isBusy == value)
-                return;
-
-            _isBusy = value;
-            OnPropertyChanged();
-        }
+        set => SetProperty(ref _isBusy, value);
     }
-
+    
+    private bool _auto;
     public bool Auto {
         get => _auto;
         set {
-            if (_auto == value)
-                return;
-
-            _auto = value;
-            OnPropertyChanged();
-            if (Tirage.Status == CebStatus.Valide && Auto)
-                Task.Run(ResolveAsync);
+            if (SetProperty(ref _auto, value) && Tirage.Status == CebStatus.Valide && Auto) Task.Run(ResolveAsync);
         }
     }
 
-
+    private bool _isComputed;
     public bool IsComputed {
-        get => Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche or CebStatus.Invalide;
+        get => _isComputed; 
         // ReSharper disable once ValueParameterNotUsed
-        set => OnPropertyChanged();
+        set => SetProperty(ref _isComputed, value);
     }
 
 private bool _popup;
-
 public bool Popup {
     get => _popup;
     set {
-        if (_popup == value) return;
-        _popup = value;
-        OnPropertyChanged();
+        if (!SetProperty(ref _popup, value)) return;
         if (value)
             DelayPopup(5000);
         else
@@ -256,17 +200,14 @@ public bool Popup {
 
     public DateTime Date {
         get => _date;
-        set {
-            if (_date == value) return;
-            _date = value;
-            OnPropertyChanged();
-        }
+        set => SetProperty(ref _date, value);
     }
+    
 
 #endif
-    public bool CanExecute(object? parameter) => true;
-
-    public async void Execute(object? parameter) {
+    
+    [RelayCommand]
+    public async Task Ceb(object? parameter) {
         var cmd = (parameter as string)?.ToLower();
         switch (cmd) {
             case "random":
@@ -292,7 +233,7 @@ public bool Popup {
 
             case "export":
                 if (Tirage.Count != 0)
-                    await ExportFichierAsync(FmtExport);
+                    await Export(FmtExport);
 
                 break;
             case "theme":
@@ -323,9 +264,10 @@ public bool Popup {
     private void ClearData() {
         Solution = null!;
         UpdateForeground();
+        IsComputed = Tirage.Status == CebStatus.Invalide;
         Result = Tirage.Status != CebStatus.Invalide ? "Le Compte Est Bon" : "Tirage invalide";
         Popup = false;
-         OnPropertiesChanged(nameof(IsComputed), nameof(Tirage));
+         OnPropertiesChanged( nameof(Tirage));
     }
 
 
@@ -351,8 +293,17 @@ public bool Popup {
         Popup = true;
     }
 
-
-    private async Task ExportFichierAsync(string fmt) {
+    [RelayCommand]
+    public async Task Export(string format) {
+        if (string.IsNullOrEmpty(format))
+            format = FmtExport;
+        if (format == "export")
+            format = FmtExport;
+#pragma warning disable CA1862
+        var fmt = ListeFormats.FirstOrDefault(elt => elt.ToLower() == format.ToLower());
+        if (fmt == null) return;
+            FmtExport = fmt;
+            
         if (Tirage.Status is not (CebStatus.CompteEstBon or CebStatus.CompteApproche)) return;
         string extension;
         Action<Stream> exportStream; 
@@ -434,7 +385,8 @@ public bool Popup {
 
         UpdateForeground();
         IsBusy = false;
-        OnPropertiesChanged(nameof(Tirage), nameof(IsComputed));
+        IsComputed = true;
+        OnPropertyChanged(nameof(Tirage));
         ShowPopup();
 
         return Tirage.Status;
@@ -459,10 +411,10 @@ public bool Popup {
     // public event PropertyChangedEventHandler? PropertyChanged;
 
 
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null) {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
-    }
+    //protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null) {
+    //    if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+    //    field = value;
+    //    OnPropertyChanged(propertyName);
+    //    return true;
+    //}
 }

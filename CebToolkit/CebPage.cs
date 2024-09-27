@@ -83,10 +83,10 @@ public class  CebPage : ContentPage {
         Children = {
             new Button() 
                 .Text("Résoudre")
-                .BindCommand(parameterSource: "resolve")
+                .BindCommand(nameof(ViewTirage.CebCommand), parameterSource: "resolve")
                 .Column(0),
             new Button ()
-                .BindCommand(parameterSource: "random")
+                .BindCommand(nameof(ViewTirage.CebCommand), parameterSource: "random")
                 .Text("Hasard")
                 .Column(1),
             VueOptionExport.Column(2),
@@ -131,7 +131,7 @@ public class  CebPage : ContentPage {
             
             new Button()
                 .Text("Export")
-                .BindCommand(nameof(ViewTirage.ExportsCommmand), parameterSource: "export") //                )
+                .BindCommand(nameof(ViewTirage.ExportCommand), parameterSource: "export") //                )
                 .Column(1)
         }
     };
@@ -438,7 +438,7 @@ public class  CebPage : ContentPage {
                 }
             }
             .Text("Hasard")
-            .BindCommand(parameterSource: "random"),
+            .BindCommand(nameof(ViewTirage.CebCommand), parameterSource: "random"),
         new MenuFlyoutItem {
                 KeyboardAccelerators = {
                     new KeyboardAccelerator {
@@ -447,7 +447,7 @@ public class  CebPage : ContentPage {
                     }
                 }
             }
-            .BindCommand(parameterSource: "resolve")
+            .BindCommand(nameof(ViewTirage.CebCommand),parameterSource: "resolve")
             .Text("Résoudre"),
         new MenuFlyoutSeparator(), new MenuFlyoutSubItem {
             new MenuFlyoutItem {
@@ -459,7 +459,7 @@ public class  CebPage : ContentPage {
                     }
                 }
                 .Text("Excel")
-                .BindCommand(nameof(ViewTirage.ExportsCommmand), parameterSource: "excel"),
+                .BindCommand(nameof(ViewTirage.ExportCommand), parameterSource: "excel"),
             new MenuFlyoutItem {
                     KeyboardAccelerators = {
                         new KeyboardAccelerator {
@@ -469,7 +469,7 @@ public class  CebPage : ContentPage {
                     }
                 }
                 .Text("Word")
-                .BindCommand(nameof(ViewTirage.ExportsCommmand), parameterSource: "word"),
+                .BindCommand(nameof(ViewTirage.ExportCommand), parameterSource: "word"),
             new MenuFlyoutItem {
                     KeyboardAccelerators = {
                         new KeyboardAccelerator {
@@ -479,7 +479,7 @@ public class  CebPage : ContentPage {
                     }
                 }
                 .Text("Json")
-                .BindCommand(nameof(ViewTirage.ExportsCommmand), parameterSource: "json"),
+                .BindCommand(nameof(ViewTirage.ExportCommand), parameterSource: "json"),
             new MenuFlyoutItem {
                     KeyboardAccelerators = {
                         new KeyboardAccelerator {
@@ -489,7 +489,7 @@ public class  CebPage : ContentPage {
                     }
                 }
                 .Text("Xml")
-                .BindCommand(nameof(ViewTirage.ExportsCommmand), parameterSource: "xml"),
+                .BindCommand(nameof(ViewTirage.ExportCommand), parameterSource: "xml"),
             new MenuFlyoutItem {
                     KeyboardAccelerators = {
                         new KeyboardAccelerator {
@@ -499,7 +499,7 @@ public class  CebPage : ContentPage {
                     }
                 }
                 .Text("HTML")
-                .BindCommand(nameof(ViewTirage.ExportsCommmand), parameterSource: "html")
+                .BindCommand(nameof(ViewTirage.ExportCommand), parameterSource: "html")
         }.Text("Export"),
         new MenuFlyoutItem {
                 KeyboardAccelerators = {
@@ -509,7 +509,7 @@ public class  CebPage : ContentPage {
                     }
                 }
             }
-            .Text("Inverser vue").BindCommand(parameterSource: "vue"),
+            .Text("Inverser vue").BindCommand(nameof(ViewTirage.CebCommand),parameterSource: "vue"),
         new MenuFlyoutItem {
             KeyboardAccelerators = {
                 new KeyboardAccelerator {
@@ -517,7 +517,7 @@ public class  CebPage : ContentPage {
                     Modifiers = KeyboardAcceleratorModifiers.Ctrl
                 }
             }
-        }.Text("Thème").BindCommand(parameterSource: "theme"),
+        }.Text("Thème").BindCommand(nameof(ViewTirage.CebCommand),parameterSource: "theme"),
         new MenuFlyoutItem {
             KeyboardAccelerators = {
                 new KeyboardAccelerator {
@@ -525,7 +525,7 @@ public class  CebPage : ContentPage {
                     Modifiers = KeyboardAcceleratorModifiers.Ctrl
                 }
             }
-        }.Text("Auto").BindCommand(parameterSource: "auto")
+        }.Text("Auto").BindCommand(nameof(ViewTirage.CebCommand),parameterSource: "auto")
     ];
 
     private Border Borderize(View content) => new Border {
