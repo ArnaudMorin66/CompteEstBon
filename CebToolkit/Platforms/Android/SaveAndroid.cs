@@ -18,7 +18,7 @@ public static partial class SaveService
 	{
 		var root = Android.OS.Environment.IsExternalStorageEmulated ? Android.App.Application.Context.GetExternalFilesDir(Android.OS.Environment.DirectoryDownloads)!.AbsolutePath : System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
 
-		Java.IO.File myDir = new(root + "/CebToolkit");
+		Java.IO.File myDir = new(root + "/CebDictionary");
 		myDir.Mkdir();
 
 		Java.IO.File file = new(myDir, filename);

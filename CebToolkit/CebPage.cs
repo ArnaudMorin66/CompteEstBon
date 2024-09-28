@@ -21,7 +21,7 @@ using CebToolkit.ViewModel;
 namespace CebToolkit;
 
 public class  CebPage : ContentPage {
-    private readonly InvertedBoolConverter _invertedBoolConverter = new();
+    private readonly InvertedBoolConverter invertedBoolConverter = new();
     
 
     public CebPage() {
@@ -31,6 +31,7 @@ public class  CebPage : ContentPage {
         BindingContext = ViewTirage;
         FlyoutBase.SetContextFlyout(this, MenuContext);
         Content = MainScrollView;
+        this.AppThemeColorBinding(BackgroundColorProperty, Color.FromArgb("8fbc8f"), Colors.DarkSlateGrey);
     }
 
     private ViewTirage ViewTirage { get; } = new();
@@ -60,12 +61,7 @@ public class  CebPage : ContentPage {
                         CustomFormat = "000",
                         Maximum = 999,
                         Minimum = 100,
-                        HorizontalTextAlignment = TextAlignment.Center,
-                        VerticalTextAlignment = TextAlignment.Center,
-                        UpDownPlacementMode = NumericEntryUpDownPlacementMode.InlineVertical
                     }
-                    .CenterHorizontal()
-                    .Bind(SfNumericEntry.TextColorProperty, nameof(ViewTirage.Foreground))
                     .AppThemeBinding(SfNumericEntry.ShowBorderProperty, true, false)
                     .Column(8).Bind(SfNumericEntry.ValueProperty, "Tirage.Search")
             }
@@ -82,7 +78,7 @@ public class  CebPage : ContentPage {
 #endif
         Children = {
             new Button() 
-                .Text("Résoudre")
+                     .Text("Résoudre")
                 .BindCommand(nameof(ViewTirage.CebCommand), parameterSource: "resolve")
                 .Column(0),
             new Button ()
@@ -110,8 +106,8 @@ public class  CebPage : ContentPage {
                 .Bold()
                 .FillHorizontal()
                 .End()
+                .TextColor(Colors.White)
                 .CenterVertical()
-                .BackgroundColor(Colors.Transparent)
                 .Column(0),
             new SfSwitch()
                 .Bind(SfSwitch.IsOnProperty!, nameof(ViewTirage.VueGrille), source:ViewTirage)
@@ -123,15 +119,15 @@ public class  CebPage : ContentPage {
         ColumnDefinitions = Columns.Define(Star, Star),
         Children = {
             new Picker() {
-                    ItemsSource = ViewTirage.ListeFormats
+                    ItemsSource = ViewTirage.ListeFormats,
                 }
-                .BackgroundColor(Colors.Transparent)
+                .TextColor(Colors.White)
                 .Bind(Picker.SelectedItemProperty,  nameof(ViewTirage.FmtExport), BindingMode.TwoWay)
                 .Column(0),
             
             new Button()
                 .Text("Export")
-                .BindCommand(nameof(ViewTirage.ExportCommand), parameterSource: "export") //                )
+                .BindCommand(nameof(ViewTirage.ExportCommand), parameterSource:"") //                )
                 .Column(1)
         }
     };
@@ -144,8 +140,8 @@ public class  CebPage : ContentPage {
                 .Bold()
                 .FillHorizontal()
                 .End()
+                .TextColor(Colors.White)
                 .CenterVertical()
-                .BackgroundColor(Colors.Transparent)
                 .Column(0),
             new SfSwitch()
                 .Column(1)
@@ -163,7 +159,7 @@ public class  CebPage : ContentPage {
                 .FillHorizontal()
                 .End()
                 .CenterVertical()
-                .BackgroundColor(Colors.Transparent)
+                .TextColor(Colors.White)
                 .Column(0),
             new SfSwitch()
                 .Bind(SfSwitch.IsOnProperty!, nameof(ViewTirage.Auto), source:ViewTirage).Column(1)
@@ -180,7 +176,7 @@ public class  CebPage : ContentPage {
                 VerticalItemSpacing = 2,
                 Span = 4
             },
-            ItemTemplate = new DataTemplate(() => VueSolutionsDetail)
+            ItemTemplate = new DataTemplate(() => Borderize( VueSolutionsDetail, true))
         }
         .Bind(IsVisibleProperty, nameof(ViewTirage.VueGrille))
         .Bind(ItemsView.ItemsSourceProperty, "Tirage.Solutions")
@@ -237,13 +233,13 @@ public class  CebPage : ContentPage {
                 }
             ],
             DefaultStyle = new DataGridStyle()
-                .Bind(DataGridStyle.RowTextColorProperty, nameof(ViewTirage.Foreground))
-                .AppThemeColorBinding(DataGridStyle.AlternateRowBackgroundProperty, Colors.DarkSeaGreen,
-                    Colors.DarkSlateGray)
+                .AppThemeColorBinding(DataGridStyle.RowTextColorProperty, Colors.Black, Colors.White)
+                .AppThemeColorBinding(DataGridStyle.AlternateRowBackgroundProperty, Colors.DarkGray,
+                    Colors.DarkCyan)
                 .AppThemeColorBinding(DataGridStyle.HeaderRowBackgroundProperty, Colors.SlateGrey, Colors.DarkGreen)
                 .AppThemeColorBinding(DataGridStyle.HeaderRowTextColorProperty, Colors.Yellow, Colors.White)
         }
-        .Bind(IsVisibleProperty, nameof(ViewTirage.VueGrille), BindingMode.Default, _invertedBoolConverter)
+        .Bind(IsVisibleProperty, nameof(ViewTirage.VueGrille), BindingMode.Default, invertedBoolConverter)
         .Bind(SfDataGrid.ItemsSourceProperty, "Tirage.Solutions")
         .Invoke(datagrid => datagrid.SelectionChanged += (sender, _) => {
             if (sender is SfDataGrid { SelectedRow: CebBase sol }) ViewTirage.ShowPopup(sol);
@@ -370,6 +366,7 @@ public class  CebPage : ContentPage {
         ColumnDefinitions = Columns.Define(Star, Star, Star, Star),
         RowDefinitions = Rows.Define(Star),
         HeightRequest = 50,
+        
         VerticalOptions = LayoutOptions.Center,
         Children = {
             new Label ()
@@ -397,16 +394,17 @@ public class  CebPage : ContentPage {
                 .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
                 .Column(3)
         }
-    }.Bind(Grid.IsVisibleProperty, nameof(ViewTirage.IsComputed));
+    }.Bind(Grid.IsVisibleProperty, nameof(ViewTirage.IsComputed))
+    .AppThemeColorBinding(Grid.BackgroundColorProperty, light:Color.FromArgb("8fbc8f"), dark:Colors.DarkSlateGrey);
 
 
     private ScrollView MainScrollView => new() {
         Content =
             new VerticalStackLayout {
                 Children = {
-                    Borderize(VueSaisie),
-                    Borderize(VueResultat),
-                    Borderize(VueAction),
+                    Borderize(VueSaisie,true),
+                    Borderize(VueResultat,true),
+                    Borderize(VueAction, true),
                     Borderize(VueSolutions),
                     VuePopup
                 }
@@ -424,7 +422,7 @@ public class  CebPage : ContentPage {
                     }
                     .Bind(DropDownListBase.TextProperty, $"Tirage.Plaques[{i}].Value",
                         BindingMode.TwoWay)
-                    .DynamicResource(SfComboBox.StyleProperty, "SfComboboxStyle")
+//                    .DynamicResource(SfComboBox.StyleProperty, "SfComboboxStyle")
                     .Column(i));
     });
 
@@ -449,7 +447,8 @@ public class  CebPage : ContentPage {
             }
             .BindCommand(nameof(ViewTirage.CebCommand),parameterSource: "resolve")
             .Text("Résoudre"),
-        new MenuFlyoutSeparator(), new MenuFlyoutSubItem {
+        new MenuFlyoutSeparator(), 
+        new MenuFlyoutSubItem {
             new MenuFlyoutItem {
                     KeyboardAccelerators = {
                         new KeyboardAccelerator {
@@ -528,15 +527,18 @@ public class  CebPage : ContentPage {
         }.Text("Auto").BindCommand(nameof(ViewTirage.CebCommand),parameterSource: "auto")
     ];
 
-    private Border Borderize(View content) => new Border {
+    private Border Borderize(View content, bool isShadow = false) => new Border {
             StrokeThickness = 0.5,
             MinimumHeightRequest = 50,
             Content = content
         }
         .Margin(new Thickness(2, 4))
         .Bind(IsEnabledProperty,
-            nameof(ViewTirage.IsBusy), BindingMode.OneWay, _invertedBoolConverter)
-        .Bind(Border.StrokeProperty, nameof(ViewTirage.Foreground));
+            nameof(ViewTirage.IsBusy), BindingMode.OneWay, invertedBoolConverter)
+        .Bind(Border.StrokeProperty, nameof(ViewTirage.Foreground))
+        .Invoke(b => {
+            if (isShadow) b.DynamicResource(Border.StyleProperty, "BorderWithShadowStyle");
+        });
 
 #if WINDOWS
     private TitleBar VueTitleBar => new TitleBar() {
@@ -551,7 +553,8 @@ public class  CebPage : ContentPage {
                 VueOptionTheme.Column(0),
                 VueOptionGrille.Column(1),
                 VueOptionAuto.Column(2),
-            new Label().CenterVertical().Bind(Label.TextProperty, "Date", source: ViewTirage)
+            new Label()
+                .TextColor(Colors.White).CenterVertical().Bind(Label.TextProperty, "Date", source: ViewTirage)
                 .Column(3),
             
         } }

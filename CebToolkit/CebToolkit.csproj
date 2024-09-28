@@ -124,7 +124,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <MauiXaml Update="Resources\Styles\MainDictionary.xaml">
+      <MauiXaml Update="Resources\Styles\CebDictionary.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>
     </ItemGroup>

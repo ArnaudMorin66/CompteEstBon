@@ -27,7 +27,7 @@ public static class ExportOffice {
 	}
 
 
-	public static void ExcelSaveStream(this CebTirage tirage, Stream stream) {
+	public static void SaveStreamExcel(this CebTirage tirage, Stream stream) {
 		using ExcelEngine engine = new();
 
 		var application = engine.Excel;
@@ -76,12 +76,12 @@ public static class ExportOffice {
 		workbook.SaveAs(stream);
 	}
 
-	public static void HtmlSaveStream(this CebTirage tirage, Stream stream) =>
-		tirage.WordStream(stream, FormatType.Html);
+	public static void SaveStreamHtml(this CebTirage tirage, Stream stream) =>
+		tirage.SaveStreamWordType(stream, FormatType.Html);
 
-	public static void WordSaveStream(this CebTirage tirage, Stream stream) => tirage.WordStream(stream);
+	public static void SaveStreamWord(this CebTirage tirage, Stream stream) => tirage.SaveStreamWordType(stream);
 
-	public static void WordStream(this CebTirage tirage, Stream stream, FormatType ftype = FormatType.Docx) {
+	public static void SaveStreamWordType(this CebTirage tirage, Stream stream, FormatType ftype = FormatType.Docx) {
 		using WordDocument wd = new();
 
 		var sect = wd.AddSection() as WSection;

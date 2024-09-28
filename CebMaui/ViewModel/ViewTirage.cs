@@ -318,11 +318,11 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
                 _ => throw new NotImplementedException()
             };
         Action<MemoryStream> exportStream = extension switch {
-            "xlsx" => Tirage.ExcelSaveStream,
-            "docx" => Tirage.WordSaveStream,
-            "json" => Tirage.JsonSaveStream,
-            "xml" => Tirage.XmlSaveStream,
-            "html" => Tirage.HtmlSaveStream,
+            "xlsx" => Tirage.SaveStreamExcel,
+            "docx" => Tirage.SaveStreamWord,
+            "json" => Tirage.SaveStreamJson,
+            "xml" => Tirage.SaveStreamXml,
+            "html" => Tirage.SaveStreamHtml,
             _ => throw new NotImplementedException()
         };
         await using var mstream = new MemoryStream();

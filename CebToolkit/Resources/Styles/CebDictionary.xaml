@@ -1,8 +1,9 @@
-﻿<ResourceDictionary x:Class="CebToolkit.Resources.Styles.MainDictionary" 
+﻿<ResourceDictionary x:Class="CebToolkit.Resources.Styles.CebDictionary" 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                     xmlns:sfb="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
                     xmlns:sfi="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs">
+    <Shadow x:Key="ShadowCebToolkit"  Brush="{AppThemeBinding Dark=Orange, Light=Black}" Offset="2,2" Opacity="0.8"/>
     <Style TargetType="sfb:SfSwitch">
         <Setter Property="VisualStateManager.VisualStateGroups">
             <Setter.Value>
@@ -135,8 +136,10 @@
     </Style>
     <Style TargetType="Button">
         <Setter Property="TextColor" Value="{Binding Foreground}"/>
-        <Setter Property="CornerRadius" Value="2"/>
-        <Setter Property="Margin" Value="2"/>
+        <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}"/>
+
         <Setter Property="VisualStateManager.VisualStateGroups">
             <Setter.Value>
                 <VisualStateGroupList>
@@ -158,12 +161,13 @@
                         </VisualState>
                         <VisualState x:Name="Pressed">
                             <VisualState.Setters>
-                                <Setter Property="Background" Value="{StaticResource SecondaryBrush}"/>
+                                <Setter Property="Background" Value="#2F2F2F"/>
+                                <Setter Property="TextColor" Value="White"/>
                             </VisualState.Setters>
                         </VisualState>
                         <VisualState x:Name="Disabled">
                             <VisualState.Setters>
-                                <Setter Property="Background" Value="#BFC3C7"/>
+                                <Setter Property="BackgroundColor" Value="CadetBlue"/>
                                 <Setter Property="TextColor" Value="Black"/>
                             </VisualState.Setters>
                         </VisualState>
@@ -172,23 +176,31 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style TargetType="sfi:SfComboBox" x:Key="SfComboboxStyle">
+    <Style TargetType="sfi:SfComboBox">
+        <Setter Property="Margin" Value="5"/>
         <Setter Property="HorizontalTextAlignment" Value="Center"/>
         <Setter Property="IsClearButtonVisible" Value="False"/>
         <Setter Property="ShowBorder" Value="{AppThemeBinding Dark=False, Light=True}"/>
-        <Setter Property="TextColor" Value="{Binding Foreground}"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark=DarkSlateGrey, Light=#8fbc8f}"/>
+        <Setter Property="DropDownBackground" Value="{AppThemeBinding Dark=DarkSlateGrey, Light=#8fbc8f}"/>
+        <Setter Property="DropDownIconColor" Value="{AppThemeBinding Dark=White, Light=Black}"/>
+        <Setter Property="DropDownItemTextColor" Value="White"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="DropDownPlacement" Value="Top"></Setter>
+        <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}"/>
+
     </Style>
     <Style TargetType="Picker">
-        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <Setter.Value>
                 <VisualStateGroupList>
                     <VisualStateGroup x:Name="CommonStates">
                         <VisualState x:Name="Normal">
                             <VisualState.Setters>
-                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark=#1F1F1F, Light=#708090}"/>
-                                <Setter Property="Margin" Value="2"/>
-                                <Setter Property="TextColor" Value="White"/>
+                                <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark=DarkSlateGrey, Light=#8fbc8f}"/>
+                                <Setter Property="Margin" Value="5"/>
                             </VisualState.Setters>
                         </VisualState>
                         <VisualState x:Name="Checked">
@@ -215,5 +227,21 @@
                 </VisualStateGroupList>
             </Setter.Value>
         </Setter>
+    </Style>
+    <Style TargetType="sfi:SfNumericEntry">
+        <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}"/>
+
+        <Setter Property="Margin" Value="5"/>
+        <Setter Property="TextColor" Value="White"/>
+        <Setter Property="UpDownButtonColor"  Value="{AppThemeBinding Dark=White, Light=Black}"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark=DarkSlateGrey, Light=#8fbc8f}"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="UpDownPlacementMode" Value="InlineVertical"/>
+        
+    </Style>
+    <Style TargetType="Border" x:Key="BorderWithShadowStyle">
+        <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}"/>
+
     </Style>
 </ResourceDictionary>
