@@ -16,10 +16,10 @@ using static CommunityToolkit.Maui.Markup.GridRowsColumns;
 namespace CebToolkit;
 
 public partial class ConfigPage : ContentPage {
-    private ViewTirage ViewTirage { get; } = App.Current.Services.GetService<ViewTirage>()!;
+    private readonly ViewTirage viewTirage  = App.Current.Services.GetService<ViewTirage>()!;
 
     public ConfigPage() {
-        BindingContext = ViewTirage;
+        BindingContext = viewTirage;
         Content = new Grid() {
             RowDefinitions = Rows.Define(Star, Star, Star),
             Children = {
@@ -45,7 +45,7 @@ public partial class ConfigPage : ContentPage {
                 .CenterVertical()
                 .Column(0),
             new SfSwitch()
-                .Bind(SfSwitch.IsOnProperty!, nameof(ViewTirage.VueGrille), source:ViewTirage)
+                .Bind(SfSwitch.IsOnProperty!, nameof(viewTirage.VueGrille))
                 .Column(1)
         }
     };
@@ -65,7 +65,7 @@ public partial class ConfigPage : ContentPage {
                 .Column(0),
             new SfSwitch()
                 .Column(1)
-                .Bind(SfSwitch.IsOnProperty!, nameof(ViewTirage.ThemeDark), source:ViewTirage).Column(1)
+                .Bind(SfSwitch.IsOnProperty!, nameof(viewTirage.ThemeDark)).Column(1)
         }
     };
 
@@ -85,9 +85,8 @@ public partial class ConfigPage : ContentPage {
                 .TextColor(Colors.White)
                 .Column(0),
             new SfSwitch()
-                .Bind(SfSwitch.IsOnProperty!, nameof(ViewTirage.Auto), source:ViewTirage).Column(1)
+                .Bind(SfSwitch.IsOnProperty!, nameof(viewTirage.Auto)).Column(1)
         }
     };
-
-
+    
 }

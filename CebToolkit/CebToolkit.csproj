@@ -75,6 +75,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <MauiXaml Remove="AppShell.xaml" />
       <MauiXaml Remove="MainPage.xaml" />
     </ItemGroup>
 
@@ -136,6 +137,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <MauiXaml Update="App.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
       <MauiXaml Update="Resources\Styles\CebDictionary.xaml">
         <Generator>MSBuild:Compile</Generator>
       </MauiXaml>

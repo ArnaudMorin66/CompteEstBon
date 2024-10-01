@@ -55,11 +55,9 @@ public partial class ViewTirage : ObservableObject {
     /// </returns>
     public ViewTirage() {
         Auto = false;
-#if WINDOWS
-        ThemeDark = !IsLightTheme();
-#else
-        ThemeDark = true;
-#endif
+        
+        ThemeDark = Application.Current?.RequestedTheme == AppTheme.Dark;
+
         Tirage.PropertyChanged += (_, args) => {
             if (args.PropertyName != "Clear") return;
             ClearData();
@@ -70,9 +68,8 @@ public partial class ViewTirage : ObservableObject {
 
 #if WINDOWS
         timerDay = new Timer(_ => Date = DateTime.Now, null, 1000, 1000);
-#else
-        vueGrille = true;
 #endif
+        vueGrille = false;
         ClearData();
     }
 
@@ -93,6 +90,12 @@ public partial class ViewTirage : ObservableObject {
 
         UpdateForeground();
     }
+
+     partial void OnAutoChanged(bool value) {
+        if (!value) return;
+        if (Tirage.Status == CebStatus.Valide)
+Task.Run(ResolveAsync);
+     }
 
     partial void OnPopupChanged(bool value) {
         if (value)

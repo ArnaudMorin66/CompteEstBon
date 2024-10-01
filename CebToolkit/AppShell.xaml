@@ -4,11 +4,7 @@
     x:Class="CebToolkit.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:CebToolkit"
-    Title="Compte est bon"
-    FlyoutHeight="200"
-    FlyoutBackgroundColor="DarkSlateGrey"
-    FlyoutBackgroundImageAspect="AspectFill">
+    xmlns:local="clr-namespace:CebToolkit">
    
     <ShellContent
         Icon="favicon.ico"
