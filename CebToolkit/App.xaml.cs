@@ -1,13 +1,39 @@
 ﻿using System.Globalization;
 
+using CebToolkit.ViewModel;
+
 namespace CebToolkit;
 
 public partial class App {
+    
     public App() {
+        Services = ConfigureServices();
+        
         UserAppTheme = AppTheme.Dark;
-        InitializeComponent();
         CultureInfo.CurrentUICulture = new CultureInfo("fr-FR");
+        InitializeComponent();
+        
     }
 
-    protected override Window CreateWindow(IActivationState? activationState) => new(new AppShell()) { };
+     protected override Window CreateWindow(IActivationState? activationState) => new(new AppShell());
+    /// <summary>
+    /// Gets the current <see cref="App"/> instance in use
+    /// </summary>
+    public static new App Current => (App)Application.Current!;
+
+    /// <summary>
+    /// Gets the <see cref="IServiceProvider"/> instance to resolve application services.
+    /// </summary>
+    public IServiceProvider Services { get; }
+
+    /// <summary>
+    /// Configures the services for the application.
+    /// </summary>
+    private static IServiceProvider ConfigureServices() {
+        var services = new ServiceCollection();
+
+        services.AddScoped<ViewTirage>();
+
+        return services.BuildServiceProvider();
+    }
 }

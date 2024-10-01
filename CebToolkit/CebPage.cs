@@ -1,8 +1,12 @@
 ﻿#region using
 
+using CebToolkit.ViewModel;
+
 using CommunityToolkit.Maui.Converters;
 using CommunityToolkit.Maui.Markup;
 using CommunityToolkit.Maui.Markup.LeftToRight;
+
+using CompteEstBon;
 
 using Syncfusion.Maui.Buttons;
 using Syncfusion.Maui.Core;
@@ -10,19 +14,18 @@ using Syncfusion.Maui.DataGrid;
 using Syncfusion.Maui.Inputs;
 using Syncfusion.Maui.Inputs.DropDownControls;
 using Syncfusion.Maui.Popup;
-using static CommunityToolkit.Maui.Markup.GridRowsColumns;
-using SelectionMode = Microsoft.Maui.Controls.SelectionMode;
 
-using CompteEstBon;
-using CebToolkit.ViewModel;
+using static CommunityToolkit.Maui.Markup.GridRowsColumns;
+
+using SelectionMode = Microsoft.Maui.Controls.SelectionMode;
 
 #endregion
 
 namespace CebToolkit;
 
-public class  CebPage : ContentPage {
+public class CebPage : ContentPage {
     private readonly InvertedBoolConverter invertedBoolConverter = new();
-    
+
 
     public CebPage() {
 #if WINDOWS
@@ -34,62 +37,91 @@ public class  CebPage : ContentPage {
         this.AppThemeColorBinding(BackgroundColorProperty, Color.FromArgb("8fbc8f"), Colors.DarkSlateGrey);
     }
 
-    private ViewTirage ViewTirage { get; } = new();
+    private ViewTirage ViewTirage { get; } = App.Current.Services.GetService<ViewTirage>()!;
 
     private View VueSolutions => new Grid {
         RowDefinitions = Rows.Define(Star),
         Children = {
             VueGollectionSolutions,
-            VueDataGridSolutions,
-            VueBuzyindicator
+            Vueindicator,
+            VueDataGridSolutions
         }
     };
-
+#if WINDOWS
     private View VueSaisie => new Grid {
             ColumnDefinitions = Columns.Define(
-                Star, Stars(2), Stars(2), Stars(2), Stars(2), Stars(2), Stars(2), Star, Stars(2)),
+                 Star, Star, Star, Star, Star, Star, Star),
             Children = {
-                new Label()
-                    .Text("Plaques")
-                    .Margin(2)
-                    .CenterVertical()
-                    .Start()
-                    .Column(0),
-                VuePlaques.Column(1).ColumnSpan(6),
-                new Label().Text("Chercher").CenterVertical().Column(7),
+
+                VuePlaques.Column(0).ColumnSpan(6),
                 new SfNumericEntry {
                         CustomFormat = "000",
                         Maximum = 999,
                         Minimum = 100,
                     }
                     .AppThemeBinding(SfNumericEntry.ShowBorderProperty, true, false)
-                    .Column(8).Bind(SfNumericEntry.ValueProperty, "Tirage.Search")
+                    .Column(6).Bind(SfNumericEntry.ValueProperty, "Tirage.Search")
             }
         }
         .CenterVertical();
-
+#else
+    private View VueSaisie => new Grid {
+            RowDefinitions = Rows.Define(
+                Star, Star, Star, Star),
+            Children = {
+                VuePlaques.Row(0).RowSpan(3),
+                new SfNumericEntry {
+                        CustomFormat = "000",
+                        Maximum = 999,
+                        Minimum = 100
+                    }
+                    .AppThemeBinding(SfNumericEntry.ShowBorderProperty, true, false)
+                    .Row(4)
+                    .Bind(SfNumericEntry.ValueProperty, "Tirage.Search")
+            }
+        }
+        .CenterVertical();
+#endif
 
     private View VueAction => new Grid {
 #if WINDOWS
         ColumnDefinitions = Columns.Define(Stars(2), Stars(2), Star),
 #else
-        ColumnDefinitions = Columns.Define(
-            Star, Star, Star, Star, Star, Star),
+        ColumnDefinitions = Columns.Define(Star, Star),
+        RowDefinitions = Rows.Define(Star, Star),
 #endif
         Children = {
-            new Button() 
-                     .Text("Résoudre")
+            new Button {
+                    ImageSource = new FileImageSource {
+                        File = "resolve.png"
+                    },
+                    ContentLayout = new Button.ButtonContentLayout(Button.ButtonContentLayout.ImagePosition.Left, 10)
+                }
+                .Text("Résoudre")
                 .BindCommand(nameof(ViewTirage.CebCommand), parameterSource: "resolve")
+#if WINDOWS
                 .Column(0),
-            new Button ()
+#else
+                .Column(0).Row(0),
+#endif
+            new Button {
+                    ImageSource = new FileImageSource {
+                        File = "random.png"
+                    },
+                    ContentLayout = new Button.ButtonContentLayout(Button.ButtonContentLayout.ImagePosition.Left, 10)
+                }
                 .BindCommand(nameof(ViewTirage.CebCommand), parameterSource: "random")
                 .Text("Hasard")
-                .Column(1),
-            VueOptionExport.Column(2),
+                .Column(1)
 #if !WINDOWS
-            VueOptionGrille.Column(3),
-            VueOptionTheme.Column(4),
-            VueOptionAuto.Column(5)
+                .Row(0)
+#endif
+            ,
+            VueOptionExport
+#if WINDOWS
+                .Column(2),
+#else
+                .Column(0).Row(1).ColumnSpan(2)
 #endif
         }
     };
@@ -110,7 +142,7 @@ public class  CebPage : ContentPage {
                 .CenterVertical()
                 .Column(0),
             new SfSwitch()
-                .Bind(SfSwitch.IsOnProperty!, nameof(ViewTirage.VueGrille), source:ViewTirage)
+                .Bind(SfSwitch.IsOnProperty!, nameof(ViewTirage.VueGrille), source: ViewTirage)
                 .Column(1)
         }
     };
@@ -118,16 +150,21 @@ public class  CebPage : ContentPage {
     private Grid VueOptionExport => new() {
         ColumnDefinitions = Columns.Define(Star, Star),
         Children = {
-            new Picker() {
-                    ItemsSource = ViewTirage.ListeFormats,
+            new Picker {
+                    ItemsSource = ViewTirage.ListeFormats
                 }
                 .TextColor(Colors.White)
-                .Bind(Picker.SelectedItemProperty,  nameof(ViewTirage.FmtExport), BindingMode.TwoWay)
+                .Bind(Picker.SelectedItemProperty, nameof(ViewTirage.FmtExport), BindingMode.TwoWay)
                 .Column(0),
-            
-            new Button()
+
+            new Button {
+                    ImageSource = new FileImageSource {
+                        File = "excel.png"
+                    },
+                    ContentLayout = new Button.ButtonContentLayout(Button.ButtonContentLayout.ImagePosition.Left, 10)
+                }
                 .Text("Export")
-                .BindCommand(nameof(ViewTirage.ExportCommand), parameterSource:"") //                )
+                .BindCommand(nameof(ViewTirage.ExportCommand), parameterSource: "") //                )
                 .Column(1)
         }
     };
@@ -145,7 +182,7 @@ public class  CebPage : ContentPage {
                 .Column(0),
             new SfSwitch()
                 .Column(1)
-                .Bind(SfSwitch.IsOnProperty!, nameof(ViewTirage.ThemeDark), source:ViewTirage).Column(1)
+                .Bind(SfSwitch.IsOnProperty!, nameof(ViewTirage.ThemeDark), source: ViewTirage).Column(1)
         }
     };
 
@@ -162,21 +199,24 @@ public class  CebPage : ContentPage {
                 .TextColor(Colors.White)
                 .Column(0),
             new SfSwitch()
-                .Bind(SfSwitch.IsOnProperty!, nameof(ViewTirage.Auto), source:ViewTirage).Column(1)
+                .Bind(SfSwitch.IsOnProperty!, nameof(ViewTirage.Auto), source: ViewTirage).Column(1)
         }
     };
 
     private CollectionView VueGollectionSolutions => new CollectionView {
-            HeightRequest = 400,
             ItemSizingStrategy = ItemSizingStrategy.MeasureAllItems,
             ItemsUpdatingScrollMode = ItemsUpdatingScrollMode.KeepScrollOffset,
             SelectionMode = SelectionMode.Single,
             VerticalScrollBarVisibility = ScrollBarVisibility.Always,
             ItemsLayout = new GridItemsLayout(ItemsLayoutOrientation.Vertical) {
                 VerticalItemSpacing = 2,
+#if WINDOWS
                 Span = 4
+#else
+                Span = 2
+#endif
             },
-            ItemTemplate = new DataTemplate(() => Borderize( VueSolutionsDetail, true))
+            ItemTemplate = new DataTemplate(() => Borderize(VueSolutionsDetail, true))
         }
         .Bind(IsVisibleProperty, nameof(ViewTirage.VueGrille))
         .Bind(ItemsView.ItemsSourceProperty, "Tirage.Solutions")
@@ -190,12 +230,12 @@ public class  CebPage : ContentPage {
             HorizontalOptions = LayoutOptions.Center,
             SelectionMode = SelectionMode.Single,
             ItemTemplate = new DataTemplate(() =>
-                new Label() 
+                new Label()
                     .TextCenterHorizontal()
                     .Fill()
                     .Bind(Label.TextProperty))
         }.Bind(ItemsView.ItemsSourceProperty, "Operations")
-        .AppThemeColorBinding(CollectionView.BackgroundColorProperty,Colors.CadetBlue, Color.FromArgb("2f4f4f"))
+        .AppThemeColorBinding(BackgroundColorProperty, Colors.CadetBlue, Color.FromArgb("2f4f4f"))
         .Center()
         .Invoke(collection => collection.SelectionChanged += (sender, _) => {
             if (sender is CollectionView { BindingContext: CebBase sol }) ViewTirage.ShowPopup(sol);
@@ -203,17 +243,11 @@ public class  CebPage : ContentPage {
 
 
     private SfDataGrid VueDataGridSolutions => new SfDataGrid {
-            HeightRequest = 400,
-            AutoGenerateColumnsMode = AutoGenerateColumnsMode.None,
-            HorizontalScrollBarVisibility = ScrollBarVisibility.Always,
-            ColumnWidthMode = ColumnWidthMode.Fill,
-            EnableDataVirtualization = true,
-            SelectionMode = DataGridSelectionMode.Single,
+            MinimumHeightRequest = 400,
             Columns = [
                 new DataGridTextColumn {
                     HeaderText = "Opération 1",
                     MappingName = "Op1"
-                    
                 },
                 new DataGridTextColumn {
                     HeaderText = "Opération 2",
@@ -231,181 +265,193 @@ public class  CebPage : ContentPage {
                     HeaderText = "Opération 5",
                     MappingName = "Op5"
                 }
-            ],
-            DefaultStyle = new DataGridStyle()
-                .AppThemeColorBinding(DataGridStyle.RowTextColorProperty, Colors.Black, Colors.White)
-                .AppThemeColorBinding(DataGridStyle.AlternateRowBackgroundProperty, Colors.DarkGray,
-                    Colors.DarkCyan)
-                .AppThemeColorBinding(DataGridStyle.HeaderRowBackgroundProperty, Colors.SlateGrey, Colors.DarkGreen)
-                .AppThemeColorBinding(DataGridStyle.HeaderRowTextColorProperty, Colors.Yellow, Colors.White)
+            ]
         }
         .Bind(IsVisibleProperty, nameof(ViewTirage.VueGrille), BindingMode.Default, invertedBoolConverter)
         .Bind(SfDataGrid.ItemsSourceProperty, "Tirage.Solutions")
+        .DynamicResource(StyleProperty, "DatagridSolutionsStyle")
         .Invoke(datagrid => datagrid.SelectionChanged += (sender, _) => {
             if (sender is SfDataGrid { SelectedRow: CebBase sol }) ViewTirage.ShowPopup(sol);
         });
 
-
-    private SfBusyIndicator VueBuzyindicator => new SfBusyIndicator {
-            AnimationType = AnimationType.DoubleCircle,
-            IndicatorColor = Colors.Blue,
-            HeightRequest = 400,
-            ZIndex = 99
-        }
-        .Bind(IsVisibleProperty, nameof(ViewTirage.IsBusy))
-        .Bind(SfBusyIndicator.IsRunningProperty, nameof(ViewTirage.IsBusy));
+    private View Vueindicator => Borderize(new SfBusyIndicator {
+                //HeightRequest = 200,
+                //WidthRequest = 200,
+                IndicatorColor = Colors.Blue,
+                AnimationType = AnimationType.CircularMaterial,
+                ZIndex = 99
+            }
+            .Bind(SfBusyIndicator.IsRunningProperty, nameof(ViewTirage.IsBusy)))
+        .Bind(IsVisibleProperty, nameof(ViewTirage.IsBusy));
 
     private SfPopup VuePopup => new SfPopup {
-        Margin = 4,
-        AutoSizeMode = PopupAutoSizeMode.Height,
-        WidthRequest = 400,
-        ShowFooter = false,
-        ShowHeader = false,
-        AnimationDuration = 1,
-        AnimationMode = PopupAnimationMode.SlideOnBottom,
-        AnimationEasing = PopupAnimationEasing.SinOut,
-        VerticalOptions = LayoutOptions.Fill,
-        PopupStyle =
-            new PopupStyle {
-                CornerRadius = 5,
-                StrokeThickness = 2
-            }.Bind(PopupStyle.StrokeProperty,
-                nameof(ViewTirage.Foreground)),
-        ContentTemplate = new DataTemplate(() => new VerticalStackLayout {
             Margin = 4,
-            HorizontalOptions = LayoutOptions.Center,
-            Spacing = 0.5,
-            Children = {
-                new VerticalStackLayout {
-                    Padding = 2,
-                    VerticalOptions = LayoutOptions.Start,
-                    Children = {
-                        new Label()
-                            .FontSize(24)
-                            .CenterHorizontal()
-                            .CenterVertical()
-                            .Bind(Label.TextProperty, "Result")
-                            .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
-                    }
-                },
-                new BoxView {
-                    HeightRequest = 2,
-                    CornerRadius = 0
-                }.Bind(BoxView.ColorProperty,
+            AutoSizeMode = PopupAutoSizeMode.Height,
+            WidthRequest = 400,
+            ShowFooter = false,
+            ShowHeader = false,
+            AnimationDuration = 1,
+            AnimationMode = PopupAnimationMode.SlideOnBottom,
+            AnimationEasing = PopupAnimationEasing.SinOut,
+            VerticalOptions = LayoutOptions.Fill,
+            PopupStyle =
+                new PopupStyle {
+                    CornerRadius = 5,
+                    StrokeThickness = 2
+                }.Bind(PopupStyle.StrokeProperty,
                     nameof(ViewTirage.Foreground)),
-                new VerticalStackLayout {
-                    VerticalOptions = LayoutOptions.Center,
-                    Children = {
-                        new CollectionView {
-                            Margin = 4,
-                            VerticalOptions = LayoutOptions.Center,
-                            ItemTemplate = new DataTemplate(
-                                () => new Label {
-                                        HorizontalTextAlignment = TextAlignment.Center
-                                    }
-                                    .Bind(Label.TextProperty))
-                        }.Bind(ItemsView.ItemsSourceProperty, "Solution.Operations")
-                    }
-                },
-                new BoxView {
-                    HeightRequest = 2,
-                    CornerRadius = 0
-                }.Bind(BoxView.ColorProperty,
-                    nameof(ViewTirage.Foreground)),
-                new Grid {
-                    ColumnDefinitions = Columns.Define(Stars(5), Stars(4)),
-                    RowDefinitions = Rows.Define(Star, Star, Star),
-                    Children = {
-                        new Label().Text("Trouvé:")
-                            .TextRight()
-                            .Margin(2)
-                            .FontSize(15)
-                            .Row(0).Column(0),
-                        new Label()
-                            .Margin(2)
-                            .TextRight()
-                            .Bind(Label.TextProperty, "Tirage.Found")
-                            .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
-                            .Row(0).Column(1),
+            ContentTemplate = new DataTemplate(() => new VerticalStackLayout {
+                Margin = 4,
+                HorizontalOptions = LayoutOptions.Center,
+                Spacing = 0.5,
+                Children = {
+                    new VerticalStackLayout {
+                        Padding = 2,
+                        VerticalOptions = LayoutOptions.Start,
+                        Children = {
+                            new Label()
+                                .FontSize(24)
+                                .CenterHorizontal()
+                                .CenterVertical()
+                                .Bind(Label.TextProperty, "Result")
+                                .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
+                        }
+                    },
+                    new BoxView {
+                        HeightRequest = 2,
+                        CornerRadius = 0
+                    }.Bind(BoxView.ColorProperty,
+                        nameof(ViewTirage.Foreground)),
+                    new VerticalStackLayout {
+                        VerticalOptions = LayoutOptions.Center,
+                        Children = {
+                            new CollectionView {
+                                Margin = 4,
+                                VerticalOptions = LayoutOptions.Center,
+                                ItemTemplate = new DataTemplate(
+                                    () => new Label {
+                                            HorizontalTextAlignment = TextAlignment.Center
+                                        }
+                                        .Bind(Label.TextProperty))
+                            }.Bind(ItemsView.ItemsSourceProperty, "Solution.Operations")
+                        }
+                    },
+                    new BoxView {
+                        HeightRequest = 2,
+                        CornerRadius = 0
+                    }.Bind(BoxView.ColorProperty,
+                        nameof(ViewTirage.Foreground)),
+                    new Grid {
+                        ColumnDefinitions = Columns.Define(Stars(5), Stars(4)),
+                        RowDefinitions = Rows.Define(Star, Star, Star),
+                        Children = {
+                            new Label().Text("Trouvé:")
+                                .TextRight()
+                                .Margin(2)
+                                .FontSize(15)
+                                .Row(0).Column(0),
+                            new Label()
+                                .Margin(2)
+                                .TextRight()
+                                .Bind(Label.TextProperty, "Tirage.Found")
+                                .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
+                                .Row(0).Column(1),
 
-                        new Label().Text("Nombre de solutions:")
-                            .TextRight()
-                            .Margin(2)
-                            .FontSize(15)
-                            .Row(1).Column(0),
-                        
-                        new Label()
-                            .Margin(2)
-                            .TextRight()
-                            .Bind(Label.TextProperty, "Tirage.Count")
-                            .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
-                            .Row(1).Column(1),
+                            new Label().Text("Nombre de solutions:")
+                                .TextRight()
+                                .Margin(2)
+                                .FontSize(15)
+                                .Row(1).Column(0),
 
-                        new Label().Text("Durée:")
-                            .TextRight()
-                            .Margin(2)
-                            .FontSize(15)
-                            .Row(2).Column(0),
-                        
-                        new Label()
-                            .Margin(2)
-                            .TextRight()
-                            .Bind(Label.TextProperty, "Tirage.Duree.TotalSeconds", stringFormat: "{0:N3} s")
-                            .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
-                            .Row(2).Column(1),
+                            new Label()
+                                .Margin(2)
+                                .TextRight()
+                                .Bind(Label.TextProperty, "Tirage.Count")
+                                .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
+                                .Row(1).Column(1),
 
+                            new Label().Text("Durée:")
+                                .TextRight()
+                                .Margin(2)
+                                .FontSize(15)
+                                .Row(2).Column(0),
+
+                            new Label()
+                                .Margin(2)
+                                .TextRight()
+                                .Bind(Label.TextProperty, "Tirage.Duree.TotalSeconds", stringFormat: "{0:N3} s")
+                                .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
+                                .Row(2).Column(1)
+                        }
                     }
                 }
-            }
-        })
-            }
-            .Bind(SfPopup.IsOpenProperty, nameof(ViewTirage.Popup));
-    
-
-            private View VueResultat => new Grid {
-        ColumnDefinitions = Columns.Define(Star, Star, Star, Star),
-        RowDefinitions = Rows.Define(Star),
-        HeightRequest = 50,
-        
-        VerticalOptions = LayoutOptions.Center,
-        Children = {
-            new Label ()
-                .CenterVertical()
-                .FontSize(18)
-                .Bind(Label.TextProperty, nameof(ViewTirage.Result))
-                .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
-                .Column(0),
-            new Label()
-                .CenterVertical()
-                .FontSize(18)
-                .Bind(Label.TextProperty, "Tirage.Found", stringFormat: "Trouvé: {0}")
-                .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
-                .Column(1),
-            new Label()
-                .CenterVertical()
-                .FontSize(18)
-                .Bind(Label.TextProperty, "Tirage.Count", stringFormat: "Nombre de solutions: {0}")
-                .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
-                .Column(2),
-            new Label() 
-                .CenterVertical()
-                .FontSize(18)
-                .Bind(Label.TextProperty, "Tirage.Duree.TotalSeconds", stringFormat: "Durée: {0:N3} s")
-                .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
-                .Column(3)
+            })
         }
-    }.Bind(Grid.IsVisibleProperty, nameof(ViewTirage.IsComputed))
-    .AppThemeColorBinding(Grid.BackgroundColorProperty, light:Color.FromArgb("8fbc8f"), dark:Colors.DarkSlateGrey);
+        .Bind(SfPopup.IsOpenProperty, nameof(ViewTirage.Popup));
+
+
+    private View VueResultat => new Grid {
+#if WINDOWS
+                ColumnDefinitions = Columns.Define(Star, Star, Star, Star),
+        RowDefinitions = Rows.Define(Star),
+#else
+            ColumnDefinitions = Columns.Define(Star, Star),
+            RowDefinitions = Rows.Define(Star, Star),
+#endif
+
+            VerticalOptions = LayoutOptions.Center,
+            Children = {
+                new Label()
+                    .CenterVertical()
+                    .Bold()
+                    .Bind(Label.TextProperty, nameof(ViewTirage.Result))
+                    .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
+#if !WINDOWS
+                    .Row(0)
+#endif
+                    .Column(0),
+                new Label()
+                    .Bold()
+                    .CenterVertical()
+                    .Bind(Label.TextProperty, "Tirage.Found", stringFormat: "Trouvé: {0}")
+                    .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
+#if !WINDOWS
+                    .Row(0)
+#endif
+                    .Column(1),
+                new Label()
+                    .Bold()
+                    .CenterVertical()
+                    .Bind(Label.TextProperty, "Tirage.Count", stringFormat: "Nombre de solutions: {0}")
+                    .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
+#if WINDOWS
+                .Column(2),
+#else
+                    .Column(0).Row(1),
+#endif
+                new Label()
+                    .CenterVertical()
+                    .Bold()
+                    .Bind(Label.TextProperty, "Tirage.Duree.TotalSeconds", stringFormat: "Durée: {0:N3} s")
+                    .Bind(Label.TextColorProperty, nameof(ViewTirage.Foreground))
+#if WINDOWS
+                .Column(3)
+#else
+                    .Column(1).Row(1)
+#endif
+            }
+        }.Bind(IsVisibleProperty, nameof(ViewTirage.IsComputed))
+        .AppThemeColorBinding(BackgroundColorProperty, Color.FromArgb("8fbc8f"), Colors.DarkSlateGrey);
 
 
     private ScrollView MainScrollView => new() {
         Content =
             new VerticalStackLayout {
                 Children = {
-                    Borderize(VueSaisie,true),
-                    Borderize(VueResultat,true),
+                    Borderize(VueSaisie, true),
                     Borderize(VueAction, true),
-                    Borderize(VueSolutions),
+                    Borderize(VueResultat, true),
+                    VueSolutions,
                     VuePopup
                 }
             }
@@ -413,17 +459,25 @@ public class  CebPage : ContentPage {
 
 
     private Grid VuePlaques => new Grid {
+#if WINDOWS
         ColumnDefinitions = Columns.Define(Star, Star, Star, Star, Star, Star)
+#else
+        RowDefinitions = Rows.Define(Star, Star, Star),
+        ColumnDefinitions = Columns.Define(Star, Star)
+#endif
     }.Invoke(g => {
         for (var i = 0; i < 6; i++)
             g.Add(
-                new SfComboBox() {
+                new SfComboBox {
                         ItemsSource = ViewTirage.ListePlaques
                     }
                     .Bind(DropDownListBase.TextProperty, $"Tirage.Plaques[{i}].Value",
                         BindingMode.TwoWay)
-//                    .DynamicResource(SfComboBox.StyleProperty, "SfComboboxStyle")
+#if WINDOWS
                     .Column(i));
+#else
+                    .Row(i / 2).Column(i % 2));
+#endif
     });
 
     private MenuFlyout MenuContext => [
@@ -445,10 +499,9 @@ public class  CebPage : ContentPage {
                     }
                 }
             }
-            .BindCommand(nameof(ViewTirage.CebCommand),parameterSource: "resolve")
+            .BindCommand(nameof(ViewTirage.CebCommand), parameterSource: "resolve")
             .Text("Résoudre"),
-        new MenuFlyoutSeparator(), 
-        new MenuFlyoutSubItem {
+        new MenuFlyoutSeparator(), new MenuFlyoutSubItem {
             new MenuFlyoutItem {
                     KeyboardAccelerators = {
                         new KeyboardAccelerator {
@@ -508,7 +561,7 @@ public class  CebPage : ContentPage {
                     }
                 }
             }
-            .Text("Inverser vue").BindCommand(nameof(ViewTirage.CebCommand),parameterSource: "vue"),
+            .Text("Inverser vue").BindCommand(nameof(ViewTirage.CebCommand), parameterSource: "vue"),
         new MenuFlyoutItem {
             KeyboardAccelerators = {
                 new KeyboardAccelerator {
@@ -516,7 +569,7 @@ public class  CebPage : ContentPage {
                     Modifiers = KeyboardAcceleratorModifiers.Ctrl
                 }
             }
-        }.Text("Thème").BindCommand(nameof(ViewTirage.CebCommand),parameterSource: "theme"),
+        }.Text("Thème").BindCommand(nameof(ViewTirage.CebCommand), parameterSource: "theme"),
         new MenuFlyoutItem {
             KeyboardAccelerators = {
                 new KeyboardAccelerator {
@@ -524,12 +577,14 @@ public class  CebPage : ContentPage {
                     Modifiers = KeyboardAcceleratorModifiers.Ctrl
                 }
             }
-        }.Text("Auto").BindCommand(nameof(ViewTirage.CebCommand),parameterSource: "auto")
+        }.Text("Auto").BindCommand(nameof(ViewTirage.CebCommand), parameterSource: "auto")
     ];
 
     private Border Borderize(View content, bool isShadow = false) => new Border {
             StrokeThickness = 0.5,
-            MinimumHeightRequest = 50,
+#if WINDOWS
+        MinimumHeightRequest = 50,
+#endif
             Content = content
         }
         .Margin(new Thickness(2, 4))
@@ -537,29 +592,28 @@ public class  CebPage : ContentPage {
             nameof(ViewTirage.IsBusy), BindingMode.OneWay, invertedBoolConverter)
         .Bind(Border.StrokeProperty, nameof(ViewTirage.Foreground))
         .Invoke(b => {
-            if (isShadow) b.DynamicResource(Border.StyleProperty, "BorderWithShadowStyle");
+            if (isShadow) b.DynamicResource(StyleProperty, "BorderWithShadowStyle");
         });
 
 #if WINDOWS
     private TitleBar VueTitleBar => new TitleBar() {
         Icon = "favicon.ico",
-        HorizontalOptions = LayoutOptions.Center,
-        TrailingContent = new Grid()
-        { 
-            HeightRequest=32,
-            ColumnDefinitions = Columns.Define(Stars(2),Stars(2), Stars(2),Star),
+        Content = new Grid() {
+            HeightRequest = 32,
+            ColumnDefinitions = Columns.Define(Stars(2), Stars(2), Stars(2)),
             VerticalOptions = LayoutOptions.Center,
             Children = {
                 VueOptionTheme.Column(0),
                 VueOptionGrille.Column(1),
-                VueOptionAuto.Column(2),
-            new Label()
+                VueOptionAuto.Column(2),}
+        },
+        TrailingContent = new Label()
                 .TextColor(Colors.White).CenterVertical().Bind(Label.TextProperty, "Date", source: ViewTirage)
-                .Column(3),
-            
-        } }
+        
+        
 
     }.Bind(TitleBar.ForegroundColorProperty, "Foreground", source: ViewTirage)
+    .DynamicResource(TitleBar.BackgroundProperty, "LinearGradientBrushBase")
     .Bind(TitleBar.TitleProperty, nameof(ViewTirage.Result), source:ViewTirage);
 #endif
 }

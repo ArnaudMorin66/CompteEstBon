@@ -66,6 +66,7 @@
 
     <ItemGroup>
       <Compile Remove="MainPage.xaml.cs" />
+      <Compile Remove="Resources\Styles\CebDictionary.xaml.cs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -82,7 +83,12 @@
       <None Remove="Monikers.imagemanifest" />
       <None Remove="Resources\AppIcon\appicon.png" />
       <None Remove="Resources\Images\ceb.png" />
+      <None Remove="Resources\Images\excel.png" />
+      <None Remove="Resources\Images\exec.png" />
       <None Remove="Resources\Images\favicon.ico" />
+      <None Remove="Resources\Images\random.png" />
+      <None Remove="Resources\Images\resolve.png" />
+      <None Remove="Resources\Images\word.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -104,15 +110,15 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0-rc.1.24431.7" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0-rc.1.24431.7" />
         <PackageReference Include="Microsoft.Maui.Graphics" Version="9.0.0-rc.1.24453.9" />
-        <PackageReference Include="Syncfusion.Maui.Core" Version="27.1.50" />
-        <PackageReference Include="Syncfusion.Maui.DataGrid" Version="27.1.50" />
-        <PackageReference Include="Syncfusion.Maui.Inputs" Version="27.1.50" />
-        <PackageReference Include="Syncfusion.Maui.Buttons" version="27.1.50" />
-        <PackageReference Include="Syncfusion.Maui.ListView" Version="27.1.50" />
-        <PackageReference Include="Syncfusion.Maui.Popup" Version="27.1.50" />
-        <PackageReference Include="Syncfusion.Maui.Picker" Version="27.1.50" />
-        <PackageReference Include="Syncfusion.Maui.ProgressBar" Version="27.1.50" />
-        <PackageReference Include="Syncfusion.Maui.PullToRefresh" Version="27.1.50" />
+        <PackageReference Include="Syncfusion.Maui.Core" Version="27.1.51" />
+        <PackageReference Include="Syncfusion.Maui.DataGrid" Version="27.1.51" />
+        <PackageReference Include="Syncfusion.Maui.Inputs" Version="27.1.51" />
+        <PackageReference Include="Syncfusion.Maui.Buttons" version="27.1.51" />
+        <PackageReference Include="Syncfusion.Maui.ListView" Version="27.1.51" />
+        <PackageReference Include="Syncfusion.Maui.Popup" Version="27.1.51" />
+        <PackageReference Include="Syncfusion.Maui.Picker" Version="27.1.51" />
+        <PackageReference Include="Syncfusion.Maui.ProgressBar" Version="27.1.51" />
+        <PackageReference Include="Syncfusion.Maui.PullToRefresh" Version="27.1.51" />
         <PackageReference Include="System.Text.Json" Version="9.0.0-rc.1.24431.7" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0-rc.1.24431.7" />        
     </ItemGroup>
@@ -121,6 +127,12 @@
       <ProjectReference Include="..\CebExport\CebExport.csproj" />
       <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
       <ProjectReference Include="..\Outils\arnaud.morin.outils.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="ConfigPage.xaml.cs">
+        <DependentUpon>ConfigPage.xaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>

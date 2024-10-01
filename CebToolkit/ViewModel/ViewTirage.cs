@@ -70,6 +70,8 @@ public partial class ViewTirage : ObservableObject {
 
 #if WINDOWS
         timerDay = new Timer(_ => Date = DateTime.Now, null, 1000, 1000);
+#else
+        vueGrille = true;
 #endif
         ClearData();
     }
@@ -152,7 +154,7 @@ public partial class ViewTirage : ObservableObject {
         IsComputed = Tirage.Status == CebStatus.Invalide;
         Result = Tirage.Status != CebStatus.Invalide ? "Le Compte Est Bon" : "Tirage invalide";
         Popup = false;
-        OnPropertiesChanged(nameof(Tirage));
+        OnPropertyChanged(nameof(Tirage));
     }
 
 
@@ -161,8 +163,8 @@ public partial class ViewTirage : ObservableObject {
             CebStatus.Indefini => Colors.Blue,
             CebStatus.Valide => Colors.White,
             CebStatus.EnCours => Colors.Aqua,
-            CebStatus.CompteEstBon => ThemeDark ? Colors.SpringGreen : Colors.DarkSlateGray,
-            CebStatus.CompteApproche => ThemeDark ? Colors.Orange : Colors.OrangeRed,
+            CebStatus.CompteEstBon => ThemeDark ? Colors.GreenYellow: Colors.DarkGreen,
+            CebStatus.CompteApproche => Colors.Orange,
             CebStatus.Invalide => Colors.Red,
             _ => throw new NotImplementedException()
         };
