@@ -204,8 +204,14 @@ public sealed class CebTirage:  INotifyPropertyChanged {
 	}
 
 	/// <summary>
+	/// Asynchronously selects the value and the plaque's list.
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>
+	/// A <see cref="CebStatus"/> representing the status of the operation.
+	/// </returns>
+	/// <remarks>
+	/// This method runs the <see cref="Random"/> method on a separate thread.
+	/// </remarks>
 	public async ValueTask<CebStatus> RandomAsync() => await Task.Run(Random);
 
 	/// <summary>
@@ -227,8 +233,9 @@ public sealed class CebTirage:  INotifyPropertyChanged {
 	}
 
 	/// <summary>
+	/// Sets the values of the plaques.
 	/// </summary>
-	/// <param name="pq"></param>
+	/// <param name="pq">A list of integers representing the values to be set for the plaques.</param>
 	public void SetPlaques(IList<int> pq) => SetPlaques(pq.ToArray());
 
 	/// <summary>
@@ -248,7 +255,10 @@ public sealed class CebTirage:  INotifyPropertyChanged {
 
 	#region resolution
 
-	/// <param name="sol"></param>
+	/// <summary>
+	/// Inserts a solution into the list of solutions if it meets certain criteria.
+	/// </summary>
+	/// <param name="sol">The solution to be inserted.</param>
 	private void InsertSolution(CebBase sol) {
 		var ecart = Abs(_search - sol.Value);
 		switch (ecart - Ecart) {
@@ -270,29 +280,60 @@ public sealed class CebTirage:  INotifyPropertyChanged {
 	}
 
 
-	/// <summary>
-	///     boucle de résolution du compte
-	/// </summary>
-	/// <param name="liste"></param>
-	// ReSharper disable PossibleMultipleEnumeration
-	private void Resolve(IEnumerable<CebBase> liste) {
-		
-		foreach (var (g, i) in liste.Indexed()) {
-			InsertSolution(g);
+    /// <summary>
+    ///     Resolves the "Compte Est Bon" game by iterating through possible solutions.
+    /// </summary>
+    /// <param name="liste">
+    ///     The initial list of <see cref="CebBase"/> elements to start the resolution process.
+    /// </param>
+    /// <remarks>
+    ///     This method uses a stack-based approach to explore all possible combinations of operations
+    ///     and values to find valid solutions. It inserts each solution found and continues to explore
+    ///     further combinations until all possibilities are exhausted.
+    /// </remarks>
+    // ReSharper disable PossibleMultipleEnumeration
+    
+    private void Resolve(IEnumerable<CebBase> liste) {
+        var stack = new Stack<IEnumerable<CebBase>>();
+        stack.Push(liste);
 
-			foreach (var (d, j) in liste.Indexed().Where((_, j) => j > i))
-			foreach (var oper in CebOperation.ListeOperations
-				         .Select(op => new CebOperation(g, op, d))
-				         .Where(o => o.Value != 0))
-				Resolve(liste.Where((_, k) => k != i && k != j).Append(oper));
-		}
-	}
+        while (stack.Count > 0) {
+            var currentList = stack.Pop();
 
-	// ReSharper enable PossibleMultipleEnumeration
-	/// <summary>
-	/// </summary>
-	/// <returns></returns>
-	public CebStatus Resolve() {
+            foreach (var (g, i) in currentList.Indexed()) {
+                InsertSolution(g);
+
+                foreach (var (d, j) in currentList.Indexed().Where((_, j) => j > i)) {
+                    var validOperations = CebOperation.ListeOperations
+                        .Select(op => new CebOperation(g, op, d))
+                        .Where(o => o.Value != 0);
+
+                    foreach (var oper in validOperations) {
+                        stack.Push(NextList(currentList, oper, i, j));
+                    }
+                }
+            }
+        }
+    }
+
+    private IEnumerable<CebBase> NextList(IEnumerable<CebBase> current, CebBase operation, int i, int j) {
+        foreach (var (item, k) in current.Indexed()) {
+            if (k != i && k != j) {
+                yield return item;
+            }
+        }
+
+        yield return operation;
+    }
+
+    // ReSharper enable PossibleMultipleEnumeration
+    /// <summary>
+    ///     Resolves the current "Compte est bon" problem by finding the best possible solution.
+    /// </summary>
+    /// <returns>
+    ///     The status of the resolution process, indicating whether the solution is exact, approximate, or invalid.
+    /// </returns>
+    public CebStatus Resolve() {
 		_solutions.Clear();
 		if (Status == CebStatus.Invalide)
 			return Status;

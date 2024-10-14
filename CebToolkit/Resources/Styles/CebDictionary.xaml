@@ -1,9 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                    xmlns:z="using:Microsoft.Maui.Graphics"
                     xmlns:sfb="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
                     xmlns:sfg="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
-                    xmlns:sfi="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs">
-    <SolidColorBrush x:Key="CebBrushForeground" Color="{Binding Foreground}"></SolidColorBrush>
+                    xmlns:sfi="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
+                    xmlns:viewModel="clr-namespace:CebToolkit.ViewModel">
+    <SolidColorBrush x:Key="CebBrushForeground" Color="{Binding Foreground}" x:DataType="viewModel:ViewTirage"></SolidColorBrush>
+    
     <Shadow x:Key="ShadowCebToolkit" Brush="{DynamicResource CebBrushForeground}" Offset="1,1" Opacity="0.6" />
     <LinearGradientBrush x:Key="LinearGradientBrushBase" StartPoint="0,0" EndPoint="1,0">
         <GradientStop Color="{StaticResource OffBlack}" Offset="0" />
@@ -143,11 +146,10 @@
         </Setter>
     </Style>
     <Style TargetType="Button">
-        <Setter Property="TextColor" Value="{Binding Foreground}" />
-        <Setter Property="CornerRadius" Value="0" />
-        <Setter Property="Margin" Value="2" />
+        <Setter Property="TextColor" Value="{Binding Foreground}" x:DataType="z:Color" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Margin" Value="1" />
         <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}" />
-
         <Setter Property="VisualStateManager.VisualStateGroups">
             <Setter.Value>
                 <VisualStateGroupList>
@@ -155,7 +157,7 @@
                         <VisualState x:Name="Normal">
                             <VisualState.Setters>
                                 <Setter Property="BackgroundColor"
-                                        Value="{AppThemeBinding Dark=DarkSlateGrey, Light=#8fbc8f}" />
+                                        Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
                             </VisualState.Setters>
                         </VisualState>
                         <VisualState x:Name="Checked">
@@ -186,17 +188,18 @@
         </Setter>
     </Style>
     <Style TargetType="sfi:SfComboBox">
-        <Setter Property="Margin" Value="2" />
+        <Setter Property="Margin" Value="0.2" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
         <Setter Property="IsClearButtonVisible" Value="False" />
         <Setter Property="ShowBorder" Value="{AppThemeBinding Dark=False, Light=True}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark=DarkSlateGrey, Light=#8fbc8f}" />
-        <Setter Property="DropDownBackground" Value="{AppThemeBinding Dark=DarkSlateGrey, Light=#8fbc8f}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
+        <Setter Property="DropDownBackground" Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
         <Setter Property="DropDownIconColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
         <Setter Property="DropDownItemTextColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
         <Setter Property="TextColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
         <Setter Property="DropDownPlacement" Value="Top"></Setter>
         <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}" />
+        <Setter Property="FontSize" Value="{OnIdiom Phone=9}"/>
 
     </Style>
     <Style TargetType="Picker">
@@ -209,7 +212,7 @@
                         <VisualState x:Name="Normal">
                             <VisualState.Setters>
                                 <Setter Property="BackgroundColor"
-                                        Value="{AppThemeBinding Dark=DarkSlateGrey, Light=#8fbc8f}" />
+                                        Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
                             </VisualState.Setters>
                         </VisualState>
                         <VisualState x:Name="Checked">
@@ -239,13 +242,14 @@
     </Style>
     <Style TargetType="sfi:SfNumericEntry">
         <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}" />
-        <Setter Property="Margin" Value="2" />
+        <Setter Property="Margin" Value="0.2" />
         <Setter Property="TextColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
         <Setter Property="UpDownButtonColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark=DarkSlateGrey, Light=#8fbc8f}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
         <Setter Property="VerticalTextAlignment" Value="Center" />
         <Setter Property="UpDownPlacementMode" Value="InlineVertical" />
+        <Setter Property="FontSize" Value="{OnIdiom Phone=9}"/>
 
     </Style>
     <Style TargetType="Border" x:Key="BorderWithShadowStyle">
@@ -258,16 +262,16 @@
         <Setter Property="ColumnWidthMode" Value="Fill"/>
         <Setter Property="EnableDataVirtualization" Value="True"/>
         <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="ShowRowHeader" Value="False"/>
+        <Setter Property="HeaderRowHeight" Value="0"/>
         <Setter Property="DefaultStyle">
             <Setter.Value>
                 <sfg:DataGridStyle 
                     RowTextColor="{AppThemeBinding Light=Black, Dark=White}"
                     AlternateRowBackground="{AppThemeBinding Light=DarkGrey, Dark=DarkCyan}"   
-                    HeaderRowBackground="{AppThemeBinding Dark=#272822, Light=DarkGreen}"
-                    
-                    HeaderRowTextColor="White">
-                </sfg:DataGridStyle>
+                    />
             </Setter.Value>
         </Setter>
     </Style>
+   
 </ResourceDictionary>

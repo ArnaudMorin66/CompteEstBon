@@ -18,7 +18,10 @@ $enable-gradients: true;
 @import "@fortawesome/fontawesome-free/scss/brands";
 @import "@fortawesome/fontawesome-free/scss/fontawesome";
 
-@import "ej2/bootstrap5-dark";
+@import "ej2/bootstrap5.3-dark";
+/*
+    @import "ej2/fluent-dark";
+*/
 @import "bootstrap/scss/bootstrap";
 
 

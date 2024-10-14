@@ -10,13 +10,21 @@ using System.Runtime.InteropServices;
 
 using CebBlazor.Maui.Services;
 
+using CommunityToolkit.Maui.Storage;
+
 using CompteEstBon;
 
 using Microsoft.JSInterop;
 
 using Syncfusion.Blazor;
+#if WINDOWS
+using Windows.Storage;
 
+using Launcher = Windows.System.Launcher;
+
+#endif
 namespace CebBlazor.Maui.Code;
+
 
 public static class Export {
 	private static readonly Dictionary<string, string> ContentType = new() {
@@ -45,15 +53,30 @@ public static class Export {
 		var filename = $"CompteEstBon.{extension}";
 		await using var mstream = new MemoryStream();
 		Action<MemoryStream> exportStream = extension switch {
-			"xlsx" => tirage.ExcelSaveStream,
-			"docx" => tirage.WordStream,
-			"json" => tirage.JsonSaveStream,
-			"xml" => tirage.XmlSaveStream,
-			"html" => tirage.HtmlStream,
+			"xlsx" => tirage.SaveStreamExcel,
+			"docx" => tirage.SaveStreamWord,
+			"json" => tirage.SaveStreamJson,
+			"xml" => tirage.SaveStreamXml,
+			"html" => tirage.SaveStreamHtml,
 			_ => throw new NotImplementedException()
 		};
 		exportStream(mstream);
-		SaveService.SaveAndView(filename, ContentType[extension], mstream);
+#pragma warning disable CA1416
+		// ReSharper disable once UnusedVariable
+		var fileresult = await FileSaver.Default.SaveAsync(filename, mstream);
+#if WINDOWS
+		if (fileresult.IsSuccessful) await ShowFile(fileresult.FilePath);
+#endif
+		//SaveService.SaveAndView(filename, ContentType[extension], mstream);
 			
 	}
+#if WINDOWS
+	
+
+	private static async Task ShowFile(string filename) => await MainThread.InvokeOnMainThreadAsync(async () => {
+		if (await Application.Current!.Windows[0].Page!
+			    .DisplayAlert("Le Compte est Bon", "Afficher le fichier", "Oui", "Non"))
+			await Launcher.LaunchFileAsync(await StorageFile.GetFileFromPathAsync(filename));
+	});
+#endif
 }

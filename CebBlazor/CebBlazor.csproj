@@ -17,9 +17,10 @@
       <EmbeddedResource Remove="Resource.resx" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Syncfusion.Blazor.Core" Version="26.2.13" />
-        <PackageReference Include="Syncfusion.Blazor.Grid" Version="26.2.13" />
-        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="26.2.13" />
+        <PackageReference Include="Syncfusion.Blazor.Core" Version="27.1.52" />
+        <PackageReference Include="Syncfusion.Blazor.Grid" Version="27.1.52" />
+        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="27.1.52" />
+        <PackageReference Include="System.Text.Json" Version="9.0.0-rc.2.24473.5" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />

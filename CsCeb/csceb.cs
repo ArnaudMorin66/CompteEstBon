@@ -17,8 +17,8 @@ using static Spectre.Console.AnsiConsole;
 Ceb.Factory.Run(args);
 
 internal class Ceb {
-	public CebParametres Param = CebParametres.Get;
-	private Ceb() { }
+	public CebParametres Param;
+	private Ceb() => Param = CebParametres.Get;
 	public static Ceb Factory { get; } = new();
 
 	private void Solve() {
@@ -33,11 +33,8 @@ internal class Ceb {
 
 
 			// ReSharper disable once UseObjectOrCollectionInitializer
-			var res = new List<string>();
-			res.Add("[yellow bold u]Recherche[/]:");
-			res.Add(tirage.Search.ToString());
-			res.Add("[yellow bold u]Plaques[/]:");
-			res.AddRange(tirage.Plaques.Select(p => p.ToString()));
+			List<string> res = ["[yellow bold u]Recherche[/]:", tirage.Search.ToString(), "[yellow bold u]Plaques[/]:"];
+            res.AddRange(tirage.Plaques.Select(p => p.ToString()));
 
 			Write(Align.Center(new Panel(new Columns(res)).Border(BoxBorder.Square)));
 			WriteLine();
@@ -98,10 +95,8 @@ internal class Ceb {
 					table.AddRow(rw.ToArray());
 					ctx.Refresh();
 				}
-
-				return Task.CompletedTask;
+                
 			});
-		//Write(tab);
 		Background = Color.Default;
 		WriteLine();
 

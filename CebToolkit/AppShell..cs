@@ -1,6 +1,4 @@
-﻿using System.Windows.Input;
-
-using CebToolkit.ViewModel;
+﻿using CebToolkit.ViewModel;
 
 using CommunityToolkit.Maui.Markup;
 
@@ -15,45 +13,42 @@ namespace CebToolkit;
 public  class AppShell : Shell {
     private readonly ViewTirage viewTirage = App.Current.Services.GetService<ViewTirage>()!;
 
-    public AppShell():base() {
+    public AppShell() {
 
         Title = "Compte est bon";
-        FlyoutBackgroundColor = Colors.DarkSlateGrey;
+        FlyoutBackgroundColor = Color.FromArgb("4f4f4f");
         FlyoutBackgroundImageAspect = Aspect.AspectFit;
+        FlyoutIcon = ImageSource.FromFile("favicon.ico");
+        if (DeviceInfo.Platform == DevicePlatform.WinUI) 
+            SetNavBarIsVisible(this,false);
+
+        ToolbarItems.Add(new ToolbarItem() {
+            IconImageSource = ImageSource.FromFile("resolve.png"),
+            Text = "Résoudre"
+            
+        }.BindCommand(nameof(viewTirage.ResolveCommand)));
         
-#if WINDOWS
-        SetNavBarIsVisible(this,false);
-#endif
+        ToolbarItems.Add(new ToolbarItem() {
+            IconImageSource = ImageSource.FromFile("random.png"),
+            Text = "Hasard"
+        }.BindCommand(nameof(viewTirage.RandomCommand)));
+        ToolbarItems.Add(new ToolbarItem()
+            .Bind(MenuItem.TextProperty, "Date"));
         Items.Add(new ShellContent() {
             Route = "Ceb",
             Title ="Le Compte Est Bon",
             ContentTemplate = new DataTemplate(()=> new CebPage()),
-            Icon = new FileImageSource() {
-                File = "favicon.ico"
-            } 
+            Icon = ImageSource.FromFile("favicon.ico"),
+            
         });
         Items.Add(new ShellContent() {
             Route = "Config",
             Title = "Configuration",
             ContentTemplate = new DataTemplate(() => new ConfigPage())
         });
-        FlyoutHeaderTemplate = new DataTemplate(()=> new Image(){
-            Source = new FileImageSource(){
-            File = "ceb.png"
-        }});
-        
-        FlyoutFooterTemplate = new DataTemplate(() => 
-            new VerticalStackLayout() {
-                BackgroundColor= Colors.DimGrey,
-                Children = {
-                    VueOptionTheme,
-                    VueOptionGrille,
-                    VueOptionAuto,
-                    VueOptionExport,
-                    new Button().Text("Quitter")
-                        .Invoke((b)=> b.Clicked+= (_,_)=> Application.Current?.Quit())
-                }
-        });
+
+        FlyoutFooterTemplate = new DataTemplate(() => VueFooter); 
+                    FlyoutHeaderTemplate = new DataTemplate(() => VueHeader);
         BindingContext = viewTirage;
     }
     private Grid VueOptionGrille => new() {
@@ -109,6 +104,12 @@ public  class AppShell : Shell {
                 .Bind(SfSwitch.IsOnProperty!, nameof(viewTirage.Auto)).Column(1)
         }
     };
+    /// <summary>
+    /// Gets a <see cref="Grid"/> that provides options for exporting data.
+    /// </summary>
+    /// <remarks>
+    /// This grid contains a <see cref="Picker"/> for selecting export formats and a <see cref="Button"/> for initiating the export process.
+    /// </remarks>
     private Grid VueOptionExport => new() {
         ColumnDefinitions = Columns.Define(Star, Star),
         Children = {
@@ -131,9 +132,45 @@ public  class AppShell : Shell {
         }
     };
 
-#if WINDOWS
+    /// <summary>
+    /// Gets the view that serves as the header for the flyout menu in the application shell.
+    /// </summary>
+    /// <remarks>
+    /// The header view includes an image and a label with the text "Le Compte Est Bon".
+    /// </remarks>
+    private View VueHeader => new Grid() {
+        BackgroundColor = Color.FromArgb("2f4f4f"),
+        HeightRequest = 50,
+        Children = {
+            new Image() {
+                Opacity = 0.6,
+                Source = ImageSource.FromFile("favicon.ico")
+            },
+            new Label() {
+                Text = "Le Compte Est Bon",
+                TextColor = Colors.Black,
+                FontAttributes = FontAttributes.Bold,
+                HorizontalTextAlignment = TextAlignment.Center,
+                VerticalTextAlignment = TextAlignment.Center,
+            }
+        },
+    };
+
+    private View VueFooter => new VerticalStackLayout() {
+        BackgroundColor = Color.FromArgb("2f4f4f"),
+        Children = {
+            VueOptionTheme,
+            VueOptionGrille,
+            VueOptionAuto,
+            VueOptionExport,
+            new Button().Text("Quitter")
+                .Invoke((b) => b.Clicked += (_, _) => Application.Current?.Quit())
+        }
+    }; 
+        
+    
+
     private TitleBar VueTitleBar => new TitleBar() {
-        Icon = "favicon.ico",
         TrailingContent = new Label()
                 .TextColor(Colors.White).CenterVertical().Bind(Label.TextProperty, "Date", source: viewTirage)
         
@@ -145,8 +182,9 @@ public  class AppShell : Shell {
 
     protected override void OnAppearing() {
         base.OnAppearing();
-        Application.Current!.Windows[0].TitleBar = VueTitleBar;
+        if (DeviceInfo.Platform == DevicePlatform.WinUI)
+            Application.Current!.Windows[0].TitleBar = VueTitleBar;
     }
-#endif
 
-    }
+
+}

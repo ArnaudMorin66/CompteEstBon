@@ -38,11 +38,11 @@ public static class Util {
     var filename = $"CompteEstBon.{extension}";
     await using var mstream = new MemoryStream();
     Action<MemoryStream> exportStream = extension switch {
-      "xlsx" => tirage.ExcelSaveStream,
-      "docx" => tirage.WordStream,
-      "json" => tirage.JsonSaveStream,
-      "xml" => tirage.XmlSaveStream,
-      "html" => tirage.HtmlStream,
+      "xlsx" => tirage.SaveStreamExcel,
+      "docx" => tirage.SaveStreamWord,
+      "json" => tirage.SaveStreamJson,
+      "xml" => tirage.SaveStreamXml,
+      "html" => tirage.SaveStreamHtml,
       _ => throw new NotImplementedException()
     };
     exportStream(mstream);
