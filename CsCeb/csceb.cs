@@ -20,95 +20,200 @@ internal class Ceb {
 	public CebParametres Param;
 	private Ceb() => Param = CebParametres.Get;
 	public static Ceb Factory { get; } = new();
+private void Solve() {
+    var tirage = Param.Tirage;
+    if (!Param.Jsonx) {
+        DisplayHeader();
+        DisplayTirageDetails(tirage);
+    }
+    tirage.Resolve();
+    if (Param.Jsonx) {
+        WriteLine(tirage.WriteJson());
+        Environment.Exit(0);
+    }
+    if (Param.Json) {
+        DisplayJsonOutput(tirage);
+    }
+    ValidateTirage(tirage);
+    DisplayResults(tirage);
+    DisplaySolutions(tirage);
+    if (Param.Exports is { Count: > 0 }) {
+        ExportResults(tirage);
+    }
+}
+private void DisplayHeader() {
+    Write(
+        new FigletText("COMPTE EST BON")
+            .Centered()
+            .Color(Color.Yellow));
+    WriteLine();
+    WriteLine();
+}
+private void DisplayTirageDetails(CebTirage tirage) {
+    var res = new List<string> {
+        "[yellow bold u]Recherche[/]:", 
+        tirage.Search.ToString(), 
+        "[yellow bold u]Plaques[/]:"
+    };
+    res.AddRange(tirage.Plaques.Select(p => p.ToString()));
+    Write(Align.Center(new Panel(new Columns(res)).Border(BoxBorder.Square)));
+    WriteLine();
+    WriteLine();
+}
+private void DisplayJsonOutput(CebTirage tirage) {
+    var jtext = new JsonText(tirage.WriteJson());
+    Write(Align.Center(
+        new Panel(jtext).Expand()
+            .RoundedBorder()
+            .BorderColor(Color.Yellow)));
+}
+private void ValidateTirage(CebTirage tirage) {
+    if (tirage.Status == CebStatus.Invalide)
+        throw new ArgumentException("Tirage invalide");
+}
+private void DisplayResults(CebTirage tirage) {
+    Write(Align.Center(new Markup(
+        tirage.Status == CebStatus.CompteEstBon
+            ? "[green]Compte est bon[/]"
+            : $"[orange1]Compte approché:[/] {tirage.Found}")));
+    WriteLine();
+    WriteLine();
+    Write(Align.Center(new Markup(
+        $@"[yellow]Nombre de solutions:[/] {tirage.Count}{(tirage.Status == CebStatus.CompteApproche ?
+            $@", [yellow]écart:[/] {tirage.Ecart}" : string.Empty)}, [yellow]durée du calcul:[/] {TimeSpan.FromSeconds(tirage.Duree.TotalSeconds)}")));
+    WriteLine();
+    WriteLine();
+}
+private void DisplaySolutions(CebTirage tirage) {
+    Background = Color.White;
+    var couleur = tirage.Status == CebStatus.CompteEstBon ? Color.Green : Color.Orange1;
+    var table = CreateSolutionsTable(couleur);
+    var no = 0;
+    Live(table)
+        .AutoClear(false)
+        .Overflow(VerticalOverflow.Ellipsis)
+        .Cropping(VerticalOverflowCropping.Top)
+        .Start(ctx => {
+            foreach (var solution in tirage.Solutions) {
+                var rw = new List<string> { $"[{couleur}]{++no}/{tirage.Count}[/]" };
+                rw.AddRange(solution.Operations);
+                table.AddRow(rw.ToArray());
+                ctx.Refresh();
+            }
+        });
+    Background = Color.Default;
+    WriteLine();
+}
+private Table CreateSolutionsTable(Color couleur) {
+    return new Table()
+        .Border(TableBorder.HeavyHead)
+        .BorderColor(couleur)
+        .AddColumns(
+            new TableColumn($"[{couleur}]N°[/]").Alignment(Justify.Center),
+            new TableColumn(Align.Center(new Markup($"[{couleur} b]Opération 1[/]"))),
+            new TableColumn(Align.Center(new Markup($"[{couleur} b]Opération 2[/]"))),
+            new TableColumn(Align.Center(new Markup($"[{couleur} b]Opération 3[/]"))),
+            new TableColumn(Align.Center(new Markup($"[{couleur} b]Opération 4[/]"))),
+            new TableColumn(Align.Center(new Markup($"[{couleur} b]Opération 5[/]"))));
+}
+private void ExportResults(CebTirage tirage) {
+    ExportOffice.RegisterLicense(Resources.sflicence);
+    tirage.SerializeFichiers(Param.Exports);
+    if (Param.Display) {
+        foreach (var export in Param.Exports) {
+            export.FullName.OpenDocument();
+        }
+    }
+}
 
-	private void Solve() {
-		var tirage = Param.Tirage;
-		if (!Param.Jsonx) {
-			Write(
-				new FigletText("COMPTE EST BON")
-					.Centered()
-					.Color(Color.Yellow));
-			WriteLine();
-			WriteLine();
+	//private void Solve() {
+	//	var tirage = Param.Tirage;
+	//	if (!Param.Jsonx) {
+	//		Write(
+	//			new FigletText("COMPTE EST BON")
+	//				.Centered()
+	//				.Color(Color.Yellow));
+	//		WriteLine();
+	//		WriteLine();
 
 
-			// ReSharper disable once UseObjectOrCollectionInitializer
-			List<string> res = ["[yellow bold u]Recherche[/]:", tirage.Search.ToString(), "[yellow bold u]Plaques[/]:"];
-            res.AddRange(tirage.Plaques.Select(p => p.ToString()));
+	//		// ReSharper disable once UseObjectOrCollectionInitializer
+	//		List<string> res = ["[yellow bold u]Recherche[/]:", tirage.Search.ToString(), "[yellow bold u]Plaques[/]:"];
+ //           res.AddRange(tirage.Plaques.Select(p => p.ToString()));
 
-			Write(Align.Center(new Panel(new Columns(res)).Border(BoxBorder.Square)));
-			WriteLine();
-			WriteLine();
-		}
+	//		Write(Align.Center(new Panel(new Columns(res)).Border(BoxBorder.Square)));
+	//		WriteLine();
+	//		WriteLine();
+	//	}
 
-		tirage.Resolve();
-		if (Param.Jsonx) {
-			WriteLine(tirage.WriteJson());
-			Environment.Exit(0);
-		}
+	//	tirage.Resolve();
+	//	if (Param.Jsonx) {
+	//		WriteLine(tirage.WriteJson());
+	//		Environment.Exit(0);
+	//	}
 
-		if (Param.Json) {
-			var jtext = new JsonText(tirage.WriteJson());
-			Write(Align.Center(
-				new Panel(jtext).Expand()
-					.RoundedBorder()
-					.BorderColor(Color.Yellow)));
-		}
+	//	if (Param.Json) {
+	//		var jtext = new JsonText(tirage.WriteJson());
+	//		Write(Align.Center(
+	//			new Panel(jtext).Expand()
+	//				.RoundedBorder()
+	//				.BorderColor(Color.Yellow)));
+	//	}
 
-		if (tirage.Status == CebStatus.Invalide)
-			throw new ArgumentException("Tirage  invalide");
+	//	if (tirage.Status == CebStatus.Invalide)
+	//		throw new ArgumentException("Tirage  invalide");
 
-		Write(Align.Center(new Markup(
-			tirage.Status == CebStatus.CompteEstBon
-				? "[green]Compte est bon[/]"
-				: $"[orange1]Compte approché:[/] {tirage.Found}")));
-		WriteLine();
-		WriteLine();
+	//	Write(Align.Center(new Markup(
+	//		tirage.Status == CebStatus.CompteEstBon
+	//			? "[green]Compte est bon[/]"
+	//			: $"[orange1]Compte approché:[/] {tirage.Found}")));
+	//	WriteLine();
+	//	WriteLine();
 
-		Write(Align.Center(new Markup(
-			$@"[yellow]Nombre de solutions:[/] {tirage.Count}{(tirage.Status == CebStatus.CompteApproche ?
-				$@", [yellow]écart:[/] {tirage.Ecart}" : string.Empty)}, [yellow]durée du calcul:[/] {TimeSpan.FromSeconds(tirage.Duree.TotalSeconds)}")));
+	//	Write(Align.Center(new Markup(
+	//		$@"[yellow]Nombre de solutions:[/] {tirage.Count}{(tirage.Status == CebStatus.CompteApproche ?
+	//			$@", [yellow]écart:[/] {tirage.Ecart}" : string.Empty)}, [yellow]durée du calcul:[/] {TimeSpan.FromSeconds(tirage.Duree.TotalSeconds)}")));
 
-		WriteLine();
-		WriteLine();
-		Background = Color.White;
-		var couleur = tirage.Status == CebStatus.CompteEstBon ? Color.Green : Color.Orange1;
-		var table = new Table()
-			.Border(TableBorder.HeavyHead)
-			.BorderColor(couleur)
-			.AddColumns(
-				new TableColumn($"[{couleur}]N°[/]").Alignment(Justify.Center),
-				new TableColumn(Align.Center(new Markup($"[{couleur} b]Opération 1[/]"))),
-				new TableColumn(Align.Center(new Markup($"[{couleur} b]Opération 2[/]"))),
-				new TableColumn(Align.Center(new Markup($"[{couleur} b]Opération 3[/]"))),
-				new TableColumn(Align.Center(new Markup($"[{couleur} b]Opération 4[/]"))),
-				new TableColumn(Align.Center(new Markup($"[{couleur} b]Opération 5[/]"))));
-		var no = 0;
-		Live(table)
-			.AutoClear(false)
-			.Overflow(VerticalOverflow.Ellipsis)
-			.Cropping(VerticalOverflowCropping.Top)
-			.Start(ctx => {
-				foreach (var solution in tirage.Solutions) {
-					var rw = new List<string> { $"[{couleur}]{++no}/{tirage.Count}[/]" };
-					rw.AddRange(solution.Operations);
-					table.AddRow(rw.ToArray());
-					ctx.Refresh();
-				}
+	//	WriteLine();
+	//	WriteLine();
+	//	Background = Color.White;
+	//	var couleur = tirage.Status == CebStatus.CompteEstBon ? Color.Green : Color.Orange1;
+	//	var table = new Table()
+	//		.Border(TableBorder.HeavyHead)
+	//		.BorderColor(couleur)
+	//		.AddColumns(
+	//			new TableColumn($"[{couleur}]N°[/]").Alignment(Justify.Center),
+	//			new TableColumn(Align.Center(new Markup($"[{couleur} b]Opération 1[/]"))),
+	//			new TableColumn(Align.Center(new Markup($"[{couleur} b]Opération 2[/]"))),
+	//			new TableColumn(Align.Center(new Markup($"[{couleur} b]Opération 3[/]"))),
+	//			new TableColumn(Align.Center(new Markup($"[{couleur} b]Opération 4[/]"))),
+	//			new TableColumn(Align.Center(new Markup($"[{couleur} b]Opération 5[/]"))));
+	//	var no = 0;
+	//	Live(table)
+	//		.AutoClear(false)
+	//		.Overflow(VerticalOverflow.Ellipsis)
+	//		.Cropping(VerticalOverflowCropping.Top)
+	//		.Start(ctx => {
+	//			foreach (var solution in tirage.Solutions) {
+	//				var rw = new List<string> { $"[{couleur}]{++no}/{tirage.Count}[/]" };
+	//				rw.AddRange(solution.Operations);
+	//				table.AddRow(rw.ToArray());
+	//				ctx.Refresh();
+	//			}
                 
-			});
-		Background = Color.Default;
-		WriteLine();
+	//		});
+	//	Background = Color.Default;
+	//	WriteLine();
 
-		if (Param.Exports is { Count: > 0 }) {
-			ExportOffice.RegisterLicense(Resources.sflicence);
-			tirage.SerializeFichiers(Param.Exports);
+	//	if (Param.Exports is { Count: > 0 }) {
+	//		ExportOffice.RegisterLicense(Resources.sflicence);
+	//		tirage.SerializeFichiers(Param.Exports);
 
-			if (Param.Display)
-				foreach (var export in Param.Exports)
-					export.FullName.OpenDocument();
-		}
-	}
+	//		if (Param.Display)
+	//			foreach (var export in Param.Exports)
+	//				export.FullName.OpenDocument();
+	//	}
+	//}
 
 	public void Run(string[] args) {
 		try {
