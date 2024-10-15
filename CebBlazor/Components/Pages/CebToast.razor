@@ -24,7 +24,7 @@
 					@if (Tirage.Ecart != 0) {
 						<div>&Eacute;cart:&nbsp;@Tirage.Ecart</div>
 					}
-					<div>@Tirage.Count&nbsp;solutions&nbsp;en&nbsp;@($"{Tirage.Duree.TotalSeconds:F3}") s</div>
+					<div>@Tirage.Count&nbsp;solutions&nbsp;en&nbsp;@($"{ElapsedTime.TotalSeconds:F3}") s</div>
 				</div>
 				<div class="w-100 text-center text-white">
 					@{
@@ -50,6 +50,7 @@
 #pragma warning disable CS8618
 #pragma warning disable BL0007
 	[Parameter] public CebTirage Tirage { get; set; } 
+    [Parameter] public TimeSpan ElapsedTime { get; set; } = TimeSpan.Zero;
 	
 	protected Timer Timer = new();
 	protected bool WithTimer { get; set; }

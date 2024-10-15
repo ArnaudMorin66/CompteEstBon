@@ -109,22 +109,22 @@
 
     <ItemGroup>
         <PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
-        <PackageReference Include="CommunityToolkit.Maui.Markup" Version="4.1.0" />
+        <PackageReference Include="CommunityToolkit.Maui.Markup" Version="4.2.0" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.0-rc.2.24503.2" />
         <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.0-rc.2.24503.2" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.0-rc.2.24473.5" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0-rc.2.24473.5" />
         <PackageReference Include="Microsoft.Maui.Graphics" Version="9.0.0-rc.2.24503.2" />
-        <PackageReference Include="Syncfusion.Maui.Core" Version="27.1.52" />
-        <PackageReference Include="Syncfusion.Maui.DataGrid" Version="27.1.52" />
-        <PackageReference Include="Syncfusion.Maui.Inputs" Version="27.1.52" />
-        <PackageReference Include="Syncfusion.Maui.Buttons" version="27.1.52" />
-        <PackageReference Include="Syncfusion.Maui.ListView" Version="27.1.52" />
-        <PackageReference Include="Syncfusion.Maui.Popup" Version="27.1.52" />
-        <PackageReference Include="Syncfusion.Maui.Picker" Version="27.1.52" />
-        <PackageReference Include="Syncfusion.Maui.ProgressBar" Version="27.1.52" />
-        <PackageReference Include="Syncfusion.Maui.PullToRefresh" Version="27.1.52" />
+        <PackageReference Include="Syncfusion.Maui.Core" Version="27.1.53" />
+        <PackageReference Include="Syncfusion.Maui.DataGrid" Version="27.1.53" />
+        <PackageReference Include="Syncfusion.Maui.Inputs" Version="27.1.53" />
+        <PackageReference Include="Syncfusion.Maui.Buttons" version="27.1.53" />
+        <PackageReference Include="Syncfusion.Maui.ListView" Version="27.1.53" />
+        <PackageReference Include="Syncfusion.Maui.Popup" Version="27.1.53" />
+        <PackageReference Include="Syncfusion.Maui.Picker" Version="27.1.53" />
+        <PackageReference Include="Syncfusion.Maui.ProgressBar" Version="27.1.53" />
+        <PackageReference Include="Syncfusion.Maui.PullToRefresh" Version="27.1.53" />
         <PackageReference Include="System.Text.Json" Version="9.0.0-rc.2.24473.5" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.0-rc.2.24473.5" />        
     </ItemGroup>

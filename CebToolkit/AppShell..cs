@@ -11,8 +11,14 @@ using static CommunityToolkit.Maui.Markup.GridRowsColumns;
 namespace CebToolkit;
 
 public  class AppShell : Shell {
+    public static Color BackgroundDark;
+    public static Color BackgroundLight;
     private readonly ViewTirage viewTirage = App.Current.Services.GetService<ViewTirage>()!;
 
+    static AppShell() {
+        BackgroundLight = App.FindResource<Color>("BackgroundLight")!;
+        BackgroundDark = App.FindResource<Color>("BackgroundDark")!;
+            }
     /// <summary>
     /// Initializes a new instance of the <see cref="CebToolkit.AppShell"/> class.
     /// </summary>
@@ -28,7 +34,7 @@ public  class AppShell : Shell {
     }
     private void InitializeShell() {
         Title = "Compte est bon";
-        FlyoutBackgroundColor = Color.FromArgb("4f4f4f");
+        FlyoutBackgroundColor = BackgroundDark;
         FlyoutBackgroundImageAspect = Aspect.AspectFit;
         FlyoutIcon = ImageSource.FromFile("favicon.ico");
 
@@ -51,7 +57,7 @@ public  class AppShell : Shell {
             Text = "Hasard"
         }.BindCommand(nameof(viewTirage.RandomCommand)));
 
-        ToolbarItems.Add(new ToolbarItem().Bind(MenuItem.TextProperty, "Date"));
+        //ToolbarItems.Add(new ToolbarItem().Bind(MenuItem.TextProperty, nameof(viewTirage.ElapsedTime)));
 
         Items.Add(new ShellContent {
             Route = "Ceb",
@@ -162,7 +168,6 @@ public  class AppShell : Shell {
     /// The header view includes an image and a label with the text "Le Compte Est Bon".
     /// </remarks>
     private View VueHeader => new Grid() {
-        BackgroundColor = Color.FromArgb("2f4f4f"),
         HeightRequest = 50,
         Children = {
             new Image() {
@@ -177,7 +182,7 @@ public  class AppShell : Shell {
                 VerticalTextAlignment = TextAlignment.Center,
             }
         },
-    };
+    }.AppThemeColorBinding(VerticalStackLayout.BackgroundProperty, BackgroundLight, BackgroundDark);
 
     /// <summary>
     /// Gets the view that serves as the footer for the flyout menu in the application shell.
@@ -185,22 +190,28 @@ public  class AppShell : Shell {
     /// <remarks>
     /// The footer view includes options for theme, grid, auto, export, and a "Quitter" button.
     /// </remarks>
-    private View VueFooter => new VerticalStackLayout() {
-        BackgroundColor = Color.FromArgb("2f4f4f"),
+    private View VueFooter => new Grid() {
+        RowDefinitions = Rows.Define(Star,Star, Star, Star,Star),
+        RowSpacing = 1,
         Children =
         {
-            VueOptionTheme,
-            VueOptionGrille,
-            VueOptionAuto,
-            VueOptionExport,
-            new Button()
-            {
-                Text = "Quitter",
-                Command = new Command(() => Application.Current?.Quit())
-            }
+            VueOptionTheme.Row(0),
+            VueOptionGrille.Row(1),
+            VueOptionAuto.Row(2),
+            VueOptionExport.Row(3),
+            VueQuitter.Row(4),
         }
-    };
-
+    }.AppThemeColorBinding(VerticalStackLayout.BackgroundProperty, BackgroundLight, BackgroundDark);
+    /// <summary>
+    /// Gets the view that serves as the Quitter button in the footer for the flyout menu in the application shell.
+    /// </summary>
+    /// <remarks>
+    /// The Quitter button allows the user to quit the application.
+    /// </remarks>
+    private View VueQuitter => new Button() {
+    Text = "Quitter",
+    HeightRequest = 24,
+}.BindCommand(nameof(viewTirage.QuitterCommand));
     /// <summary>
     /// Gets the view that serves as the title bar for the application shell.
     /// </summary>
@@ -209,25 +220,23 @@ public  class AppShell : Shell {
     /// </remarks>
     private TitleBar VueTitleBar => new TitleBar() {
             TrailingContent = new HorizontalStackLayout() {
+                BindingContext = viewTirage,
                 Children = {
-                    new Label()
-                        .TextColor(Colors.White)
-                        .CenterVertical()
-                        .Bind(Label.TextProperty, "Date", source: viewTirage),
                     new Button() {
-                        ImageSource = ImageSource.FromFile("resolve.png")
-                    }.BindCommand(nameof(viewTirage.ResolveCommand),source:this.viewTirage),
+                        ImageSource = ImageSource.FromFile("resolve.png"),
+                        }.BindCommand(nameof(viewTirage.ResolveCommand)),
                     new Button() {
-                        ImageSource = ImageSource.FromFile("random.png")
-                    }.BindCommand(nameof(viewTirage.RandomCommand),source:viewTirage),
+                        ImageSource = ImageSource.FromFile("random.png"), 
+                    }.BindCommand(nameof(viewTirage.RandomCommand)),
 
 
                 }
             } 
         }
-        .Bind(TitleBar.ForegroundColorProperty, "Foreground", source: viewTirage)
+        .Bind(TitleBar.ForegroundColorProperty, "Foreground")
         .DynamicResource(TitleBar.BackgroundProperty, "LinearGradientBrushBase")
-        .Bind(TitleBar.TitleProperty, nameof(viewTirage.Result), source: viewTirage);
+        .Bind(TitleBar.TitleProperty, nameof(viewTirage.Result), source:viewTirage)
+        .Height(24);
     
     /// <summary>
     /// Called when the shell is appearing on the screen.

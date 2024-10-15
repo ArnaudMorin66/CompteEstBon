@@ -9,6 +9,8 @@
 
 // ReSharper disable InconsistentNaming
 
+using System.Diagnostics;
+
 using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -32,11 +34,10 @@ namespace CebToolkit.ViewModel;
 public partial class ViewTirage : ObservableObject {
     public static readonly string[] ListeFormats = ["Excel", "Word", "Json", "Xml", "HTML"];
     private Timer? _timer;
+    private Timer _timerChrono;
     [ObservableProperty] private bool auto;
-    [ObservableProperty] private Color background = Color.FromRgb(22, 22, 22);
-#if WINDOWS
-    [ObservableProperty] private DateTime date;
-#endif
+    // [ObservableProperty] private Color background = Color.FromRgb(22, 22, 22);
+    [ObservableProperty] private TimeSpan elapsedTime;
     [ObservableProperty] private string fmtExport;
     [ObservableProperty] private Color foreground = Colors.LightGray;
     [ObservableProperty] private bool isBusy;
@@ -45,16 +46,16 @@ public partial class ViewTirage : ObservableObject {
     [ObservableProperty] private string result = "Résoudre";
     [ObservableProperty] private CebBase? solution;
     [ObservableProperty] private bool themeDark;
-#if WINDOWS
-    [ObservableProperty] public Timer? timerDay;
-#endif
+
     [ObservableProperty] private bool vueGrille;
+    private readonly Stopwatch stopwatch;
+    
+    
 
     /// <summary>
     ///     Initialisation
     /// </summary>
-    /// <returns>
-    /// </returns>
+    /// <returns></returns>
     public ViewTirage() {
         Auto = false;
         ThemeDark = Application.Current?.RequestedTheme == AppTheme.Dark;
@@ -65,12 +66,14 @@ public partial class ViewTirage : ObservableObject {
             if (Auto) Task.Run(Resolve);
         };
         fmtExport = "Excel";
-#if WINDOWS
-        timerDay = new Timer(_ => Date = DateTime.Now, null, 1000, 1000);
-#endif
+        stopwatch = new Stopwatch();
+        _timerChrono = new Timer(_ => ElapsedTime = stopwatch.Elapsed, null, 0, 100);
+        elapsedTime = TimeSpan.Zero;
         vueGrille = DeviceInfo.Current.Idiom == DeviceIdiom.Phone &&
                     DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait;
         ClearData();
+        
+        
     }
 
     public CebTirage Tirage { get; } = new();
@@ -103,7 +106,7 @@ public partial class ViewTirage : ObservableObject {
     }
 
     [RelayCommand]
-    public void Inverse(object? parameter) {
+    public void Parametre(object? parameter) {
         var cmd = (parameter as string)?.ToLower();
         switch (cmd) {
             case "theme":
@@ -130,6 +133,8 @@ public partial class ViewTirage : ObservableObject {
 
     private void ClearData() {
         Solution = null!;
+        stopwatch.Reset();
+        ElapsedTime = TimeSpan.Zero;
         UpdateForeground();
         IsComputed = Tirage.Status == CebStatus.Invalide;
         Result = Tirage.Status != CebStatus.Invalide ? "Le Compte Est Bon" : "Tirage invalide";
@@ -159,10 +164,16 @@ public partial class ViewTirage : ObservableObject {
         Popup = true;
     }
 
+    /// <summary>
+    /// Exports the solutions in the specified format.
+    /// </summary>
+    /// <param name="format">The format in which to export the solutions.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     [RelayCommand]
     public async Task Export(string format) {
         if (Tirage.Solutions is []) return;
         if (string.IsNullOrEmpty(format)) format = FmtExport;
+
 #pragma warning disable CA1862
         var fmt = ListeFormats.FirstOrDefault(elt => elt.ToLower() == format.ToLower());
         if (fmt == null) return;
@@ -174,7 +185,7 @@ public partial class ViewTirage : ObservableObject {
             "json" => "json",
             "html" => "html",
             "xml" => "xml",
-            var _ => throw new NotImplementedException()
+            _ => throw new NotImplementedException()
         };
 
         await using var mstream = new MemoryStream();
@@ -185,7 +196,7 @@ public partial class ViewTirage : ObservableObject {
         var fileresult = await FileSaver.Default.SaveAsync($"CompteEstBon.{extension}", mstream);
 #if WINDOWS
         if (fileresult.IsSuccessful) await ShowFile(fileresult.FilePath);
- #endif
+#endif
     }
 
 
@@ -198,16 +209,40 @@ public partial class ViewTirage : ObservableObject {
         IsBusy = old;
     }
 
+    /// <summary>
+    /// Executes a random selection of values for the "Compte est bon" game.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     [RelayCommand]
     public async Task Random() {
         await Tirage.RandomAsync();
         ClearData();
         if (Auto) await Resolve();
     }
-
+    /// <summary>
+    /// Quitte l' application.
+    /// </summary>
+    [RelayCommand]
+    public void Quitter() {
+        Application.Current?.Quit();
+    }
+    /// <summary>
+    /// Resolves the current "Compte est bon" problem by finding the best possible solution.
+    /// </summary>
+    /// <returns>
+    /// The status of the resolution process, indicating whether the solution is exact, approximate, or invalid.
+    /// </returns>
+    /// <remarks>
+    /// This method checks the current status of the "Compte est bon" game and performs the necessary actions to resolve it.
+    /// If the game is already solved or in progress, it clears the current state.
+    /// If the game is invalid, it generates a new random game.
+    /// If the game is valid, it starts the resolution process and updates the status and result accordingly.
+    /// </remarks>
     [RelayCommand]
     public async Task Resolve() {
-        if (IsBusy) return;
+        if (IsBusy)
+            return;
+
         switch (Tirage.Status) {
             case CebStatus.CompteEstBon or CebStatus.CompteApproche:
                 await Clear();
@@ -218,14 +253,16 @@ public partial class ViewTirage : ObservableObject {
         }
 
         IsBusy = true;
+        stopwatch.Start();
         Result = "⏰ Calcul en cours...";
         Foreground = Colors.Aqua;
         await Tirage.ResolveAsync();
+        stopwatch.Stop();
         Result = Tirage.Status switch {
             CebStatus.CompteEstBon => "😊 Compte est Bon",
             CebStatus.CompteApproche => "😒 Compte approché",
             CebStatus.Invalide => "🤬 Tirage invalide",
-            var _ => ""
+            _ => ""
         };
         Solution = Tirage.Solutions[0];
         UpdateForeground();

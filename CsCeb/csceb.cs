@@ -7,6 +7,7 @@
 
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
+using System.Diagnostics;
 
 using arnaud.morin.outils;
 
@@ -20,14 +21,31 @@ internal class Ceb {
 	public CebParametres Param;
 	private Ceb() => Param = CebParametres.Get;
 	public static Ceb Factory { get; } = new();
+    public string elapsedtime = "00:00:00.000";
 private void Solve() {
     var tirage = Param.Tirage;
     if (!Param.Jsonx) {
         DisplayHeader();
         DisplayTirageDetails(tirage);
     }
-    tirage.Resolve();
-    if (Param.Jsonx) {
+
+    var ligne = System.Console.CursorTop;
+    
+    var stopwatch = new Stopwatch();
+        var timerChrono = new Timer(_ => {
+            elapsedtime = stopwatch.Elapsed.ToString(@"hh\:mm\:ss\.fff");
+            Cursor.SetPosition(0,ligne);
+            Write(new String(' ', System.Console.WindowWidth));
+            Cursor.SetPosition(0,ligne);
+            Write(Align.Center(new Markup($"[green]{elapsedtime}[/]")));
+        }, null, 0, 100);
+stopwatch.Start();
+        tirage.Resolve();
+        stopwatch.Stop();
+        elapsedtime = stopwatch.Elapsed.ToString(@"hh\:mm\:ss\.fff");
+        timerChrono.Dispose();
+        Cursor.SetPosition(0,ligne);
+        if (Param.Jsonx) {
         WriteLine(tirage.WriteJson());
         Environment.Exit(0);
     }
@@ -80,7 +98,7 @@ private void DisplayResults(CebTirage tirage) {
     WriteLine();
     Write(Align.Center(new Markup(
         $@"[yellow]Nombre de solutions:[/] {tirage.Count}{(tirage.Status == CebStatus.CompteApproche ?
-            $@", [yellow]écart:[/] {tirage.Ecart}" : string.Empty)}, [yellow]durée du calcul:[/] {TimeSpan.FromSeconds(tirage.Duree.TotalSeconds)}")));
+            $@", [yellow]écart:[/] {tirage.Ecart}" : string.Empty)}, [yellow]durée du calcul:[/] {elapsedtime}")));
     WriteLine();
     WriteLine();
 }

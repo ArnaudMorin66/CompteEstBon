@@ -64,11 +64,7 @@ public sealed class CebTirage:  INotifyPropertyChanged {
 	///     Ecart
 	/// </summary>
 	public int? Ecart { get; private set; }
-
-	/// <summary>
-	///     Durée de calcul
-	/// </summary>
-	public TimeSpan Duree { get; private set; }
+    
 
 	/// <summary>
 	///     Première solution
@@ -165,25 +161,25 @@ public sealed class CebTirage:  INotifyPropertyChanged {
 	}
 
 
-	/// <summary>
-	///     Remise à zéro des données
-	/// </summary>
-	/// <returns></returns>
-	public CebStatus Clear() {
-		_solutions.Clear();
-		Duree = TimeSpan.Zero;
-		Ecart = null;
-		Status = CebStatus.Indefini;
-		Valid();
-		NotifyPropertyChanged();
-		return Status;
-	}
+    /// <summary>
+    ///     Remise à zéro des données
+    /// </summary>
+    /// <returns></returns>
+    public CebStatus Clear() {
+        _solutions.Clear();
+        Ecart = null;
+        Status = CebStatus.Indefini;
+        Valid();
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Clear"));
+        return Status;
+    }
 
-	/// <summary>
-	///     Remise à zéro asynchrone
-	/// </summary>
-	/// <returns></returns>
-	public async ValueTask<CebStatus> ClearAsync() => await Task.Run(Clear);
+
+    /// <summary>
+    ///     Remise à zéro asynchrone
+    /// </summary>
+    /// <returns></returns>
+    public async ValueTask<CebStatus> ClearAsync() => await Task.Run(Clear);
 
 	/// <summary>
 	///     Select the value and the plaque's list
@@ -337,14 +333,11 @@ public sealed class CebTirage:  INotifyPropertyChanged {
 		_solutions.Clear();
 		if (Status == CebStatus.Invalide)
 			return Status;
-		var debut = DateTime.Now;
 		Status = CebStatus.EnCours;
 		Ecart = int.MaxValue;
 		Resolve(Plaques);
 		Status = Ecart == 0 ? CebStatus.CompteEstBon : CebStatus.CompteApproche;
 		_solutions.Sort((p, q) => p.Rank.CompareTo(q.Rank));
-
-		Duree = DateTime.Now - debut;
 		NotifyPropertyChanged(nameof(Solutions));
 		return Status;
 	}

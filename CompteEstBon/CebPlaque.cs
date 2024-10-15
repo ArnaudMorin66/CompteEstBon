@@ -23,7 +23,7 @@ public sealed class CebPlaque : CebBase, INotifyPropertyChanged {
 
 	/// <summary>
 	/// </summary>
-	public static readonly IEnumerable<int> DistinctPlaques = ListePlaques.Distinct();
+	public static readonly HashSet<int> DistinctPlaques = [..ListePlaques];
 
 	/// <summary>
 	///     Création d'une plaque

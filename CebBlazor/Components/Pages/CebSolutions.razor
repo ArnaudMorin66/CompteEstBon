@@ -38,8 +38,9 @@
 					</GridColumn>
 				}
 				else {
-					@for (var i = 0; i < 5; i++) {
-						var ii = i;
+                     @for (var i = 0; i < 5; i++) {
+                         var ii = i;
+						
 						<GridColumn TextAlign="TextAlign.Center">
 							<Template Context="data">
 								@{
@@ -49,7 +50,7 @@
 								}
 							</Template>
 						</GridColumn>
-					}
+					} 
 				}
 			</GridColumns>
 		</SfGrid>

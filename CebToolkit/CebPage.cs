@@ -28,8 +28,7 @@ public class CebPage : ContentPage {
     private readonly InvertedBoolConverter invertedBoolConverter = new();
 
     private readonly ViewTirage viewTirage = App.Current.Services.GetService<ViewTirage>()!;
-    public Color BackgroundDark = Color.FromArgb("1E1F1C");
-    public Color BackgroundLight = Color.FromArgb("8fbc8f");
+    
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="CebToolkit.CebPage" /> class.
@@ -38,14 +37,11 @@ public class CebPage : ContentPage {
     ///     This constructor sets up the binding context, context flyout, content, and theme color binding for the page.
     /// </remarks>
     public CebPage() {
-        if (App.Current.Resources.TryGetValue("BackgroundDark", out var value)) BackgroundDark = ((Color?)value)!;
-
-        if (App.Current.Resources.TryGetValue("BackgroundLight", out value)) BackgroundLight = ((Color?)value)!;
         BindingContext = viewTirage;
         FlyoutBase.SetContextFlyout(this, MenuContext);
         //Content = MainScrollView;
         Content = MainStackLayout;
-        this.AppThemeColorBinding(BackgroundColorProperty, BackgroundLight, BackgroundDark);
+        this.AppThemeColorBinding(BackgroundColorProperty, AppShell.BackgroundLight, AppShell.BackgroundDark);
     }
 
     /// <summary>
@@ -129,35 +125,10 @@ public class CebPage : ContentPage {
 
 
     /// <summary>
-    ///     Gets a view that displays a collection of solutions in a list format.
+    /// Gets a <see cref="CollectionView"/> that displays a collection of solutions.
     /// </summary>
     /// <remarks>
-    ///     The view is an instance of <see cref="Syncfusion.Maui.ListView.SfListView" /> with the following properties:
-    ///     <list type="bullet">
-    ///         <item>
-    ///             <description>SelectionMode: Single</description>
-    ///         </item>
-    ///         <item>
-    ///             <description>AutoFitMode: DynamicHeight</description>
-    ///         </item>
-    ///         <item>
-    ///             <description>CachingStrategy: RecycleTemplate</description>
-    ///         </item>
-    ///         <item>
-    ///             <description>IsScrollingEnabled: true</description>
-    ///         </item>
-    ///         <item>
-    ///             <description>HeightRequest: 500</description>
-    ///         </item>
-    ///         <item>
-    ///             <description>ItemsLayout: GridLayout with SpanCount based on device idiom</description>
-    ///         </item>
-    ///         <item>
-    ///             <description>ItemTemplate: DataTemplate for displaying solution details</description>
-    ///         </item>
-    ///     </list>
-    ///     The view is bound to the "Tirage.Solutions" property and its visibility is controlled by the "viewTirage.VueGrille"
-    ///     property.
+    /// This view is bound to the "Tirage.Solutions" property and is visible based on the "VueGrille" property of the <see cref="ViewTirage"/> view model.
     /// </remarks>
     private View VueGollectionSolutions => new CollectionView {
             SelectionMode = SelectionMode.Single,
@@ -175,8 +146,8 @@ public class CebPage : ContentPage {
         }
         .Bind(IsVisibleProperty, nameof(viewTirage.VueGrille))
         .Bind(ItemsView.ItemsSourceProperty, "Tirage.Solutions")
-        .AppThemeColorBinding(BackgroundColorProperty, BackgroundLight,
-            BackgroundDark) //"{AppThemeBinding Dark=DarkSlateGrey, Light=#8fbc8f}"
+        .AppThemeColorBinding(BackgroundColorProperty, AppShell.BackgroundLight,
+            AppShell.BackgroundDark) //"{AppThemeBinding Dark=DarkSlateGrey, Light=#8fbc8f}"
         .Invoke(l => {
             l.SelectionChanged += (sender, _) => {
                 if (sender is SfListView { SelectedItem: CebBase sol }) viewTirage.ShowPopup(sol);
@@ -196,7 +167,7 @@ public class CebPage : ContentPage {
             SelectionMode = SelectionMode.Single,
             ItemsLayout = new LinearItemsLayout(ItemsLayoutOrientation.Vertical)
         }.Bind(ItemsView.ItemsSourceProperty, "Operations")
-        .AppThemeColorBinding(BackgroundColorProperty, Colors.CadetBlue, BackgroundDark)
+        .AppThemeColorBinding(BackgroundColorProperty, AppShell.BackgroundLight, AppShell.BackgroundDark)
         .Center()
         .Invoke(collection => collection.SelectionChanged += (sender, _) => {
             if (sender is CollectionView { BindingContext: CebBase sol }) viewTirage.ShowPopup(sol);
@@ -263,7 +234,17 @@ public class CebPage : ContentPage {
             .Bind(SfBusyIndicator.IsRunningProperty, nameof(viewTirage.IsBusy)))
         .Bind(IsVisibleProperty, nameof(viewTirage.IsBusy));
 
-    private SfPopup VuePopup => new SfPopup {
+    /// <summary>
+    /// Gets the popup view used to display results and related information.
+    /// </summary>
+    /// <value>
+    /// A <see cref="View"/> representing the popup, which includes various UI elements such as labels, box views, and a collection view.
+    /// </value>
+    /// <remarks>
+    /// The popup is configured with specific styles and bindings to display the results of a "tirage" operation, including the found result,
+    /// the number of solutions, and the elapsed time.
+    /// </remarks>
+    private View VuePopup => new SfPopup {
             Margin = 4,
             AutoSizeMode = PopupAutoSizeMode.Height,
             WidthRequest = 400,
@@ -358,7 +339,7 @@ public class CebPage : ContentPage {
                             new Label()
                                 .Margin(2)
                                 .TextRight()
-                                .Bind(Label.TextProperty, "Tirage.Duree.TotalSeconds", stringFormat: "{0:N3} s")
+                                .Bind(Label.TextProperty, nameof(viewTirage.ElapsedTime), stringFormat:"{0:hh\\:mm\\:ss\\.fff}")
                                 .Bind(Label.TextColorProperty, nameof(viewTirage.Foreground))
                                 .Row(2).Column(1)
                         }
@@ -389,6 +370,7 @@ public class CebPage : ContentPage {
                     .Bold()
                     .Bind(Label.TextProperty, nameof(viewTirage.Result))
                     .Bind(Label.TextColorProperty, nameof(viewTirage.Foreground))
+                    .Bind(IsVisibleProperty, nameof(viewTirage.IsComputed))
                     .Row(0)
                     .Column(0),
                 new Label()
@@ -396,6 +378,7 @@ public class CebPage : ContentPage {
                     .CenterVertical()
                     .Bind(Label.TextProperty, "Tirage.Found", stringFormat: "Trouvé: {0}")
                     .Bind(Label.TextColorProperty, nameof(viewTirage.Foreground))
+                    .Bind(IsVisibleProperty, nameof(viewTirage.IsComputed))
                     .Row(0)
                     .Column(1),
                 new Label()
@@ -404,27 +387,32 @@ public class CebPage : ContentPage {
                     .Bind(Label.TextProperty, "Tirage.Count", stringFormat: "Nombre de solutions: {0}")
                     .Bind(Label.TextColorProperty, nameof(viewTirage.Foreground))
                     .Column(DeviceInfo.Idiom == DeviceIdiom.Phone ? 0 : 2)
-                    .Row(DeviceInfo.Idiom == DeviceIdiom.Phone ? 1 : 0),
+                    .Row(DeviceInfo.Idiom == DeviceIdiom.Phone ? 1 : 0)
+                    .Bind(IsVisibleProperty, nameof(viewTirage.IsComputed)),
                 new Label()
                     .CenterVertical()
                     .Bold()
-                    .Bind(Label.TextProperty, "Tirage.Duree.TotalSeconds", stringFormat: "Durée: {0:N3} s")
+                    .Bind(Label.TextProperty, nameof(viewTirage.ElapsedTime), stringFormat:"{0:hh\\:mm\\:ss\\.fff}")
                     .Bind(Label.TextColorProperty, nameof(viewTirage.Foreground))
                     .Column(DeviceInfo.Idiom == DeviceIdiom.Phone ? 1 : 3)
                     .Row(DeviceInfo.Idiom == DeviceIdiom.Phone ? 1 : 0)
             }
-        }.Bind(IsVisibleProperty, nameof(viewTirage.IsComputed))
-        .AppThemeColorBinding(BackgroundColorProperty, BackgroundLight, BackgroundDark);
+        }
+        .AppThemeColorBinding(BackgroundColorProperty, AppShell.BackgroundLight, AppShell.BackgroundDark);
 
 
     
 
+/// <summary>
+    /// Gets the main stack layout of the page.
+    /// </summary>
+    /// <value>
+    /// A <see cref="VerticalStackLayout"/> representing the main stack layout of the page.
+    /// </value>
     private VerticalStackLayout MainStackLayout {
         get {
-            var verticalStackLayout = new VerticalStackLayout();
+            VerticalStackLayout verticalStackLayout = [Borderize(VueSaisie, true)];
             if (DeviceInfo.Idiom != DeviceIdiom.Phone) verticalStackLayout.Add(Borderize(VueAction, true));
-
-            verticalStackLayout.Add(Borderize(VueSaisie, true));
             verticalStackLayout.Add(Borderize(VueResultat, true));
             verticalStackLayout.Add(VueSolutions);
             verticalStackLayout.Add(VuePopup);
@@ -446,11 +434,11 @@ public class CebPage : ContentPage {
             var result = new Grid();
             if (DeviceInfo.Idiom != DeviceIdiom.Phone) {
                 result.ColumnDefinitions = Columns.Define(Star, Star, Star, Star, Star, Star);
-            }
-            else {
+            } else {
                 result.RowDefinitions = Rows.Define(Star, Star, Star);
                 result.ColumnDefinitions = Columns.Define(Star, Star);
             }
+
             AddPlaquesToGrid();
             return result;
 
@@ -460,37 +448,33 @@ public class CebPage : ContentPage {
                     PositionComboBoxInGrid(ref comboBox, i);
                     result.Children.Add(comboBox);
                 }
-                return;
-
-                /// <summary>
-                ///     Creates a <see cref="SfComboBox" /> for a plaque at the specified index.
-                /// </summary>
-                /// <param name="index">The index of the plaque.</param>
-                /// <returns>A <see cref="SfComboBox" /> for the plaque.</returns>
-                SfComboBox PlaqueComboBox(int index) => new SfComboBox {
-                    ItemsSource = CebPlaque.DistinctPlaques
-                }
-                .Bind(DropDownListBase.TextProperty, $"Tirage.Plaques[{index}].Value", BindingMode.TwoWay);
-
-                /// <summary>
-                ///     Positions the <see cref="SfComboBox" /> in the grid based on the index.
-                /// </summary>
-                /// <param name="comboBox">The <see cref="SfComboBox" /> to position.</param>
-                /// <param name="index">The index of the plaque.</param>
-                void PositionComboBoxInGrid(ref SfComboBox comboBox, int index) {
-                    if (DeviceInfo.Idiom != DeviceIdiom.Phone) {
-                        comboBox.Column(index);
-                    }
-                    else {
-                        comboBox.Column(index % 2).Row(index / 2);
-                    }
-                }
             }
         }
     }
-        
-    
 
+    /// <summary>
+    ///     Positions the <see cref="SfComboBox" /> in the grid based on the index.
+    /// </summary>
+    /// <param name="comboBox">The <see cref="SfComboBox" /> to position.</param>
+    /// <param name="index">The index of the plaque.</param>
+    private void PositionComboBoxInGrid(ref SfComboBox comboBox, int index) {
+        if (DeviceInfo.Idiom != DeviceIdiom.Phone) {
+            comboBox.Column(index);
+        } else {
+            comboBox.Column(index % 2).Row(index / 2);
+        }
+    }
+    /// <summary>
+    ///     Creates a <see cref="SfComboBox" /> for a plaque at the specified index.
+    /// </summary>
+    /// <param name="index">The index of the plaque.</param>
+    /// <returns>A <see cref="SfComboBox" /> for the plaque.</returns>
+    private SfComboBox PlaqueComboBox(int index) => new SfComboBox {
+            ItemsSource = CebPlaque.DistinctPlaques
+        }
+        .Bind(DropDownListBase.TextProperty, $"Tirage.Plaques[{index}].Value", BindingMode.TwoWay);
+
+    
     /// <summary>
     ///     Gets the context menu for the page, providing various commands and options for user interaction.
     /// </summary>
@@ -518,7 +502,8 @@ public class CebPage : ContentPage {
             }
             .BindCommand(nameof(viewTirage.ResolveCommand))
             .Text("Résoudre"),
-        new MenuFlyoutSeparator(), new MenuFlyoutSubItem {
+        new MenuFlyoutSeparator(),
+        new MenuFlyoutSubItem {
             new MenuFlyoutItem {
                     KeyboardAccelerators = {
                         new KeyboardAccelerator {
@@ -578,7 +563,7 @@ public class CebPage : ContentPage {
                     }
                 }
             }
-            .Text("Inverser vue").BindCommand(nameof(viewTirage.InverseCommand), parameterSource: "vue"),
+            .Text("Vue").BindCommand(nameof(viewTirage.ParametreCommand), parameterSource: "vue"),
         new MenuFlyoutItem {
             KeyboardAccelerators = {
                 new KeyboardAccelerator {
@@ -586,7 +571,7 @@ public class CebPage : ContentPage {
                     Modifiers = KeyboardAcceleratorModifiers.Ctrl
                 }
             }
-        }.Text("Thème").BindCommand(nameof(viewTirage.InverseCommand), parameterSource: "theme"),
+        }.Text("Thème").BindCommand(nameof(viewTirage.ParametreCommand), parameterSource: "theme"),
         new MenuFlyoutItem {
             KeyboardAccelerators = {
                 new KeyboardAccelerator {
@@ -594,7 +579,17 @@ public class CebPage : ContentPage {
                     Modifiers = KeyboardAcceleratorModifiers.Ctrl
                 }
             }
-        }.Text("Auto").BindCommand(nameof(viewTirage.InverseCommand), parameterSource: "auto")
+        }.Text("Auto").BindCommand(nameof(viewTirage.ParametreCommand), parameterSource: "auto"),
+        new MenuFlyoutSeparator(),
+        new MenuFlyoutItem {
+                KeyboardAccelerators = {
+                    new KeyboardAccelerator {
+                        Key = "Q",
+                        Modifiers = KeyboardAcceleratorModifiers.Alt
+                    }
+                }
+            }
+            .Text("Quitter").BindCommand(nameof(viewTirage.QuitterCommand) ),
     ];
 
     /// <summary>
@@ -607,7 +602,7 @@ public class CebPage : ContentPage {
             StrokeThickness = 0.5,
             Content = content
         }
-        .Margin(new Thickness(1, 1))
+        .Margin(1)
         .Bind(IsEnabledProperty,
             nameof(viewTirage.IsBusy), BindingMode.OneWay, invertedBoolConverter)
         .Bind(Border.StrokeProperty, nameof(viewTirage.Foreground))

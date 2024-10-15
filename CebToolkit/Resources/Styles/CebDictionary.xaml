@@ -5,8 +5,8 @@
                     xmlns:sfg="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
                     xmlns:sfi="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
                     xmlns:viewModel="clr-namespace:CebToolkit.ViewModel">
-    <SolidColorBrush x:Key="CebBrushForeground" Color="{Binding Foreground}" x:DataType="viewModel:ViewTirage"></SolidColorBrush>
-    
+    <SolidColorBrush x:Key="CebBrushForeground" Color="{Binding Foreground}" x:DataType="viewModel:ViewTirage" />
+
     <Shadow x:Key="ShadowCebToolkit" Brush="{DynamicResource CebBrushForeground}" Offset="1,1" Opacity="0.6" />
     <LinearGradientBrush x:Key="LinearGradientBrushBase" StartPoint="0,0" EndPoint="1,0">
         <GradientStop Color="{StaticResource OffBlack}" Offset="0" />
@@ -15,6 +15,7 @@
         <GradientStop Color="Green" Offset="0.75" />
         <GradientStop Color="ForestGreen" Offset="1" />
     </LinearGradientBrush>
+
     <Style TargetType="sfb:SfSwitch">
         <Setter Property="VisualStateManager.VisualStateGroups">
             <Setter.Value>
@@ -145,6 +146,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+
     <Style TargetType="Button">
         <Setter Property="TextColor" Value="{Binding Foreground}" x:DataType="z:Color" />
         <Setter Property="CornerRadius" Value="4" />
@@ -187,6 +189,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+
     <Style TargetType="sfi:SfComboBox">
         <Setter Property="Margin" Value="0.2" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
@@ -197,11 +200,11 @@
         <Setter Property="DropDownIconColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
         <Setter Property="DropDownItemTextColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
         <Setter Property="TextColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
-        <Setter Property="DropDownPlacement" Value="Top"></Setter>
+        <Setter Property="DropDownPlacement" Value="Top" />
         <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}" />
-        <Setter Property="FontSize" Value="{OnIdiom Phone=9}"/>
-
+        <Setter Property="FontSize" Value="{OnIdiom Phone=9}" />
     </Style>
+
     <Style TargetType="Picker">
         <Setter Property="Margin" Value="2" />
         <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}" />
@@ -240,6 +243,7 @@
             </Setter.Value>
         </Setter>
     </Style>
+
     <Style TargetType="sfi:SfNumericEntry">
         <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}" />
         <Setter Property="Margin" Value="0.2" />
@@ -249,29 +253,28 @@
         <Setter Property="HorizontalTextAlignment" Value="Center" />
         <Setter Property="VerticalTextAlignment" Value="Center" />
         <Setter Property="UpDownPlacementMode" Value="InlineVertical" />
-        <Setter Property="FontSize" Value="{OnIdiom Phone=9}"/>
-
+        <Setter Property="FontSize" Value="{OnIdiom Phone=9}" />
     </Style>
+
     <Style TargetType="Border" x:Key="BorderWithShadowStyle">
         <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}" />
-
     </Style>
+
     <Style TargetType="sfg:SfDataGrid" x:Key="DatagridSolutionsStyle">
-        <Setter Property="AutoGenerateColumnsMode" Value="None"/>
-        <Setter Property="HorizontalScrollBarVisibility" Value="Always"/>
-        <Setter Property="ColumnWidthMode" Value="Fill"/>
-        <Setter Property="EnableDataVirtualization" Value="True"/>
-        <Setter Property="SelectionMode" Value="Single"/>
-        <Setter Property="ShowRowHeader" Value="False"/>
-        <Setter Property="HeaderRowHeight" Value="0"/>
+        <Setter Property="AutoGenerateColumnsMode" Value="None" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Always" />
+        <Setter Property="ColumnWidthMode" Value="Fill" />
+        <Setter Property="EnableDataVirtualization" Value="True" />
+        <Setter Property="SelectionMode" Value="Single" />
+        <Setter Property="ShowRowHeader" Value="False" />
+        <Setter Property="HeaderRowHeight" Value="0" />
         <Setter Property="DefaultStyle">
             <Setter.Value>
                 <sfg:DataGridStyle 
                     RowTextColor="{AppThemeBinding Light=Black, Dark=White}"
                     AlternateRowBackground="{AppThemeBinding Light=DarkGrey, Dark=DarkCyan}"   
-                    />
+                />
             </Setter.Value>
         </Setter>
     </Style>
-   
 </ResourceDictionary>

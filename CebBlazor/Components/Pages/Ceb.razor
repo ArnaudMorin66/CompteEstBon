@@ -1,5 +1,6 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+@using System.Diagnostics
 @using CompteEstBon
 @using Syncfusion.Blazor.SplitButtons
 @inject IJSRuntime Js;
@@ -99,13 +100,13 @@
 				case CebStatus.CompteApproche:
 					<div class="bg-secondary text-wheat" style="cursor: pointer;" @onclick="ClearAsync" accesskey="r">
 						<i class="fa-regular fa-thumbs-down"></i>&nbsp;
-						&nbsp;Compte approché:&nbsp;@Tirage.Found,&nbsp;écart:&nbsp;@Tirage.Ecart,&nbsp;@Tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{Tirage.Duree.TotalSeconds:F3}")&nbsp;s
+						&nbsp;Compte approché:&nbsp;@Tirage.Found,&nbsp;écart:&nbsp;@Tirage.Ecart,&nbsp;@Tirage.Count&nbsp;solutions,&nbsp;durée:&nbsp;@($"{ElapseTime.TotalSeconds:F3}")&nbsp;s
 					</div>
 					break;
 				case CebStatus.CompteEstBon:
 					<div class="bg-success w-100 text-black" style="cursor: pointer;" @onclick="ClearAsync" accesskey="r">
 						<i class="fa-regular fa-thumbs-up"></i>
-						&nbsp;Compte est bon,&nbsp;@(Tirage.Count)&nbsp;solutions&nbsp;en&nbsp;@($"{Tirage.Duree.TotalSeconds:F3}")&nbsp;s
+						&nbsp;Compte est bon,&nbsp;@(Tirage.Count)&nbsp;solutions&nbsp;en&nbsp;@($"{ElapseTime.TotalSeconds:F3}")&nbsp;s
 					</div>
 					break;
 				default:
@@ -122,69 +123,76 @@
 			  VueVerticale="VueVerticale" 
 			  ShowDetail="async ligne => await Toast!.ShowAsync(ligne, false)"></CebSolutions>
 <CebFooter></CebFooter>
-<CebToast @ref="Toast" Tirage="Tirage" DueTime="10000"></CebToast>
+<CebToast @ref="Toast" Tirage="Tirage" DueTime="10000" ElapsedTime="ElapseTime"></CebToast>
 
 @code {
-	public CebTirage Tirage { get; init; } = new();
-	
-	private bool _vueVerticale;
+    public CebTirage Tirage { get; init; } = new();
 
-	public bool VueVerticale {
-		get => _vueVerticale;
-		set {
-			if (value == _vueVerticale) return;
-			_vueVerticale = value;
-			InvokeAsync(StateHasChanged);
-		}
-	}
+    private bool _vueVerticale;
 
-	private bool _auto;
+    public bool VueVerticale {
+        get => _vueVerticale;
+        set {
+            if (value == _vueVerticale) return;
+            _vueVerticale = value;
+            InvokeAsync(StateHasChanged);
+        }
+    }
 
-	bool Auto {
-		get => _auto;
-		set {
-			if (_auto == value) return;
-			_auto = value;
-			InvokeAsync(StateHasChanged);
-			if (_auto && Tirage.Status == CebStatus.Valide) {
-				Task.Run(async () => {
-					await Tirage.ResolveAsync();
-					await InvokeAsync(StateHasChanged);
-				});
-			}
-		}
-	}
+    private bool _auto;
+
+    bool Auto {
+        get => _auto;
+        set {
+            if (_auto == value) return;
+            _auto = value;
+            InvokeAsync(StateHasChanged);
+            if (_auto && Tirage.Status == CebStatus.Valide) {
+                Task.Run(async () => {
+                    await Tirage.ResolveAsync();
+                    await InvokeAsync(StateHasChanged);
+                });
+            }
+        }
+    }
 
 #pragma warning disable CS8618
 #pragma warning disable CS8602
-	public CebToast? Toast { get; set; }
+    public CebToast? Toast { get; set; }
 
-	protected override async Task OnInitializedAsync() {
-		await base.OnInitializedAsync();
-		Tirage.PropertyChanged += async (_, args) => {
-			await Toast.HideAsync();
-			if (!Auto || args.PropertyName.ToLower() != "clear" || Tirage.Status == CebStatus.EnCours) return;
-			await ResolveAsync();
-			await InvokeAsync(StateHasChanged);
-		};
-		Auto = false;
-		VueVerticale = false;
-		await InvokeAsync(StateHasChanged);
-	}
+    protected override async Task OnInitializedAsync() {
+        await base.OnInitializedAsync();
+        Tirage.PropertyChanged += async (_, args) => {
+            await Toast.HideAsync();
+            if (!Auto || args.PropertyName.ToLower() != "clear" || Tirage.Status == CebStatus.EnCours) return;
+            await ResolveAsync();
+            await InvokeAsync(StateHasChanged);
+        };
+        Auto = false;
+        VueVerticale = false;
+        await InvokeAsync(StateHasChanged);
+    }
+    public TimeSpan ElapseTime { get; set; } = TimeSpan.Zero;
 
 	async Task RandomAsync() {
+        ElapseTime = TimeSpan.Zero;
 		await Toast.HideAsync();
 		await Tirage.RandomAsync();
 	}
 
 	async Task ClearAsync() {
+        ElapseTime = TimeSpan.Zero;
 		await Toast.HideAsync();
 		await Tirage.ClearAsync();
 	}
 
 	async Task ResolveAsync() {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
 		await Toast.HideAsync();
 		await Tirage.ResolveAsync();
+        stopwatch.Stop();
+        ElapseTime = stopwatch.Elapsed;
 
 		if (Tirage.Status is CebStatus.CompteEstBon or CebStatus.CompteApproche) {
 			await Toast.ShowAsync(0);
