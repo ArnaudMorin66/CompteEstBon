@@ -33,8 +33,10 @@ namespace CebToolkit.ViewModel;
 
 public partial class ViewTirage : ObservableObject {
     public static readonly string[] ListeFormats = ["Excel", "Word", "Json", "Xml", "HTML"];
-    private Timer? _timer;
-    private Timer _timerChrono;
+    private Timer? timerPopup { get; set; }
+    // ReSharper disable once NotAccessedField.Local
+    private Timer? timerChrono;
+
     [ObservableProperty] private bool auto;
     // [ObservableProperty] private Color background = Color.FromRgb(22, 22, 22);
     [ObservableProperty] private TimeSpan elapsedTime;
@@ -50,7 +52,6 @@ public partial class ViewTirage : ObservableObject {
     [ObservableProperty] private bool vueGrille;
     private readonly Stopwatch stopwatch;
     
-    
 
     /// <summary>
     ///     Initialisation
@@ -62,12 +63,12 @@ public partial class ViewTirage : ObservableObject {
         Tirage.PropertyChanged += (_, args) => {
             if (args.PropertyName != "Clear") return;
             ClearData();
-
-            if (Auto) Task.Run(Resolve);
+            if (Auto)
+                Task.Run(Resolve);
         };
         fmtExport = "Excel";
         stopwatch = new Stopwatch();
-        _timerChrono = new Timer(_ => ElapsedTime = stopwatch.Elapsed, null, 0, 100);
+        timerChrono = new Timer(_ => ElapsedTime = stopwatch.Elapsed, null, 0, 100);
         elapsedTime = TimeSpan.Zero;
         vueGrille = DeviceInfo.Current.Idiom == DeviceIdiom.Phone &&
                     DeviceDisplay.Current.MainDisplayInfo.Orientation == DisplayOrientation.Portrait;
@@ -102,12 +103,12 @@ public partial class ViewTirage : ObservableObject {
         if (value)
             DelayPopup(5000);
         else
-            _timer?.Dispose();
+            timerPopup?.Dispose();
     }
 
     [RelayCommand]
-    public void Parametre(object? parameter) {
-        var cmd = (parameter as string)?.ToLower();
+    public void UpdatePropriete(object? propriete) {
+        var cmd = (propriete as string)?.ToLower();
         switch (cmd) {
             case "theme":
                 ThemeDark = !ThemeDark;
@@ -122,15 +123,22 @@ public partial class ViewTirage : ObservableObject {
     }
 
 
+    /// <summary>
+    /// Delays the popup for a specified amount of time.
+    /// </summary>
+    /// <param name="duetime">The delay time in milliseconds.</param>
     private void DelayPopup(int duetime) {
-        _timer = new Timer(state => {
+        timerPopup = new Timer(state => {
             if (state is not Timer ti) return;
             ti.Dispose();
             Popup = false;
         });
-        _timer.Change(duetime, 0);
+        timerPopup.Change(duetime, 0);
     }
 
+    /// <summary>
+    /// Clears the data of the ViewTirage.
+    /// </summary>
     private void ClearData() {
         Solution = null!;
         stopwatch.Reset();
@@ -143,6 +151,9 @@ public partial class ViewTirage : ObservableObject {
     }
 
 
+    /// <summary>
+    /// Updates the foreground color based on the status of the "Compte Est Bon" game.
+    /// </summary>
     private void UpdateForeground() => Foreground =
         Tirage.Status switch {
             CebStatus.Indefini => Colors.Blue,
@@ -151,14 +162,15 @@ public partial class ViewTirage : ObservableObject {
             CebStatus.CompteEstBon => ThemeDark ? Colors.GreenYellow : Colors.DarkGreen,
             CebStatus.CompteApproche => Colors.Orange,
             CebStatus.Invalide => Colors.Red,
-            var _ => throw new NotImplementedException()
+            _ => throw new NotImplementedException()
         };
 
-    public void ShowPopup(int index = 0) {
-        if (index < 0) return;
-        ShowPopup(Tirage.Solutions[index]);
-    }
-
+    
+    /// <summary>
+    /// Shows the popup for the specified solution of the solutions list.
+    /// </summary>
+    /// <param name="sol">The solution of the solution to show.</param>
+    [RelayCommand]
     public void ShowPopup(CebBase sol) {
         Solution = sol;
         Popup = true;
@@ -200,8 +212,10 @@ public partial class ViewTirage : ObservableObject {
     }
 
 
-    #region Action
-
+    /// <summary>
+    /// Clears the data of the ViewTirage.
+    /// </summary>
+    /// <returns></returns>
     public async Task Clear() {
         var old = IsBusy;
         await Tirage.ClearAsync();
@@ -214,18 +228,14 @@ public partial class ViewTirage : ObservableObject {
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
     [RelayCommand]
-    public async Task Random() {
-        await Tirage.RandomAsync();
-        ClearData();
-        if (Auto) await Resolve();
-    }
+    public async Task Random() => await Tirage.RandomAsync();
+
     /// <summary>
     /// Quitte l' application.
     /// </summary>
     [RelayCommand]
-    public void Quitter() {
-        Application.Current?.Quit();
-    }
+    public void Quitter() => Application.Current?.Quit();
+
     /// <summary>
     /// Resolves the current "Compte est bon" problem by finding the best possible solution.
     /// </summary>
@@ -240,8 +250,7 @@ public partial class ViewTirage : ObservableObject {
     /// </remarks>
     [RelayCommand]
     public async Task Resolve() {
-        if (IsBusy)
-            return;
+        if (IsBusy) return;
 
         switch (Tirage.Status) {
             case CebStatus.CompteEstBon or CebStatus.CompteApproche:
@@ -252,6 +261,7 @@ public partial class ViewTirage : ObservableObject {
                 return;
         }
 
+        
         IsBusy = true;
         stopwatch.Start();
         Result = "⏰ Calcul en cours...";
@@ -264,15 +274,17 @@ public partial class ViewTirage : ObservableObject {
             CebStatus.Invalide => "🤬 Tirage invalide",
             _ => ""
         };
-        Solution = Tirage.Solutions[0];
+        // Solution = Tirage.Solutions[0];
         UpdateForeground();
+        
+        OnPropertyChanged(nameof(Tirage));
+        
         IsBusy = false;
         IsComputed = true;
-        OnPropertyChanged(nameof(Tirage));
-        ShowPopup();
+        ShowPopup(Tirage.Solutions[0]);
     }
 
-    #endregion Action
+
 
 #if WINDOWS
     private async Task ShowFile(string filename) => await MainThread.InvokeOnMainThreadAsync(async () => {

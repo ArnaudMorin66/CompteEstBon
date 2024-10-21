@@ -30,18 +30,25 @@ public partial class ConfigPage : ContentPage {
         };
         //InitializeComponent();
     }
+    /// <summary>
+    /// Gets the view that represents the grille option in the configuration page.
+    /// </summary>
+    /// <remarks>
+    /// This view includes a label for displaying the "Grille" text, a switch for toggling the grille option,
+    /// and sets the column definitions.
+    /// </remarks>
     private Grid VueOptionGrille => new() {
         ColumnDefinitions =
             GridRowsColumns.Columns.Define(Star, Star),
         HorizontalOptions = LayoutOptions.Fill,
         VerticalOptions = LayoutOptions.Center,
+
         Children = {
             new Label()
                 .Text("Grille:")
                 .Bold()
                 .FillHorizontal()
                 .End()
-                .TextColor(Colors.White)
                 .CenterVertical()
                 .Column(0),
             new SfSwitch()
@@ -49,27 +56,37 @@ public partial class ConfigPage : ContentPage {
                 .Column(1)
         }
     };
+    /// <summary>
+    /// Gets the view that represents the theme option in the configuration page.
+    /// </summary>
+    /// <remarks>
+    /// This view includes a label for displaying the "Sombre" text, a switch for toggling the theme,
+    /// and sets the column definitions.
+    /// </remarks>
     private Grid VueOptionTheme => new() {
         ColumnDefinitions = Columns.Define(Star, Star),
-        HorizontalOptions = LayoutOptions.Fill,
-        VerticalOptions = LayoutOptions.Center,
-
         Children = {
             new Label()
                 .Text("Sombre:")
                 .Bold()
                 .FillHorizontal()
                 .End()
-                .TextColor(Colors.White)
                 .CenterVertical()
                 .Column(0),
             new SfSwitch()
+                .Bind(SfSwitch.IsOnProperty!, nameof(viewTirage.ThemeDark))
                 .Column(1)
-                .Bind(SfSwitch.IsOnProperty!, nameof(viewTirage.ThemeDark)).Column(1)
         }
     };
 
 
+    /// <summary>
+    /// Gets the view that represents the auto option in the configuration page.
+    /// </summary>
+    /// <remarks>
+    /// This view includes a label for displaying the "Auto" text, a switch for toggling the auto option,
+    /// and sets the column definitions.
+    /// </remarks>
     private Grid VueOptionAuto => new() {
         ColumnDefinitions = Columns.Define(Star, Star),
         HorizontalOptions = LayoutOptions.Fill,
@@ -82,10 +99,10 @@ public partial class ConfigPage : ContentPage {
                 .FillHorizontal()
                 .End()
                 .CenterVertical()
-                .TextColor(Colors.White)
                 .Column(0),
             new SfSwitch()
-                .Bind(SfSwitch.IsOnProperty!, nameof(viewTirage.Auto)).Column(1)
+                .Bind(SfSwitch.IsOnProperty!, nameof(viewTirage.Auto))
+                .Column(1)
         }
     };
     

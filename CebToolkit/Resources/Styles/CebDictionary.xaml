@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                    xmlns:z="using:Microsoft.Maui.Graphics"
                     xmlns:sfb="clr-namespace:Syncfusion.Maui.Buttons;assembly=Syncfusion.Maui.Buttons"
                     xmlns:sfg="clr-namespace:Syncfusion.Maui.DataGrid;assembly=Syncfusion.Maui.DataGrid"
                     xmlns:sfi="clr-namespace:Syncfusion.Maui.Inputs;assembly=Syncfusion.Maui.Inputs"
@@ -148,45 +147,39 @@
     </Style>
 
     <Style TargetType="Button">
-        <Setter Property="TextColor" Value="{Binding Foreground}" x:DataType="z:Color" />
+        <Setter Property="TextColor" Value="{AppThemeBinding Light=Black, Dark=White}" />
         <Setter Property="CornerRadius" Value="4" />
         <Setter Property="Margin" Value="1" />
         <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}" />
+        <Setter Property="Background" Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
-            <Setter.Value>
-                <VisualStateGroupList>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal">
-                            <VisualState.Setters>
-                                <Setter Property="BackgroundColor"
-                                        Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="Checked">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="Green" />
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="Hovered">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="DeepSkyBlue" />
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="Pressed">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="#2F2F2F" />
-                                <Setter Property="TextColor" Value="White" />
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="Disabled">
-                            <VisualState.Setters>
-                                <Setter Property="BackgroundColor" Value="CadetBlue" />
-                                <Setter Property="TextColor" Value="Black" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateGroupList>
-            </Setter.Value>
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Checked">
+                        <VisualState.Setters>
+                            <Setter Property="Background" Value="Green" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Hovered">
+                        <VisualState.Setters>
+                            <Setter Property="Background" Value="DeepSkyBlue" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="Background" Value="#2F2F2F" />
+                            <Setter Property="TextColor" Value="White" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Background" Value="CadetBlue" />
+                            <Setter Property="TextColor" Value="Black" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
         </Setter>
     </Style>
 
@@ -198,8 +191,8 @@
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
         <Setter Property="DropDownBackground" Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
         <Setter Property="DropDownIconColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
-        <Setter Property="DropDownItemTextColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
-        <Setter Property="TextColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
+        <Setter Property="DropDownItemTextColor" Value="{AppThemeBinding Dark=White, Light=Yellow}" />
+      <Setter Property="TextColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
         <Setter Property="DropDownPlacement" Value="Top" />
         <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}" />
         <Setter Property="FontSize" Value="{OnIdiom Phone=9}" />
@@ -208,39 +201,33 @@
     <Style TargetType="Picker">
         <Setter Property="Margin" Value="2" />
         <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}" />
+        <Setter Property="Background" Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
-            <Setter.Value>
-                <VisualStateGroupList>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal">
-                            <VisualState.Setters>
-                                <Setter Property="BackgroundColor"
-                                        Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="Checked">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="Green" />
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="Hovered">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="DeepSkyBlue" />
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="Pressed">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="{StaticResource SecondaryBrush}" />
-                            </VisualState.Setters>
-                        </VisualState>
-                        <VisualState x:Name="Disabled">
-                            <VisualState.Setters>
-                                <Setter Property="Background" Value="#BFC3C7" />
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateGroupList>
-            </Setter.Value>
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Checked">
+                        <VisualState.Setters>
+                            <Setter Property="Background" Value="Green" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Hovered">
+                        <VisualState.Setters>
+                            <Setter Property="Background" Value="DeepSkyBlue" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Pressed">
+                        <VisualState.Setters>
+                            <Setter Property="Background" Value="{StaticResource SecondaryBrush}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="Background" Value="#BFC3C7" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
         </Setter>
     </Style>
 
@@ -268,11 +255,11 @@
         <Setter Property="SelectionMode" Value="Single" />
         <Setter Property="ShowRowHeader" Value="False" />
         <Setter Property="HeaderRowHeight" Value="0" />
-        <Setter Property="DefaultStyle">
+            <Setter Property="DefaultStyle">
             <Setter.Value>
                 <sfg:DataGridStyle 
-                    RowTextColor="{AppThemeBinding Light=Black, Dark=White}"
-                    AlternateRowBackground="{AppThemeBinding Light=DarkGrey, Dark=DarkCyan}"   
+                    RowFontAttributes="Bold"
+                    AlternateRowBackground="{AppThemeBinding Light=DarkGrey, Dark=DarkCyan}" 
                 />
             </Setter.Value>
         </Setter>

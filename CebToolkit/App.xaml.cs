@@ -37,3 +37,4 @@ InitializeComponent();
     public static object? FindResource(string key) => Current.Resources.TryGetValue(key, out object value) ? value : null;
     public static T? FindResource<T>(string key) => Current.Resources.TryGetValue(key, out object value) ? (T)value : default;
 }
+
