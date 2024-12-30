@@ -363,7 +363,7 @@ public class ViewTirage : INotifyPropertyChanged, ICommand {
         IsBusy = true;
         Result = "⏰ Calcul en cours...";
         Foreground = Colors.Aqua;
-        await Tirage.ResolveAsync();
+        await Tirage.SolveAsync();
         Result = Tirage.Status switch {
             CebStatus.CompteEstBon => "😊 Compte est Bon",
             CebStatus.CompteApproche => "\ud83d\ude22 Compte approché",

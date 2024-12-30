@@ -5,7 +5,8 @@
 		}
 
 		protected override Window CreateWindow(IActivationState? activationState) {
-			return new Window(new MainPage());
+			return new Window(new MainPage()) { Title = "Jeu du Compte est bon" };
+			
 		}
 	}
 }

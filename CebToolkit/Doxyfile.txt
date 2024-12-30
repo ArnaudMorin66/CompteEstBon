@@ -1,0 +1,20 @@
+# Doxyfile
+
+# Project related settings
+PROJECT_NAME           = "CebToolkit"
+OUTPUT_DIRECTORY       = "docs"
+INPUT                  = "CebToolkit"
+FILE_PATTERNS          = "*.cs;*.xaml"
+RECURSIVE              = YES
+
+# Build related settings
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+
+# HTML output settings
+GENERATE_HTML          = YES
+HTML_OUTPUT            = "html"
+
+# LaTeX output settings (optional)
+GENERATE_LATEX         = NO

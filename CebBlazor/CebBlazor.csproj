@@ -12,15 +12,13 @@
         <Authors>@Arnaud Morin</Authors>
         <SignAssembly>False</SignAssembly>
         <NeutralLanguage>fr</NeutralLanguage>
-    </PropertyGroup>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    </PropertyGroup>     
     <ItemGroup>
-      <EmbeddedResource Remove="Resource.resx" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Syncfusion.Blazor.Core" Version="27.1.52" />
-        <PackageReference Include="Syncfusion.Blazor.Grid" Version="27.1.52" />
-        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="27.1.52" />
-        <PackageReference Include="System.Text.Json" Version="9.0.0-rc.2.24473.5" />
+        <PackageReference Include="Syncfusion.Blazor.Core" Version="28.1.36" />
+        <PackageReference Include="Syncfusion.Blazor.Grid" Version="28.1.36" />
+        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="28.1.36" />
+        <PackageReference Include="System.Text.Json" Version="9.0.0" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
@@ -28,6 +26,23 @@
       <ProjectReference Include="..\CebExport\CebExport.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <Resource Include="Properties\Resource.resx" />
+      <Folder Include="Properties\PublishProfiles\" />
+      <Folder Include="wwwroot\css\" />
     </ItemGroup>
+    <ItemGroup>
+      <None Include="wwwroot\favicon.png" />
+    </ItemGroup>
+   <Target Name="CopyFonts" BeforeTargets="Build">
+       <ItemGroup>
+           <fontawesome Include="node_modules\@fortawesome\fontawesome-free\webfonts\**\*.*" />
+       </ItemGroup>
+       <Copy SourceFiles="@(fontawesome)" DestinationFolder="wwwroot\webfonts\" SkipUnchangedFiles="true" />
+    </Target>
+    <Target Name="CompileSassDebug" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'" >
+        <Exec Command="sass scss/site.scss:wwwroot/css/site.css -I node_modules/ -I node_modules/@syncfusion/ --source-map -c"
+              ConsoleToMsBuild="true" />
+    </Target>
+    <Target Name="CompileSassRelease" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'" >
+        <Exec Command="sass scss/site.scss:scss/release/site.css --style=compressed -I node_modules/ -I node_modules/@syncfusion/ -c --no-source-map" />
+    </Target>
 </Project>

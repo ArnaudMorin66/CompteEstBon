@@ -27,8 +27,6 @@
         <!-- App Identifier -->
         <ApplicationId>com.companyname.cebblazor.maui</ApplicationId>
 
-        <!-- Versions -->
-        <ApplicationDisplayVersion>4.8.2</ApplicationDisplayVersion>
         <ApplicationVersion>1</ApplicationVersion>
 
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
@@ -39,42 +37,57 @@
         <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
         <AssemblyVersion>4.9.50.0</AssemblyVersion>
         <FileVersion>4.9.50.0</FileVersion>
-        <Version>4.2.2</Version>
         <Copyright>©️Arnaud Morin</Copyright>
         <Authors>@Arnaud Morin</Authors>
         <DefaultLanguage>fr-FR</DefaultLanguage>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-android|AnyCPU'">
-      <ApplicationId>arnaud.morin.cebblazor.maui</ApplicationId>
+      <ApplicationId>ceb.blazor.maui</ApplicationId>
+      <ApplicationTitle>ceb.blazor.maui</ApplicationTitle>
+      <ApplicationVersion>2</ApplicationVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-ios|AnyCPU'">
-      <ApplicationId>arnaud.morin.cebblazor.maui</ApplicationId>
+      <ApplicationId>ceb.blazor.maui</ApplicationId>
+      <ApplicationTitle>ceb.blazor.maui</ApplicationTitle>
+      <ApplicationVersion>2</ApplicationVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-maccatalyst|AnyCPU'">
-      <ApplicationId>arnaud.morin.cebblazor.maui</ApplicationId>
+      <ApplicationId>ceb.blazor.maui</ApplicationId>
+      <ApplicationTitle>ceb.blazor.maui</ApplicationTitle>
+      <ApplicationVersion>2</ApplicationVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net9.0-windows10.0.19041.0|AnyCPU'">
-      <ApplicationId>arnaud.morin.cebblazor.maui</ApplicationId>
+      <ApplicationId>ceb.blazor.maui</ApplicationId>
+      <ApplicationTitle>ceb.blazor.maui</ApplicationTitle>
+      <ApplicationVersion>2</ApplicationVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-android|AnyCPU'">
-      <ApplicationId>arnaud.morin.cebblazor.maui</ApplicationId>
+      <ApplicationId>ceb.blazor.maui</ApplicationId>
+      <ApplicationTitle>ceb.blazor.maui</ApplicationTitle>
+      <ApplicationVersion>2</ApplicationVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-ios|AnyCPU'">
-      <ApplicationId>arnaud.morin.cebblazor.maui</ApplicationId>
+      <ApplicationId>ceb.blazor.maui</ApplicationId>
+      <ApplicationTitle>ceb.blazor.maui</ApplicationTitle>
+      <ApplicationVersion>2</ApplicationVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-maccatalyst|AnyCPU'">
-      <ApplicationId>arnaud.morin.cebblazor.maui</ApplicationId>
+      <ApplicationId>ceb.blazor.maui</ApplicationId>
+      <ApplicationTitle>ceb.blazor.maui</ApplicationTitle>
+      <ApplicationVersion>2</ApplicationVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net9.0-windows10.0.19041.0|AnyCPU'">
-      <ApplicationId>arnaud.morin.cebblazor.maui</ApplicationId>
+      <ApplicationId>ceb.blazor.maui</ApplicationId>
+      <ApplicationTitle>ceb.blazor.maui</ApplicationTitle>
+      <ApplicationVersion>2</ApplicationVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -101,14 +114,14 @@
     
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
-        <PackageReference Include="Syncfusion.Blazor.Core" Version="27.1.52" />
-        <PackageReference Include="Syncfusion.Blazor.Grid" Version="27.1.52" />
-        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="27.1.52" />
-        <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0-rc.2.24473.5" />
-        <PackageReference Include="System.Text.Json" Version="9.0.0-rc.2.24473.5" />
+        <PackageReference Include="CommunityToolkit.Maui" Version="10.0.0" />
+        <PackageReference Include="Syncfusion.Blazor.Core" Version="28.1.36" />
+        <PackageReference Include="Syncfusion.Blazor.Grid" Version="28.1.36" />
+        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="28.1.36" />
+        <PackageReference Include="Microsoft.Maui.Controls" Version="9.0.21" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="9.0.21" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
+        <PackageReference Include="System.Text.Json" Version="9.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -118,6 +131,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Services\" />
+      <Folder Include="wwwroot\css\" />
       <Folder Include="wwwroot\webfonts\" />
     </ItemGroup>
     <ItemGroup>
@@ -136,4 +151,16 @@
         <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
+    <Target Name="CopyFonts" BeforeTargets="Build">
+        <ItemGroup>
+            <fontawesome Include="node_modules\@fortawesome\fontawesome-free\webfonts\**\*.*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(fontawesome)" DestinationFolder="wwwroot\webfonts\" SkipUnchangedFiles="true" />
+    </Target>
+    <Target Name="CompileSassDebug" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'" Outputs="wwwroot/css/site.css">
+        <Exec Command="sass scss/site.scss:wwwroot/css/site.css -I node_modules/ -I node_modules/@syncfusion/ --source-map -c --quiet --no-color" ConsoleToMsBuild="true" />
+    </Target>
+    <Target Name="CompileSassRelease" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'" Outputs="wwwroot/css/site.css">
+        <Exec Command="sass scss/site.scss:scss/release/site.css --style=compressed -I node_modules/ -I node_modules/@syncfusion/ -c --quiet --no-source-map --no-color" />
+    </Target>
 </Project>

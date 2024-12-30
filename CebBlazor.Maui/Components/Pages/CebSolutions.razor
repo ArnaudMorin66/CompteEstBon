@@ -36,17 +36,8 @@
                     </Template>
                 </GridColumn>
             } else {
-                @for (var i = 0; i < 5; i++) {
-                    var ii = i;
-                    <GridColumn TextAlign="TextAlign.Center">
-                        <Template Context="data">
-                            @{
-                                var operations = (data as CebBase)!.Operations;
-                                if (ii < operations.Count)
-                                @operations[ii]
-                            }
-                        </Template>
-                    </GridColumn>
+                @foreach (var prop in new[] { "Op1", "Op2", "Op3", "Op4", "Op5" }) {
+                    <GridColumn Field="@prop" TextAlign="TextAlign.Center"></GridColumn>
                 }
             }
         </GridColumns>

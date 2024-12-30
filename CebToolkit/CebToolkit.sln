@@ -10,8 +10,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CebExport", "..\CebExport\C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "arnaud.morin.outils", "..\Outils\arnaud.morin.outils.csproj", "{5AFD6D83-9669-4E3C-873D-F4460775FE7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CebMaui", "..\CebMaui\CebMaui.csproj", "{68DD755D-0F54-4170-8454-873463A745CF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,18 +54,6 @@ Global
 		{5AFD6D83-9669-4E3C-873D-F4460775FE7A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5AFD6D83-9669-4E3C-873D-F4460775FE7A}.Release|x64.ActiveCfg = Release|Any CPU
 		{5AFD6D83-9669-4E3C-873D-F4460775FE7A}.Release|x64.Build.0 = Release|Any CPU
-		{68DD755D-0F54-4170-8454-873463A745CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{68DD755D-0F54-4170-8454-873463A745CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{68DD755D-0F54-4170-8454-873463A745CF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{68DD755D-0F54-4170-8454-873463A745CF}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{68DD755D-0F54-4170-8454-873463A745CF}.Debug|x64.Build.0 = Debug|Any CPU
-		{68DD755D-0F54-4170-8454-873463A745CF}.Debug|x64.Deploy.0 = Debug|Any CPU
-		{68DD755D-0F54-4170-8454-873463A745CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{68DD755D-0F54-4170-8454-873463A745CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{68DD755D-0F54-4170-8454-873463A745CF}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{68DD755D-0F54-4170-8454-873463A745CF}.Release|x64.ActiveCfg = Release|Any CPU
-		{68DD755D-0F54-4170-8454-873463A745CF}.Release|x64.Build.0 = Release|Any CPU
-		{68DD755D-0F54-4170-8454-873463A745CF}.Release|x64.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

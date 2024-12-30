@@ -61,7 +61,8 @@ namespace CebBlazor.Maui.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à MzUyNTc2MkAzMjM3MmUzMDJlMzBlNENvSmwrMFBlTFhqV1J5Rjk3ZXlVZTRyMi93Q2NrbHRyNW0xS1A2SFpnPQ==;MzUyNTc2M0AzMjM3MmUzMDJlMzBjczFBbzNvSm5aYWZKUDBPMk1tang2QjZpZ0NpR0dRRGdCVzh5bVlTTXVzPQ==.
+        ///   Recherche une chaîne localisée semblable à Ngo9BigBOggjHTQxAR8/V1NMaF5cXmBCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWH1fc3RXRmdfVUR3WUM=
+        ///.
         /// </summary>
         internal static string SfLicence {
             get {

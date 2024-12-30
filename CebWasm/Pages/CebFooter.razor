@@ -1,0 +1,31 @@
+﻿@using System.Timers
+@using CebWasm.Code
+
+	<div class="d-flex bg-gradient justify-content-between align-items-center border border-secondary">
+		<span class="e-badge text-white">
+			@Util.Version
+		</span>
+
+		<div class="d-flex justify-content-between align-items-center">
+			<img src="favicon.ico" height="32" alt="" class="p-1">
+			<div class="text-center text-uppercase text-danger text-wrap text-truncate ">Compte&nbsp;est&nbsp;bon</div>
+		</div>
+		<span class="e-badge text-white">@($"{_datetime:dddd dd MMMM yyyy à HH:mm:ss}")</span>
+	</div>
+
+
+@code {
+	private DateTime _datetime;
+
+	protected override Task OnInitializedAsync() {
+		var timer = new Timer(1000);
+		timer.Elapsed += (_, e) => {
+			_datetime = e.SignalTime;
+			InvokeAsync(StateHasChanged);
+		};
+		timer.AutoReset = true;
+		timer.Start();
+		return base.OnInitializedAsync();
+	}
+
+}

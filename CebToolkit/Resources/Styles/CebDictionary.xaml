@@ -6,7 +6,6 @@
                     xmlns:viewModel="clr-namespace:CebToolkit.ViewModel">
     <SolidColorBrush x:Key="CebBrushForeground" Color="{Binding Foreground}" x:DataType="viewModel:ViewTirage" />
 
-    <Shadow x:Key="ShadowCebToolkit" Brush="{DynamicResource CebBrushForeground}" Offset="1,1" Opacity="0.6" />
     <LinearGradientBrush x:Key="LinearGradientBrushBase" StartPoint="0,0" EndPoint="1,0">
         <GradientStop Color="{StaticResource OffBlack}" Offset="0" />
         <GradientStop Color="DarkSlateGrey" Offset="0.25"/>
@@ -148,9 +147,11 @@
 
     <Style TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Light=Black, Dark=White}" />
-        <Setter Property="CornerRadius" Value="4" />
-        <Setter Property="Margin" Value="1" />
-        <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="BorderWidth" Value="4" />
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="Background" Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
@@ -187,20 +188,21 @@
         <Setter Property="Margin" Value="0.2" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
         <Setter Property="IsClearButtonVisible" Value="False" />
-        <Setter Property="ShowBorder" Value="{AppThemeBinding Dark=False, Light=True}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
         <Setter Property="DropDownBackground" Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
         <Setter Property="DropDownIconColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
-        <Setter Property="DropDownItemTextColor" Value="{AppThemeBinding Dark=White, Light=Yellow}" />
-      <Setter Property="TextColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
+        <Setter Property="DropDownItemTextColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
+        <Setter Property="DropDownItemFontAttributes" Value="Bold"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Stroke" Value="Yellow" />
+        <Setter Property="ShowBorder" Value="False"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
         <Setter Property="DropDownPlacement" Value="Top" />
-        <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}" />
         <Setter Property="FontSize" Value="{OnIdiom Phone=9}" />
     </Style>
 
     <Style TargetType="Picker">
         <Setter Property="Margin" Value="2" />
-        <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}" />
         <Setter Property="Background" Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
@@ -232,20 +234,19 @@
     </Style>
 
     <Style TargetType="sfi:SfNumericEntry">
-        <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}" />
         <Setter Property="Margin" Value="0.2" />
         <Setter Property="TextColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
+        <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="UpDownButtonColor" Value="{AppThemeBinding Dark=White, Light=Black}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Dark={StaticResource BackgroundDark}, Light={StaticResource BackgroundLight}}" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
         <Setter Property="VerticalTextAlignment" Value="Center" />
         <Setter Property="UpDownPlacementMode" Value="InlineVertical" />
+        <Setter Property="Stroke" Value="Yellow"/>
+        <Setter Property="ShowBorder" Value="False"></Setter>
         <Setter Property="FontSize" Value="{OnIdiom Phone=9}" />
     </Style>
 
-    <Style TargetType="Border" x:Key="BorderWithShadowStyle">
-        <Setter Property="Shadow" Value="{StaticResource ShadowCebToolkit}" />
-    </Style>
 
     <Style TargetType="sfg:SfDataGrid" x:Key="DatagridSolutionsStyle">
         <Setter Property="AutoGenerateColumnsMode" Value="None" />
@@ -255,7 +256,7 @@
         <Setter Property="SelectionMode" Value="Single" />
         <Setter Property="ShowRowHeader" Value="False" />
         <Setter Property="HeaderRowHeight" Value="0" />
-            <Setter Property="DefaultStyle">
+        <Setter Property="DefaultStyle">
             <Setter.Value>
                 <sfg:DataGridStyle 
                     RowFontAttributes="Bold"

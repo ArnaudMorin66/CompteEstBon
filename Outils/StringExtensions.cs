@@ -170,7 +170,7 @@ public static partial class StringExtensions {
 	/// <returns>une chaîne contenant le nombre spécifié de caractères en partant de la gauche de s</returns>
 	public static string Left(this string s, int count) => s.Length >= count ? s : s[..count];
 
-	public static string Fill(this string s, int count) => (s + new string(' ', count))[..count];
+	public static string Fill(this string s, int count) => ($"{s}{new string(' ', count)}")[..count];
 
 	/// <summary>
 	///     Retourne une chaîne contenant un nombre spécifié de caractères en partant de la droite d'une chaîne.

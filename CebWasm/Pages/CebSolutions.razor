@@ -1,0 +1,78 @@
+﻿@using CompteEstBon
+@using SelectionType = Syncfusion.Blazor.Grids.SelectionType
+@* @inject CebTirage Tirage  *@	
+<div class="border border-secondary border-1 rounded bg-primary mb-1 mt-1" style="height: 32rem;" id="grille">
+		<SfGrid AllowSelection="true"
+				DataSource="Tirage.Solutions"
+				EnableAltRow="true"
+				GridLines="GridLine.Horizontal"
+				Height="100%"
+				Width="100%"
+				ID="solutions"
+				TValue="CebBase">
+			<GridEvents OnRecordClick="async data => await ShowDetail.InvokeAsync(data.RowIndex)"
+						TValue="CebBase">
+			</GridEvents>
+			<GridSelectionSettings CellSelectionMode="CellSelectionMode.Box" 
+								   Type="SelectionType.Single"></GridSelectionSettings>
+			<GridTemplates>
+				<EmptyRecordTemplate>
+					@if (Tirage.Status == CebStatus.EnCours) {
+						<div class="position-absolute top-50 start-50 translate-middle">
+							<SfSpinner Visible=true Type="@SpinnerType.Fluent" Size="100" Label="En cours..."/>
+						</div>
+					}
+				</EmptyRecordTemplate>
+			</GridTemplates>
+			<GridColumns>
+				@if (VueVerticale) {
+					<GridColumn TextAlign="TextAlign.Center">
+						<Template Context="data">
+							@{
+								var operations = (data as CebBase)!.Operations;
+								foreach (var operation in operations) {
+									<div>@operation</div>
+								}
+							}
+						</Template>
+					</GridColumn>
+				}
+				else {
+					 @for (var i = 0; i < 5; i++) {
+						 var ii = i;
+						
+						<GridColumn TextAlign="TextAlign.Center">
+							<Template Context="data">
+								@{
+									var operations = (data as CebBase)!.Operations;
+									if (ii < operations.Count)
+										@operations[ii]
+								}
+							</Template>
+						</GridColumn>
+					} 
+				}
+			</GridColumns>
+		</SfGrid>
+	</div>
+
+
+@code {
+
+#pragma warning disable CS8618
+	[Parameter]
+	public CebTirage Tirage { get; set; }
+	
+	[Parameter]
+	public bool VueVerticale { get; set; }
+
+
+	[Parameter]
+	public EventCallback<int> ShowDetail { get; set; }
+
+	protected override void OnInitialized() {
+		VueVerticale = true;
+		base.OnInitialized();
+	}
+
+}

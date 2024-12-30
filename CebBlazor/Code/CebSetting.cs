@@ -7,6 +7,12 @@
 
 namespace CebBlazor.Code;
 
+/// <summary>
+/// Représente les paramètres de configuration pour CebBlazor.
+/// </summary>
 public class CebSetting {
+    /// <summary>
+    /// Obtient ou définit une valeur indiquant si le calcul automatique est activé.
+    /// </summary>
     public bool AutoCalcul { get; set; }
 }

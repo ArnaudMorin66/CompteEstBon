@@ -1,60 +1,39 @@
 ﻿<!DOCTYPE html>
 <html lang="fr">
-
 <head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<base href="/" />
-	<link href="@Assets["css/site.min.css"]" rel="stylesheet" />
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<base href="/"/>
+	<link href="@Assets["css/site.css"]" rel="stylesheet"/>
 	<script type="text/javascript">
 		window.saveAsFile = (fileName, bytesBase64) => {
-			var regex = new RegExp("[^.]+$");
-			var extention = fileName.match(regex);
-			var mimeType = "application/";
-
-			switch (extention) {
-				case "docx":
-					mimeType += "vnd.openxmlformats-officedocument.wordprocessingml.document";
-					break;
-				case "xlsx":
-					mimeType += "vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-					break;
-				case "json":
-					mimeType += "json";
-					break;
-				case "xml":
-					mimeType += "xml";
-					break;
-				case "html":
-					mimeType += "html";
-					break;
-			}
-
-			var fileUrl = `data:${mimeType};base64,${bytesBase64}`;
-			window.fetch(fileUrl)
-				.then(response => response.blob())
-				.then(blob => {
-					var link = window.document.createElement("a");
-					link.href = window.URL.createObjectURL(blob);
-					link.download = fileName ?? '';
-					document.body.appendChild(link);
-					link.click();
-					document.body.removeChild(link);
-				});
+			const extension = fileName.split('.').pop();
+			const mimeTypes = {
+				docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+				xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+				json: "application/json",
+				xml: "application/xml",
+				html: "application/html"
+			};
+			const mimeType = mimeTypes[extension] || "application/octet-stream";
+			const link = document.createElement("a");
+			link.href = `data:${mimeType};base64,${bytesBase64}`;
+			link.download = fileName || '';
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
 		};
-
 	</script>
-
-	<ImportMap />
-	<link rel="icon" type="image/png" href="favicon.png" />
-	<HeadOutlet />
+	<ImportMap/>
+	<link rel="icon" type="image/png" href="favicon.png"/>
+	<HeadOutlet @rendermode="InteractiveServer"/>
 </head>
 
 <body>
-<Routes />
-<script src="_framework/blazor.web.js"></script>
+<Routes @rendermode="InteractiveServer" />
+<script src="./_framework/blazor.web.js"></script>
 
-<script src="_content/Syncfusion.Blazor.Core/scripts/syncfusion-blazor.min.js" async type="text/javascript"></script>
+<script src="./_content/Syncfusion.Blazor.Core/scripts/syncfusion-blazor.min.js" async type="text/javascript"></script>
 </body>
 
 </html>

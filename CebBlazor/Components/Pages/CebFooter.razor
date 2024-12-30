@@ -19,12 +19,12 @@
 
 	protected override Task OnInitializedAsync() {
 		var timer = new Timer(1000);
-		timer.Elapsed += async (_, e) => {
+		timer.Elapsed += (_, e) => {
 			_datetime = e.SignalTime;
-			await InvokeAsync(StateHasChanged);
+			InvokeAsync(StateHasChanged);
 		};
 		timer.AutoReset = true;
-		timer.Enabled = true;
+		timer.Start();
 		return base.OnInitializedAsync();
 	}
 

@@ -10,7 +10,14 @@ using Syncfusion.Maui.Core.Hosting;
 
 namespace CebToolkit;
 
+/// <summary>
+/// Provides methods to create and configure the .NET MAUI application.
+/// </summary>
 public static class MauiProgram {
+    /// <summary>
+    /// Creates and configures the .NET MAUI application.
+    /// </summary>
+    /// <returns>The configured <see cref="MauiApp"/> instance.</returns>
     public static MauiApp CreateMauiApp() {
         var assembly = Assembly.GetExecutingAssembly();
         using var stream = assembly.GetManifestResourceStream("CebToolkit.Resources.appsettings.json");

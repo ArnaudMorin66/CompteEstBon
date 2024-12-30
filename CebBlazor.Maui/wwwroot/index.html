@@ -5,46 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <title>CebBlazor.Maui</title>
     <base href="/" />
-    <link href="css/site.min.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
     <link rel="icon" href="data:,">
-    <script type="text/javascript">
-        window.saveAsFile = (fileName, bytesBase64) => {
-            var regex = new RegExp("[^.]+$");
-            var extention = fileName.match(regex);
-            var mimeType = "application/";
-
-            switch (extention) {
-                case "docx":
-                    mimeType += "vnd.openxmlformats-officedocument.wordprocessingml.document";
-                    break;
-                case "xlsx":
-                    mimeType += "vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                    break;
-                case "json":
-                    mimeType += "json";
-                    break;
-                case "xml":
-                    mimeType += "xml";
-                    break;
-                case "html":
-                    mimeType += "html";
-                    break;
-            }
-
-            var fileUrl = `data:${mimeType};base64,${bytesBase64}`;
-            window.fetch(fileUrl)
-                .then(response => response.blob())
-                .then(blob => {
-                    var link = window.document.createElement("a");
-                    link.href = window.URL.createObjectURL(blob);
-                    link.download = fileName ?? '';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                });
-            alert("Chargement terminé\n" + fileName)
-        };
-        </script>
+    
         </head >
 
             <body>

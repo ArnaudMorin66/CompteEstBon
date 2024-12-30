@@ -38,8 +38,8 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NETCore.Platforms" Version="8.0.0-preview.7.23375.6" />
-        <PackageReference Include="Spectre.Console" Version="0.49.2-preview.0.44" />
-        <PackageReference Include="Spectre.Console.Json" Version="0.49.2-preview.0.44" />
+        <PackageReference Include="Spectre.Console" Version="0.49.2-preview.0.69" />
+        <PackageReference Include="Spectre.Console.Json" Version="0.49.2-preview.0.69" />
         <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
         <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1" />
     </ItemGroup>

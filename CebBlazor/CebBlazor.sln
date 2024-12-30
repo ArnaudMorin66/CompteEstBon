@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CebBlazor.Maui", "..\CebBla
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CebExport", "..\CebExport\CebExport.csproj", "{C189F3D8-37EF-429C-8584-F44215AF6362}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CebWasm", "..\CebWasm\CebWasm.csproj", "{EF767BE4-8C28-46FA-9C1E-70A0174F0878}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,18 @@ Global
 		{C189F3D8-37EF-429C-8584-F44215AF6362}.Release|x64.Build.0 = Release|Any CPU
 		{C189F3D8-37EF-429C-8584-F44215AF6362}.Release|x86.ActiveCfg = Release|Any CPU
 		{C189F3D8-37EF-429C-8584-F44215AF6362}.Release|x86.Build.0 = Release|Any CPU
+		{EF767BE4-8C28-46FA-9C1E-70A0174F0878}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF767BE4-8C28-46FA-9C1E-70A0174F0878}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF767BE4-8C28-46FA-9C1E-70A0174F0878}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EF767BE4-8C28-46FA-9C1E-70A0174F0878}.Debug|x64.Build.0 = Debug|Any CPU
+		{EF767BE4-8C28-46FA-9C1E-70A0174F0878}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EF767BE4-8C28-46FA-9C1E-70A0174F0878}.Debug|x86.Build.0 = Debug|Any CPU
+		{EF767BE4-8C28-46FA-9C1E-70A0174F0878}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF767BE4-8C28-46FA-9C1E-70A0174F0878}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF767BE4-8C28-46FA-9C1E-70A0174F0878}.Release|x64.ActiveCfg = Release|Any CPU
+		{EF767BE4-8C28-46FA-9C1E-70A0174F0878}.Release|x64.Build.0 = Release|Any CPU
+		{EF767BE4-8C28-46FA-9C1E-70A0174F0878}.Release|x86.ActiveCfg = Release|Any CPU
+		{EF767BE4-8C28-46FA-9C1E-70A0174F0878}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,13 +9,17 @@ namespace CebToolkit.WinUI {
     /// </summary>
     public partial class App : MauiWinUIApplication {
         /// <summary>
-        /// Initializes the singleton application object.  This is the first line of authored code
+        /// Initializes the singleton application object. This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
         public App() {
             this.InitializeComponent();
         }
 
+        /// <summary>
+        /// Creates the MauiApp instance that defines the app's behavior.
+        /// </summary>
+        /// <returns>A new instance of the <see cref="MauiApp"/> class.</returns>
         protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
     }
 

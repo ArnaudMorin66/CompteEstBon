@@ -50,6 +50,12 @@ dotnet_naming_rule.private_instance_fields_rule.resharper_guid = 4a98fdf6-7d98-4
 dotnet_naming_rule.private_instance_fields_rule.severity = suggestion
 dotnet_naming_rule.private_instance_fields_rule.style = lower_camel_case_style
 dotnet_naming_rule.private_instance_fields_rule.symbols = private_instance_fields_symbols
+dotnet_naming_rule.private_instance_fields_rule_1.import_to_resharper = True
+dotnet_naming_rule.private_instance_fields_rule_1.resharper_description = Instance fields (private)
+dotnet_naming_rule.private_instance_fields_rule_1.resharper_guid = 4a98fdf6-7d98-4f5a-afeb-ea44ad98c70c
+dotnet_naming_rule.private_instance_fields_rule_1.severity = suggestion
+dotnet_naming_rule.private_instance_fields_rule_1.style = lower_camel_case_style
+dotnet_naming_rule.private_instance_fields_rule_1.symbols = private_instance_fields_symbols_1
 dotnet_naming_rule.private_static_fields_rule.import_to_resharper = True
 dotnet_naming_rule.private_static_fields_rule.resharper_description = Static fields (private)
 dotnet_naming_rule.private_static_fields_rule.resharper_exclusive_prefixes_suffixes = true
@@ -90,6 +96,10 @@ dotnet_naming_symbols.private_instance_fields_symbols.applicable_accessibilities
 dotnet_naming_symbols.private_instance_fields_symbols.applicable_kinds = field
 dotnet_naming_symbols.private_instance_fields_symbols.resharper_applicable_kinds = field,readonly_field
 dotnet_naming_symbols.private_instance_fields_symbols.resharper_required_modifiers = instance
+dotnet_naming_symbols.private_instance_fields_symbols_1.applicable_accessibilities = private
+dotnet_naming_symbols.private_instance_fields_symbols_1.applicable_kinds = field
+dotnet_naming_symbols.private_instance_fields_symbols_1.resharper_applicable_kinds = field,readonly_field
+dotnet_naming_symbols.private_instance_fields_symbols_1.resharper_required_modifiers = instance
 dotnet_naming_symbols.private_static_fields_symbols.applicable_accessibilities = private
 dotnet_naming_symbols.private_static_fields_symbols.applicable_kinds = field
 dotnet_naming_symbols.private_static_fields_symbols.required_modifiers = static
@@ -184,3 +194,14 @@ resharper_suggest_var_or_type_simple_types_highlighting = hint
 indent_style = space
 indent_size = 4
 tab_width = 4
+
+[*.{appxmanifest,asax,ascx,aspx,axaml,axml,blockshader,build,c,c++,c++m,cc,ccm,cginc,compute,config,cp,cpp,cppm,cs,cshtml,csproj,cu,cuh,cxx,cxxm,dbml,discomap,dtd,fx,fxh,h,h++,hh,hlsl,hlsli,hlslinc,hp,hpp,htm,html,hxx,icc,inc,inl,ino,ipp,ixx,jsproj,lsproj,master,mpp,mq4,mq5,mqh,mxx,njsproj,nuspec,paml,proj,props,razor,resw,resx,shaderFoundry,skin,StyleCop,targets,tasks,tcc,tpp,urtshader,usf,ush,vb,vbproj,xaml,xamlx,xml,xoml,xsd}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+
+[*generated.cs]
+generated_code = true
+
+[*.g.cs]
+generated_code = true

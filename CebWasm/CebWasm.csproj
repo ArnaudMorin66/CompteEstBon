@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Remove="scss\debug\**" />
+        <Compile Remove="scss\release\**" />
+        <Content Remove="scss\debug\**" />
+        <Content Remove="scss\release\**" />
+        <EmbeddedResource Remove="scss\debug\**" />
+        <EmbeddedResource Remove="scss\release\**" />
+        <None Remove="scss\debug\**" />
+        <None Remove="scss\release\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Remove="Pages\Home.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="9.0.0" PrivateAssets="all" />
+        <PackageReference Include="Syncfusion.Blazor.Core" Version="28.1.36" />
+        <PackageReference Include="Syncfusion.Blazor.Grid" Version="28.1.36" />
+        <PackageReference Include="Syncfusion.Blazor.ProgressBar" Version="28.1.36" />
+        <PackageReference Include="System.Text.Json" Version="9.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\CebExport\CebExport.csproj" />
+        <ProjectReference Include="..\CompteEstBon\CompteEstBon.csproj" />
+        <ProjectReference Include="..\Outils\arnaud.morin.outils.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Properties\Resource.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Resource.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Update="Properties\Resource.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
+
+</Project>

@@ -8,8 +8,6 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-using CebBlazor.Maui.Services;
-
 using CommunityToolkit.Maui.Storage;
 
 using CompteEstBon;
@@ -25,8 +23,7 @@ using Launcher = Windows.System.Launcher;
 #endif
 namespace CebBlazor.Maui.Code;
 
-
-public static class Export {
+internal static class Export {
 	private static readonly Dictionary<string, string> ContentType = new() {
 		["xlsx"] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 		["json"] = "application/json",
@@ -67,11 +64,9 @@ public static class Export {
 #if WINDOWS
 		if (fileresult.IsSuccessful) await ShowFile(fileresult.FilePath);
 #endif
-		//SaveService.SaveAndView(filename, ContentType[extension], mstream);
 			
 	}
 #if WINDOWS
-	
 
 	private static async Task ShowFile(string filename) => await MainThread.InvokeOnMainThreadAsync(async () => {
 		if (await Application.Current!.Windows[0].Page!
